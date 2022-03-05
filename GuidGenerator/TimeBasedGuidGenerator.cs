@@ -11,10 +11,13 @@ namespace XstarS.GuidGenerators
 
         private volatile int ClockSequence;
 
-        internal TimeBasedGuidGenerator()
+        private TimeBasedGuidGenerator()
         {
             this.ClockSequence = new Random().Next();
         }
+
+        internal static TimeBasedGuidGenerator Instance { get; } =
+            new TimeBasedGuidGenerator();
 
         public override GuidVersion Version => GuidVersion.Version1;
 

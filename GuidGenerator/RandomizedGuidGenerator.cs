@@ -4,7 +4,10 @@ namespace XstarS.GuidGenerators
 {
     internal sealed class RandomizedGuidGenerator : GuidGenerator
     {
-        internal RandomizedGuidGenerator() { }
+        private RandomizedGuidGenerator() { }
+
+        internal static RandomizedGuidGenerator Instance { get; } =
+            new RandomizedGuidGenerator();
 
         public override GuidVersion Version => GuidVersion.Version4;
 

@@ -29,14 +29,23 @@ namespace XstarS.GuidGenerators
 
         private byte[] ProcessHashBytes(byte[] hashBytes)
         {
-            throw new NotImplementedException();
+            const int GuidLength = 16;
+            var guidBytes = new byte[GuidLength];
+            Array.Copy(hashBytes, 0, guidBytes, 0, GuidLength);
+            var version = (int)this.Version;
+            guidBytes[7] = (byte)(guidBytes[7] & ~0xF0 | version);
+            guidBytes[8] = (byte)(guidBytes[8] & ~0xC0 | 0x80);
+            return guidBytes;
         }
 
         internal sealed class MD5Hashing : NameBasedGuidGenerator
         {
             private readonly HashAlgorithm Hashing;
 
-            internal MD5Hashing() { this.Hashing = MD5.Create(); }
+            private MD5Hashing() { this.Hashing = MD5.Create(); }
+
+            internal static NameBasedGuidGenerator.MD5Hashing Instance { get; } =
+                new NameBasedGuidGenerator.MD5Hashing();
 
             public override GuidVersion Version => GuidVersion.Version3;
 
@@ -50,7 +59,10 @@ namespace XstarS.GuidGenerators
         {
             private readonly HashAlgorithm Hashing;
 
-            internal SHA1Hashing() { this.Hashing = SHA1.Create(); }
+            private SHA1Hashing() { this.Hashing = SHA1.Create(); }
+
+            internal static NameBasedGuidGenerator.SHA1Hashing Instance { get; } =
+                new NameBasedGuidGenerator.SHA1Hashing();
 
             public override GuidVersion Version => GuidVersion.Version5;
 

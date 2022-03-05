@@ -8,7 +8,7 @@ namespace XstarS.GuidGenerators
     public enum GuidVersion
     {
         /// <summary>
-        /// 表示未知 <see cref="GuidVersion"/> 。
+        /// 表示未知 GUID 版本。
         /// </summary>
         Unknown = 0,
         /// <summary>

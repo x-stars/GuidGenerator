@@ -6,6 +6,9 @@ namespace XstarS.GuidGenerators
     {
         internal DceSecurityGuidGenerator() { }
 
+        internal static DceSecurityGuidGenerator Instance { get; } =
+            new DceSecurityGuidGenerator();
+
         public override GuidVersion Version => GuidVersion.Version2;
 
         public override Guid NewGuid()
