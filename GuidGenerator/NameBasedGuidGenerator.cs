@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -6,7 +7,15 @@ namespace XstarS.GuidGenerators
 {
     internal abstract class NameBasedGuidGenerator : GuidGenerator
     {
-        protected NameBasedGuidGenerator() { }
+        private readonly int MaxHashingCount;
+
+        private readonly ConcurrentBag<HashAlgorithm> Hasings;
+
+        protected NameBasedGuidGenerator()
+        {
+            this.MaxHashingCount = Environment.ProcessorCount * 2;
+            this.Hasings = new ConcurrentBag<HashAlgorithm>();
+        }
 
         public sealed override Guid NewGuid()
         {
@@ -25,13 +34,28 @@ namespace XstarS.GuidGenerators
             return new Guid(guidBytes);
         }
 
-        protected abstract byte[] ComputeHash(byte[] input);
+        protected abstract HashAlgorithm CreateHashing();
+
+        private byte[] ComputeHash(byte[] input)
+        {
+            var hashings = this.Hasings;
+            if (!hashings.TryTake(out var hasing))
+            {
+                hasing = this.CreateHashing();
+            }
+            var hash = hasing.ComputeHash(input);
+            var maxCount = this.MaxHashingCount;
+            if (hashings.Count < maxCount)
+            {
+                hashings.Add(hasing);
+            }
+            return hash;
+        }
 
         private byte[] GetGuidBytes(byte[] hashBytes)
         {
-            const int GuidLength = 16;
-            var guidBytes = new byte[GuidLength];
-            Array.Copy(hashBytes, 0, guidBytes, 0, GuidLength);
+            var guidBytes = new byte[16];
+            Array.Copy(hashBytes, 0, guidBytes, 0, 16);
             if (BitConverter.IsLittleEndian)
             {
                 Array.Reverse(guidBytes, 0, 4);
@@ -46,36 +70,26 @@ namespace XstarS.GuidGenerators
 
         internal sealed class MD5Hashing : NameBasedGuidGenerator
         {
-            private readonly HashAlgorithm Hashing;
-
-            private MD5Hashing() { this.Hashing = MD5.Create(); }
+            private MD5Hashing() { }
 
             internal static NameBasedGuidGenerator.MD5Hashing Instance { get; } =
                 new NameBasedGuidGenerator.MD5Hashing();
 
             public override GuidVersion Version => GuidVersion.Version3;
 
-            protected override byte[] ComputeHash(byte[] input)
-            {
-                return this.Hashing.ComputeHash(input);
-            }
+            protected override HashAlgorithm CreateHashing() => MD5.Create();
         }
 
         internal sealed class SHA1Hashing : NameBasedGuidGenerator
         {
-            private readonly HashAlgorithm Hashing;
-
-            private SHA1Hashing() { this.Hashing = SHA1.Create(); }
+            private SHA1Hashing() { }
 
             internal static NameBasedGuidGenerator.SHA1Hashing Instance { get; } =
                 new NameBasedGuidGenerator.SHA1Hashing();
 
             public override GuidVersion Version => GuidVersion.Version5;
 
-            protected override byte[] ComputeHash(byte[] input)
-            {
-                return this.Hashing.ComputeHash(input);
-            }
+            protected override HashAlgorithm CreateHashing() => SHA1.Create();
         }
     }
 }
