@@ -6,6 +6,7 @@
     <TargetFrameworks>net461;net472;netcoreapp3.1;net6.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -42,7 +43,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GuidGenerator\GuidGenerator.csproj" />
+    <Compile Include="..\GuidGenerator\**\*.cs" />
+    <Compile Remove="..\GuidGenerator\bin\**\*.cs" />
+    <Compile Remove="..\GuidGenerator\obj\**\*.cs" />
+    <Compile Remove="..\GuidGenerator\Properties\*.cs" />
   </ItemGroup>
 
 </Project>
