@@ -25,6 +25,11 @@ namespace XstarS.GuidGenerators
 
         public sealed override Guid NewGuid(Guid ns, string name)
         {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
             var nsBytes = ns.ToUuidByteArray();
             var nameBytes = Encoding.UTF8.GetBytes(name);
             var input = new byte[nsBytes.Length + nameBytes.Length];

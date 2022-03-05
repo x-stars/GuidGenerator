@@ -21,9 +21,6 @@ namespace XstarS.GuidGenerators
 
         public override GuidVersion Version => GuidVersion.Version2;
 
-        public override Guid NewGuid()
-        {
-            throw new NotImplementedException();
-        }
+        public override Guid NewGuid() => throw new NotImplementedException();
     }
 }
