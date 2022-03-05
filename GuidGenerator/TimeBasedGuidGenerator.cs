@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Net.NetworkInformation;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace XstarS.GuidGenerators
 {
     internal sealed class TimeBasedGuidGenerator : GuidGenerator
     {
+        private static class Singleton
+        {
+            internal static readonly TimeBasedGuidGenerator Value =
+                new TimeBasedGuidGenerator();
+        }
+
         private static readonly DateTime BaseTimestamp =
             new DateTime(1582, 10, 15, 0, 0, 0, DateTimeKind.Utc);
 
@@ -19,8 +26,11 @@ namespace XstarS.GuidGenerators
             this.ClockSequence = new Random().Next();
         }
 
-        internal static TimeBasedGuidGenerator Instance { get; } =
-            new TimeBasedGuidGenerator();
+        internal static TimeBasedGuidGenerator Instance
+        {
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            get => TimeBasedGuidGenerator.Singleton.Value;
+        }
 
         public override GuidVersion Version => GuidVersion.Version1;
 

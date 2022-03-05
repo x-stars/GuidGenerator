@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -70,10 +71,19 @@ namespace XstarS.GuidGenerators
 
         internal sealed class MD5Hashing : NameBasedGuidGenerator
         {
+            private static class Singleton
+            {
+                internal static readonly NameBasedGuidGenerator.MD5Hashing Value =
+                    new NameBasedGuidGenerator.MD5Hashing();
+            }
+
             private MD5Hashing() { }
 
-            internal static NameBasedGuidGenerator.MD5Hashing Instance { get; } =
-                new NameBasedGuidGenerator.MD5Hashing();
+            internal static NameBasedGuidGenerator.MD5Hashing Instance
+            {
+                [MethodImpl(MethodImplOptions.NoInlining)]
+                get => NameBasedGuidGenerator.MD5Hashing.Singleton.Value;
+            }
 
             public override GuidVersion Version => GuidVersion.Version3;
 
@@ -82,10 +92,19 @@ namespace XstarS.GuidGenerators
 
         internal sealed class SHA1Hashing : NameBasedGuidGenerator
         {
+            private static class Singleton
+            {
+                internal static readonly NameBasedGuidGenerator.SHA1Hashing Value =
+                    new NameBasedGuidGenerator.SHA1Hashing();
+            }
+
             private SHA1Hashing() { }
 
-            internal static NameBasedGuidGenerator.SHA1Hashing Instance { get; } =
-                new NameBasedGuidGenerator.SHA1Hashing();
+            internal static NameBasedGuidGenerator.SHA1Hashing Instance
+            {
+                [MethodImpl(MethodImplOptions.NoInlining)]
+                get => NameBasedGuidGenerator.SHA1Hashing.Singleton.Value;
+            }
 
             public override GuidVersion Version => GuidVersion.Version5;
 
