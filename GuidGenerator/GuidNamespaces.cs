@@ -3,7 +3,7 @@
 namespace XstarS.GuidGenerators
 {
     /// <summary>
-    /// 提供由 RFC 4122 预定义的 <see cref="Guid"/> 命名空间。
+    /// 提供由 RFC 4122 定义的 <see cref="Guid"/> 命名空间。
     /// </summary>
     public static class GuidNamespaces
     {

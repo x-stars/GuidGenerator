@@ -11,7 +11,7 @@ namespace XstarS.GuidGenerators
                 new DceSecurityGuidGenerator();
         }
 
-        internal DceSecurityGuidGenerator() { }
+        private DceSecurityGuidGenerator() { }
 
         internal static DceSecurityGuidGenerator Instance
         {
