@@ -6,7 +6,10 @@ namespace XstarS.GuidGenerators
 {
     internal sealed class TimeBasedGuidGenerator : GuidGenerator
     {
-        private static byte[] LocalMacAddressBytes =
+        private static readonly DateTime BaseTimestamp =
+            new DateTime(1582, 10, 15, 0, 0, 0, DateTimeKind.Utc);
+
+        private static readonly byte[] LocalMacAddressBytes =
             TimeBasedGuidGenerator.GetLocalMacAdddress().GetAddressBytes();
 
         private volatile int ClockSequence;
@@ -23,25 +26,74 @@ namespace XstarS.GuidGenerators
 
         private static PhysicalAddress GetLocalMacAdddress()
         {
-            var currentInterface = default(NetworkInterface);
-            var interfaces = NetworkInterface.GetAllNetworkInterfaces();
-            foreach (var @interface in interfaces)
+            var target = default(NetworkInterface);
+            var ifaces = NetworkInterface.GetAllNetworkInterfaces();
+            foreach (var iface in ifaces)
             {
-                if (@interface.OperationalStatus == OperationalStatus.Up)
+                if (iface.OperationalStatus == OperationalStatus.Up)
                 {
-                    currentInterface = @interface;
+                    target = iface;
                     break;
                 }
             }
-            if (currentInterface is null) { return PhysicalAddress.None; }
-            return currentInterface.GetPhysicalAddress();
+            if (target is null) { return PhysicalAddress.None; }
+            return target.GetPhysicalAddress();
         }
 
         public override Guid NewGuid()
         {
+            var guidBytes = new byte[16];
+            var timestamp = this.GetCurrentTimestamp();
+            this.FillTimestampFields(guidBytes, timestamp);
+            var version = (int)this.Version << 4;
+            guidBytes[7] = (byte)(guidBytes[7] & ~0xF0 | version);
             var clockSeq = Interlocked.Increment(ref this.ClockSequence);
+            this.FillClockSequenceField(guidBytes, clockSeq);
+            guidBytes[8] = (byte)(guidBytes[8] & ~0xC0 | 0x80);
             var macAddress = TimeBasedGuidGenerator.LocalMacAddressBytes;
-            throw new NotImplementedException();
+            Array.Copy(macAddress, 0, guidBytes, 10, macAddress.Length);
+            return new Guid(guidBytes);
+        }
+
+        private long GetCurrentTimestamp()
+        {
+            var begin = TimeBasedGuidGenerator.BaseTimestamp;
+            return DateTime.UtcNow.Ticks - begin.Ticks;
+        }
+
+        private unsafe void FillTimestampFields(byte[] guidBytes, long timestamp)
+        {
+            if (BitConverter.IsLittleEndian)
+            {
+                fixed (byte* pGuidBytes = &guidBytes[0])
+                {
+                    *(long*)pGuidBytes = timestamp;
+                }
+            }
+            else
+            {
+                foreach (var index in 0..8)
+                {
+                    var shifted = timestamp >> (index * 8);
+                    guidBytes[index] = (byte)shifted;
+                }
+            }
+        }
+
+        private unsafe void FillClockSequenceField(byte[] guidBytes, int clockSeq)
+        {
+            if (BitConverter.IsLittleEndian)
+            {
+                fixed (byte* pGuidBytes = &guidBytes[8])
+                {
+                    *(int*)pGuidBytes = clockSeq;
+                }
+            }
+            else
+            {
+                guidBytes[8] = (byte)(clockSeq >> (0 * 8));
+                guidBytes[9] = (byte)(clockSeq >> (1 * 8));
+            }
         }
     }
 }
