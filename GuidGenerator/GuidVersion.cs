@@ -34,7 +34,7 @@ namespace XstarS.GuidGenerators
     }
 
     /// <summary>
-    /// 提供 <see cref="GuidVersion"/> 相关的扩展方法。
+    /// 提供 <see cref="GuidVersion"/> 的扩展方法。
     /// </summary>
     public static class GuidVersionExtensions
     {
@@ -76,13 +76,5 @@ namespace XstarS.GuidGenerators
         public static bool ContainsPrivateID(this GuidVersion version) =>
             version == GuidVersion.Version1 ||
             version == GuidVersion.Version2;
-
-        /// <summary>
-        /// 获取当前 <see cref="Guid"/> 的版本。
-        /// </summary>
-        /// <param name="guid">要获取版本的 <see cref="Guid"/>。</param>
-        /// <returns>当前 <see cref="Guid"/> 的版本。</returns>
-        public static GuidVersion GetVersion(this Guid guid) =>
-            (GuidVersion)((guid.ToByteArray()[7] & 0xF0) >> 4);
     }
 }

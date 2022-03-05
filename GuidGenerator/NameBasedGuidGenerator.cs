@@ -15,24 +15,30 @@ namespace XstarS.GuidGenerators
 
         public sealed override Guid NewGuid(Guid ns, string name)
         {
-            var nsBytes = ns.ToByteArray();
+            var nsBytes = ns.ToUuidByteArray();
             var nameBytes = Encoding.UTF8.GetBytes(name);
             var input = new byte[nsBytes.Length + nameBytes.Length];
             Array.Copy(nsBytes, 0, input, 0, nsBytes.Length);
             Array.Copy(nameBytes, 0, input, nsBytes.Length, nameBytes.Length);
             var hashBytes = this.ComputeHash(input);
-            var guidBytes = this.ProcessHashBytes(hashBytes);
+            var guidBytes = this.GetGuidBytes(hashBytes);
             return new Guid(guidBytes);
         }
 
         protected abstract byte[] ComputeHash(byte[] input);
 
-        private byte[] ProcessHashBytes(byte[] hashBytes)
+        private byte[] GetGuidBytes(byte[] hashBytes)
         {
             const int GuidLength = 16;
             var guidBytes = new byte[GuidLength];
             Array.Copy(hashBytes, 0, guidBytes, 0, GuidLength);
-            var version = (int)this.Version;
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(guidBytes, 0, 4);
+                Array.Reverse(guidBytes, 4, 2);
+                Array.Reverse(guidBytes, 6, 2);
+            }
+            var version = (int)this.Version << 4;
             guidBytes[7] = (byte)(guidBytes[7] & ~0xF0 | version);
             guidBytes[8] = (byte)(guidBytes[8] & ~0xC0 | 0x80);
             return guidBytes;
