@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace XstarS.GuidGenerators
@@ -8,6 +9,20 @@ namespace XstarS.GuidGenerators
     {
         private readonly DateTime BaseTimestamp =
             new DateTime(1582, 10, 15, 0, 0, 0, DateTimeKind.Utc);
+
+        [TestMethod]
+        public void NewGuid_UnknownVersion_CatchInvalidOperationException()
+        {
+            Assert.ThrowsException<InvalidOperationException>(
+                () => GuidGenerator.NewGuid(GuidVersion.Unknown));
+        }
+
+        [TestMethod]
+        public void NewGuid_InvalidVersionEnum_CatchInvalidEnumArgumentException()
+        {
+            Assert.ThrowsException<InvalidEnumArgumentException>(
+                () => GuidGenerator.NewGuid((GuidVersion)(-1)));
+        }
 
         [TestMethod]
         public void NewGuid_Version1_GetExpectedTimestamp()
@@ -25,6 +40,13 @@ namespace XstarS.GuidGenerators
             var ticksDiff = (ticksNow - ticksBase) - timestamp;
             var ticks1s = TimeSpan.FromSeconds(1).Ticks;
             Assert.IsTrue(ticksDiff < ticks1s);
+        }
+
+        [TestMethod]
+        public void NewGuid_Version1_GetGuidWithVersion1()
+        {
+            var guid = GuidGenerator.NewGuid(GuidVersion.Version1);
+            Assert.AreEqual(GuidVersion.Version1, guid.GetVersion());
         }
 
         [TestMethod]
@@ -47,13 +69,6 @@ namespace XstarS.GuidGenerators
             var clockSeq1 = BitConverter.ToInt32(guidBytes1, 8);
             clockSeq1 &= ~((int)0xC0 << (3 * 8));
             Assert.AreEqual(clockSeq0 + 1, clockSeq1);
-        }
-
-        [TestMethod]
-        public void NewGuid_Version1_GetGuidWithVersion1()
-        {
-            var guid = GuidGenerator.NewGuid(GuidVersion.Version1);
-            Assert.AreEqual(GuidVersion.Version1, guid.GetVersion());
         }
 
         [TestMethod]
@@ -82,6 +97,13 @@ namespace XstarS.GuidGenerators
         }
 
         [TestMethod]
+        public void NewGuid_Version3NullName_CatchArgumentNullException()
+        {
+            Assert.ThrowsException<ArgumentNullException>(
+                () => GuidGenerator.NewGuid(GuidVersion.Version3, Guid.Empty, null!));
+        }
+
+        [TestMethod]
         public void NewGuid_Version4_GetGuidWithVersion4()
         {
             var guid = GuidGenerator.NewGuid(GuidVersion.Version4);
@@ -104,6 +126,13 @@ namespace XstarS.GuidGenerators
             var guid = GuidGenerator.NewGuid(GuidVersion.Version5, ns, name);
             var expected = Guid.Parse("768a7b1b-ae51-5c0a-bc9d-a85a343f2c24");
             Assert.AreEqual(expected, guid);
+        }
+
+        [TestMethod]
+        public void NewGuid_Version5NullName_CatchArgumentNullException()
+        {
+            Assert.ThrowsException<ArgumentNullException>(
+                () => GuidGenerator.NewGuid(GuidVersion.Version5, Guid.Empty, null!));
         }
     }
 }
