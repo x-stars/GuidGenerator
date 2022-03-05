@@ -1,3 +1,4 @@
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace XstarS.GuidGenerators
@@ -5,9 +6,104 @@ namespace XstarS.GuidGenerators
     [TestClass]
     public class GuidGeneratorTest
     {
+        private readonly DateTime BaseTimestamp =
+            new DateTime(1582, 10, 15, 0, 0, 0, DateTimeKind.Utc);
+
         [TestMethod]
-        public void TestMethod1()
+        public void NewGuid_Version1_GetExpectedTimestamp()
         {
+            var guid = GuidGenerator.NewGuid(GuidVersion.Version1);
+            var guidBytes = guid.ToByteArray();
+            if (!BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(guidBytes, 0, 8);
+            }
+            var timestamp = BitConverter.ToInt64(guidBytes, 0);
+            timestamp &= ~((long)0xF0 << (7 * 8));
+            var ticksNow = DateTime.UtcNow.Ticks;
+            var ticksBase = this.BaseTimestamp.Ticks;
+            var ticksDiff = (ticksNow - ticksBase) - timestamp;
+            var ticks1s = TimeSpan.FromSeconds(1).Ticks;
+            Assert.IsTrue(ticksDiff < ticks1s);
+        }
+
+        [TestMethod]
+        public void NewGuid_Version1_GetIncrementClockSeq()
+        {
+            var guid0 = GuidGenerator.NewGuid(GuidVersion.Version1);
+            var guidBytes0 = guid0.ToByteArray();
+            if (!BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(guidBytes0, 8, 2);
+            }
+            var clockSeq0 = BitConverter.ToInt32(guidBytes0, 8);
+            clockSeq0 &= ~((int)0xC0 << (3 * 8));
+            var guid1 = GuidGenerator.NewGuid(GuidVersion.Version1);
+            var guidBytes1 = guid1.ToByteArray();
+            if (!BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(guidBytes1, 8, 2);
+            }
+            var clockSeq1 = BitConverter.ToInt32(guidBytes1, 8);
+            clockSeq1 &= ~((int)0xC0 << (3 * 8));
+            Assert.AreEqual(clockSeq0 + 1, clockSeq1);
+        }
+
+        [TestMethod]
+        public void NewGuid_Version1_GetGuidWithVersion1()
+        {
+            var guid = GuidGenerator.NewGuid(GuidVersion.Version1);
+            Assert.AreEqual(GuidVersion.Version1, guid.GetVersion());
+        }
+
+        [TestMethod]
+        public void NewGuid_Version1_GetGuidWithReservedBits10()
+        {
+            var guid = GuidGenerator.NewGuid(GuidVersion.Version1);
+            var reserved = guid.ToByteArray()[8] & 0xC0;
+            Assert.AreEqual(0x80, reserved);
+        }
+
+        [TestMethod]
+        public void NewGuid_Version2_CatchNotImplementedException()
+        {
+            Assert.ThrowsException<NotImplementedException>(
+                () => GuidGenerator.NewGuid(GuidVersion.Version2));
+        }
+
+        [TestMethod]
+        public void NewGuid_Version3_GetExpectedGuid()
+        {
+            var ns = GuidNamespaces.URL;
+            var name = "https://github.com/x-stars/GuidGenerator";
+            var guid = GuidGenerator.NewGuid(GuidVersion.Version3, ns, name);
+            var expected = Guid.Parse("a9ec4420-7252-3c11-ab70-512e10273537");
+            Assert.AreEqual(expected, guid);
+        }
+
+        [TestMethod]
+        public void NewGuid_Version4_GetGuidWithVersion4()
+        {
+            var guid = GuidGenerator.NewGuid(GuidVersion.Version4);
+            Assert.AreEqual(GuidVersion.Version4, guid.GetVersion());
+        }
+
+        [TestMethod]
+        public void NewGuid_Version4_GetGuidWithReservedBits10()
+        {
+            var guid = GuidGenerator.NewGuid(GuidVersion.Version4);
+            var reserved = guid.ToByteArray()[8] & 0xC0;
+            Assert.AreEqual(0x80, reserved);
+        }
+
+        [TestMethod]
+        public void NewGuid_Version5_GetExpectedGuid()
+        {
+            var ns = GuidNamespaces.URL;
+            var name = "https://github.com/x-stars/GuidGenerator";
+            var guid = GuidGenerator.NewGuid(GuidVersion.Version5, ns, name);
+            var expected = Guid.Parse("768a7b1b-ae51-5c0a-bc9d-a85a343f2c24");
+            Assert.AreEqual(expected, guid);
         }
     }
 }
