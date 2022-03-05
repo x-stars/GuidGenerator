@@ -20,6 +20,16 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <PackageId>$(AssemblyName)</PackageId>
+    <PackageVersion>$(Version)</PackageVersion>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/x-stars/GuidGenerator</PackageProjectUrl>
+    <PackageIconUrl></PackageIconUrl>
+    <RepositoryUrl>https://github.com/x-stars/GuidGenerator</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <DocumentationFile>
       obj\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml
     </DocumentationFile>
