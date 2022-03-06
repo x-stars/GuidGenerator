@@ -34,7 +34,7 @@ namespace XstarS.GuidGenerators.Commands
             var readInput = args.Length == 2;
             var nsArg = args[1].ToUpper();
             var ns = Guid.Empty;
-            if (nsArg.StartsWith("@"))
+            if (nsArg.StartsWith(":"))
             {
                 var knownNs = nsArg.Substring(1);
                 if (!GuidNamespaces.TryFindByName(knownNs, out ns))

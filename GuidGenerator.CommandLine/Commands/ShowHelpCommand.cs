@@ -29,22 +29,23 @@ namespace XstarS.GuidGenerators.Commands
             var cmdName = this.GetCommandName();
             var helpLines = new[]
             {
-                $"Usage: {cmdName} -?|-H|-Help",
-                $"       {cmdName} [-V1|-V2|-V4] [-Cn]",
-                $"       {cmdName} -V3|-V5 @NS|GuidNS [Name]",
+                $"Usage:  {cmdName} -?|-H|-Help",
+                $"        {cmdName} [-V1|-V2|-V4] [-Cn]",
+                $"        {cmdName} -V3|-V5 :NS|GuidNS [Name]",
                 "Parameters:",
-                "    -V1: generate time-based GUIDs.",
-                "    -V2: generate DCE security GUIDs.",
-                "    -V3: generate name-based GUID by MD5 hashing.",
-                "    -V4: generate pesudo-random GUIDs (default).",
-                "    -V5: generate name-based GUID by SHA1 hashing.",
-                "    -Cn: generate n GUIDs of the current version.",
-                "    @NS: specify a well-known GUID namespace,",
-                "         which can be @DNS, @URL, @OID or @X500.",
-                "    GuidNS: specify a user-defined GUID namespace.",
-                "    Name: specify the name to generate GUID,",
-                "          or keep empty to read from standard input.",
-                "    -?|-H|-Help: show the current help message.",
+                "    -V1     generate time-based GUIDs.",
+                "    -V2     generate DCE security GUIDs.",
+                "    -V3     generate name-based GUID by MD5 hashing.",
+                "    -V4     generate pesudo-random GUIDs (default).",
+                "    -V5     generate name-based GUID by SHA1 hashing.",
+                "    -Cn     generate n GUIDs of the current version.",
+                "    :NS     specify a well-known GUID namespace,",
+                "            which can be :DNS, :URL, :OID or :X500.",
+                "    GuidNS  specify a user-defined GUID namespace.",
+                "    Name    specify the name to generate GUID,",
+                "            or empty to read from standard input.",
+                "    -?|-H|-Help",
+                "            show the current help message.",
             };
             foreach (var helpLine in helpLines)
             {
