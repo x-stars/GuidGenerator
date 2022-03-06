@@ -101,8 +101,13 @@ namespace System
 
         public bool IsFromEnd => this._value < 0;
 
-        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        //public int GetOffset(int length) { ... }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int GetOffset(int length)
+        {
+            int offset = this._value;
+            if (this.IsFromEnd) { offset += length + 1; }
+            return offset;
+        }
 
         public override bool Equals(object value) =>
             (value is Index other) && (this._value == other._value);
