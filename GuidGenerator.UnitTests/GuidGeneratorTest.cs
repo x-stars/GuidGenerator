@@ -47,7 +47,7 @@ namespace XstarS.GuidGenerators
         {
             var guid0 = GuidGenerator.NewGuid(GuidVersion.Version1);
             var guidBytes0 = guid0.ToByteArray();
-            if (!BitConverter.IsLittleEndian)
+            if (BitConverter.IsLittleEndian)
             {
                 Array.Reverse(guidBytes0, 8, 2);
             }
@@ -55,7 +55,7 @@ namespace XstarS.GuidGenerators
             clockSeq0 &= ~((int)0xC0 << (3 * 8));
             var guid1 = GuidGenerator.NewGuid(GuidVersion.Version1);
             var guidBytes1 = guid1.ToByteArray();
-            if (!BitConverter.IsLittleEndian)
+            if (BitConverter.IsLittleEndian)
             {
                 Array.Reverse(guidBytes1, 8, 2);
             }

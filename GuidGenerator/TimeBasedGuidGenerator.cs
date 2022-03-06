@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace XstarS.GuidGenerators
 {
-    internal sealed class TimeBasedGuidGenerator : GuidGenerator
+    internal class TimeBasedGuidGenerator : GuidGenerator
     {
         private static class Singleton
         {
@@ -21,7 +21,7 @@ namespace XstarS.GuidGenerators
 
         private volatile int ClockSequence;
 
-        private TimeBasedGuidGenerator()
+        protected TimeBasedGuidGenerator()
         {
             this.ClockSequence = new Random().Next();
         }
@@ -58,7 +58,7 @@ namespace XstarS.GuidGenerators
             var version = (int)this.Version << 4;
             guidBytes[7] = (byte)(guidBytes[7] & ~0xF0 | version);
             var clockSeq = Interlocked.Increment(ref this.ClockSequence);
-            this.FillClockSequenceField(guidBytes, clockSeq);
+            this.FillClockSeqFields(guidBytes, clockSeq);
             guidBytes[8] = (byte)(guidBytes[8] & ~0xC0 | 0x80);
             var macAddress = TimeBasedGuidGenerator.LocalMacAddressBytes;
             Array.Copy(macAddress, 0, guidBytes, 10, macAddress.Length);
@@ -93,23 +93,10 @@ namespace XstarS.GuidGenerators
             }
         }
 
-        private void FillClockSequenceField(byte[] guidBytes, int clockSeq)
+        private void FillClockSeqFields(byte[] guidBytes, int clockSeq)
         {
-            if (BitConverter.IsLittleEndian)
-            {
-                unsafe
-                {
-                    fixed (byte* pGuidBytes = &guidBytes[8])
-                    {
-                        *(int*)pGuidBytes = clockSeq;
-                    }
-                }
-            }
-            else
-            {
-                guidBytes[8] = (byte)(clockSeq >> (0 * 8));
-                guidBytes[9] = (byte)(clockSeq >> (1 * 8));
-            }
+            guidBytes[8] = (byte)(clockSeq >> (1 * 8));
+            guidBytes[9] = (byte)(clockSeq >> (0 * 8));
         }
     }
 }
