@@ -51,21 +51,21 @@ namespace XstarS.GuidGenerators
             {
                 Array.Reverse(guidBytes0, 8, 2);
             }
-            var clockSeq0 = BitConverter.ToInt32(guidBytes0, 8);
-            clockSeq0 &= ~((int)0xC0 << (3 * 8));
+            var clockSeq0 = BitConverter.ToUInt16(guidBytes0, 8);
+            clockSeq0 &= (ushort)(clockSeq0 & ~0xC000);
             var guid1 = GuidGenerator.NewGuid(GuidVersion.Version1);
             var guidBytes1 = guid1.ToByteArray();
             if (BitConverter.IsLittleEndian)
             {
                 Array.Reverse(guidBytes1, 8, 2);
             }
-            var clockSeq1 = BitConverter.ToInt32(guidBytes1, 8);
-            clockSeq1 &= ~((int)0xC0 << (3 * 8));
+            var clockSeq1 = BitConverter.ToUInt16(guidBytes1, 8);
+            clockSeq1 = (ushort)(clockSeq1 & ~0xC000);
             Assert.AreEqual(clockSeq0 + 1, clockSeq1);
         }
 
         [TestMethod]
-        public void NewGuid_Version1_GetGuidWithReservedBits10()
+        public void NewGuid_Version1_GetGuidWithVariantBits10()
         {
             var guid = GuidGenerator.NewGuid(GuidVersion.Version1);
             var reserved = guid.ToByteArray()[8] & 0xC0;
@@ -73,10 +73,45 @@ namespace XstarS.GuidGenerators
         }
 
         [TestMethod]
-        public void NewGuid_Version2_CatchNotImplementedException()
+        public void NewGuid_Version2_GetExpectedTimestamp()
         {
-            Assert.ThrowsException<NotImplementedException>(
-                () => GuidGenerator.NewGuid(GuidVersion.Version2));
+            var guid = GuidGenerator.NewGuid(GuidVersion.Version2);
+            var hasTs = guid.TryGetTimestamp(out var timestamp);
+            Assert.IsTrue(hasTs);
+            var ticksTs = timestamp.Ticks;
+            var ticksNow = DateTime.UtcNow.Ticks;
+            var ticksDiff = ticksNow - ticksTs;
+            var ticks10m = TimeSpan.FromMinutes(10).Ticks;
+            Assert.IsTrue(ticksDiff < ticks10m);
+        }
+
+        [TestMethod]
+        public void NewGuid_Version1_GetGuidWithVersion2()
+        {
+            var guid = GuidGenerator.NewGuid(GuidVersion.Version2);
+            Assert.AreEqual(GuidVersion.Version2, guid.GetVersion());
+        }
+
+        [TestMethod]
+        public void NewGuid_Version2_GetIncrementClockSeq()
+        {
+            var guid0 = GuidGenerator.NewGuid(GuidVersion.Version2);
+            var guidBytes0 = guid0.ToByteArray();
+            var clockSeq0 = guidBytes0[8];
+            clockSeq0 = (byte)(clockSeq0 & ~0xC0);
+            var guid1 = GuidGenerator.NewGuid(GuidVersion.Version2);
+            var guidBytes1 = guid1.ToByteArray();
+            var clockSeq1 = guidBytes1[8];
+            clockSeq1 = (byte)(clockSeq1 & ~0xC0);
+            Assert.AreEqual(clockSeq0 + 1, clockSeq1);
+        }
+
+        [TestMethod]
+        public void NewGuid_Version2_GetGuidWithVariantBits10()
+        {
+            var guid = GuidGenerator.NewGuid(GuidVersion.Version2);
+            var reserved = guid.ToByteArray()[8] & 0xC0;
+            Assert.AreEqual(0x80, reserved);
         }
 
         [TestMethod]

@@ -6,7 +6,7 @@ namespace XstarS.GuidGenerators
     {
         internal static void Main(string[] args)
         {
-            foreach (var verNum in new[] { 1, 3, 4, 5 })
+            foreach (var verNum in 0..6)
             {
                 var version = (GuidVersion)verNum;
                 var guid = GuidGenerator.NewGuid(version);
