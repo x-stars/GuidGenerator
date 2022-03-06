@@ -13,17 +13,14 @@ namespace XstarS.GuidGenerators
                 new TimeBasedGuidGenerator();
         }
 
-        private static readonly DateTime BaseTimestamp =
-            new DateTime(1582, 10, 15, 0, 0, 0, DateTimeKind.Utc);
-
-        private static readonly byte[] LocalMacAddressBytes =
-            TimeBasedGuidGenerator.GetLocalMacAdddress().GetAddressBytes();
-
         private volatile int ClockSequence;
+
+        private readonly Lazy<byte[]> LazyMacAddressBytes;
 
         protected TimeBasedGuidGenerator()
         {
             this.ClockSequence = new Random().Next();
+            this.LazyMacAddressBytes = new Lazy<byte[]>(this.GetMacAdddressBytes);
         }
 
         internal static TimeBasedGuidGenerator Instance
@@ -34,7 +31,7 @@ namespace XstarS.GuidGenerators
 
         public override GuidVersion Version => GuidVersion.Version1;
 
-        private static PhysicalAddress GetLocalMacAdddress()
+        private byte[] GetMacAdddressBytes()
         {
             var target = default(NetworkInterface);
             var ifaces = NetworkInterface.GetAllNetworkInterfaces();
@@ -46,8 +43,8 @@ namespace XstarS.GuidGenerators
                     break;
                 }
             }
-            if (target is null) { return PhysicalAddress.None; }
-            return target.GetPhysicalAddress();
+            if (target is null) { return new byte[6]; }
+            return target.GetPhysicalAddress().GetAddressBytes();
         }
 
         public override Guid NewGuid()
@@ -63,7 +60,7 @@ namespace XstarS.GuidGenerators
 
         private long GetCurrentTimestamp()
         {
-            var begin = TimeBasedGuidGenerator.BaseTimestamp;
+            var begin = GuidExtensions.BaseTimestamp;
             return DateTime.UtcNow.Ticks - begin.Ticks;
         }
 
@@ -99,7 +96,7 @@ namespace XstarS.GuidGenerators
 
         private void FillNodeIDFields(byte[] guidBytes)
         {
-            var nodeID = TimeBasedGuidGenerator.LocalMacAddressBytes;
+            var nodeID = this.LazyMacAddressBytes.Value;
             Array.Copy(nodeID, 0, guidBytes, 10, nodeID.Length);
         }
     }

@@ -10,7 +10,7 @@ namespace XstarS.GuidGenerators
         /// <summary>
         /// 表示 <see cref="Guid"/> 使用的基准时间戳。
         /// </summary>
-        private static readonly DateTime BaseTimestamp =
+        internal static readonly DateTime BaseTimestamp =
             new DateTime(1582, 10, 15, 0, 0, 0, DateTimeKind.Utc);
 
         /// <summary>

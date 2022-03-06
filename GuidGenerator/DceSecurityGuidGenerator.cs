@@ -2,15 +2,18 @@
 using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace XstarS.GuidGenerators
 {
     internal abstract class DceSecurityGuidGenerator : TimeBasedGuidGenerator
     {
-        private static readonly byte LocalIPAddressLastByte =
-            DceSecurityGuidGenerator.GetLocalIPAddressLastByte();
+        private readonly Lazy<byte> LazyIPAddressLastByte;
 
-        private DceSecurityGuidGenerator() { }
+        private DceSecurityGuidGenerator()
+        {
+            this.LazyIPAddressLastByte = new Lazy<byte>(this.GetIPAddressLastByte);
+        }
 
         internal static new DceSecurityGuidGenerator Instance
         {
@@ -21,6 +24,8 @@ namespace XstarS.GuidGenerators
                    DceSecurityGuidGenerator.UnixLikeUID.Instance :
                    DceSecurityGuidGenerator.UnknownUID.Instance;
         }
+
+        public override GuidVersion Version => GuidVersion.Version2;
 
         private static bool IsSupportedWindows()
         {
@@ -35,9 +40,7 @@ namespace XstarS.GuidGenerators
                    platform == PlatformID.MacOSX;
         }
 
-        public override GuidVersion Version => GuidVersion.Version2;
-
-        private static byte GetLocalIPAddressLastByte()
+        private byte GetIPAddressLastByte()
         {
             var target = default(NetworkInterface);
             var ifaces = NetworkInterface.GetAllNetworkInterfaces();
@@ -94,7 +97,7 @@ namespace XstarS.GuidGenerators
 
         private void FillSiteIDField(byte[] guidBytes)
         {
-            guidBytes[9] = DceSecurityGuidGenerator.LocalIPAddressLastByte;
+            guidBytes[9] = this.LazyIPAddressLastByte.Value;
         }
 
         private sealed class WindowsUID : DceSecurityGuidGenerator
@@ -105,10 +108,12 @@ namespace XstarS.GuidGenerators
                     new DceSecurityGuidGenerator.WindowsUID();
             }
 
-            private static Lazy<int> LazyUserDomainID =
-                new Lazy<int>(DceSecurityGuidGenerator.WindowsUID.GetUserDomainID);
+            private readonly Lazy<int> LazyUserDomainID;
 
-            private WindowsUID() { }
+            private WindowsUID()
+            {
+                this.LazyUserDomainID = new Lazy<int>(this.GetUserDomainID);
+            }
 
             internal static new DceSecurityGuidGenerator.WindowsUID Instance
             {
@@ -116,14 +121,15 @@ namespace XstarS.GuidGenerators
                 get => DceSecurityGuidGenerator.WindowsUID.Singleton.Value;
             }
 
-            private static int GetUserDomainID()
+            private int GetUserDomainID()
             {
                 var whoamiProc = Process.Start(new ProcessStartInfo()
                 {
                     FileName = "WHOAMI.exe",
                     Arguments = "/USER /FO LIST",
                     UseShellExecute = false,
-                    RedirectStandardOutput = true
+                    RedirectStandardOutput = true,
+                    StandardOutputEncoding = Encoding.UTF8,
                 })!;
                 var userSID = string.Empty;
                 whoamiProc.OutputDataReceived += (sender, e) =>
@@ -141,10 +147,7 @@ namespace XstarS.GuidGenerators
                 return (userID << (2 * 8)) | domainID;
             }
 
-            protected override int GetUserID()
-            {
-                return WindowsUID.LazyUserDomainID.Value;
-            }
+            protected override int GetUserID() => this.LazyUserDomainID.Value;
         }
 
         private sealed class UnixLikeUID : DceSecurityGuidGenerator
@@ -155,10 +158,12 @@ namespace XstarS.GuidGenerators
                     new DceSecurityGuidGenerator.UnixLikeUID();
             }
 
-            private static Lazy<int> LazyUserGroupID =
-                new Lazy<int>(DceSecurityGuidGenerator.UnixLikeUID.GetUserGroupID);
+            private readonly Lazy<int> LazyUserGroupID;
 
-            private UnixLikeUID() { }
+            private UnixLikeUID()
+            {
+                this.LazyUserGroupID = new Lazy<int>(this.GetUserGroupID);
+            }
 
             internal static new DceSecurityGuidGenerator.UnixLikeUID Instance
             {
@@ -166,21 +171,22 @@ namespace XstarS.GuidGenerators
                 get => DceSecurityGuidGenerator.UnixLikeUID.Singleton.Value;
             }
 
-            private static int GetUserGroupID()
+            private int GetUserGroupID()
             {
-                var userID = UnixLikeUID.GetIDByType("-u");
-                var groupID = UnixLikeUID.GetIDByType("-g");
+                var userID = this.GetIDByType("-u");
+                var groupID = this.GetIDByType("-g");
                 return (userID << (2 * 8)) | groupID;
             }
 
-            private static ushort GetIDByType(string arguments)
+            private ushort GetIDByType(string arguments)
             {
                 var idProc = Process.Start(new ProcessStartInfo()
                 {
                     FileName = "id",
                     Arguments = arguments,
                     UseShellExecute = false,
-                    RedirectStandardOutput = true
+                    RedirectStandardOutput = true,
+                    StandardOutputEncoding = Encoding.UTF8,
                 })!;
                 var userID = string.Empty;
                 idProc.OutputDataReceived += (sender, e) =>
@@ -195,10 +201,7 @@ namespace XstarS.GuidGenerators
                 return ushort.Parse(userID);
             }
 
-            protected override int GetUserID()
-            {
-                return UnixLikeUID.LazyUserGroupID.Value;
-            }
+            protected override int GetUserID() => this.LazyUserGroupID.Value;
         }
 
         private sealed class UnknownUID : DceSecurityGuidGenerator
