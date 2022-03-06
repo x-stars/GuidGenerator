@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace XstarS.GuidGenerators
 {
@@ -41,27 +40,6 @@ namespace XstarS.GuidGenerators
             0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8);
 
         /// <summary>
-        /// 表示 <see cref="Guid"/> 命名空间根据名称的查找表。
-        /// </summary>
-        private static readonly Dictionary<string, Guid> LookupTable =
-            GuidNamespaces.CreateLookupTable();
-
-        /// <summary>
-        /// 创建 <see cref="Guid"/> 命名空间根据名称的查找表。
-        /// </summary>
-        /// <returns><see cref="Guid"/> 命名空间根据名称的查找表。</returns>
-        private static Dictionary<string, Guid> CreateLookupTable()
-        {
-            return new Dictionary<string, Guid>()
-            {
-                [nameof(GuidNamespaces.DNS)] = GuidNamespaces.DNS,
-                [nameof(GuidNamespaces.URL)] = GuidNamespaces.URL,
-                [nameof(GuidNamespaces.OID)] = GuidNamespaces.OID,
-                [nameof(GuidNamespaces.X500)] = GuidNamespaces.X500,
-            };
-        }
-
-        /// <summary>
         /// 尝试根据命名空间的名称查找对应的 <see cref="Guid"/> 命名空间。
         /// </summary>
         /// <param name="nsName">要查找的命名空间的名称。</param>
@@ -71,7 +49,15 @@ namespace XstarS.GuidGenerators
         /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
         public static bool TryFindByName(string nsName, out Guid ns)
         {
-            return LookupTable.TryGetValue(nsName, out ns);
+            ns = nsName switch
+            {
+                nameof(DNS) => GuidNamespaces.DNS,
+                nameof(URL) => GuidNamespaces.URL,
+                nameof(OID) => GuidNamespaces.OID,
+                nameof(X500) => GuidNamespaces.X500,
+                _ => Guid.Empty
+            };
+            return ns != Guid.Empty;
         }
     }
 }
