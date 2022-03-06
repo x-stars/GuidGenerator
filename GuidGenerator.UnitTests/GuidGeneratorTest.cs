@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace XstarS.GuidGenerators
 {
     [TestClass]
+    [DoNotParallelize]
     public class GuidGeneratorTest
     {
         [TestMethod]
