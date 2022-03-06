@@ -56,22 +56,23 @@ GUID 生成命令行工具的工程位于 [GuidGenerator.CommandLine](GuidGenera
 
 ``` CMD
 > GuidGen.exe -?
-Usage: GuidGen[.exe] -?|-H|-Help
-       GuidGen[.exe] [-V1|-V2|-V4] [-Cn]
-       GuidGen[.exe] -V3|-V5 @NS|GuidNS [Name]
+Usage:  GuidGen[.exe] -?|-H|-Help
+        GuidGen[.exe] [-V1|-V2|-V4] [-Cn]
+        GuidGen[.exe] -V3|-V5 :NS|GuidNS [Name]
 Parameters:
-    -V1: generate time-based GUIDs.
-    -V2: generate DCE security GUIDs.
-    -V3: generate name-based GUID by MD5 hashing.
-    -V4: generate pesudo-random GUIDs (default).
-    -V5: generate name-based GUID by SHA1 hashing.
-    -Cn: generate n GUIDs of the current version.
-    @NS: specify a well-known GUID namespace,
-         which can be @DNS, @URL, @OID or @X500.
-    GuidNS: specify a user-defined GUID namespace.
-    Name: specify the name to generate GUID,
-          or keep empty to read from standard input.
-    -?|-H|-Help: show the current help message.
+    -V1     generate time-based GUIDs.
+    -V2     generate DCE security GUIDs.
+    -V3     generate name-based GUID by MD5 hashing.
+    -V4     generate pesudo-random GUIDs (default).
+    -V5     generate name-based GUID by SHA1 hashing.
+    -Cn     generate n GUIDs of the current version.
+    :NS     specify a well-known GUID namespace,
+            which can be :DNS, :URL, :OID or :X500.
+    GuidNS  specify a user-defined GUID namespace.
+    Name    specify the name to generate GUID,
+            or empty to read from standard input.
+    -?|-H|-Help
+            show the current help message.
 ```
 
 ### 命令行工具使用例
@@ -83,8 +84,10 @@ Parameters:
 b3cbe197-3cca-4cd3-bcde-af605e6cac90
 d0bb2cf9-ba9a-4d10-bc58-cfc7b9bd304a
 3b1dc563-7c2e-4827-a1de-63f2eacd6512
-> GuidGen.exe -V5 @DNS github.com
+> GuidGen.exe -V5 :DNS github.com
 6fca3dd2-d61d-58de-9363-1574b382ea68
-> echo github.com | GuidGen.exe -V3 @DNS
-7f4771a0-1982-373d-928f-d31140a51652
+> echo github.com | GuidGen.exe -V5 :DNS
+6fca3dd2-d61d-58de-9363-1574b382ea68
+> GuidGen.exe -V5 00000000-0000-0000-0000-000000000000 ""
+e129f27c-5103-5c5c-844b-cdf0a15e160d
 ```
