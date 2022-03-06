@@ -11,10 +11,10 @@ namespace XstarS.GuidGenerators
             new DateTime(1582, 10, 15, 0, 0, 0, DateTimeKind.Utc);
 
         [TestMethod]
-        public void NewGuid_UnknownVersion_CatchInvalidOperationException()
+        public void NewGuid_EmptyVersion_GetEmptyGuid()
         {
-            Assert.ThrowsException<InvalidOperationException>(
-                () => GuidGenerator.NewGuid(GuidVersion.Unknown));
+            var guid = GuidGenerator.NewGuid(GuidVersion.Empty);
+            Assert.AreEqual(Guid.Empty, guid);
         }
 
         [TestMethod]

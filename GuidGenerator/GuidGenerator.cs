@@ -21,14 +21,14 @@ namespace XstarS.GuidGenerators
         /// <param name="version">要生成的 <see cref="Guid"/> 的版本。</param>
         /// <returns>版本为 <paramref name="version"/> 的 <see cref="GuidGenerator"/>。</returns>
         /// <exception cref="InvalidOperationException">
-        /// <paramref name="version"/> 为 <see cref="GuidVersion.Unknown"/>。</exception>
+        /// <paramref name="version"/> 为 <see cref="GuidVersion.Empty"/>。</exception>
         /// <exception cref="InvalidEnumArgumentException">
         /// <paramref name="version"/> 不为有效的 <see cref="GuidVersion"/> 枚举值。</exception>
         public static GuidGenerator OfVersion(GuidVersion version)
         {
             return version switch
             {
-                Unknown => throw new InvalidOperationException(),
+                Empty => EmptyGuidGenerator.Instance,
                 Version1 => TimeBasedGuidGenerator.Instance,
                 Version2 => DceSecurityGuidGenerator.Instance,
                 Version3 => NameBasedGuidGenerator.MD5Hashing.Instance,
@@ -44,7 +44,7 @@ namespace XstarS.GuidGenerators
         /// <param name="version">要生成的 <see cref="Guid"/> 的版本。</param>
         /// <returns>一个版本为 <paramref name="version"/> 的 <see cref="Guid"/> 实例。</returns>
         /// <exception cref="InvalidOperationException">
-        /// <paramref name="version"/> 为 <see cref="GuidVersion.Unknown"/>。</exception>
+        /// <paramref name="version"/> 为 <see cref="GuidVersion.Empty"/>。</exception>
         /// <exception cref="InvalidEnumArgumentException">
         /// <paramref name="version"/> 不为有效的 <see cref="GuidVersion"/> 枚举值。</exception>
         public static Guid NewGuid(GuidVersion version)
@@ -61,7 +61,7 @@ namespace XstarS.GuidGenerators
         /// <returns>根据 <paramref name="ns"/> 和 <paramref name="name"/>
         /// 生成的版本为 <paramref name="version"/> 的 <see cref="Guid"/> 实例。</returns>
         /// <exception cref="InvalidOperationException">
-        /// <paramref name="version"/> 为 <see cref="GuidVersion.Unknown"/>。</exception>
+        /// <paramref name="version"/> 为 <see cref="GuidVersion.Empty"/>。</exception>
         /// <exception cref="InvalidEnumArgumentException">
         /// <paramref name="version"/> 不为有效的 <see cref="GuidVersion"/> 枚举值。</exception>
         /// <exception cref="ArgumentNullException">
