@@ -8,9 +8,9 @@ namespace XstarS.GuidGenerators
     public enum GuidVersion
     {
         /// <summary>
-        /// 表示未知 GUID 版本。
+        /// 表示 <see cref="Guid.Empty"/> 的版本。
         /// </summary>
-        Unknown = 0,
+        Empty = 0,
         /// <summary>
         /// 表示 RFC 4122 UUID 版本 1。
         /// </summary>
@@ -68,13 +68,22 @@ namespace XstarS.GuidGenerators
             version == GuidVersion.Version4;
 
         /// <summary>
-        /// 获取当前 <see cref="GuidVersion"/> 生成的 <see cref="Guid"/> 是否包含私有 ID 信息。
+        /// 获取当前 <see cref="GuidVersion"/> 生成的 <see cref="Guid"/> 是否包含节点 ID 信息。
         /// </summary>
         /// <param name="version">要获取信息的 <see cref="GuidVersion"/>。</param>
-        /// <returns>若 <paramref name="version"/> 生成的 <see cref="Guid"/> 包含私有 ID 信息，
+        /// <returns>若 <paramref name="version"/> 生成的 <see cref="Guid"/> 包含节点 ID 信息，
         /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
-        public static bool ContainsPrivateID(this GuidVersion version) =>
+        public static bool ContainsNodeID(this GuidVersion version) =>
             version == GuidVersion.Version1 ||
+            version == GuidVersion.Version2;
+
+        /// <summary>
+        /// 获取当前 <see cref="GuidVersion"/> 生成的 <see cref="Guid"/> 是否包含用户 ID 信息。
+        /// </summary>
+        /// <param name="version">要获取信息的 <see cref="GuidVersion"/>。</param>
+        /// <returns>若 <paramref name="version"/> 生成的 <see cref="Guid"/> 包含用户 ID 信息，
+        /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
+        public static bool ContainsUserID(this GuidVersion version) =>
             version == GuidVersion.Version2;
     }
 }

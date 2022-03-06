@@ -71,13 +71,16 @@ namespace XstarS.GuidGenerators
             return DateTime.UtcNow.Ticks - begin.Ticks;
         }
 
-        private unsafe void FillTimestampFields(byte[] guidBytes, long timestamp)
+        private void FillTimestampFields(byte[] guidBytes, long timestamp)
         {
             if (BitConverter.IsLittleEndian)
             {
-                fixed (byte* pGuidBytes = &guidBytes[0])
+                unsafe
                 {
-                    *(long*)pGuidBytes = timestamp;
+                    fixed (byte* pGuidBytes = &guidBytes[0])
+                    {
+                        *(long*)pGuidBytes = timestamp;
+                    }
                 }
             }
             else
@@ -90,13 +93,16 @@ namespace XstarS.GuidGenerators
             }
         }
 
-        private unsafe void FillClockSequenceField(byte[] guidBytes, int clockSeq)
+        private void FillClockSequenceField(byte[] guidBytes, int clockSeq)
         {
             if (BitConverter.IsLittleEndian)
             {
-                fixed (byte* pGuidBytes = &guidBytes[8])
+                unsafe
                 {
-                    *(int*)pGuidBytes = clockSeq;
+                    fixed (byte* pGuidBytes = &guidBytes[8])
+                    {
+                        *(int*)pGuidBytes = clockSeq;
+                    }
                 }
             }
             else

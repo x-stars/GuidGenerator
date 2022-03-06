@@ -7,9 +7,6 @@ namespace XstarS.GuidGenerators
     [TestClass]
     public class GuidGeneratorTest
     {
-        private readonly DateTime BaseTimestamp =
-            new DateTime(1582, 10, 15, 0, 0, 0, DateTimeKind.Utc);
-
         [TestMethod]
         public void NewGuid_EmptyVersion_GetEmptyGuid()
         {
@@ -28,16 +25,11 @@ namespace XstarS.GuidGenerators
         public void NewGuid_Version1_GetExpectedTimestamp()
         {
             var guid = GuidGenerator.NewGuid(GuidVersion.Version1);
-            var guidBytes = guid.ToByteArray();
-            if (!BitConverter.IsLittleEndian)
-            {
-                Array.Reverse(guidBytes, 0, 8);
-            }
-            var timestamp = BitConverter.ToInt64(guidBytes, 0);
-            timestamp &= ~((long)0xF0 << (7 * 8));
+            var hasTs = guid.TryGetTimestamp(out var timestamp);
+            Assert.IsTrue(hasTs);
+            var ticksTs = timestamp.Ticks;
             var ticksNow = DateTime.UtcNow.Ticks;
-            var ticksBase = this.BaseTimestamp.Ticks;
-            var ticksDiff = (ticksNow - ticksBase) - timestamp;
+            var ticksDiff = ticksNow - ticksTs;
             var ticks1s = TimeSpan.FromSeconds(1).Ticks;
             Assert.IsTrue(ticksDiff < ticks1s);
         }
