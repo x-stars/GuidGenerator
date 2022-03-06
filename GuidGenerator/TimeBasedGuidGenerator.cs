@@ -53,15 +53,11 @@ namespace XstarS.GuidGenerators
         public override Guid NewGuid()
         {
             var guidBytes = new byte[16];
-            var timestamp = this.GetCurrentTimestamp();
-            this.FillTimestampFields(guidBytes, timestamp);
-            var version = (int)this.Version << 4;
-            guidBytes[7] = (byte)(guidBytes[7] & ~0xF0 | version);
-            var clockSeq = Interlocked.Increment(ref this.ClockSequence);
-            this.FillClockSeqFields(guidBytes, clockSeq);
-            guidBytes[8] = (byte)(guidBytes[8] & ~0xC0 | 0x80);
-            var macAddress = TimeBasedGuidGenerator.LocalMacAddressBytes;
-            Array.Copy(macAddress, 0, guidBytes, 10, macAddress.Length);
+            this.FillTimestampFields(guidBytes);
+            this.FillVersionField(guidBytes);
+            this.FillClockSeqFields(guidBytes);
+            this.FillVariantField(guidBytes);
+            this.FillNodeIDFields(guidBytes);
             return new Guid(guidBytes);
         }
 
@@ -71,8 +67,9 @@ namespace XstarS.GuidGenerators
             return DateTime.UtcNow.Ticks - begin.Ticks;
         }
 
-        private void FillTimestampFields(byte[] guidBytes, long timestamp)
+        private void FillTimestampFields(byte[] guidBytes)
         {
+            var timestamp = this.GetCurrentTimestamp();
             if (BitConverter.IsLittleEndian)
             {
                 unsafe
@@ -93,10 +90,17 @@ namespace XstarS.GuidGenerators
             }
         }
 
-        private void FillClockSeqFields(byte[] guidBytes, int clockSeq)
+        private void FillClockSeqFields(byte[] guidBytes)
         {
+            var clockSeq = Interlocked.Increment(ref this.ClockSequence);
             guidBytes[8] = (byte)(clockSeq >> (1 * 8));
             guidBytes[9] = (byte)(clockSeq >> (0 * 8));
+        }
+
+        private void FillNodeIDFields(byte[] guidBytes)
+        {
+            var nodeID = TimeBasedGuidGenerator.LocalMacAddressBytes;
+            Array.Copy(nodeID, 0, guidBytes, 10, nodeID.Length);
         }
     }
 }

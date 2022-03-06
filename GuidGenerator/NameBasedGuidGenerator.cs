@@ -68,9 +68,8 @@ namespace XstarS.GuidGenerators
                 Array.Reverse(guidBytes, 4, 2);
                 Array.Reverse(guidBytes, 6, 2);
             }
-            var version = (int)this.Version << 4;
-            guidBytes[7] = (byte)(guidBytes[7] & ~0xF0 | version);
-            guidBytes[8] = (byte)(guidBytes[8] & ~0xC0 | 0x80);
+            this.FillVersionField(guidBytes);
+            this.FillVariantField(guidBytes);
             return guidBytes;
         }
 

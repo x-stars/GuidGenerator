@@ -93,5 +93,24 @@ namespace XstarS.GuidGenerators
         /// <exception cref="ArgumentNullException">
         /// <paramref name="name"/> 为 <see langword="null"/>。</exception>
         public virtual Guid NewGuid(Guid ns, string name) => this.NewGuid();
+
+        /// <summary>
+        /// 填充 <see cref="Guid"/> 字节数组中表示 GUID 版本的字段。
+        /// </summary>
+        /// <param name="guidBytes">要填充的 <see cref="Guid"/> 字节数组。</param>
+        protected void FillVersionField(byte[] guidBytes)
+        {
+            var version = (int)this.Version << 4;
+            guidBytes[7] = (byte)(guidBytes[7] & ~0xF0 | version);
+        }
+
+        /// <summary>
+        /// 填充 <see cref="Guid"/> 字节数组中表示 GUID 变体的字段。
+        /// </summary>
+        /// <param name="guidBytes">要填充的 <see cref="Guid"/> 字节数组。</param>
+        protected virtual void FillVariantField(byte[] guidBytes)
+        {
+            guidBytes[8] = (byte)(guidBytes[8] & ~0xC0 | 0x80);
+        }
     }
 }
