@@ -1,17 +1,13 @@
-﻿using System;
+﻿using XstarS.GuidGenerators.Commands;
 
 namespace XstarS.GuidGenerators
 {
     internal static class Program
     {
-        internal static void Main(string[] args)
+        internal static int Main(string[] args)
         {
-            foreach (var verNum in 0..6)
-            {
-                var version = (GuidVersion)verNum;
-                var guid = GuidGenerator.NewGuid(version);
-                Console.WriteLine(guid.ToString());
-            }
+            var result = ProgramCommand.Execute(args);
+            return result ? 0 : 1;
         }
     }
 }
