@@ -56,9 +56,9 @@ GUID 生成命令行工具的工程位于 [GuidGenerator.CommandLine](GuidGenera
 
 ``` CMD
 > GuidGen.exe -?
-Usage:  GuidGen[.exe] -?|-H|-Help
-        GuidGen[.exe] [-V1|-V2|-V4] [-Cn]
+Usage:  GuidGen[.exe] [-V1|-V2|-V4] [-Cn]
         GuidGen[.exe] -V3|-V5 :NS|GuidNS [Name]
+        GuidGen[.exe] -?|-H|-Help
 Parameters:
     -V1     generate time-based GUIDs.
     -V2     generate DCE security GUIDs.
