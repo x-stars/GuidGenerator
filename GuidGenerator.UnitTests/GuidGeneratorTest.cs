@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace XstarS.GuidGenerators
@@ -16,9 +15,9 @@ namespace XstarS.GuidGenerators
         }
 
         [TestMethod]
-        public void NewGuid_InvalidVersionEnum_CatchInvalidEnumArgumentException()
+        public void NewGuid_InvalidVersionEnum_CatchArgumentOutOfRangeException()
         {
-            Assert.ThrowsException<InvalidEnumArgumentException>(
+            Assert.ThrowsException<ArgumentOutOfRangeException>(
                 () => GuidGenerator.NewGuid((GuidVersion)(-1)));
         }
 
