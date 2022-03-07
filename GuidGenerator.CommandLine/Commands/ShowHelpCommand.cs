@@ -29,9 +29,9 @@ namespace XstarS.GuidGenerators.Commands
             var cmdName = this.GetCommandName();
             var helpLines = new[]
             {
-                $"Usage:  {cmdName} -?|-H|-Help",
-                $"        {cmdName} [-V1|-V2|-V4] [-Cn]",
+                $"Usage:  {cmdName} [-V1|-V2|-V4] [-Cn]",
                 $"        {cmdName} -V3|-V5 :NS|GuidNS [Name]",
+                $"        {cmdName} -?|-H|-Help",
                 "Parameters:",
                 "    -V1     generate time-based GUIDs.",
                 "    -V2     generate DCE security GUIDs.",
