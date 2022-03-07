@@ -27,20 +27,17 @@ internal static class RangeEnumerable
     {
         return new RangeEnumerator(range);
     }
-}
 
-namespace System
-{
     [CompilerGenerated, DebuggerNonUserCode]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    internal struct RangeEnumerator
+    public struct RangeEnumerator
     {
         private int CurrentIndex;
 
         private readonly int EndIndex;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public RangeEnumerator(Range range)
+        internal RangeEnumerator(Range range)
         {
             var pair = new IndexPair() { Range = range };
             int start = pair.StartIndex, end = pair.EndIndex;
