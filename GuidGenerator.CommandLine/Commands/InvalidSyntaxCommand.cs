@@ -19,7 +19,7 @@ namespace XstarS.GuidGenerators.Commands
             };
             foreach (var errorLine in errorLines)
             {
-                Console.WriteLine(errorLine);
+                Console.Error.WriteLine(errorLine);
             }
             return false;
         }
