@@ -12,7 +12,8 @@ namespace XstarS.GuidGenerators
 
         private DceSecurityGuidGenerator()
         {
-            this.LazyIPAddressLastByte = new Lazy<byte>(this.GetIPAddressLastByte);
+            this.LazyIPAddressLastByte =
+                new Lazy<byte>(this.GetIPAddressLastByte);
         }
 
         internal static new DceSecurityGuidGenerator Instance
@@ -142,9 +143,9 @@ namespace XstarS.GuidGenerators
                 whoamiProc.BeginOutputReadLine();
                 whoamiProc.WaitForExit();
                 var userSIDs = userSID.Split('-');
-                var userID = ushort.Parse(userSIDs[^1]);
-                var domainID = ushort.Parse(userSIDs[3]);
-                return (userID << (2 * 8)) | domainID;
+                var userID = (int)ulong.Parse(userSIDs[^1]);
+                var domainID = (byte)ulong.Parse(userSIDs[3]);
+                return (userID << (1 * 8)) | domainID;
             }
 
             protected override int GetUserID() => this.LazyUserDomainID.Value;
@@ -198,7 +199,7 @@ namespace XstarS.GuidGenerators
                 };
                 idProc.BeginOutputReadLine();
                 idProc.WaitForExit();
-                return ushort.Parse(userID);
+                return (ushort)ulong.Parse(userID);
             }
 
             protected override int GetUserID() => this.LazyUserGroupID.Value;
