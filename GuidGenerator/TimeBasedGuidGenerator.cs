@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -13,14 +14,21 @@ namespace XstarS.GuidGenerators
                 new TimeBasedGuidGenerator();
         }
 
+        private readonly DateTime StartTimestamp;
+
+        private readonly Stopwatch HiResTimer;
+
         private volatile int ClockSequence;
 
         private readonly Lazy<byte[]> LazyMacAddressBytes;
 
         protected TimeBasedGuidGenerator()
         {
+            this.StartTimestamp = DateTime.UtcNow;
+            this.HiResTimer = Stopwatch.StartNew();
             this.ClockSequence = new Random().Next();
-            this.LazyMacAddressBytes = new Lazy<byte[]>(this.GetMacAdddressBytes);
+            this.LazyMacAddressBytes =
+                new Lazy<byte[]>(this.GetMacAdddressBytes);
         }
 
         internal static TimeBasedGuidGenerator Instance
@@ -60,8 +68,8 @@ namespace XstarS.GuidGenerators
 
         private long GetCurrentTimestamp()
         {
-            var begin = GuidExtensions.BaseTimestamp;
-            return DateTime.UtcNow.Ticks - begin.Ticks;
+            var nowTs = this.StartTimestamp + this.HiResTimer.Elapsed;
+            return nowTs.Ticks - GuidExtensions.BaseTimestamp.Ticks;
         }
 
         private void FillTimestampFields(byte[] guidBytes)
