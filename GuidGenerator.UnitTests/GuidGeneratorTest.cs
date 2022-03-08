@@ -60,7 +60,8 @@ namespace XstarS.GuidGenerators
             }
             var clockSeq1 = BitConverter.ToUInt16(guidBytes1, 8);
             clockSeq1 = (ushort)(clockSeq1 & ~0xC000);
-            Assert.AreEqual(clockSeq0 + 1, clockSeq1);
+            var expected = (ushort)((clockSeq0 + 1) & ~0xC000);
+            Assert.AreEqual(expected, clockSeq1);
         }
 
         [TestMethod]
@@ -102,7 +103,8 @@ namespace XstarS.GuidGenerators
             var guidBytes1 = guid1.ToByteArray();
             var clockSeq1 = guidBytes1[8];
             clockSeq1 = (byte)(clockSeq1 & ~0xC0);
-            Assert.AreEqual(clockSeq0 + 1, clockSeq1);
+            var expected = (byte)((clockSeq0 + 1) & ~0xC0);
+            Assert.AreEqual(expected, clockSeq1);
         }
 
         [TestMethod]
