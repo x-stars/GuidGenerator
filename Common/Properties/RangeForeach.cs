@@ -8,7 +8,7 @@
 //   foreach (var index in 0..100) { /* ... */ }
 // which is equivalent to the legacy for-loop below:
 //   for (int i = 0; i < 100; i++) { /* ... */ }
-// NOTE: use '^' to represent negative numbers,
+// NOTE: Use '^' to represent negative numbers,
 //       e.g. ^100..0 (instead of -100..0).
 
 #nullable disable
@@ -21,23 +21,29 @@ using System.Runtime.InteropServices;
 
 [CompilerGenerated, DebuggerNonUserCode]
 [EditorBrowsable(EditorBrowsableState.Never)]
+[Obsolete(RangeEnumerable.NoDirectUsageMessage)]
 internal static class RangeEnumerable
 {
-    public static RangeEnumerator GetEnumerator(this Range range)
+    internal const string NoDirectUsageMessage =
+        "This type supports the range-foreach syntax " +
+        "and should not be used directly in user code.";
+
+    public static Enumerator GetEnumerator(this Range range)
     {
-        return new RangeEnumerator(range);
+        return new Enumerator(range);
     }
 
     [CompilerGenerated, DebuggerNonUserCode]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public struct RangeEnumerator
+    [Obsolete(RangeEnumerable.NoDirectUsageMessage)]
+    public struct Enumerator
     {
         private int CurrentIndex;
 
         private readonly int EndIndex;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal RangeEnumerator(Range range)
+        internal Enumerator(Range range)
         {
             var pair = new IndexPair() { Range = range };
             int start = pair.StartIndex, end = pair.EndIndex;
@@ -63,12 +69,13 @@ internal static class RangeEnumerable
 #if !(NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// NOTE: some APIs have been removed for code size and compatibility reasons.
+// NOTE: Some APIs have been removed for compatibility reasons.
 
 namespace System
 {
     [CompilerGenerated, DebuggerNonUserCode]
     [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete(RangeEnumerable.NoDirectUsageMessage)]
     internal readonly struct Index : IEquatable<Index>
     {
         private readonly int _value;
@@ -107,7 +114,7 @@ namespace System
         }
 
         public override bool Equals(object value) =>
-            (value is Index other) && (this._value == other._value);
+            (value is Index other) && this.Equals(other);
 
         public bool Equals(Index other) => this._value == other._value;
 
@@ -127,6 +134,7 @@ namespace System
 
     [CompilerGenerated, DebuggerNonUserCode]
     [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete(RangeEnumerable.NoDirectUsageMessage)]
     internal readonly struct Range : IEquatable<Range>
     {
         public Index Start { get; }
@@ -136,13 +144,16 @@ namespace System
         public Range(Index start, Index end) { this.Start = start; this.End = end; }
 
         public override bool Equals(object value) =>
-            (value is Range other) && this.Start.Equals(other.Start) && this.End.Equals(other.End);
+            (value is Range other) && this.Equals(other);
 
-        public bool Equals(Range other) => this.Start.Equals(other.Start) && this.End.Equals(other.End);
+        public bool Equals(Range other) =>
+            this.Start.Equals(other.Start) && this.End.Equals(other.End);
 
-        public override int GetHashCode() => this.Start.GetHashCode() * 31 + this.End.GetHashCode();
+        public override int GetHashCode() =>
+            this.Start.GetHashCode() * 31 + this.End.GetHashCode();
 
-        public override string ToString() => this.Start.ToString() + ".." + this.End.ToString();
+        public override string ToString() =>
+            this.Start.ToString() + ".." + this.End.ToString();
 
         public static Range StartAt(Index start) => new Range(start, Index.End);
 
