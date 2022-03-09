@@ -17,7 +17,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 [CompilerGenerated, DebuggerNonUserCode]
 [EditorBrowsable(EditorBrowsableState.Never)]
@@ -45,24 +44,13 @@ internal static class RangeEnumerable
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal Enumerator(Range range)
         {
-            var pair = new IndexPair() { Range = range };
-            int start = pair.StartIndex, end = pair.EndIndex;
-            this.CurrentIndex = start - (start >> 31) - 1;
-            this.EndIndex = end - (end >> 31);
+            this.CurrentIndex = range.Start.GetOffset(0) - 1;
+            this.EndIndex = range.End.GetOffset(0);
         }
 
         public int Current => this.CurrentIndex;
 
         public bool MoveNext() => ++this.CurrentIndex < this.EndIndex;
-
-        [StructLayout(LayoutKind.Explicit)]
-        [CompilerGenerated, DebuggerNonUserCode]
-        private struct IndexPair
-        {
-            [FieldOffset(0)] public Range Range;
-            [FieldOffset(0)] public int StartIndex;
-            [FieldOffset(4)] public int EndIndex;
-        }
     }
 }
 
