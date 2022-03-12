@@ -32,12 +32,16 @@ namespace XstarS.GuidGenerators.Commands
             return false;
         }
 
+        private bool SupportPathExt =>
+            Environment.OSVersion.Platform < PlatformID.Unix;
+
         protected string GetCommandName()
         {
             var cmdPath = Environment.GetCommandLineArgs()[0];
             var cmdName = Path.GetFileNameWithoutExtension(cmdPath);
             var cmdExt = Path.GetExtension(cmdPath);
-            if (cmdExt.Length != 0) { cmdName += $"[{cmdExt}]"; }
+            if (this.SupportPathExt) { cmdExt = $"[{cmdExt}]"; }
+            if (cmdExt.Length != 0) { cmdName += cmdExt; }
             return cmdName;
         }
 
