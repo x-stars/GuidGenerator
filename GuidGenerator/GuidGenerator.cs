@@ -104,8 +104,9 @@ namespace XstarS.GuidGenerators
         /// <param name="guid">要填充字段的 <see cref="Guid"/>。</param>
         protected virtual void FillVariantField(ref Guid guid)
         {
-            ref var clkSeq_Var = ref guid.ClkSeqHi_Var();
-            clkSeq_Var = (byte)(clkSeq_Var & ~0xC0 | 0x80);
+            const int shiftVar = 0x80;
+            ref var clkSeqHi_Var = ref guid.ClkSeqHi_Var();
+            clkSeqHi_Var = (byte)(clkSeqHi_Var & ~0xC0 | shiftVar);
         }
     }
 }

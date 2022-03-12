@@ -63,15 +63,15 @@ namespace XstarS.GuidGenerators
         /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
         public static unsafe bool TryGetNodeID(this Guid guid, out byte[] nodeID)
         {
-            nodeID = new byte[6];
+            const int size = 6;
+            nodeID = new byte[size];
             if (!guid.GetVersion().ContainsNodeID())
             {
                 return false;
             }
-            var pGuidNodeID = guid.NodeID();
             fixed (byte* pNodeID = &nodeID[0])
             {
-                Buffer.MemoryCopy(pGuidNodeID, pNodeID, 6, 6);
+                Buffer.MemoryCopy(guid.NodeID(), pNodeID, size, size);
             }
             return true;
         }

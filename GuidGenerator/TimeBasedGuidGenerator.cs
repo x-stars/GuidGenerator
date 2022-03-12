@@ -89,11 +89,11 @@ namespace XstarS.GuidGenerators
 
         private unsafe void FillNodeIDFields(ref Guid guid)
         {
-            var fNodeID = guid.NodeID();
             var nodeID = this.LazyMacAddressBytes.Value;
+            var size = Math.Min(nodeID.Length, 6);
             fixed (byte* pNodeID = &nodeID[0])
             {
-                Buffer.MemoryCopy(pNodeID, fNodeID, 6, 6);
+                Buffer.MemoryCopy(pNodeID, guid.NodeID(), size, size);
             }
         }
     }

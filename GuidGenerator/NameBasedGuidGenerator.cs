@@ -39,10 +39,11 @@ namespace XstarS.GuidGenerators
 
         private unsafe byte[] CreateInput(Guid ns, string name)
         {
+            const int guidSize = 16;
             var nameBytes = Encoding.UTF8.GetBytes(name);
-            var input = new byte[16 + nameBytes.Length];
+            var input = new byte[guidSize + nameBytes.Length];
             fixed (byte* pInput = &input[0]) { ns.WriteUuidBytes(pInput); }
-            Buffer.BlockCopy(nameBytes, 0, input, 16, nameBytes.Length);
+            Buffer.BlockCopy(nameBytes, 0, input, guidSize, nameBytes.Length);
             return input;
         }
 
