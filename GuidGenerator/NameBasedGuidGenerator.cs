@@ -30,17 +30,21 @@ namespace XstarS.GuidGenerators
                 throw new ArgumentNullException(nameof(name));
             }
 
-            var nsBytes = ns.ToUuidByteArray();
-            var nameBytes = Encoding.UTF8.GetBytes(name);
-            var input = new byte[nsBytes.Length + nameBytes.Length];
-            Array.Copy(nsBytes, 0, input, 0, nsBytes.Length);
-            Array.Copy(nameBytes, 0, input, nsBytes.Length, nameBytes.Length);
+            var input = this.CreateInput(ns, name);
             var hashBytes = this.ComputeHash(input);
-            var guidBytes = this.GetGuidBytes(hashBytes);
-            return new Guid(guidBytes);
+            return this.HashBytesToGuid(hashBytes);
         }
 
         protected abstract HashAlgorithm CreateHashing();
+
+        private unsafe byte[] CreateInput(Guid ns, string name)
+        {
+            var nameBytes = Encoding.UTF8.GetBytes(name);
+            var input = new byte[16 + nameBytes.Length];
+            fixed (byte* pInput = &input[0]) { ns.WriteUuidBytes(pInput); }
+            Buffer.BlockCopy(nameBytes, 0, input, 16, nameBytes.Length);
+            return input;
+        }
 
         private byte[] ComputeHash(byte[] input)
         {
@@ -58,19 +62,17 @@ namespace XstarS.GuidGenerators
             return hash;
         }
 
-        private byte[] GetGuidBytes(byte[] hashBytes)
+        private unsafe Guid HashBytesToGuid(byte[] hashBytes)
         {
-            var guidBytes = new byte[16];
-            Array.Copy(hashBytes, 0, guidBytes, 0, 16);
-            if (BitConverter.IsLittleEndian)
+            var guid = default(Guid);
+            fixed (byte* pHashBytes = &hashBytes[0])
             {
-                Array.Reverse(guidBytes, 0, 4);
-                Array.Reverse(guidBytes, 4, 2);
-                Array.Reverse(guidBytes, 6, 2);
+                var uuid = *(Guid*)pHashBytes;
+                uuid.WriteUuidBytes((byte*)&guid);
             }
-            this.FillVersionField(guidBytes);
-            this.FillVariantField(guidBytes);
-            return guidBytes;
+            this.FillVersionField(ref guid);
+            this.FillVariantField(ref guid);
+            return guid;
         }
 
         internal sealed class MD5Hashing : NameBasedGuidGenerator

@@ -46,19 +46,11 @@ namespace XstarS.GuidGenerators
         {
             var guid0 = GuidGenerator.NewGuid(GuidVersion.Version1);
             var guidBytes0 = guid0.ToByteArray();
-            if (BitConverter.IsLittleEndian)
-            {
-                Array.Reverse(guidBytes0, 8, 2);
-            }
-            var clockSeq0 = BitConverter.ToUInt16(guidBytes0, 8);
+            var clockSeq0 = (guidBytes0[8] << 8) | guidBytes0[9];
             clockSeq0 &= (ushort)(clockSeq0 & ~0xC000);
             var guid1 = GuidGenerator.NewGuid(GuidVersion.Version1);
             var guidBytes1 = guid1.ToByteArray();
-            if (BitConverter.IsLittleEndian)
-            {
-                Array.Reverse(guidBytes1, 8, 2);
-            }
-            var clockSeq1 = BitConverter.ToUInt16(guidBytes1, 8);
+            var clockSeq1 = (guidBytes1[8] << 8) | guidBytes1[9];
             clockSeq1 = (ushort)(clockSeq1 & ~0xC000);
             var expected = (ushort)((clockSeq0 + 1) & ~0xC000);
             Assert.AreEqual(expected, clockSeq1);

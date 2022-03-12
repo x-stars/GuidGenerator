@@ -88,22 +88,24 @@ namespace XstarS.GuidGenerators
         public virtual Guid NewGuid(Guid ns, string name) => this.NewGuid();
 
         /// <summary>
-        /// 填充 <see cref="Guid"/> 字节数组中表示 GUID 版本的字段。
+        /// 填充 <see cref="Guid"/> 中表示 GUID 版本的字段。
         /// </summary>
-        /// <param name="guidBytes">要填充的 <see cref="Guid"/> 字节数组。</param>
-        protected void FillVersionField(byte[] guidBytes)
+        /// <param name="guid">要填充字段的 <see cref="Guid"/>。</param>
+        protected void FillVersionField(ref Guid guid)
         {
-            var version = (int)this.Version << 4;
-            guidBytes[7] = (byte)(guidBytes[7] & ~0xF0 | version);
+            var shiftVer = (int)this.Version << (3 * 4);
+            ref var timeHi_Ver = ref guid.TimeHi_Ver();
+            timeHi_Ver = (ushort)(timeHi_Ver & ~0xF000 | shiftVer);
         }
 
         /// <summary>
-        /// 填充 <see cref="Guid"/> 字节数组中表示 GUID 变体的字段。
+        /// 填充 <see cref="Guid"/> 中表示 GUID 变体的字段。
         /// </summary>
-        /// <param name="guidBytes">要填充的 <see cref="Guid"/> 字节数组。</param>
-        protected virtual void FillVariantField(byte[] guidBytes)
+        /// <param name="guid">要填充字段的 <see cref="Guid"/>。</param>
+        protected virtual void FillVariantField(ref Guid guid)
         {
-            guidBytes[8] = (byte)(guidBytes[8] & ~0xC0 | 0x80);
+            ref var clkSeq_Var = ref guid.ClkSeqHi_Var();
+            clkSeq_Var = (byte)(clkSeq_Var & ~0xC0 | 0x80);
         }
     }
 }

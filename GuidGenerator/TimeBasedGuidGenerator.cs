@@ -57,13 +57,13 @@ namespace XstarS.GuidGenerators
 
         public override Guid NewGuid()
         {
-            var guidBytes = new byte[16];
-            this.FillTimestampFields(guidBytes);
-            this.FillVersionField(guidBytes);
-            this.FillClockSeqFields(guidBytes);
-            this.FillVariantField(guidBytes);
-            this.FillNodeIDFields(guidBytes);
-            return new Guid(guidBytes);
+            var guid = default(Guid);
+            this.FillTimestampFields(ref guid);
+            this.FillVersionField(ref guid);
+            this.FillClockSeqFields(ref guid);
+            this.FillVariantField(ref guid);
+            this.FillNodeIDFields(ref guid);
+            return guid;
         }
 
         private long GetCurrentTimestamp()
@@ -72,40 +72,29 @@ namespace XstarS.GuidGenerators
             return nowTs.Ticks - GuidExtensions.BaseTimestamp.Ticks;
         }
 
-        private void FillTimestampFields(byte[] guidBytes)
+        private void FillTimestampFields(ref Guid guid)
         {
             var timestamp = this.GetCurrentTimestamp();
-            if (BitConverter.IsLittleEndian)
-            {
-                unsafe
-                {
-                    fixed (byte* pGuidBytes = &guidBytes[0])
-                    {
-                        *(long*)pGuidBytes = timestamp;
-                    }
-                }
-            }
-            else
-            {
-                foreach (var index in 0..8)
-                {
-                    var shifted = timestamp >> (index * 8);
-                    guidBytes[index] = (byte)shifted;
-                }
-            }
+            guid.TimeLow() = (uint)(timestamp >> (0 * 8));
+            guid.TimeMid() = (ushort)(timestamp >> (4 * 8));
+            guid.TimeHi_Ver() = (ushort)(timestamp >> (6 * 8));
         }
 
-        private void FillClockSeqFields(byte[] guidBytes)
+        private void FillClockSeqFields(ref Guid guid)
         {
             var clockSeq = Interlocked.Increment(ref this.ClockSequence);
-            guidBytes[8] = (byte)(clockSeq >> (1 * 8));
-            guidBytes[9] = (byte)(clockSeq >> (0 * 8));
+            guid.ClkSeqLow() = (byte)(clockSeq >> (0 * 8));
+            guid.ClkSeqHi_Var() = (byte)(clockSeq >> (1 * 8));
         }
 
-        private void FillNodeIDFields(byte[] guidBytes)
+        private unsafe void FillNodeIDFields(ref Guid guid)
         {
+            var fNodeID = guid.NodeID();
             var nodeID = this.LazyMacAddressBytes.Value;
-            Array.Copy(nodeID, 0, guidBytes, 10, nodeID.Length);
+            fixed (byte* pNodeID = &nodeID[0])
+            {
+                Buffer.MemoryCopy(pNodeID, fNodeID, 6, 6);
+            }
         }
     }
 }

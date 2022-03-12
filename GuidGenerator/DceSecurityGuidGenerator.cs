@@ -63,42 +63,25 @@ namespace XstarS.GuidGenerators
         public override Guid NewGuid()
         {
             var guid = base.NewGuid();
-            var guidBytes = guid.ToByteArray();
-            this.FillUserIDFields(guidBytes);
-            guidBytes[8] = guidBytes[9];
-            this.FillVariantField(guidBytes);
-            this.FillSiteIDField(guidBytes);
-            return new Guid(guidBytes);
+            this.FillUserIDFields(ref guid);
+            guid.ClkSeqHi_Var() = guid.ClkSeqLow();
+            this.FillVariantField(ref guid);
+            this.FillSiteIDField(ref guid);
+            return guid;
         }
 
         protected abstract int GetUserID();
 
-        private void FillUserIDFields(byte[] guidBytes)
+        private void FillUserIDFields(ref Guid guid)
         {
             var userID = this.GetUserID();
-            if (BitConverter.IsLittleEndian)
-            {
-                unsafe
-                {
-                    fixed (byte* pGuidBytes = &guidBytes[0])
-                    {
-                        *(int*)pGuidBytes = userID;
-                    }
-                }
-            }
-            else
-            {
-                foreach (var index in 0..4)
-                {
-                    var shifted = userID >> (index * 8);
-                    guidBytes[index] = (byte)shifted;
-                }
-            }
+            guid.TimeLow() = (uint)userID;
         }
 
-        private void FillSiteIDField(byte[] guidBytes)
+        private void FillSiteIDField(ref Guid guid)
         {
-            guidBytes[9] = this.LazyIPAddressLastByte.Value;
+            var siteID = this.LazyIPAddressLastByte.Value;
+            guid.ClkSeqLow() = (byte)siteID;
         }
 
         private sealed class WindowsUID : DceSecurityGuidGenerator
