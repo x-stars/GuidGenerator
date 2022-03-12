@@ -45,10 +45,10 @@ namespace XstarS.GuidGenerators.Commands
                 {
                     return false;
                 }
-                int.TryParse(countArg.Substring(2), out count);
-                if (count < 0) { return false; }
+                var parsed = int.TryParse(countArg.Substring(2), out count);
+                if (!parsed || (count < 0)) { return false; }
             }
-            foreach (var _ in 0..count)
+            foreach (var _ in ..count)
             {
                 var guid = GuidGenerator.NewGuid(version);
                 Console.WriteLine(guid.ToString());
