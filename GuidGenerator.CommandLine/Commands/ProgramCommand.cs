@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace XstarS.GuidGenerators.Commands
@@ -9,18 +10,19 @@ namespace XstarS.GuidGenerators.Commands
 
         public static bool Execute(string[] args)
         {
-            var commands = new ProgramCommand[]
+            IEnumerable<ProgramCommand> GetCommandChain()
             {
-                NewNoNameGuidCommand.Default,
-                NewNoNameGuidCommand.Version1,
-                NewNoNameGuidCommand.Version2,
-                NewNameBasedGuidCommand.Version3,
-                NewNoNameGuidCommand.Version4,
-                NewNameBasedGuidCommand.Version5,
-                ShowHelpCommand.Instance,
-                InvalidSyntaxCommand.Instance,
-            };
-            foreach (var command in commands)
+                yield return NewNoNameGuidCommand.Default;
+                yield return NewNoNameGuidCommand.Version1;
+                yield return NewNoNameGuidCommand.Version2;
+                yield return NewNameBasedGuidCommand.Version3;
+                yield return NewNoNameGuidCommand.Version4;
+                yield return NewNameBasedGuidCommand.Version5;
+                yield return ShowHelpCommand.Instance;
+                yield return InvalidSyntaxCommand.Instance;
+            }
+
+            foreach (var command in GetCommandChain())
             {
                 if (command.TryExecute(args))
                 {
