@@ -5,7 +5,7 @@ namespace XstarS.GuidGenerators
     /// <summary>
     /// 提供 <see cref="Guid"/> 的扩展方法。
     /// </summary>
-    public static class GuidExtensions
+    public static unsafe class GuidExtensions
     {
         /// <summary>
         /// 表示 <see cref="Guid"/> 使用的基准时间戳。
@@ -30,7 +30,7 @@ namespace XstarS.GuidGenerators
         /// <returns>若当前 <see cref="Guid"/> 的版本为
         /// <see cref="GuidVersion.Version1"/> 或 <see cref="GuidVersion.Version2"/>，
         /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
-        public static unsafe bool TryGetTimestamp(this Guid guid, out DateTime timestamp)
+        public static bool TryGetTimestamp(this Guid guid, out DateTime timestamp)
         {
             var version = guid.GetVersion();
             if (!version.IsTimeBased())
@@ -61,7 +61,7 @@ namespace XstarS.GuidGenerators
         /// <returns>若当前 <see cref="Guid"/> 的版本为
         /// <see cref="GuidVersion.Version1"/> 或 <see cref="GuidVersion.Version2"/>，
         /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
-        public static unsafe bool TryGetNodeID(this Guid guid, out byte[] nodeID)
+        public static bool TryGetNodeID(this Guid guid, out byte[] nodeID)
         {
             const int size = 6;
             nodeID = new byte[size];
@@ -82,7 +82,7 @@ namespace XstarS.GuidGenerators
         /// <param name="guid">要获取字节数组的 <see cref="Guid"/>。</param>
         /// <returns>包含 <paramref name="guid"/> 的值的 16 元素字节数组，
         /// 其 0-3、4-5 以及 6-7 字节均按照大端序排列，以符合 RFC 4122 UUID 标准。</returns>
-        public static unsafe byte[] ToUuidByteArray(this Guid guid)
+        public static byte[] ToUuidByteArray(this Guid guid)
         {
             var uuidBytes = new byte[16];
             fixed (byte* pUuidBytes = &uuidBytes[0])
@@ -97,7 +97,7 @@ namespace XstarS.GuidGenerators
         /// </summary>
         /// <param name="guid">作为字节来源的 <see cref="Guid"/>。</param>
         /// <param name="destination">要写入 <see cref="Guid"/> 的字节的地址。</param>
-        internal static unsafe void WriteUuidBytes(this Guid guid, byte* destination)
+        internal static void WriteUuidBytes(this Guid guid, byte* destination)
         {
             *(Guid*)destination = guid;
             if (BitConverter.IsLittleEndian)

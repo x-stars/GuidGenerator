@@ -26,7 +26,10 @@ namespace XstarS.GuidGenerators
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void* RefFieldAt(this ref Guid guid, int offset)
         {
-            fixed (Guid* pGuid = &guid) { return (byte*)pGuid + offset; }
+            fixed (Guid* pGuid = &guid)
+            {
+                return (byte*)pGuid + offset;
+            }
         }
     }
 }

@@ -19,27 +19,21 @@ namespace XstarS.GuidGenerators
         internal static new DceSecurityGuidGenerator Instance
         {
             [MethodImpl(MethodImplOptions.NoInlining)]
-            get => DceSecurityGuidGenerator.IsSupportedWindows() ?
+            get => DceSecurityGuidGenerator.IsSupportedWindows ?
                    DceSecurityGuidGenerator.WindowsUID.Instance :
-                   DceSecurityGuidGenerator.IsSupportedUnixLike() ?
+                   DceSecurityGuidGenerator.IsSupportedUnixLike?
                    DceSecurityGuidGenerator.UnixLikeUID.Instance :
                    DceSecurityGuidGenerator.UnknownUID.Instance;
         }
 
+        private static bool IsSupportedWindows =>
+            Environment.OSVersion.Platform == PlatformID.Win32NT;
+
+        private static bool IsSupportedUnixLike =>
+            Environment.OSVersion.Platform == PlatformID.Unix ||
+            Environment.OSVersion.Platform == PlatformID.MacOSX;
+
         public override GuidVersion Version => GuidVersion.Version2;
-
-        private static bool IsSupportedWindows()
-        {
-            var platform = Environment.OSVersion.Platform;
-            return platform == PlatformID.Win32NT;
-        }
-
-        private static bool IsSupportedUnixLike()
-        {
-            var platform = Environment.OSVersion.Platform;
-            return platform == PlatformID.Unix ||
-                   platform == PlatformID.MacOSX;
-        }
 
         private byte GetIPAddressLastByte()
         {
