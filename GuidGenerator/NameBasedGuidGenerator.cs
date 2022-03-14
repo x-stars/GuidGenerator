@@ -10,12 +10,12 @@ namespace XstarS.GuidGenerators
     {
         private readonly int MaxHashingCount;
 
-        private readonly ConcurrentBag<HashAlgorithm> Hasings;
+        private readonly ConcurrentBag<HashAlgorithm> Hashings;
 
         protected NameBasedGuidGenerator()
         {
             this.MaxHashingCount = Environment.ProcessorCount * 2;
-            this.Hasings = new ConcurrentBag<HashAlgorithm>();
+            this.Hashings = new ConcurrentBag<HashAlgorithm>();
         }
 
         public sealed override Guid NewGuid()
@@ -49,7 +49,7 @@ namespace XstarS.GuidGenerators
 
         private byte[] ComputeHash(byte[] input)
         {
-            var hashings = this.Hasings;
+            var hashings = this.Hashings;
             if (!hashings.TryTake(out var hasing))
             {
                 hasing = this.CreateHashing();
