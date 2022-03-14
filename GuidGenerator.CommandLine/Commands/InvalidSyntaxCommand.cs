@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace XstarS.GuidGenerators.Commands
 {
@@ -11,13 +12,14 @@ namespace XstarS.GuidGenerators.Commands
 
         public override bool TryExecute(string[] args)
         {
-            var cmdName = this.GetCommandName();
-            var errorLines = new[]
+            IEnumerable<string> GetErrorMessage()
             {
-                "The syntax of the command is incorrect.",
-                $"Try '{cmdName} -Help' for more information.",
-            };
-            foreach (var errorLine in errorLines)
+                var cmdName = this.GetCommandName();
+                yield return "The syntax of the command is incorrect.";
+                yield return $"Try '{cmdName} -Help' for more information.";
+            }
+
+            foreach (var errorLine in GetErrorMessage())
             {
                 Console.Error.WriteLine(errorLine);
             }

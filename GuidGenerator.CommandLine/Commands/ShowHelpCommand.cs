@@ -26,28 +26,29 @@ namespace XstarS.GuidGenerators.Commands
                 return false;
             }
 
-            var cmdName = this.GetCommandName();
-            var helpLines = new[]
+            IEnumerable<string> GetHelpMessage()
             {
-                $"Usage:  {cmdName} [-V1|-V2|-V4] [-Cn]",
-                $"        {cmdName} -V3|-V5 :NS|GuidNS [Name]",
-                $"        {cmdName} -?|-H|-Help",
-                "Parameters:",
-                "    -V1     generate time-based GUIDs.",
-                "    -V2     generate DCE security GUIDs.",
-                "    -V3     generate name-based GUID by MD5 hashing.",
-                "    -V4     generate pesudo-random GUIDs (default).",
-                "    -V5     generate name-based GUID by SHA1 hashing.",
-                "    -Cn     generate n GUIDs of the current version.",
-                "    :NS     specify a well-known GUID namespace,",
-                "            which can be :DNS, :URL, :OID or :X500.",
-                "    GuidNS  specify a user-defined GUID namespace.",
-                "    Name    specify the name to generate GUID,",
-                "            or empty to read from standard input.",
-                "    -?|-H|-Help",
-                "            show the current help message.",
-            };
-            foreach (var helpLine in helpLines)
+                var cmdName = this.GetCommandName();
+                yield return $"Usage:  {cmdName} [-V1|-V2|-V4] [-Cn]";
+                yield return $"        {cmdName} -V3|-V5 :NS|GuidNS [Name]";
+                yield return $"        {cmdName} -?|-H|-Help";
+                yield return "Parameters:";
+                yield return "    -V1     generate time-based GUIDs.";
+                yield return "    -V2     generate DCE security GUIDs.";
+                yield return "    -V3     generate name-based GUID by MD5 hashing.";
+                yield return "    -V4     generate pesudo-random GUIDs (default).";
+                yield return "    -V5     generate name-based GUID by SHA1 hashing.";
+                yield return "    -Cn     generate n GUIDs of the current version.";
+                yield return "    :NS     specify a well-known GUID namespace,";
+                yield return "            which can be :DNS, :URL, :OID or :X500.";
+                yield return "    GuidNS  specify a user-defined GUID namespace.";
+                yield return "    Name    specify the name to generate GUID,";
+                yield return "            or empty to read from standard input.";
+                yield return "    -?|-H|-Help";
+                yield return "            show the current help message.";
+            }
+
+            foreach (var helpLine in GetHelpMessage())
             {
                 Console.WriteLine(helpLine);
             }
