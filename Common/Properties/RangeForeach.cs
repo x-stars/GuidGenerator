@@ -11,7 +11,13 @@
 // NOTE: Use '^' to represent negative numbers,
 //       e.g. ^100..0 (instead of -100..0).
 
+// If STEPPED_RANGE is defined, this can also be used:
+//   foreach (var index in (99..^1).Step(-2)) { /* ... */ }
+// which is equivalent to the legacy for-loop below:
+//   for (int i = 100 - 1; i >= 0; i += -2) { /* ... */ }
+
 #nullable disable
+//#define STEPPED_RANGE
 
 using System;
 using System.ComponentModel;
@@ -31,6 +37,13 @@ internal static class RangeEnumerable
     {
         return new Enumerator(range);
     }
+
+#if STEPPED_RANGE
+    public static Stepped Step(this Range range, int step)
+    {
+        return new Stepped(range, step);
+    }
+#endif
 
     [CompilerGenerated, DebuggerNonUserCode]
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -52,12 +65,82 @@ internal static class RangeEnumerable
 
         public bool MoveNext() => ++this.CurrentIndex < this.EndIndex;
     }
+
+#if STEPPED_RANGE
+    [CompilerGenerated, DebuggerNonUserCode]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete(RangeEnumerable.NoDirectUsageMessage)]
+    public readonly struct Stepped : IEquatable<Stepped>
+    {
+        public Range Range { get; }
+
+        public int Step { get; }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Stepped(Range range, int step)
+        {
+            if (step == 0) { throw Stepped.StepOutOfRange(); }
+            this.Range = range; this.Step = step;
+        }
+
+        public Enumerator GetEnumerator() => new Enumerator(this);
+
+        public bool Equals(Stepped other) =>
+            this.Range.Equals(other.Range) && (this.Step == other.Step);
+
+        public override bool Equals(object obj) =>
+            (obj is Stepped other) && this.Equals(other);
+
+        public override int GetHashCode() =>
+            this.Range.GetHashCode() * 31 + this.Step;
+
+        public override string ToString() =>
+            this.Range.ToString() + ".%" + this.Step.ToString();
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static ArgumentOutOfRangeException StepOutOfRange() =>
+            new ArgumentOutOfRangeException("step", "Non-zero number required.");
+
+        [CompilerGenerated, DebuggerNonUserCode]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete(RangeEnumerable.NoDirectUsageMessage)]
+        public struct Enumerator
+        {
+            private int CurrentIndex;
+
+            private readonly int EndIndex;
+
+            private readonly int StepSign;
+
+            private readonly int StepValue;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            internal Enumerator(Stepped stepped)
+            {
+                var range = stepped.Range;
+                int start = range.Start.GetOffset(0);
+                int end = range.End.GetOffset(0);
+                int step = stepped.Step;
+                int sign = step >> 31;
+                this.CurrentIndex = (start ^ sign) - 1;
+                this.EndIndex = end ^ sign;
+                this.StepSign = sign;
+                this.StepValue = (step ^ sign) - sign;
+            }
+
+            public int Current => this.CurrentIndex ^ this.StepSign;
+
+            public bool MoveNext() =>
+                (this.CurrentIndex += this.StepValue) < this.EndIndex;
+        }
+    }
+#endif
 }
 
-#if !(NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
+#if !(INDEX_RANGE || NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// NOTE: Some APIs have been removed for compatibility reasons.
+// NOTE: Some APIs are disabled by default for compatibility reasons.
 
 namespace System
 {
@@ -149,8 +232,19 @@ namespace System
 
         public static Range All => new Range(Index.Start, Index.End);
 
-        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        //public (int Offset, int Length) GetOffsetAndLength(int length) { ... }
+#if VALUE_TUPLE || NET47_OR_GREATER || NETCOREAPP || NETSTANDARD2_0_OR_GREATER
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public (int Offset, int Length) GetOffsetAndLength(int length)
+        {
+            int start = this.Start.GetOffset(length);
+            int end = this.End.GetOffset(length);
+            if ((uint)end > (uint)length || (uint)start > (uint)end)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length));
+            }
+            return (start, end - start);
+        }
+#endif
     }
 }
 #endif
