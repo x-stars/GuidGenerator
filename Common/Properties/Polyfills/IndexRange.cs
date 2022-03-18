@@ -72,15 +72,15 @@ namespace System
         /// <summary>
         /// Gets a value that indicates whether the index is from the start or the end.
         /// </summary>
-        /// <returns><see langword="true"/> if the Index is from the end;
-        /// otherwise, <see langword="false"/>.</returns>
+        /// <returns><see langword="true"/> if the Index is from
+        /// the end; otherwise, <see langword="false"/>.</returns>
         public bool IsFromEnd => this._value < 0;
 
         /// <summary>
         /// Calculates the offset from the start of the collection using the given collection length.
         /// </summary>
-        /// <param name="length">The length of the collection that the Index will be used with.
-        /// Must be a positive value.</param>
+        /// <param name="length">The length of the collection that
+        /// the Index will be used with. Must be a positive value.</param>
         /// <returns>The offset.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetOffset(int length)
@@ -103,8 +103,8 @@ namespace System
         /// the current object is equal to another <see cref="Index"/> object.
         /// </summary>
         /// <param name="other">The object to compare with this instance.</param>
-        /// <returns><see langword="true"/> if the current Index object is equal
-        /// to <paramref name="other"/>; <see langword="false"/> otherwise.</returns>
+        /// <returns><see langword="true"/> if the current Index object is equal to
+        /// <paramref name="other"/>; <see langword="false"/> otherwise.</returns>
         public bool Equals(Index other) => this._value == other._value;
 
         /// <summary>
@@ -173,8 +173,8 @@ namespace System
         /// the current instance is equal to another <see cref="Range"/> object.
         /// </summary>
         /// <param name="other">A Range object to compare with this Range object.</param>
-        /// <returns><see langword="true"/> if the current instance is equal
-        /// to <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+        /// <returns><see langword="true"/> if the current instance is equal to
+        /// <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
         public bool Equals(Range other) => this.Start.Equals(other.Start) && this.End.Equals(other.End);
 
         /// <summary>
@@ -193,8 +193,8 @@ namespace System
         /// Returns a new <see cref="Range"/> instance starting from
         /// a specified start index to the end of the collection.
         /// </summary>
-        /// <param name="start">The position of the first element
-        /// from which the Range will be created.</param>
+        /// <param name="start">The position of the first element from
+        /// which the Range will be created.</param>
         /// <returns>A range from <paramref name="start"/> to the end of the collection.</returns>
         public static Range StartAt(Index start) => new Range(start, Index.End);
 
