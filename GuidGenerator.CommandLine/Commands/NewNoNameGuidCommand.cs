@@ -45,7 +45,7 @@ namespace XstarS.GuidGenerators.Commands
                 {
                     return false;
                 }
-                var parsed = int.TryParse(countArg.Substring(2), out count);
+                var parsed = int.TryParse(countArg[2..], out count);
                 if (!parsed || (count < 0)) { return false; }
             }
             foreach (var _ in ..count)

@@ -10,7 +10,7 @@ namespace XstarS.GuidGenerators.Commands
 
         public static bool Execute(string[] args)
         {
-            IEnumerable<ProgramCommand> GetCommandChain()
+            static IEnumerable<ProgramCommand> GetCommandChain()
             {
                 yield return NewNoNameGuidCommand.Default;
                 yield return NewNoNameGuidCommand.Version1;
