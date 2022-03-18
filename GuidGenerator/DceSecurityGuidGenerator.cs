@@ -21,7 +21,7 @@ namespace XstarS.GuidGenerators
             [MethodImpl(MethodImplOptions.NoInlining)]
             get => DceSecurityGuidGenerator.IsSupportedWindows ?
                    DceSecurityGuidGenerator.WindowsUID.Instance :
-                   DceSecurityGuidGenerator.IsSupportedUnixLike?
+                   DceSecurityGuidGenerator.IsSupportedUnixLike ?
                    DceSecurityGuidGenerator.UnixLikeUID.Instance :
                    DceSecurityGuidGenerator.UnknownUID.Instance;
         }
