@@ -31,7 +31,7 @@ internal static class RangeEnumerable
 {
     public static Enumerator GetEnumerator(this Range range)
     {
-        return new Enumerator(range);
+        return new Enumerator(in range);
     }
 
 #if STEPPED_RANGE
@@ -49,7 +49,7 @@ internal static class RangeEnumerable
         private readonly int EndIndex;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal Enumerator(Range range)
+        internal Enumerator(in Range range)
         {
             this.CurrentIndex = range.Start.GetOffset(0) - 1;
             this.EndIndex = range.End.GetOffset(0);
@@ -75,7 +75,7 @@ internal static class RangeEnumerable
             this.Range = range; this.Step = step;
         }
 
-        public Enumerator GetEnumerator() => new Enumerator(this);
+        public Enumerator GetEnumerator() => new Enumerator(in this);
 
         public bool Equals(Stepped other) =>
             this.Range.Equals(other.Range) && (this.Step == other.Step);
@@ -105,7 +105,7 @@ internal static class RangeEnumerable
             private readonly int StepValue;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            internal Enumerator(Stepped stepped)
+            internal Enumerator(in Stepped stepped)
             {
                 var range = stepped.Range;
                 int start = range.Start.GetOffset(0);

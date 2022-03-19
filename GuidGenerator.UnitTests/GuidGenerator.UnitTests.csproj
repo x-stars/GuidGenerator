@@ -38,7 +38,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Common\**\*.cs" />
+    <Compile Include="..\SharedItems\Common\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup>
