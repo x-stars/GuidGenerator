@@ -34,6 +34,25 @@ namespace System.Runtime.CompilerServices
         {
         }
     }
+
+    /// <summary>
+    /// Indicates to the compiler that the .locals init flag
+    /// should not be set in nested method headers when emitting to metadata.
+    /// </summary>
+    [CompilerGenerated, DebuggerNonUserCode]
+    [AttributeUsage(
+        AttributeTargets.Module | AttributeTargets.Class | AttributeTargets.Struct |
+        AttributeTargets.Interface | AttributeTargets.Constructor | AttributeTargets.Method |
+        AttributeTargets.Property | AttributeTargets.Event, Inherited = false)]
+    internal sealed class SkipLocalsInitAttribute : Attribute
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SkipLocalsInitAttribute"/> class.
+        /// </summary>
+        public SkipLocalsInitAttribute()
+        {
+        }
+    }
 }
 #endif
 

@@ -53,6 +53,7 @@
 
   <ItemGroup>
     <Compile Include="..\SharedItems\Common\**\*.cs" />
+    <Compile Include="..\SharedItems\SkipLocalsInit\**\*.cs" />
   </ItemGroup>
 
 </Project>
