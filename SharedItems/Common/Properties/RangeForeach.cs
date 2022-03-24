@@ -112,7 +112,7 @@ internal static class RangeEnumerable
                 int end = range.End.GetOffset(0);
                 int step = stepped.Step;
                 int sign = step >> 31;
-                this.CurrentIndex = (start ^ sign) - 1;
+                this.CurrentIndex = (start - step) ^ sign;
                 this.EndIndex = end ^ sign;
                 this.StepSign = sign;
                 this.StepValue = (step ^ sign) - sign;
