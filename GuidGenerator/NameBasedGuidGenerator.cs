@@ -8,14 +8,12 @@ namespace XstarS.GuidGenerators
 {
     internal abstract class NameBasedGuidGenerator : GuidGenerator
     {
-        private readonly int MaxHashingCount;
-
-        private readonly ConcurrentBag<HashAlgorithm> Hashings;
+        private readonly BlockingCollection<HashAlgorithm> Hashings;
 
         protected NameBasedGuidGenerator()
         {
-            this.MaxHashingCount = Environment.ProcessorCount * 2;
-            this.Hashings = new ConcurrentBag<HashAlgorithm>();
+            var concurrency = Environment.ProcessorCount * 2;
+            this.Hashings = new BlockingCollection<HashAlgorithm>(concurrency);
         }
 
         public sealed override Guid NewGuid()
@@ -55,11 +53,7 @@ namespace XstarS.GuidGenerators
                 hasing = this.CreateHashing();
             }
             var hash = hasing.ComputeHash(input);
-            var maxCount = this.MaxHashingCount;
-            if (hashings.Count < maxCount)
-            {
-                hashings.Add(hasing);
-            }
+            _ = hashings.TryAdd(hasing);
             return hash;
         }
 
