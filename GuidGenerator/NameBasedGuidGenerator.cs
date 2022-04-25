@@ -48,12 +48,12 @@ namespace XstarS.GuidGenerators
         private byte[] ComputeHash(byte[] input)
         {
             var hashings = this.Hashings;
-            if (!hashings.TryTake(out var hasing))
+            if (!hashings.TryTake(out var hashing))
             {
-                hasing = this.CreateHashing();
+                hashing = this.CreateHashing();
             }
-            var hash = hasing.ComputeHash(input);
-            _ = hashings.TryAdd(hasing);
+            var hash = hashing.ComputeHash(input);
+            _ = hashings.TryAdd(hashing);
             return hash;
         }
 
