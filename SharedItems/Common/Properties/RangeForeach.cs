@@ -57,6 +57,7 @@ internal static class RangeEnumerable
 
         public int Current => this.CurrentIndex;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool MoveNext() => ++this.CurrentIndex < this.EndIndex;
     }
 
@@ -89,7 +90,6 @@ internal static class RangeEnumerable
         public override string ToString() =>
             this.Range.ToString() + ".%" + this.Step.ToString();
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static ArgumentOutOfRangeException StepOutOfRange() =>
             new ArgumentOutOfRangeException("step", "Non-zero number required.");
 
@@ -104,7 +104,6 @@ internal static class RangeEnumerable
 
             private readonly int StepValue;
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             internal Enumerator(in Stepped stepped)
             {
                 var range = stepped.Range;
@@ -120,6 +119,7 @@ internal static class RangeEnumerable
 
             public int Current => this.CurrentIndex ^ this.StepSign;
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public bool MoveNext() =>
                 (this.CurrentIndex += this.StepValue) < this.EndIndex;
         }

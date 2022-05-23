@@ -129,7 +129,6 @@ namespace System
 
         private string ToStringFromEnd() => "^" + this.Value.ToString();
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static ArgumentOutOfRangeException ValueOutOfRange() =>
             new ArgumentOutOfRangeException("value", "Non-negative number required.");
     }
