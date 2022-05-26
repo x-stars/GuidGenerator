@@ -47,17 +47,15 @@ namespace XstarS.GuidGenerators
 
         private NetworkInterface? GetUpNetworkInterface()
         {
-            var target = default(NetworkInterface);
             var ifaces = NetworkInterface.GetAllNetworkInterfaces();
             foreach (var iface in ifaces)
             {
                 if (iface.OperationalStatus == OperationalStatus.Up)
                 {
-                    target = iface;
-                    break;
+                    return iface;
                 }
             }
-            return target;
+            return null;
         }
 
         private byte[] GetMacAdddressBytes()
