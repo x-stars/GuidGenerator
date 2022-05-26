@@ -16,8 +16,6 @@ namespace XstarS.GuidGenerators
             this.Hashings = new BlockingCollection<HashAlgorithm>(concurrency);
         }
 
-        public override bool RequiresInput => true;
-
         public sealed override Guid NewGuid()
         {
             return this.NewGuid(Guid.Empty, string.Empty);

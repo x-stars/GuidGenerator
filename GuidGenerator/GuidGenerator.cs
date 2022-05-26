@@ -75,7 +75,7 @@ namespace XstarS.GuidGenerators
         /// </summary>
         /// <returns>若当前实例生成的 <see cref="Guid"/> 依赖于输入参数，
         /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
-        public virtual bool RequiresInput => false;
+        public virtual bool RequiresInput => this.Version.IsNameBased();
 
         /// <summary>
         /// 生成一个新的 <see cref="Guid"/> 实例。
