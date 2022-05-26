@@ -71,6 +71,13 @@ namespace XstarS.GuidGenerators
         public abstract GuidVersion Version { get; }
 
         /// <summary>
+        /// 获取当前实例生成的 <see cref="Guid"/> 是否依赖于输入参数。
+        /// </summary>
+        /// <returns>若当前实例生成的 <see cref="Guid"/> 依赖于输入参数，
+        /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
+        public virtual bool RequiresInput => false;
+
+        /// <summary>
         /// 生成一个新的 <see cref="Guid"/> 实例。
         /// </summary>
         /// <returns>一个新的 <see cref="Guid"/> 实例。</returns>
