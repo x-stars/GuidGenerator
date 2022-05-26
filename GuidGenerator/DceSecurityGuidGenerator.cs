@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -12,8 +11,7 @@ namespace XstarS.GuidGenerators
 
         private DceSecurityGuidGenerator()
         {
-            this.LazyIPAddressLastByte =
-                new Lazy<byte>(this.GetIPAddressLastByte);
+            this.LazyIPAddressLastByte = new Lazy<byte>(this.GetIPAddressLastByte);
         }
 
         internal static new DceSecurityGuidGenerator Instance
@@ -35,20 +33,13 @@ namespace XstarS.GuidGenerators
 
         public override GuidVersion Version => GuidVersion.Version2;
 
+        private byte IPAddressLastByte => this.LazyIPAddressLastByte.Value;
+
         private byte GetIPAddressLastByte()
         {
-            var target = default(NetworkInterface);
-            var ifaces = NetworkInterface.GetAllNetworkInterfaces();
-            foreach (var iface in ifaces)
-            {
-                if (iface.OperationalStatus == OperationalStatus.Up)
-                {
-                    target = iface;
-                    break;
-                }
-            }
-            if (target is null) { return (byte)0; }
-            var ipAddrs = target.GetIPProperties().UnicastAddresses;
+            var upIface = this.UpNetworkInterface;
+            if (upIface is null) { return (byte)0; }
+            var ipAddrs = upIface.GetIPProperties().UnicastAddresses;
             if (ipAddrs.Count == 0) { return (byte)0; }
             var ipAddrBytes = ipAddrs[0].Address.GetAddressBytes();
             return ipAddrBytes[^1];
@@ -74,7 +65,7 @@ namespace XstarS.GuidGenerators
 
         private void FillSiteIDField(ref Guid guid)
         {
-            var siteID = this.LazyIPAddressLastByte.Value;
+            var siteID = this.IPAddressLastByte;
             guid.ClkSeqLow() = (byte)siteID;
         }
 

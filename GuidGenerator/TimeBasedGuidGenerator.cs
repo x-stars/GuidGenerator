@@ -20,6 +20,8 @@ namespace XstarS.GuidGenerators
 
         private volatile int ClockSequence;
 
+        private readonly Lazy<NetworkInterface?> LazyUpNetworkInterface;
+
         private readonly Lazy<byte[]> LazyMacAddressBytes;
 
         protected TimeBasedGuidGenerator()
@@ -27,8 +29,8 @@ namespace XstarS.GuidGenerators
             this.StartTimestamp = DateTime.UtcNow;
             this.HiResTimer = Stopwatch.StartNew();
             this.ClockSequence = new Random().Next();
-            this.LazyMacAddressBytes =
-                new Lazy<byte[]>(this.GetMacAdddressBytes);
+            this.LazyMacAddressBytes = new Lazy<byte[]>(this.GetMacAdddressBytes);
+            this.LazyUpNetworkInterface = new Lazy<NetworkInterface?>(this.GetUpNetworkInterface);
         }
 
         internal static TimeBasedGuidGenerator Instance
@@ -39,7 +41,11 @@ namespace XstarS.GuidGenerators
 
         public override GuidVersion Version => GuidVersion.Version1;
 
-        private byte[] GetMacAdddressBytes()
+        protected NetworkInterface? UpNetworkInterface => this.LazyUpNetworkInterface.Value;
+
+        private byte[] MacAddressBytes => this.LazyMacAddressBytes.Value;
+
+        private NetworkInterface? GetUpNetworkInterface()
         {
             var target = default(NetworkInterface);
             var ifaces = NetworkInterface.GetAllNetworkInterfaces();
@@ -51,8 +57,14 @@ namespace XstarS.GuidGenerators
                     break;
                 }
             }
-            if (target is null) { return new byte[6]; }
-            return target.GetPhysicalAddress().GetAddressBytes();
+            return target;
+        }
+
+        private byte[] GetMacAdddressBytes()
+        {
+            var upIface = this.UpNetworkInterface;
+            if (upIface is null) { return new byte[6]; }
+            return upIface.GetPhysicalAddress().GetAddressBytes();
         }
 
         public override Guid NewGuid()
@@ -89,7 +101,7 @@ namespace XstarS.GuidGenerators
 
         private unsafe void FillNodeIDFields(ref Guid guid)
         {
-            var nodeID = this.LazyMacAddressBytes.Value;
+            var nodeID = this.MacAddressBytes;
             var size = Math.Min(nodeID.Length, 6);
             fixed (byte* pNodeID = &nodeID[0])
             {
