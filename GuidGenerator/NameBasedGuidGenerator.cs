@@ -40,7 +40,7 @@ namespace XstarS.GuidGenerators
             const int guidSize = 16;
             var nameBytes = Encoding.UTF8.GetBytes(name);
             var input = new byte[guidSize + nameBytes.Length];
-            fixed (byte* pInput = &input[0]) { ns.WriteUuidBytes(pInput); }
+            fixed (byte* pInput = &input[0]) { ns.CopyUuidBytes(pInput); }
             Buffer.BlockCopy(nameBytes, 0, input, guidSize, nameBytes.Length);
             return input;
         }
@@ -63,7 +63,7 @@ namespace XstarS.GuidGenerators
             fixed (byte* pHashBytes = &hashBytes[0])
             {
                 var uuid = *(Guid*)pHashBytes;
-                uuid.WriteUuidBytes((byte*)&guid);
+                uuid.CopyUuidBytes((byte*)&guid);
             }
             this.FillVersionField(ref guid);
             this.FillVariantField(ref guid);

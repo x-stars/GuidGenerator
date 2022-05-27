@@ -45,7 +45,7 @@ namespace XstarS.GuidGenerators
             {
                 tsField &= ~0xFFFFFFFFL;
             }
-            tsField &= ~((long)0xF0 << (7 * 8));
+            tsField &= ~(0xF0L << (7 * 8));
             var baseTicks = GuidExtensions.BaseTimestamp.Ticks;
             var tsTicks = tsField + baseTicks;
             timestamp = new DateTime(tsTicks, DateTimeKind.Utc);
@@ -87,17 +87,17 @@ namespace XstarS.GuidGenerators
             var uuidBytes = new byte[16];
             fixed (byte* pUuidBytes = &uuidBytes[0])
             {
-                guid.WriteUuidBytes(pUuidBytes);
+                guid.CopyUuidBytes(pUuidBytes);
             }
             return uuidBytes;
         }
 
         /// <summary>
-        /// 将当前 <see cref="Guid"/> 的值按字节写入指定地址，其字节序符合 RFC 4122 UUID 标准。
+        /// 将当前 <see cref="Guid"/> 的值按字节复制到指定地址，其字节序符合 RFC 4122 UUID 标准。
         /// </summary>
-        /// <param name="guid">作为字节来源的 <see cref="Guid"/>。</param>
-        /// <param name="destination">要写入 <see cref="Guid"/> 的字节的地址。</param>
-        internal static void WriteUuidBytes(this Guid guid, byte* destination)
+        /// <param name="guid">作为字节数据来源的 <see cref="Guid"/>。</param>
+        /// <param name="destination">要写入 <see cref="Guid"/> 的字节的目标地址。</param>
+        internal static void CopyUuidBytes(this Guid guid, byte* destination)
         {
             *(Guid*)destination = guid;
             if (BitConverter.IsLittleEndian)
