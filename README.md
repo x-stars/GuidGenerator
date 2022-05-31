@@ -18,7 +18,7 @@ RFC 4122 定义了以下 5 种 UUID 版本：
 
 ## GUID 生成库使用
 
-GUID 生成库的工程位于 [GuidGenerator](GuidGenerator)。
+GUID 生成库的工程位于 [XstarS.GuidGenerators](XstarS.GuidGenerators)。
 
 ### 工厂方法创建后使用
 
@@ -48,7 +48,7 @@ var guidV5 = GuidGenerator.NewGuid(GuidVersion.Version5, GuidNamespaces.DNS, "gi
 
 ## GUID 生成命令行工具使用
 
-GUID 生成命令行工具的工程位于 [GuidGenerator.CommandLine](GuidGenerator.CommandLine)。
+GUID 生成命令行工具的工程位于 [XstarS.GuidGen.CLI](XstarS.GuidGen.CLI)。
 
 > 以下将命令行工具重命名为 `GuidGen.exe` 后执行命令。
 
