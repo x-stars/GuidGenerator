@@ -20,13 +20,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		GuidGenerator.snk = GuidGenerator.snk
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuidGenerator", "GuidGenerator\GuidGenerator.csproj", "{541B3733-22F3-4AEE-8ED3-5B29E6DEF7A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XstarS.GuidGenerators", "XstarS.GuidGenerators\XstarS.GuidGenerators.csproj", "{541B3733-22F3-4AEE-8ED3-5B29E6DEF7A4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuidGenerator.UnitTests", "GuidGenerator.UnitTests\GuidGenerator.UnitTests.csproj", "{95FB1B1F-AC1C-457A-87A3-D862ACF7DE8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XstarS.GuidGenLib.UnitTests", "XstarS.GuidGenLib.UnitTests\XstarS.GuidGenLib.UnitTests.csproj", "{95FB1B1F-AC1C-457A-87A3-D862ACF7DE8E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuidGenerator.CommandLine", "GuidGenerator.CommandLine\GuidGenerator.CommandLine.csproj", "{2097E604-3A0E-4BD1-8805-B708357DB5F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XstarS.GuidGen.CLI", "XstarS.GuidGen.CLI\XstarS.GuidGen.CLI.csproj", "{2097E604-3A0E-4BD1-8805-B708357DB5F7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuidGenerator.Benchmarks", "GuidGenerator.Benchmarks\GuidGenerator.Benchmarks.csproj", "{E9FD2D6C-AD2A-420B-9C74-B71C789CDF82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XstarS.GuidGenLib.Benchmarks", "XstarS.GuidGenLib.Benchmarks\XstarS.GuidGenLib.Benchmarks.csproj", "{E9FD2D6C-AD2A-420B-9C74-B71C789CDF82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -46,10 +46,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\GuidGenerator\**\*.cs" />
-    <Compile Remove="..\GuidGenerator\bin\**\*.cs" />
-    <Compile Remove="..\GuidGenerator\obj\**\*.cs" />
-    <Compile Remove="..\GuidGenerator\Properties\*.cs" />
+    <Compile Include="..\XstarS.GuidGenerators\**\*.cs" />
+    <Compile Remove="..\XstarS.GuidGenerators\bin\**\*.cs" />
+    <Compile Remove="..\XstarS.GuidGenerators\obj\**\*.cs" />
+    <Compile Remove="..\XstarS.GuidGenerators\Properties\*.cs" />
   </ItemGroup>
 
 </Project>
