@@ -2,8 +2,6 @@
 
 namespace XstarS.GuidGenerators
 {
-    using static GuidVersion;
-
     /// <summary>
     /// 提供生成 <see cref="Guid"/> 的方法。
     /// </summary>
@@ -25,12 +23,12 @@ namespace XstarS.GuidGenerators
         {
             return version switch
             {
-                Empty => EmptyGuidGenerator.Instance,
-                Version1 => TimeBasedGuidGenerator.Instance,
-                Version2 => DceSecurityGuidGenerator.Instance,
-                Version3 => NameBasedGuidGenerator.MD5Hashing.Instance,
-                Version4 => RandomizedGuidGenerator.Instance,
-                Version5 => NameBasedGuidGenerator.SHA1Hashing.Instance,
+                GuidVersion.Empty => EmptyGuidGenerator.Instance,
+                GuidVersion.Version1 => TimeBasedGuidGenerator.Instance,
+                GuidVersion.Version2 => DceSecurityGuidGenerator.Instance,
+                GuidVersion.Version3 => NameBasedGuidGenerator.MD5Hashing.Instance,
+                GuidVersion.Version4 => RandomizedGuidGenerator.Instance,
+                GuidVersion.Version5 => NameBasedGuidGenerator.SHA1Hashing.Instance,
                 _ => throw new ArgumentOutOfRangeException(nameof(version))
             };
         }
