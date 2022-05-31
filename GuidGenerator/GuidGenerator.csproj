@@ -15,9 +15,10 @@
     <Authors>XstarS</Authors>
     <Company>XstarS</Company>
     <Version>1.0.0</Version>
-    <Product>GUID Generator</Product>
-    <Description>$(AssemblyName)</Description>
+    <Product>XstarS GUID Generator</Product>
+    <Description>$(Product) Library</Description>
     <Copyright>Copyright © $(Company) 2022</Copyright>
+    <AssemblyTitle>$(Description)</AssemblyTitle>
   </PropertyGroup>
 
   <PropertyGroup>
