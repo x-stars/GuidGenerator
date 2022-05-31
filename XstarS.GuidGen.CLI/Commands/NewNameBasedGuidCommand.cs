@@ -47,19 +47,20 @@ namespace XstarS.GuidGenerators.Commands
                 return false;
             }
 
+            var guidGen = GuidGenerator.OfVersion(version);
             if (readInput)
             {
                 var name = default(string);
                 while ((name = Console.ReadLine()) != null)
                 {
-                    var guid = GuidGenerator.NewGuid(version, ns, name);
+                    var guid = guidGen.NewGuid(ns, name);
                     Console.WriteLine(guid);
                 }
             }
             else
             {
                 var name = args[2];
-                var guid = GuidGenerator.NewGuid(version, ns, name);
+                var guid = guidGen.NewGuid(ns, name);
                 Console.WriteLine(guid);
             }
             return true;

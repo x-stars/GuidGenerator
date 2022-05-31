@@ -48,9 +48,11 @@ namespace XstarS.GuidGenerators.Commands
                 var parsed = int.TryParse(countArg[2..], out count);
                 if (!parsed || (count < 0)) { return false; }
             }
+
+            var guidGen = GuidGenerator.OfVersion(version);
             foreach (var _ in ..count)
             {
-                var guid = GuidGenerator.NewGuid(version);
+                var guid = guidGen.NewGuid();
                 Console.WriteLine(guid.ToString());
             }
             return true;
