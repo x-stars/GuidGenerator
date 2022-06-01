@@ -93,6 +93,38 @@ namespace XstarS.GuidGenerators
         }
 
         /// <summary>
+        /// 返回一个与当前 <see cref="Guid"/> 等价的
+        /// <see cref="Guid"/>，其节点 ID 填充为指定字节数组中包含的数据。
+        /// </summary>
+        /// <param name="guid">要替换节点 ID 的 <see cref="Guid"/>。</param>
+        /// <param name="nodeID">作为节点 ID 的数据源的字节数组。</param>
+        /// <returns>将 <paramref name="guid"/> 的节点 ID 替换为
+        /// <paramref name="nodeID"/> 中的数据得到的新 <see cref="Guid"/>。</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="nodeID"/> 为 <see langword="null"/>。</exception>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="nodeID"/> 字节数组的长度小于 6。</exception>
+        public static Guid ReplaceNodeID(this Guid guid, byte[] nodeID)
+        {
+            if (nodeID is null)
+            {
+                throw new ArgumentNullException(nameof(nodeID));
+            }
+            if (nodeID.Length < 6)
+            {
+                var inner = new IndexOutOfRangeException();
+                throw new ArgumentException(inner.Message, nameof(nodeID), inner);
+            }
+
+            fixed (byte* pNodeID = &nodeID[0])
+            {
+                var pGuidNodeID = guid.NodeID();
+                Buffer.MemoryCopy(pNodeID, pGuidNodeID, 6, 6);
+            }
+            return guid;
+        }
+
+        /// <summary>
         /// 将当前 <see cref="Guid"/> 的值按字节复制到指定地址，其字节序符合 RFC 4122 UUID 标准。
         /// </summary>
         /// <param name="guid">作为字节数据来源的 <see cref="Guid"/>。</param>
