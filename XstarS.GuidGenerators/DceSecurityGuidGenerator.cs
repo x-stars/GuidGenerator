@@ -7,11 +7,16 @@ namespace XstarS.GuidGenerators
 {
     internal abstract class DceSecurityGuidGenerator : TimeBasedGuidGenerator
     {
-        private readonly Lazy<byte> LazyIPAddressLastByte;
+        private const int DefaultLocalID = 0;
+
+        private readonly Lazy<int> LazyLocalUserID;
+
+        private readonly Lazy<int> LazyLocalGroupID;
 
         private DceSecurityGuidGenerator()
         {
-            this.LazyIPAddressLastByte = new Lazy<byte>(this.GetIPAddressLastByte);
+            this.LazyLocalUserID = new Lazy<int>(this.GetLocalUserID);
+            this.LazyLocalGroupID = new Lazy<int>(this.GetLocalGroupID);
         }
 
         internal static new DceSecurityGuidGenerator Instance
@@ -33,40 +38,39 @@ namespace XstarS.GuidGenerators
 
         public override GuidVersion Version => GuidVersion.Version2;
 
-        private byte IPAddressLastByte => this.LazyIPAddressLastByte.Value;
+        private int LocalUserID => this.LazyLocalUserID.Value;
 
-        private byte GetIPAddressLastByte()
-        {
-            var upIface = this.UpNetworkInterface;
-            if (upIface is null) { return (byte)0; }
-            var ipAddrs = upIface.GetIPProperties().UnicastAddresses;
-            if (ipAddrs.Count == 0) { return (byte)0; }
-            var ipAddrBytes = ipAddrs[0].Address.GetAddressBytes();
-            return ipAddrBytes[^1];
-        }
+        private int LocalGroupID => this.LazyLocalGroupID.Value;
 
         public override Guid NewGuid()
         {
+            return this.NewGuid(DceSecurityDomain.Person, null);
+        }
+
+        public override Guid NewGuid(DceSecurityDomain domain, int? localId = null)
+        {
             var guid = base.NewGuid();
-            this.FillUserIDFields(ref guid);
+            this.FillLocalIDField(ref guid, domain, localId);
             guid.ClkSeqHi_Var() = guid.ClkSeqLow();
             this.FillVariantField(ref guid);
-            this.FillSiteIDField(ref guid);
+            guid.ClkSeqLow() = (byte)domain;
             return guid;
         }
 
-        protected abstract int GetUserID();
+        protected abstract int GetLocalUserID();
 
-        private void FillUserIDFields(ref Guid guid)
-        {
-            var userID = this.GetUserID();
-            guid.TimeLow() = (uint)userID;
-        }
+        protected abstract int GetLocalGroupID();
 
-        private void FillSiteIDField(ref Guid guid)
+        private void FillLocalIDField(ref Guid guid, DceSecurityDomain domain, int? localID)
         {
-            var siteID = this.IPAddressLastByte;
-            guid.ClkSeqLow() = (byte)siteID;
+            var finalLocalID = localID ?? domain switch
+            {
+                DceSecurityDomain.Person => this.LocalUserID,
+                DceSecurityDomain.Group => this.LocalGroupID,
+                DceSecurityDomain.Org => DceSecurityGuidGenerator.DefaultLocalID,
+                _ => throw new ArgumentOutOfRangeException(nameof(domain))
+            };
+            guid.TimeLow() = (uint)finalLocalID;
         }
 
         private sealed class WindowsUID : DceSecurityGuidGenerator
@@ -77,12 +81,7 @@ namespace XstarS.GuidGenerators
                     new DceSecurityGuidGenerator.WindowsUID();
             }
 
-            private readonly Lazy<int> LazyUserDomainID;
-
-            private WindowsUID()
-            {
-                this.LazyUserDomainID = new Lazy<int>(this.GetUserDomainID);
-            }
+            private WindowsUID() { }
 
             internal static new DceSecurityGuidGenerator.WindowsUID Instance
             {
@@ -90,7 +89,7 @@ namespace XstarS.GuidGenerators
                 get => DceSecurityGuidGenerator.WindowsUID.Singleton.Value;
             }
 
-            private int GetUserDomainID()
+            protected override int GetLocalUserID()
             {
                 var whoamiProc = Process.Start(new ProcessStartInfo()
                 {
@@ -100,23 +99,63 @@ namespace XstarS.GuidGenerators
                     RedirectStandardOutput = true,
                     StandardOutputEncoding = Encoding.UTF8,
                 })!;
-                var userSID = string.Empty;
+                var firstUserID = string.Empty;
                 whoamiProc.OutputDataReceived += (sender, e) =>
                 {
                     if (e.Data?.StartsWith("SID:") ?? false)
                     {
-                        userSID = e.Data.Replace("SID:", "").Trim();
+                        var userSID = e.Data.Replace("SID:", "").Trim();
+                        var sidFields = userSID.Split('-');
+                        if (firstUserID.Length == 0)
+                        {
+                            firstUserID = sidFields[^1];
+                        }
                     }
                 };
                 whoamiProc.BeginOutputReadLine();
                 whoamiProc.WaitForExit();
-                var userSIDs = userSID.Split('-');
-                var userID = (int)ulong.Parse(userSIDs[^1]);
-                var domainID = (byte)ulong.Parse(userSIDs[3]);
-                return (userID << (1 * 8)) | domainID;
+                var userID = (firstUserID.Length > 0) ? firstUserID : "0";
+                return (int)ulong.Parse(userID);
             }
 
-            protected override int GetUserID() => this.LazyUserDomainID.Value;
+            protected override int GetLocalGroupID()
+            {
+                var whoamiProc = Process.Start(new ProcessStartInfo()
+                {
+                    FileName = "WHOAMI.exe",
+                    Arguments = "/GROUPS /FO LIST",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    StandardOutputEncoding = Encoding.UTF8,
+                })!;
+                var commonGroupID = string.Empty;
+                var userGroupID = string.Empty;
+                whoamiProc.OutputDataReceived += (sender, e) =>
+                {
+                    const int maxCommonFields = 5;
+                    if (e.Data?.StartsWith("SID:") ?? false)
+                    {
+                        var groupSID = e.Data.Replace("SID:", "").Trim();
+                        var sidFields = groupSID.Split('-');
+                        if (sidFields.Length <= maxCommonFields)
+                        {
+                            if (commonGroupID.Length == 0)
+                            {
+                                commonGroupID = sidFields[^1];
+                            }
+                        }
+                        else if (userGroupID.Length == 0)
+                        {
+                            userGroupID = sidFields[^1];
+                        }
+                    }
+                };
+                whoamiProc.BeginOutputReadLine();
+                whoamiProc.WaitForExit();
+                var groupID = (userGroupID.Length > 0) ? userGroupID :
+                    (commonGroupID.Length > 0) ? commonGroupID : "0";
+                return (int)ulong.Parse(groupID);
+            }
         }
 
         private sealed class UnixLikeUID : DceSecurityGuidGenerator
@@ -127,12 +166,7 @@ namespace XstarS.GuidGenerators
                     new DceSecurityGuidGenerator.UnixLikeUID();
             }
 
-            private readonly Lazy<int> LazyUserGroupID;
-
-            private UnixLikeUID()
-            {
-                this.LazyUserGroupID = new Lazy<int>(this.GetUserGroupID);
-            }
+            private UnixLikeUID() { }
 
             internal static new DceSecurityGuidGenerator.UnixLikeUID Instance
             {
@@ -140,14 +174,11 @@ namespace XstarS.GuidGenerators
                 get => DceSecurityGuidGenerator.UnixLikeUID.Singleton.Value;
             }
 
-            private int GetUserGroupID()
-            {
-                var userID = this.GetIDByType("-u");
-                var groupID = this.GetIDByType("-g");
-                return (userID << (2 * 8)) | groupID;
-            }
+            protected override int GetLocalUserID() => this.GetLocalIDByType("-u");
 
-            private ushort GetIDByType(string arguments)
+            protected override int GetLocalGroupID() => this.GetLocalIDByType("-g");
+
+            private int GetLocalIDByType(string arguments)
             {
                 var idProc = Process.Start(new ProcessStartInfo()
                 {
@@ -167,10 +198,8 @@ namespace XstarS.GuidGenerators
                 };
                 idProc.BeginOutputReadLine();
                 idProc.WaitForExit();
-                return (ushort)ulong.Parse(userID);
+                return (int)ulong.Parse(userID);
             }
-
-            protected override int GetUserID() => this.LazyUserGroupID.Value;
         }
 
         private sealed class UnknownUID : DceSecurityGuidGenerator
@@ -189,10 +218,8 @@ namespace XstarS.GuidGenerators
                 get => DceSecurityGuidGenerator.UnknownUID.Singleton.Value;
             }
 
-            protected override int GetUserID()
-            {
-                throw new PlatformNotSupportedException();
-            }
+            protected override int GetLocalUserID() => throw new NotImplementedException();
+            protected override int GetLocalGroupID() => throw new NotImplementedException();
         }
     }
 }

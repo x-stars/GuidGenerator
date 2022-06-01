@@ -41,7 +41,7 @@ namespace XstarS.GuidGenerators
             var tsField = ((long)guid.TimeLow()) |
                 ((long)guid.TimeMid() << (4 * 8)) |
                 ((long)guid.TimeHi_Ver() << (6 * 8));
-            if (version.ContainsUserID())
+            if (version.ContainsLocalID())
             {
                 tsField &= ~0xFFFFFFFFL;
             }
