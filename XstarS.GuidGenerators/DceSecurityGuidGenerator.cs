@@ -219,6 +219,7 @@ namespace XstarS.GuidGenerators
             }
 
             protected override int GetLocalUserID() => throw new NotImplementedException();
+
             protected override int GetLocalGroupID() => throw new NotImplementedException();
         }
     }

@@ -20,8 +20,6 @@ namespace XstarS.GuidGenerators
 
         private volatile int ClockSequence;
 
-        private readonly Lazy<NetworkInterface?> LazyUpNetworkInterface;
-
         private readonly Lazy<byte[]> LazyMacAddressBytes;
 
         protected TimeBasedGuidGenerator()
@@ -30,7 +28,6 @@ namespace XstarS.GuidGenerators
             this.HiResTimer = Stopwatch.StartNew();
             this.ClockSequence = new Random().Next();
             this.LazyMacAddressBytes = new Lazy<byte[]>(this.GetMacAdddressBytes);
-            this.LazyUpNetworkInterface = new Lazy<NetworkInterface?>(this.GetUpNetworkInterface);
         }
 
         internal static TimeBasedGuidGenerator Instance
@@ -41,9 +38,14 @@ namespace XstarS.GuidGenerators
 
         public override GuidVersion Version => GuidVersion.Version1;
 
-        protected NetworkInterface? UpNetworkInterface => this.LazyUpNetworkInterface.Value;
-
         private byte[] MacAddressBytes => this.LazyMacAddressBytes.Value;
+
+        private byte[] GetMacAdddressBytes()
+        {
+            var upIface = this.GetUpNetworkInterface();
+            if (upIface is null) { return new byte[6]; }
+            return upIface.GetPhysicalAddress().GetAddressBytes();
+        }
 
         private NetworkInterface? GetUpNetworkInterface()
         {
@@ -56,13 +58,6 @@ namespace XstarS.GuidGenerators
                 }
             }
             return null;
-        }
-
-        private byte[] GetMacAdddressBytes()
-        {
-            var upIface = this.UpNetworkInterface;
-            if (upIface is null) { return new byte[6]; }
-            return upIface.GetPhysicalAddress().GetAddressBytes();
         }
 
         public override Guid NewGuid()
