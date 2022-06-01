@@ -7,14 +7,15 @@
 RFC 4122 定义了以下 5 种 UUID 版本：
 
 * Version 1: 基于时间戳，包含 60 位时间戳和 12 位 MAC 地址
-* Version 2: DCE Security 用途，包含 28 位时间戳、12 位 MAC 地址以及 32 位用户 ID
+* Version 2: DCE Security 用途，包含 28 位时间戳、12 位 MAC 地址以及 32 位本地 ID
 * Version 3: 基于命名空间和名称，由 MD5 散列算法计算命名空间和名称得到
 * Version 4: 基于随机数（伪随机或真随机），与 .NET 的 `Guid.NewGuid()` 等价
 * Version 5: 基于命名空间和名称，由 SHA1 散列算法计算命名空间和名称得到
 
 除此之外，还有一个特殊的 Nil UUID，与 .NET 的 `Guid.Empty` 等价。
 
-> RFC 4122 的详细标准可参考[此篇文档](http://www.webdav.org/specs/rfc4122.pdf)。
+> * [RFC 4122 详细标准](http://www.webdav.org/specs/rfc4122.pdf)
+> * [DCE Security UUID 标准](https://pubs.opengroup.org/onlinepubs/9696989899/chap5.htm)
 
 ## GUID 生成库使用
 
