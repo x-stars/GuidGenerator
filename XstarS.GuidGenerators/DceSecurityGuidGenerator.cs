@@ -218,9 +218,15 @@ namespace XstarS.GuidGenerators
                 get => DceSecurityGuidGenerator.UnknownUID.Singleton.Value;
             }
 
-            protected override int GetLocalUserID() => throw new NotImplementedException();
+            protected override int GetLocalUserID()
+            {
+                throw new PlatformNotSupportedException();
+            }
 
-            protected override int GetLocalGroupID() => throw new NotImplementedException();
+            protected override int GetLocalGroupID()
+            {
+                throw new PlatformNotSupportedException();
+            }
         }
     }
 }
