@@ -50,7 +50,7 @@ namespace XstarS.GuidGenerators
         public abstract Guid NewGuid();
 
         /// <summary>
-        /// 根据命名空间和名称生成一个新的 <see cref="Guid"/> 实例。
+        /// 根据指定的命名空间和名称生成一个新的 <see cref="Guid"/> 实例。
         /// </summary>
         /// <param name="ns">生成 <see cref="Guid"/> 时使用的命名空间。</param>
         /// <param name="name">生成 <see cref="Guid"/> 时使用的名称。</param>
@@ -61,10 +61,10 @@ namespace XstarS.GuidGenerators
         public virtual Guid NewGuid(Guid ns, string name) => this.NewGuid();
 
         /// <summary>
-        /// 根据 DEC Security 域和本地 ID 生成一个新的 <see cref="Guid"/> 实例。
+        /// 根据指定的 DCE Security 域和本地 ID 生成一个新的 <see cref="Guid"/> 实例。
         /// </summary>
-        /// <param name="domain">生成 <see cref="Guid"/> 时使用的DEC Security 域。</param>
-        /// <param name="localID">生成 <see cref="Guid"/> 时使用的本地 ID。</param>
+        /// <param name="domain">生成 <see cref="Guid"/> 时使用的 DCE Security 域。</param>
+        /// <param name="localID">生成 <see cref="Guid"/> 时使用的自定义本地 ID。</param>
         /// <returns>根据 <paramref name="domain"/> 和
         /// <paramref name="localID"/> 生成的 <see cref="Guid"/> 实例。</returns>
         /// <exception cref="ArgumentOutOfRangeException">
@@ -72,7 +72,7 @@ namespace XstarS.GuidGenerators
         public virtual Guid NewGuid(DceSecurityDomain domain, int? localID = null) => this.NewGuid();
 
         /// <summary>
-        /// 填充 <see cref="Guid"/> 中表示 GUID 版本的字段。
+        /// 填充指定的 <see cref="Guid"/> 中表示 GUID 版本的字段。
         /// </summary>
         /// <param name="guid">要填充字段的 <see cref="Guid"/>。</param>
         protected void FillVersionField(ref Guid guid)
@@ -83,7 +83,7 @@ namespace XstarS.GuidGenerators
         }
 
         /// <summary>
-        /// 填充 <see cref="Guid"/> 中表示 GUID 变体的字段。
+        /// 填充指定的 <see cref="Guid"/> 中表示 GUID 变体的字段。
         /// </summary>
         /// <param name="guid">要填充字段的 <see cref="Guid"/>。</param>
         protected virtual void FillVariantField(ref Guid guid)

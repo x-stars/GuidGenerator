@@ -43,10 +43,10 @@ namespace XstarS.GuidGenerators
         }
 
         /// <summary>
-        /// 根据指定的 DCE Security 域以及本地 ID 生成一个 RFC 4122 UUID 版本 2 的 <see cref="Guid"/> 实例。
+        /// 根据指定的 DCE Security 域和本地 ID 生成一个 RFC 4122 UUID 版本 2 的 <see cref="Guid"/> 实例。
         /// </summary>
-        /// <param name="domain">生成 <see cref="Guid"/> 使用的 DCE Security 域。</param>
-        /// <param name="localID">自定义本地 ID 的 32 位整数。</param>
+        /// <param name="domain">生成 <see cref="Guid"/> 时使用的 DCE Security 域。</param>
+        /// <param name="localID">生成 <see cref="Guid"/> 时使用的自定义本地 ID。</param>
         /// <returns>一个 RFC 4122 UUID 版本 2 的 <see cref="Guid"/> 实例。</returns>
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="domain"/> 不为有效的 <see cref="DceSecurityDomain"/> 枚举值。</exception>
