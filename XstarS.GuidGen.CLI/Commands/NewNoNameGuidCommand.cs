@@ -50,7 +50,7 @@ namespace XstarS.GuidGenerators.Commands
             }
 
             var guidGen = GuidGenerator.OfVersion(version);
-            foreach (var _ in ..count)
+            foreach (var current in ..count)
             {
                 var guid = guidGen.NewGuid();
                 Console.WriteLine(guid.ToString());
