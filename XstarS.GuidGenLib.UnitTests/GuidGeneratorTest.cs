@@ -15,16 +15,23 @@ namespace XstarS.GuidGenerators
         }
 
         [TestMethod]
-        public void NewGuid_InvalidVersionEnum_CatchArgumentOutOfRangeException()
+        public void NewGuid_EmptyVersion_GetGuidWithEmptyVersion()
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(
-                () => GuidGenerator.NewGuid((GuidVersion)(-1)));
+            var guid = GuidGenerator.NewGuid(GuidVersion.Empty);
+            Assert.AreEqual(GuidVersion.Empty, guid.GetVersion());
+        }
+
+        [TestMethod]
+        public void NewGuid_EmptyVersion_GetGuidWithNcsVariant()
+        {
+            var guid = GuidGenerator.NewGuid(GuidVersion.Empty);
+            Assert.AreEqual(GuidVariant.NCS, guid.GetVariant());
         }
 
         [TestMethod]
         public void NewGuid_Version1_GetExpectedTimestamp()
         {
-            var guid = GuidGenerator.NewGuid(GuidVersion.Version1);
+            var guid = GuidGenerator.NewGuidV1();
             var hasTs = guid.TryGetTimestamp(out var timestamp);
             Assert.IsTrue(hasTs);
             var ticksTs = timestamp.Ticks;
@@ -37,18 +44,18 @@ namespace XstarS.GuidGenerators
         [TestMethod]
         public void NewGuid_Version1_GetGuidWithVersion1()
         {
-            var guid = GuidGenerator.NewGuid(GuidVersion.Version1);
+            var guid = GuidGenerator.NewGuidV1();
             Assert.AreEqual(GuidVersion.Version1, guid.GetVersion());
         }
 
         [TestMethod]
         public void NewGuid_Version1_GetIncrementClockSeq()
         {
-            var guid0 = GuidGenerator.NewGuid(GuidVersion.Version1);
+            var guid0 = GuidGenerator.NewGuidV1();
             var guidBytes0 = guid0.ToByteArray();
             var clockSeq0 = (guidBytes0[8] << 8) | guidBytes0[9];
             clockSeq0 &= (ushort)(clockSeq0 & ~0xC000);
-            var guid1 = GuidGenerator.NewGuid(GuidVersion.Version1);
+            var guid1 = GuidGenerator.NewGuidV1();
             var guidBytes1 = guid1.ToByteArray();
             var clockSeq1 = (guidBytes1[8] << 8) | guidBytes1[9];
             clockSeq1 = (ushort)(clockSeq1 & ~0xC000);
@@ -57,17 +64,17 @@ namespace XstarS.GuidGenerators
         }
 
         [TestMethod]
-        public void NewGuid_Version1_GetGuidWithVariantBits10()
+        public void NewGuid_Version1_GetGuidWithRfc4122Variant()
         {
-            var guid = GuidGenerator.NewGuid(GuidVersion.Version1);
-            var reserved = guid.ToByteArray()[8] & 0xC0;
-            Assert.AreEqual(0x80, reserved);
+            var guid = GuidGenerator.NewGuidV1();
+            Assert.AreEqual(GuidVariant.RFC4122, guid.GetVariant());
         }
 
         [TestMethod]
         public void NewGuid_Version2_GetExpectedTimestamp()
         {
-            var guid = GuidGenerator.NewGuid(GuidVersion.Version2);
+            var domain = DceSecurityDomain.Person;
+            var guid = GuidGenerator.NewGuidV2(domain);
             var hasTs = guid.TryGetTimestamp(out var timestamp);
             Assert.IsTrue(hasTs);
             var ticksTs = timestamp.Ticks;
@@ -78,20 +85,35 @@ namespace XstarS.GuidGenerators
         }
 
         [TestMethod]
-        public void NewGuid_Version1_GetGuidWithVersion2()
+        public void NewGuid_Version2_GetGuidWithVersion2()
         {
-            var guid = GuidGenerator.NewGuid(GuidVersion.Version2);
+            var domain = DceSecurityDomain.Person;
+            var guid = GuidGenerator.NewGuidV2(domain);
             Assert.AreEqual(GuidVersion.Version2, guid.GetVersion());
+        }
+
+        [TestMethod]
+        public void NewGuid_Version2_GetInputDomainAndLocalID()
+        {
+            var domain = DceSecurityDomain.Org;
+            var localID = 0x12345678;
+            var guid = GuidGenerator.NewGuidV2(domain, localID);
+            var hasLocalID = guid.TryGetDomainAndLocalID(
+                out var guidDomain, out var guidLocalID);
+            Assert.IsTrue(hasLocalID);
+            Assert.AreEqual(domain, guidDomain);
+            Assert.AreEqual(localID, guidLocalID);
         }
 
         [TestMethod]
         public void NewGuid_Version2_GetIncrementClockSeq()
         {
-            var guid0 = GuidGenerator.NewGuid(GuidVersion.Version2);
+            var domain = DceSecurityDomain.Person;
+            var guid0 = GuidGenerator.NewGuidV2(domain);
             var guidBytes0 = guid0.ToByteArray();
             var clockSeq0 = guidBytes0[8];
             clockSeq0 = (byte)(clockSeq0 & ~0xC0);
-            var guid1 = GuidGenerator.NewGuid(GuidVersion.Version2);
+            var guid1 = GuidGenerator.NewGuidV2(domain);
             var guidBytes1 = guid1.ToByteArray();
             var clockSeq1 = guidBytes1[8];
             clockSeq1 = (byte)(clockSeq1 & ~0xC0);
@@ -100,11 +122,18 @@ namespace XstarS.GuidGenerators
         }
 
         [TestMethod]
-        public void NewGuid_Version2_GetGuidWithVariantBits10()
+        public void NewGuid_Version2_GetGuidWithRfc4122Variant()
         {
-            var guid = GuidGenerator.NewGuid(GuidVersion.Version2);
-            var reserved = guid.ToByteArray()[8] & 0xC0;
-            Assert.AreEqual(0x80, reserved);
+            var domain = DceSecurityDomain.Person;
+            var guid = GuidGenerator.NewGuidV2(domain);
+            Assert.AreEqual(GuidVariant.RFC4122, guid.GetVariant());
+        }
+
+        [TestMethod]
+        public void NewGuid_Version2InvalidDomain_CatchArgumentOutOfRangeException()
+        {
+            Assert.ThrowsException<ArgumentOutOfRangeException>(
+                () => GuidGenerator.NewGuidV2((DceSecurityDomain)(-1)));
         }
 
         [TestMethod]
@@ -112,7 +141,7 @@ namespace XstarS.GuidGenerators
         {
             var ns = GuidNamespaces.URL;
             var name = "https://github.com/x-stars/GuidGenerator";
-            var guid = GuidGenerator.NewGuid(GuidVersion.Version3, ns, name);
+            var guid = GuidGenerator.NewGuidV3(ns, name);
             var expected = Guid.Parse("a9ec4420-7252-3c11-ab70-512e10273537");
             Assert.AreEqual(expected, guid);
         }
@@ -121,22 +150,21 @@ namespace XstarS.GuidGenerators
         public void NewGuid_Version3NullName_CatchArgumentNullException()
         {
             Assert.ThrowsException<ArgumentNullException>(
-                () => GuidGenerator.NewGuid(GuidVersion.Version3, Guid.Empty, null!));
+                () => GuidGenerator.NewGuidV3(Guid.Empty, null!));
         }
 
         [TestMethod]
         public void NewGuid_Version4_GetGuidWithVersion4()
         {
-            var guid = GuidGenerator.NewGuid(GuidVersion.Version4);
+            var guid = GuidGenerator.NewGuidV4();
             Assert.AreEqual(GuidVersion.Version4, guid.GetVersion());
         }
 
         [TestMethod]
-        public void NewGuid_Version4_GetGuidWithReservedBits10()
+        public void NewGuid_Version4_GetGuidWithRfc4122Variant()
         {
-            var guid = GuidGenerator.NewGuid(GuidVersion.Version4);
-            var reserved = guid.ToByteArray()[8] & 0xC0;
-            Assert.AreEqual(0x80, reserved);
+            var guid = GuidGenerator.NewGuidV4();
+            Assert.AreEqual(GuidVariant.RFC4122, guid.GetVariant());
         }
 
         [TestMethod]
@@ -144,7 +172,7 @@ namespace XstarS.GuidGenerators
         {
             var ns = GuidNamespaces.URL;
             var name = "https://github.com/x-stars/GuidGenerator";
-            var guid = GuidGenerator.NewGuid(GuidVersion.Version5, ns, name);
+            var guid = GuidGenerator.NewGuidV5(ns, name);
             var expected = Guid.Parse("768a7b1b-ae51-5c0a-bc9d-a85a343f2c24");
             Assert.AreEqual(expected, guid);
         }
@@ -153,7 +181,14 @@ namespace XstarS.GuidGenerators
         public void NewGuid_Version5NullName_CatchArgumentNullException()
         {
             Assert.ThrowsException<ArgumentNullException>(
-                () => GuidGenerator.NewGuid(GuidVersion.Version5, Guid.Empty, null!));
+                () => GuidGenerator.NewGuidV5(Guid.Empty, null!));
+        }
+
+        [TestMethod]
+        public void NewGuid_InvalidVersionEnum_CatchArgumentOutOfRangeException()
+        {
+            Assert.ThrowsException<ArgumentOutOfRangeException>(
+                () => GuidGenerator.NewGuid((GuidVersion)(-1)));
         }
     }
 }
