@@ -29,7 +29,7 @@ namespace XstarS.GuidGenerators
         public static GuidVariant GetVariant(this Guid guid)
         {
             var variant = -1;
-            var shiftVar = guid.ClkSeqHi_Var();
+            var shiftVar = (int)guid.ClkSeqHi_Var() & 0xE0;
             while ((sbyte)(shiftVar << ++variant) < 0) { }
             return (GuidVariant)variant;
         }
