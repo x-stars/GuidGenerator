@@ -91,14 +91,14 @@ namespace XstarS.GuidGenerators
                     RedirectStandardOutput = true,
                     StandardOutputEncoding = Encoding.UTF8,
                 })!;
-                var firstUserID = string.Empty;
+                var firstUserID = default(string);
                 whoamiProc.OutputDataReceived += (sender, e) =>
                 {
                     if (e.Data?.StartsWith("SID:") ?? false)
                     {
                         var userSID = e.Data.Replace("SID:", "").Trim();
                         var sidFields = userSID.Split('-');
-                        if (firstUserID.Length == 0)
+                        if (firstUserID is null)
                         {
                             firstUserID = sidFields[^1];
                         }
@@ -106,7 +106,7 @@ namespace XstarS.GuidGenerators
                 };
                 whoamiProc.BeginOutputReadLine();
                 whoamiProc.WaitForExit();
-                var userID = (firstUserID.Length > 0) ? firstUserID : "0";
+                var userID = firstUserID ?? "0";
                 return (int)ulong.Parse(userID);
             }
 
@@ -120,8 +120,8 @@ namespace XstarS.GuidGenerators
                     RedirectStandardOutput = true,
                     StandardOutputEncoding = Encoding.UTF8,
                 })!;
-                var commonGroupID = string.Empty;
-                var userGroupID = string.Empty;
+                var commonGroupID = default(string);
+                var userGroupID = default(string);
                 whoamiProc.OutputDataReceived += (sender, e) =>
                 {
                     const int maxCommonFields = 5;
@@ -131,12 +131,12 @@ namespace XstarS.GuidGenerators
                         var sidFields = groupSID.Split('-');
                         if (sidFields.Length <= maxCommonFields)
                         {
-                            if (commonGroupID.Length == 0)
+                            if (commonGroupID is null)
                             {
                                 commonGroupID = sidFields[^1];
                             }
                         }
-                        else if (userGroupID.Length == 0)
+                        else if (userGroupID is null)
                         {
                             userGroupID = sidFields[^1];
                         }
@@ -144,8 +144,7 @@ namespace XstarS.GuidGenerators
                 };
                 whoamiProc.BeginOutputReadLine();
                 whoamiProc.WaitForExit();
-                var groupID = (userGroupID.Length > 0) ? userGroupID :
-                    (commonGroupID.Length > 0) ? commonGroupID : "0";
+                var groupID = userGroupID ?? commonGroupID ?? "0";
                 return (int)ulong.Parse(groupID);
             }
         }
@@ -168,17 +167,18 @@ namespace XstarS.GuidGenerators
                     RedirectStandardOutput = true,
                     StandardOutputEncoding = Encoding.UTF8,
                 })!;
-                var userID = string.Empty;
+                var readID = default(string);
                 idProc.OutputDataReceived += (sender, e) =>
                 {
                     if (e.Data != null)
                     {
-                        userID = e.Data.Trim();
+                        readID = e.Data.Trim();
                     }
                 };
                 idProc.BeginOutputReadLine();
                 idProc.WaitForExit();
-                return (int)ulong.Parse(userID);
+                var localID = readID ?? "0";
+                return (int)ulong.Parse(localID);
             }
         }
 
