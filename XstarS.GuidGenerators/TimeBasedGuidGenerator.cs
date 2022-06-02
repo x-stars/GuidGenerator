@@ -27,7 +27,7 @@ namespace XstarS.GuidGenerators
             this.StartTimestamp = DateTime.UtcNow;
             this.HiResTimer = Stopwatch.StartNew();
             this.ClockSequence = new Random().Next();
-            this.LazyMacAddressBytes = new Lazy<byte[]>(this.GetMacAdddressBytes);
+            this.LazyMacAddressBytes = new Lazy<byte[]>(this.GetMacAddressBytes);
         }
 
         internal static TimeBasedGuidGenerator Instance
@@ -47,7 +47,7 @@ namespace XstarS.GuidGenerators
             this.FillVersionField(ref guid);
             this.FillClockSeqFields(ref guid);
             this.FillVariantField(ref guid);
-            this.FillNodeIDFields(ref guid);
+            guid.SetNodeID(this.MacAddressBytes);
             return guid;
         }
 
@@ -57,7 +57,7 @@ namespace XstarS.GuidGenerators
             return nowTs.Ticks - GuidExtensions.BaseTimestamp.Ticks;
         }
 
-        private byte[] GetMacAdddressBytes()
+        private byte[] GetMacAddressBytes()
         {
             var upIface = this.GetUpNetworkInterface();
             if (upIface is null) { return new byte[6]; }
@@ -90,16 +90,6 @@ namespace XstarS.GuidGenerators
             var clockSeq = Interlocked.Increment(ref this.ClockSequence);
             guid.ClkSeqLow() = (byte)(clockSeq >> (0 * 8));
             guid.ClkSeqHi_Var() = (byte)(clockSeq >> (1 * 8));
-        }
-
-        private unsafe void FillNodeIDFields(ref Guid guid)
-        {
-            var nodeID = this.MacAddressBytes;
-            var size = Math.Min(nodeID.Length, 6);
-            fixed (byte* pNodeID = &nodeID[0])
-            {
-                Buffer.MemoryCopy(pNodeID, guid.NodeID(), size, size);
-            }
         }
     }
 }

@@ -116,11 +116,7 @@ namespace XstarS.GuidGenerators
                 throw new ArgumentException(inner.Message, nameof(nodeID), inner);
             }
 
-            fixed (byte* pNodeID = &nodeID[0])
-            {
-                var pGuidNodeID = guid.NodeID();
-                Buffer.MemoryCopy(pNodeID, pGuidNodeID, 6, 6);
-            }
+            guid.SetNodeID(nodeID);
             return guid;
         }
 

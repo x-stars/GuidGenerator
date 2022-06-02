@@ -20,8 +20,17 @@ namespace XstarS.GuidGenerators
         internal static ref byte ClkSeqLow(this ref Guid guid) =>
             ref *(byte*)guid.RefFieldAt(9);
 
-        internal static byte* NodeID(this ref Guid guid) =>
-            (byte*)guid.RefFieldAt(10);
+        internal static byte* NodeID(this ref Guid guid) => (byte*)guid.RefFieldAt(10);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static void SetNodeID(this ref Guid guid, byte[] nodeID)
+        {
+            var size = Math.Min(nodeID.Length, 6);
+            fixed (byte* pNodeID = &nodeID[0])
+            {
+                Buffer.MemoryCopy(pNodeID, guid.NodeID(), size, size);
+            }
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void* RefFieldAt(this ref Guid guid, int offset)
