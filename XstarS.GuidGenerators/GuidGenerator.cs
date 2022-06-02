@@ -95,8 +95,9 @@ namespace XstarS.GuidGenerators
         protected void FillVariantField(ref Guid guid)
         {
             var shiftVar = -1 << (8 - (int)this.Variant);
+            var varMask = 0xE0 & (shiftVar >> 1);
             ref var clkSeqHi_Var = ref guid.ClkSeqHi_Var();
-            clkSeqHi_Var = (byte)(clkSeqHi_Var & ~0xC0 | shiftVar);
+            clkSeqHi_Var = (byte)(clkSeqHi_Var & ~varMask | shiftVar);
         }
     }
 }
