@@ -66,6 +66,25 @@ namespace XstarS.GuidGenerators
         }
 
         /// <summary>
+        /// 尝试获取当前 <see cref="Guid"/> 表示的 DCE Security 域和本地 ID。
+        /// </summary>
+        /// <param name="guid">要获取时间戳的 <see cref="Guid"/>。</param>
+        /// <param name="domain">当前 <see cref="Guid"/> 的 DCE Security 域。
+        /// 如果 <see cref="Guid"/> 的版本不包含真实的本地 ID，则为默认值。</param>
+        /// <param name="localID">当前 <see cref="Guid"/> 表示的本地 ID。
+        /// 如果 <see cref="Guid"/> 的版本不包含真实的本地 ID，则为默认值。</param>
+        /// <returns>若当前 <see cref="Guid"/> 的版本为 <see cref="GuidVersion.Version2"/>，
+        /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
+        public static bool TryGetDomainAndLocalID(
+            this Guid guid, out DceSecurityDomain domain, out int localID)
+        {
+            var hasLocalID = guid.GetVersion().ContainsLocalID();
+            domain = hasLocalID ? (DceSecurityDomain)guid.ClkSeqLow() : 0;
+            localID = hasLocalID ? (int)guid.TimeLow() : 0;
+            return hasLocalID;
+        }
+
+        /// <summary>
         /// 尝试获取当前 <see cref="Guid"/> 表示的节点 ID。
         /// </summary>
         /// <param name="guid">要获取时间戳的 <see cref="Guid"/>。</param>
@@ -87,22 +106,6 @@ namespace XstarS.GuidGenerators
                 Buffer.MemoryCopy(guid.NodeID(), pNodeID, size, size);
             }
             return true;
-        }
-
-        /// <summary>
-        /// 返回包含当前 <see cref="Guid"/> 的值的字节数组，其字节序符合 RFC 4122 UUID 标准。
-        /// </summary>
-        /// <param name="guid">要获取字节数组的 <see cref="Guid"/>。</param>
-        /// <returns>包含 <paramref name="guid"/> 的值的 16 元素字节数组，
-        /// 其 0-3、4-5 以及 6-7 字节均按照大端序排列，以符合 RFC 4122 UUID 标准。</returns>
-        public static byte[] ToUuidByteArray(this Guid guid)
-        {
-            var uuidBytes = new byte[16];
-            fixed (byte* pUuidBytes = &uuidBytes[0])
-            {
-                guid.CopyUuidBytes(pUuidBytes);
-            }
-            return uuidBytes;
         }
 
         /// <summary>
@@ -131,6 +134,22 @@ namespace XstarS.GuidGenerators
 
             guid.SetNodeID(nodeID);
             return guid;
+        }
+
+        /// <summary>
+        /// 返回包含当前 <see cref="Guid"/> 的值的字节数组，其字节序符合 RFC 4122 UUID 标准。
+        /// </summary>
+        /// <param name="guid">要获取字节数组的 <see cref="Guid"/>。</param>
+        /// <returns>包含 <paramref name="guid"/> 的值的 16 元素字节数组，
+        /// 其 0-3、4-5 以及 6-7 字节均按照大端序排列，以符合 RFC 4122 UUID 标准。</returns>
+        public static byte[] ToUuidByteArray(this Guid guid)
+        {
+            var uuidBytes = new byte[16];
+            fixed (byte* pUuidBytes = &uuidBytes[0])
+            {
+                guid.CopyUuidBytes(pUuidBytes);
+            }
+            return uuidBytes;
         }
 
         /// <summary>
