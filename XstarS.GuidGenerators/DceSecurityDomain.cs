@@ -8,14 +8,14 @@
         /// <summary>
         /// 表示 DCE Security Person 域。
         /// </summary>
-        Person = 1,
+        Person = 0,
         /// <summary>
         /// 表示 DCE Security Group 域。
         /// </summary>
-        Group = 2,
+        Group = 1,
         /// <summary>
         /// 表示 DCE Security Org 域。
         /// </summary>
-        Org = 3,
+        Org = 2,
     }
 }
