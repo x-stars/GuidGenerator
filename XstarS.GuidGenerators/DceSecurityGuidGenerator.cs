@@ -7,6 +7,16 @@ namespace XstarS.GuidGenerators
 {
     internal abstract class DceSecurityGuidGenerator : TimeBasedGuidGenerator
     {
+        private static class Singleton
+        {
+            internal static readonly DceSecurityGuidGenerator Value =
+                DceSecurityGuidGenerator.IsSupportedWindows ?
+                new DceSecurityGuidGenerator.WindowsUID() :
+                DceSecurityGuidGenerator.IsSupportedUnixLike ?
+                new DceSecurityGuidGenerator.UnixLikeUID() :
+                new DceSecurityGuidGenerator.UnknownUID();
+        }
+
         private const int DefaultLocalID = 0;
 
         private readonly Lazy<int> LazyLocalUserID;
@@ -22,11 +32,7 @@ namespace XstarS.GuidGenerators
         internal static new DceSecurityGuidGenerator Instance
         {
             [MethodImpl(MethodImplOptions.NoInlining)]
-            get => DceSecurityGuidGenerator.IsSupportedWindows ?
-                   DceSecurityGuidGenerator.WindowsUID.Instance :
-                   DceSecurityGuidGenerator.IsSupportedUnixLike ?
-                   DceSecurityGuidGenerator.UnixLikeUID.Instance :
-                   DceSecurityGuidGenerator.UnknownUID.Instance;
+            get => DceSecurityGuidGenerator.Singleton.Value;
         }
 
         private static bool IsSupportedWindows =>
@@ -73,19 +79,7 @@ namespace XstarS.GuidGenerators
 
         private sealed class WindowsUID : DceSecurityGuidGenerator
         {
-            private static class Singleton
-            {
-                internal static readonly DceSecurityGuidGenerator.WindowsUID Value =
-                    new DceSecurityGuidGenerator.WindowsUID();
-            }
-
-            private WindowsUID() { }
-
-            internal static new DceSecurityGuidGenerator.WindowsUID Instance
-            {
-                [MethodImpl(MethodImplOptions.NoInlining)]
-                get => DceSecurityGuidGenerator.WindowsUID.Singleton.Value;
-            }
+            internal WindowsUID() { }
 
             protected override int GetLocalUserID()
             {
@@ -158,19 +152,7 @@ namespace XstarS.GuidGenerators
 
         private sealed class UnixLikeUID : DceSecurityGuidGenerator
         {
-            private static class Singleton
-            {
-                internal static readonly DceSecurityGuidGenerator.UnixLikeUID Value =
-                    new DceSecurityGuidGenerator.UnixLikeUID();
-            }
-
-            private UnixLikeUID() { }
-
-            internal static new DceSecurityGuidGenerator.UnixLikeUID Instance
-            {
-                [MethodImpl(MethodImplOptions.NoInlining)]
-                get => DceSecurityGuidGenerator.UnixLikeUID.Singleton.Value;
-            }
+            internal UnixLikeUID() { }
 
             protected override int GetLocalUserID() => this.GetLocalIDByType("-u");
 
@@ -202,19 +184,7 @@ namespace XstarS.GuidGenerators
 
         private sealed class UnknownUID : DceSecurityGuidGenerator
         {
-            private static class Singleton
-            {
-                internal static readonly DceSecurityGuidGenerator.UnknownUID Value =
-                    new DceSecurityGuidGenerator.UnknownUID();
-            }
-
-            private UnknownUID() { }
-
-            internal static new DceSecurityGuidGenerator.UnknownUID Instance
-            {
-                [MethodImpl(MethodImplOptions.NoInlining)]
-                get => DceSecurityGuidGenerator.UnknownUID.Singleton.Value;
-            }
+            internal UnknownUID() { }
 
             protected override int GetLocalUserID()
             {
