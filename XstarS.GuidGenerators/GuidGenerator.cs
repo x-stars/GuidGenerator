@@ -19,6 +19,12 @@ namespace XstarS.GuidGenerators
         public abstract GuidVersion Version { get; }
 
         /// <summary>
+        /// 获取当前实例生成的 <see cref="Guid"/> 的变体。
+        /// </summary>
+        /// <returns>当前实例生成的 <see cref="Guid"/> 的变体。</returns>
+        public virtual GuidVariant Variant => GuidVariant.RFC4122;
+
+        /// <summary>
         /// 获取当前实例生成的 <see cref="Guid"/> 是否依赖于输入参数。
         /// </summary>
         /// <returns>若当前实例生成的 <see cref="Guid"/> 依赖于输入参数，
@@ -86,9 +92,9 @@ namespace XstarS.GuidGenerators
         /// 填充指定的 <see cref="Guid"/> 中表示 GUID 变体的字段。
         /// </summary>
         /// <param name="guid">要填充字段的 <see cref="Guid"/>。</param>
-        protected virtual void FillVariantField(ref Guid guid)
+        protected void FillVariantField(ref Guid guid)
         {
-            const int shiftVar = 0x80;
+            var shiftVar = -1 << (8 - (int)this.Variant);
             ref var clkSeqHi_Var = ref guid.ClkSeqHi_Var();
             clkSeqHi_Var = (byte)(clkSeqHi_Var & ~0xC0 | shiftVar);
         }

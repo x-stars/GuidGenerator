@@ -22,6 +22,19 @@ namespace XstarS.GuidGenerators
             (GuidVersion)((guid.TimeHi_Ver() & 0xF000) >> (3 * 4));
 
         /// <summary>
+        /// 获取当前 <see cref="Guid"/> 的变体。
+        /// </summary>
+        /// <param name="guid">要获取变体的 <see cref="Guid"/>。</param>
+        /// <returns>当前 <see cref="Guid"/> 的变体。</returns>
+        public static GuidVariant GetVariant(this Guid guid)
+        {
+            var variant = -1;
+            var shiftVar = guid.ClkSeqHi_Var();
+            while ((sbyte)(shiftVar << ++variant) < 0) { }
+            return (GuidVariant)variant;
+        }
+
+        /// <summary>
         /// 尝试获取当前 <see cref="Guid"/> 表示的时间戳。
         /// </summary>
         /// <param name="guid">要获取时间戳的 <see cref="Guid"/>。</param>
