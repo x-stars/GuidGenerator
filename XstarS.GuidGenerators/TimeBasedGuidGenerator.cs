@@ -40,6 +40,23 @@ namespace XstarS.GuidGenerators
 
         private byte[] MacAddressBytes => this.LazyMacAddressBytes.Value;
 
+        public override Guid NewGuid()
+        {
+            var guid = default(Guid);
+            this.FillTimestampFields(ref guid);
+            this.FillVersionField(ref guid);
+            this.FillClockSeqFields(ref guid);
+            this.FillVariantField(ref guid);
+            this.FillNodeIDFields(ref guid);
+            return guid;
+        }
+
+        private long GetCurrentTimestamp()
+        {
+            var nowTs = this.StartTimestamp + this.HiResTimer.Elapsed;
+            return nowTs.Ticks - GuidExtensions.BaseTimestamp.Ticks;
+        }
+
         private byte[] GetMacAdddressBytes()
         {
             var upIface = this.GetUpNetworkInterface();
@@ -58,23 +75,6 @@ namespace XstarS.GuidGenerators
                 }
             }
             return null;
-        }
-
-        public override Guid NewGuid()
-        {
-            var guid = default(Guid);
-            this.FillTimestampFields(ref guid);
-            this.FillVersionField(ref guid);
-            this.FillClockSeqFields(ref guid);
-            this.FillVariantField(ref guid);
-            this.FillNodeIDFields(ref guid);
-            return guid;
-        }
-
-        private long GetCurrentTimestamp()
-        {
-            var nowTs = this.StartTimestamp + this.HiResTimer.Elapsed;
-            return nowTs.Ticks - GuidExtensions.BaseTimestamp.Ticks;
         }
 
         private void FillTimestampFields(ref Guid guid)
