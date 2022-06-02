@@ -47,10 +47,11 @@ namespace XstarS.GuidGenerators
             return this.NewGuid(DceSecurityDomain.Person, null);
         }
 
-        public override Guid NewGuid(DceSecurityDomain domain, int? localId = null)
+        public override Guid NewGuid(DceSecurityDomain domain, int? localID = null)
         {
             var guid = base.NewGuid();
-            this.FillLocalIDField(ref guid, domain, localId);
+            var iLocalID = localID ?? this.GetDefaultLocalID(domain);
+            guid.TimeLow() = (uint)iLocalID;
             guid.ClkSeqHi_Var() = guid.ClkSeqLow();
             this.FillVariantField(ref guid);
             guid.ClkSeqLow() = (byte)domain;
@@ -61,17 +62,14 @@ namespace XstarS.GuidGenerators
 
         protected abstract int GetLocalGroupID();
 
-        private void FillLocalIDField(ref Guid guid, DceSecurityDomain domain, int? localID)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private int GetDefaultLocalID(DceSecurityDomain domain) => domain switch
         {
-            var finalLocalID = localID ?? domain switch
-            {
-                DceSecurityDomain.Person => this.LocalUserID,
-                DceSecurityDomain.Group => this.LocalGroupID,
-                DceSecurityDomain.Org => DceSecurityGuidGenerator.DefaultLocalID,
-                _ => throw new ArgumentOutOfRangeException(nameof(domain))
-            };
-            guid.TimeLow() = (uint)finalLocalID;
-        }
+            DceSecurityDomain.Person => this.LocalUserID,
+            DceSecurityDomain.Group => this.LocalGroupID,
+            DceSecurityDomain.Org => DceSecurityGuidGenerator.DefaultLocalID,
+            _ => throw new ArgumentOutOfRangeException(nameof(domain))
+        };
 
         private sealed class WindowsUID : DceSecurityGuidGenerator
         {

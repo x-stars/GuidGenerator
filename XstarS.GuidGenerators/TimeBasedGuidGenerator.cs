@@ -14,9 +14,9 @@ namespace XstarS.GuidGenerators
                 new TimeBasedGuidGenerator();
         }
 
-        private readonly DateTime StartTimestamp;
-
         private readonly Stopwatch HiResTimer;
+
+        private readonly long StartTimestamp;
 
         private volatile int ClockSequence;
 
@@ -24,8 +24,10 @@ namespace XstarS.GuidGenerators
 
         protected TimeBasedGuidGenerator()
         {
-            this.StartTimestamp = DateTime.UtcNow;
+            var nowTime = DateTime.UtcNow;
             this.HiResTimer = Stopwatch.StartNew();
+            var baseTime = GuidExtensions.BaseTimestamp;
+            this.StartTimestamp = nowTime.Ticks - baseTime.Ticks;
             this.ClockSequence = new Random().Next();
             this.LazyMacAddressBytes = new Lazy<byte[]>(this.GetMacAddressBytes);
         }
@@ -38,6 +40,8 @@ namespace XstarS.GuidGenerators
 
         public override GuidVersion Version => GuidVersion.Version1;
 
+        private long CurrentTimestamp => this.StartTimestamp + this.HiResTimer.ElapsedTicks;
+
         private byte[] MacAddressBytes => this.LazyMacAddressBytes.Value;
 
         public override Guid NewGuid()
@@ -49,12 +53,6 @@ namespace XstarS.GuidGenerators
             this.FillVariantField(ref guid);
             guid.SetNodeID(this.MacAddressBytes);
             return guid;
-        }
-
-        private long GetCurrentTimestamp()
-        {
-            var nowTs = this.StartTimestamp + this.HiResTimer.Elapsed;
-            return nowTs.Ticks - GuidExtensions.BaseTimestamp.Ticks;
         }
 
         private byte[] GetMacAddressBytes()
@@ -77,14 +75,16 @@ namespace XstarS.GuidGenerators
             return null;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void FillTimestampFields(ref Guid guid)
         {
-            var timestamp = this.GetCurrentTimestamp();
+            var timestamp = this.CurrentTimestamp;
             guid.TimeLow() = (uint)(timestamp >> (0 * 8));
             guid.TimeMid() = (ushort)(timestamp >> (4 * 8));
             guid.TimeHi_Ver() = (ushort)(timestamp >> (6 * 8));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void FillClockSeqFields(ref Guid guid)
         {
             var clockSeq = Interlocked.Increment(ref this.ClockSequence);
