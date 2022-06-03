@@ -1,4 +1,4 @@
-# .NET GUID 生成器
+﻿# .NET GUID 生成器
 
 提供 .NET 平台与 RFC 4122 UUID 标准兼容的 GUID 生成器。
 
