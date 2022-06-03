@@ -8,7 +8,7 @@ namespace XstarS.GuidGenerators
     public static class GuidNamespaces
     {
         /// <summary>
-        /// 表示完整域名时的命名空间。
+        /// 表示完整域名的命名空间。
         /// </summary>
         public static readonly Guid DNS = new Guid(
             // 6ba7b810-9dad-11d1-80b4-00c04fd430c8
