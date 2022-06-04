@@ -151,9 +151,15 @@ namespace XstarS.GuidGenerators
         {
             internal UnixLikeUID() { }
 
-            protected override int GetLocalUserID() => this.GetLocalIDByType("-u");
+            protected override int GetLocalUserID()
+            {
+                return this.GetLocalIDByType("-ru");
+            }
 
-            protected override int GetLocalGroupID() => this.GetLocalIDByType("-g");
+            protected override int GetLocalGroupID()
+            {
+                return this.GetLocalIDByType("-rg");
+            }
 
             private int GetLocalIDByType(string arguments)
             {
