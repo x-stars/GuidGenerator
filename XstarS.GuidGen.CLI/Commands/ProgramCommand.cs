@@ -12,11 +12,11 @@ namespace XstarS.GuidGenerators.Commands
         {
             static IEnumerable<ProgramCommand> GetCommandChain()
             {
-                yield return NewNoNameGuidCommand.Default;
-                yield return NewNoNameGuidCommand.Version1;
-                yield return NewNoNameGuidCommand.Version2;
+                yield return NewNoInputGuidCommand.Default;
+                yield return NewNoInputGuidCommand.Version1;
+                yield return NewDceSecurityGuidCommand.Version2;
                 yield return NewNameBasedGuidCommand.Version3;
-                yield return NewNoNameGuidCommand.Version4;
+                yield return NewNoInputGuidCommand.Version4;
                 yield return NewNameBasedGuidCommand.Version5;
                 yield return ShowHelpCommand.Instance;
                 yield return InvalidSyntaxCommand.Instance;

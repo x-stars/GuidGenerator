@@ -2,30 +2,27 @@
 
 namespace XstarS.GuidGenerators.Commands
 {
-    internal class NewNoNameGuidCommand : ProgramCommand
+    internal class NewNoInputGuidCommand : ProgramCommand
     {
-        internal static readonly NewNoNameGuidCommand Default =
-            new NewNoNameGuidCommand.DefaultVersion();
+        internal static readonly NewNoInputGuidCommand Default =
+            new NewNoInputGuidCommand.DefaultVersion();
 
-        internal static readonly NewNoNameGuidCommand Version1 =
-            new NewNoNameGuidCommand(GuidVersion.Version1);
+        internal static readonly NewNoInputGuidCommand Version1 =
+            new NewNoInputGuidCommand(GuidVersion.Version1);
 
-        internal static readonly NewNoNameGuidCommand Version2 =
-            new NewNoNameGuidCommand(GuidVersion.Version2);
-
-        internal static readonly NewNoNameGuidCommand Version4 =
-            new NewNoNameGuidCommand(GuidVersion.Version4);
+        internal static readonly NewNoInputGuidCommand Version4 =
+            new NewNoInputGuidCommand(GuidVersion.Version4);
 
         private readonly GuidVersion Version;
 
-        private NewNoNameGuidCommand(GuidVersion version)
+        private NewNoInputGuidCommand(GuidVersion version)
         {
             this.Version = version;
         }
 
         public override bool TryExecute(string[] args)
         {
-            if ((args.Length != 1) && (args.Length != 2))
+            if (args.Length is not (1 or 2))
             {
                 return false;
             }
@@ -45,8 +42,8 @@ namespace XstarS.GuidGenerators.Commands
                 {
                     return false;
                 }
-                var parsed = int.TryParse(countArg[2..], out count);
-                if (!parsed || (count < 0)) { return false; }
+                var cParsed = int.TryParse(countArg[2..], out count);
+                if (!cParsed || (count < 0)) { return false; }
             }
 
             var guidGen = GuidGenerator.OfVersion(version);
@@ -58,7 +55,7 @@ namespace XstarS.GuidGenerators.Commands
             return true;
         }
 
-        private sealed class DefaultVersion : NewNoNameGuidCommand
+        private sealed class DefaultVersion : NewNoInputGuidCommand
         {
             internal DefaultVersion() : base(GuidVersion.Version4) { }
 

@@ -29,16 +29,21 @@ namespace XstarS.GuidGenerators.Commands
             IEnumerable<string> GetHelpMessage()
             {
                 var cmdName = this.GetCommandName();
-                yield return $"Usage:  {cmdName} [-V1|-V2|-V4] [-Cn]";
+                yield return $"Usage:  {cmdName} [-V1|-V4] [-Cn]";
+                yield return $"        {cmdName} -V2 [-Cn] Domain [SiteID]";
                 yield return $"        {cmdName} -V3|-V5 :NS|GuidNS [Name]";
                 yield return $"        {cmdName} -?|-H|-Help";
                 yield return "Parameters:";
                 yield return "    -V1     generate time-based GUIDs.";
                 yield return "    -V2     generate DCE security GUIDs.";
                 yield return "    -V3     generate name-based GUID by MD5 hashing.";
-                yield return "    -V4     generate pesudo-random GUIDs (default).";
+                yield return "    -V4     generate pseudo-random GUIDs (default).";
                 yield return "    -V5     generate name-based GUID by SHA1 hashing.";
                 yield return "    -Cn     generate n GUIDs of the current version.";
+                yield return "    Domain  specify a DCE security domain,";
+                yield return "            which can be Person, Group or Org.";
+                yield return "    SiteID  specify a user-defined local ID";
+                yield return "            for DCE security domain Org (required).";
                 yield return "    :NS     specify a well-known GUID namespace,";
                 yield return "            which can be :DNS, :URL, :OID or :X500.";
                 yield return "    GuidNS  specify a user-defined GUID namespace.";

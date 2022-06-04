@@ -19,7 +19,7 @@ namespace XstarS.GuidGenerators.Commands
 
         public override bool TryExecute(string[] args)
         {
-            if ((args.Length != 2) && (args.Length != 3))
+            if (args.Length is not (2 or 3))
             {
                 return false;
             }
