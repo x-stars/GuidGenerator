@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace XstarS.GuidGenerators
 {
-    internal sealed class RandomizedGuidGenerator : GuidGenerator
+    internal sealed class RandomizedGuidGenerator : GuidGenerator, IGuidGenerator
     {
         private static class Singleton
         {

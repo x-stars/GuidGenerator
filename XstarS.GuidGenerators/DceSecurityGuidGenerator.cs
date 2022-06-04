@@ -5,7 +5,7 @@ using System.Text;
 
 namespace XstarS.GuidGenerators
 {
-    internal abstract class DceSecurityGuidGenerator : TimeBasedGuidGenerator
+    internal abstract class DceSecurityGuidGenerator : TimeBasedGuidGenerator, IDceSecurityGuidGenerator
     {
         private static class Singleton
         {

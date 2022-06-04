@@ -5,8 +5,7 @@ namespace XstarS.GuidGenerators
     /// <summary>
     /// 提供生成 <see cref="Guid"/> 的方法。
     /// </summary>
-    public abstract partial class GuidGenerator : IGuidGeneratorInfo,
-        IGuidGenerator, INameBasedGuidGenerator, IDceSecurityGuidGenerator
+    public abstract partial class GuidGenerator : IGuidGeneratorInfo, IGuidGenerator
     {
         /// <summary>
         /// 初始化 <see cref="GuidGenerator"/> 类的新实例。

@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace XstarS.GuidGenerators
 {
-    internal class TimeBasedGuidGenerator : GuidGenerator
+    internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
     {
         private static class Singleton
         {

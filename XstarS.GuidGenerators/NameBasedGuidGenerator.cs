@@ -6,7 +6,7 @@ using System.Text;
 
 namespace XstarS.GuidGenerators
 {
-    internal abstract class NameBasedGuidGenerator : GuidGenerator
+    internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGenerator
     {
         private readonly BlockingCollection<HashAlgorithm> Hashings;
 
