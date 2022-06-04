@@ -21,7 +21,21 @@ RFC 4122 定义了以下 5 种 UUID 版本：
 
 GUID 生成库的工程位于 [XstarS.GuidGenerators](XstarS.GuidGenerators)。
 
-### 工厂方法创建后使用
+### 静态属性获取实例后调用
+
+``` C#
+using XstarS.GuidGenerators;
+
+// time-based GUID generation.
+var guidGenV1 = GuidGenerator.Version1;
+var guidV1 = guidGenV1.NewGuid();
+
+// name-based GUID generation.
+var guidGenV5 = GuidGenerator.Version5;
+var guidV5 = guidGenV5.NewGuid(GuidNamespaces.DNS, "github.com");
+```
+
+### 工厂方法获取实例后调用
 
 ``` C#
 using XstarS.GuidGenerators;
@@ -35,7 +49,7 @@ var guidGenV5 = GuidGenerator.OfVersion(GuidVersion.Version5);
 var guidV5 = guidGenV5.NewGuid(GuidNamespaces.DNS, "github.com");
 ```
 
-### 直接调用静态生成方法
+### 直接调用静态生成方法生成 GUID
 
 ``` C#
 using XstarS.GuidGenerators;
