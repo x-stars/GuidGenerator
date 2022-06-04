@@ -5,7 +5,8 @@ namespace XstarS.GuidGenerators
     /// <summary>
     /// 提供生成 <see cref="Guid"/> 的方法。
     /// </summary>
-    public abstract partial class GuidGenerator
+    public abstract partial class GuidGenerator : IGuidGeneratorInfo,
+        IGuidGenerator, INameBasedGuidGenerator, IDceSecurityGuidGenerator
     {
         /// <summary>
         /// 初始化 <see cref="GuidGenerator"/> 类的新实例。
@@ -30,24 +31,6 @@ namespace XstarS.GuidGenerators
         /// <returns>若当前实例生成的 <see cref="Guid"/> 依赖于输入参数，
         /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
         public virtual bool RequiresInput => this.Version.IsNameBased();
-
-        /// <summary>
-        /// 获取指定 GUID 版本的 <see cref="GuidGenerator"/> 对象。
-        /// </summary>
-        /// <param name="version">要生成的 <see cref="Guid"/> 的版本。</param>
-        /// <returns>版本为 <paramref name="version"/> 的 <see cref="GuidGenerator"/>。</returns>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// <paramref name="version"/> 不为有效的 <see cref="GuidVersion"/> 枚举值。</exception>
-        public static GuidGenerator OfVersion(GuidVersion version) => version switch
-        {
-            GuidVersion.Empty => EmptyGuidGenerator.Instance,
-            GuidVersion.Version1 => TimeBasedGuidGenerator.Instance,
-            GuidVersion.Version2 => DceSecurityGuidGenerator.Instance,
-            GuidVersion.Version3 => NameBasedGuidGenerator.MD5Hashing.Instance,
-            GuidVersion.Version4 => RandomizedGuidGenerator.Instance,
-            GuidVersion.Version5 => NameBasedGuidGenerator.SHA1Hashing.Instance,
-            _ => throw new ArgumentOutOfRangeException(nameof(version))
-        };
 
         /// <summary>
         /// 生成一个新的 <see cref="Guid"/> 实例。
