@@ -58,6 +58,8 @@ namespace XstarS.GuidGenerators
         /// <paramref name="version"/> 不为有效的 <see cref="GuidVersion"/> 枚举值。</exception>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="name"/> 为 <see langword="null"/>。</exception>
+        /// <exception cref="NotSupportedException">
+        /// <paramref name="version"/> 版本不支持基于名称的 <see cref="Guid"/> 生成模式。</exception>
         public static Guid NewGuid(GuidVersion version, Guid ns, string name)
         {
             return GuidGenerator.OfVersion(version).NewGuid(ns, name);

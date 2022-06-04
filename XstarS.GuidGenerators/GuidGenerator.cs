@@ -46,7 +46,12 @@ namespace XstarS.GuidGenerators
         /// <paramref name="name"/> 生成的 <see cref="Guid"/> 实例。</returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="name"/> 为 <see langword="null"/>。</exception>
-        public virtual Guid NewGuid(Guid ns, string name) => this.NewGuid();
+        /// <exception cref="NotSupportedException">
+        /// 当前实例不支持基于名称的 <see cref="Guid"/> 生成模式。</exception>
+        public virtual Guid NewGuid(Guid ns, string name)
+        {
+            throw new NotSupportedException();
+        }
 
         /// <summary>
         /// 根据指定的 DCE Security 域和本地 ID 生成一个新的 <see cref="Guid"/> 实例。
@@ -57,7 +62,12 @@ namespace XstarS.GuidGenerators
         /// <paramref name="localID"/> 生成的 <see cref="Guid"/> 实例。</returns>
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="domain"/> 不为有效的 <see cref="DceSecurityDomain"/> 枚举值。</exception>
-        public virtual Guid NewGuid(DceSecurityDomain domain, int? localID = null) => this.NewGuid();
+        /// <exception cref="NotSupportedException">
+        /// 当前实例不支持 DCE Security 的 <see cref="Guid"/> 生成模式。</exception>
+        public virtual Guid NewGuid(DceSecurityDomain domain, int? localID = null)
+        {
+            throw new NotSupportedException();
+        }
 
         /// <summary>
         /// 填充指定的 <see cref="Guid"/> 中表示 GUID 版本的字段。
