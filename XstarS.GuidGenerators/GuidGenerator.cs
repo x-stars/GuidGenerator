@@ -22,7 +22,7 @@ namespace XstarS.GuidGenerators
         /// 获取当前实例生成的 <see cref="Guid"/> 的变体。
         /// </summary>
         /// <returns>当前实例生成的 <see cref="Guid"/> 的变体。</returns>
-        public virtual GuidVariant Variant => GuidVariant.RFC4122;
+        public virtual GuidVariant Variant => GuidVariant.Rfc4122;
 
         /// <summary>
         /// 获取当前实例生成的 <see cref="Guid"/> 是否依赖于输入参数。

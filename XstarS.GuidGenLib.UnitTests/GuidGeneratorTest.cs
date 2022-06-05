@@ -25,7 +25,7 @@ namespace XstarS.GuidGenerators
         public void NewGuid_EmptyVersion_GetGuidWithNcsVariant()
         {
             var guid = GuidGenerator.NewGuid(GuidVersion.Empty);
-            Assert.AreEqual(GuidVariant.NCS, guid.GetVariant());
+            Assert.AreEqual(GuidVariant.Ncs, guid.GetVariant());
         }
 
         [TestMethod]
@@ -67,7 +67,7 @@ namespace XstarS.GuidGenerators
         public void NewGuid_Version1_GetGuidWithRfc4122Variant()
         {
             var guid = GuidGenerator.Version1.NewGuid();
-            Assert.AreEqual(GuidVariant.RFC4122, guid.GetVariant());
+            Assert.AreEqual(GuidVariant.Rfc4122, guid.GetVariant());
         }
 
         [TestMethod]
@@ -126,7 +126,7 @@ namespace XstarS.GuidGenerators
         {
             var domain = DceSecurityDomain.Person;
             var guid = GuidGenerator.Version2.NewGuid(domain);
-            Assert.AreEqual(GuidVariant.RFC4122, guid.GetVariant());
+            Assert.AreEqual(GuidVariant.Rfc4122, guid.GetVariant());
         }
 
         [TestMethod]
@@ -164,7 +164,7 @@ namespace XstarS.GuidGenerators
         public void NewGuid_Version4_GetGuidWithRfc4122Variant()
         {
             var guid = GuidGenerator.Version4.NewGuid();
-            Assert.AreEqual(GuidVariant.RFC4122, guid.GetVariant());
+            Assert.AreEqual(GuidVariant.Rfc4122, guid.GetVariant());
         }
 
         [TestMethod]

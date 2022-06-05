@@ -21,7 +21,7 @@ namespace XstarS.GuidGenerators
 
         public override GuidVersion Version => GuidVersion.Empty;
 
-        public override GuidVariant Variant => GuidVariant.NCS;
+        public override GuidVariant Variant => GuidVariant.Ncs;
 
         public override Guid NewGuid() => Guid.Empty;
     }

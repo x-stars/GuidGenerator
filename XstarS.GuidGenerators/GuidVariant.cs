@@ -10,11 +10,11 @@ namespace XstarS.GuidGenerators
         /// <summary>
         /// 保留，用于向后兼容 NCS UUID。
         /// </summary>
-        NCS = 0,
+        Ncs = 0,
         /// <summary>
         /// 表示 RFC 4122 定义的 UUID 变体。
         /// </summary>
-        RFC4122 = 1,
+        Rfc4122 = 1,
         /// <summary>
         /// 保留，用于向后兼容 Microsoft 早期 GUID。
         /// </summary>
