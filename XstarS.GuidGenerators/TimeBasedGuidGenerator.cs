@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -29,7 +28,8 @@ namespace XstarS.GuidGenerators
             var baseTime = GuidExtensions.BaseTimestamp;
             this.StartTimestamp = nowTime.Ticks - baseTime.Ticks;
             this.ClockSequence = new Random().Next();
-            this.LazyMacAddressBytes = new Lazy<byte[]>(this.GetMacAddressBytes);
+            var provider = NodeIDProvider.Instance;
+            this.LazyMacAddressBytes = new Lazy<byte[]>(provider.GetMacAddressBytes);
         }
 
         internal static TimeBasedGuidGenerator Instance
@@ -53,26 +53,6 @@ namespace XstarS.GuidGenerators
             this.FillVariantField(ref guid);
             guid.SetNodeID(this.MacAddressBytes);
             return guid;
-        }
-
-        private byte[] GetMacAddressBytes()
-        {
-            var upIface = this.GetUpNetworkInterface();
-            if (upIface is null) { return new byte[6]; }
-            return upIface.GetPhysicalAddress().GetAddressBytes();
-        }
-
-        private NetworkInterface? GetUpNetworkInterface()
-        {
-            var ifaces = NetworkInterface.GetAllNetworkInterfaces();
-            foreach (var iface in ifaces)
-            {
-                if (iface.OperationalStatus == OperationalStatus.Up)
-                {
-                    return iface;
-                }
-            }
-            return null;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
