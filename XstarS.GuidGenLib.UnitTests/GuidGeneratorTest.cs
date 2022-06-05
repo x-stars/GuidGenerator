@@ -139,7 +139,7 @@ namespace XstarS.GuidGenerators
         [TestMethod]
         public void NewGuid_Version3_GetExpectedGuid()
         {
-            var ns = GuidNamespaces.URL;
+            var ns = GuidNamespaces.Url;
             var name = "https://github.com/x-stars/GuidGenerator";
             var guid = GuidGenerator.Version3.NewGuid(ns, name);
             var expected = Guid.Parse("a9ec4420-7252-3c11-ab70-512e10273537");
@@ -170,7 +170,7 @@ namespace XstarS.GuidGenerators
         [TestMethod]
         public void NewGuid_Version5_GetExpectedGuid()
         {
-            var ns = GuidNamespaces.URL;
+            var ns = GuidNamespaces.Url;
             var name = "https://github.com/x-stars/GuidGenerator";
             var guid = GuidGenerator.Version5.NewGuid(ns, name);
             var expected = Guid.Parse("768a7b1b-ae51-5c0a-bc9d-a85a343f2c24");

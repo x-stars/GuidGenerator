@@ -36,8 +36,8 @@ namespace XstarS.GuidGenerators.Commands
             var ns = Guid.Empty;
             if (nsArg.StartsWith(":"))
             {
-                var knownNs = nsArg[1..];
-                if (!GuidNamespaces.TryFindByName(knownNs, out ns))
+                var nsName = nsArg[1..];
+                if (!this.TryParseNamespace(nsName, out ns))
                 {
                     return false;
                 }
@@ -64,6 +64,19 @@ namespace XstarS.GuidGenerators.Commands
                 Console.WriteLine(guid);
             }
             return true;
+        }
+
+        private bool TryParseNamespace(string name, out Guid ns)
+        {
+            ns = name switch
+            {
+                "DNS" => GuidNamespaces.Dns,
+                "URL" => GuidNamespaces.Url,
+                "OID" => GuidNamespaces.Oid,
+                "X500" => GuidNamespaces.X500,
+                _ => Guid.Empty
+            };
+            return ns != Guid.Empty;
         }
     }
 }
