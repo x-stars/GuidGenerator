@@ -19,7 +19,7 @@ namespace XstarS.GuidGenerators
 
         private volatile int ClockSequence;
 
-        private readonly Lazy<byte[]> LazyMacAddressBytes;
+        private readonly Lazy<byte[]> LazyNodeIdBytes;
 
         protected TimeBasedGuidGenerator()
         {
@@ -29,7 +29,7 @@ namespace XstarS.GuidGenerators
             this.StartTimestamp = nowTime.Ticks - baseTime.Ticks;
             this.ClockSequence = new Random().Next();
             var provider = NodeIdProvider.Instance;
-            this.LazyMacAddressBytes = new Lazy<byte[]>(provider.GetMacAddressBytes);
+            this.LazyNodeIdBytes = new Lazy<byte[]>(provider.GetNodeIdBytes);
         }
 
         internal static TimeBasedGuidGenerator Instance
@@ -42,7 +42,7 @@ namespace XstarS.GuidGenerators
 
         private long CurrentTimestamp => this.StartTimestamp + this.HiResTimer.ElapsedTicks;
 
-        private byte[] MacAddressBytes => this.LazyMacAddressBytes.Value;
+        private byte[] NodeIdBytes => this.LazyNodeIdBytes.Value;
 
         public override Guid NewGuid()
         {
@@ -51,7 +51,7 @@ namespace XstarS.GuidGenerators
             this.FillVersionField(ref guid);
             this.FillClockSeqFields(ref guid);
             this.FillVariantField(ref guid);
-            guid.SetNodeId(this.MacAddressBytes);
+            guid.SetNodeId(this.NodeIdBytes);
             return guid;
         }
 

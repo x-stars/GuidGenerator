@@ -8,7 +8,7 @@ namespace XstarS.GuidGenerators
         private static class Singleton
         {
             internal static readonly NodeIdProvider Value =
-                new NodeIdProvider.Network();
+                new NodeIdProvider.MacAddress();
         }
 
         protected NodeIdProvider() { }
@@ -19,13 +19,13 @@ namespace XstarS.GuidGenerators
             get => NodeIdProvider.Singleton.Value;
         }
 
-        public abstract byte[] GetMacAddressBytes();
+        public abstract byte[] GetNodeIdBytes();
 
-        private sealed class Network : NodeIdProvider
+        private sealed class MacAddress : NodeIdProvider
         {
-            internal Network() { }
+            internal MacAddress() { }
 
-            public override byte[] GetMacAddressBytes()
+            public override byte[] GetNodeIdBytes()
             {
                 var upIface = this.GetUpNetworkInterface();
                 if (upIface is null) { return new byte[6]; }
