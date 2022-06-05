@@ -28,7 +28,7 @@ namespace XstarS.GuidGenerators
             var baseTime = GuidExtensions.BaseTimestamp;
             this.StartTimestamp = nowTime.Ticks - baseTime.Ticks;
             this.ClockSequence = new Random().Next();
-            var provider = NodeIDProvider.Instance;
+            var provider = NodeIdProvider.Instance;
             this.LazyMacAddressBytes = new Lazy<byte[]>(provider.GetMacAddressBytes);
         }
 
@@ -51,7 +51,7 @@ namespace XstarS.GuidGenerators
             this.FillVersionField(ref guid);
             this.FillClockSeqFields(ref guid);
             this.FillVariantField(ref guid);
-            guid.SetNodeID(this.MacAddressBytes);
+            guid.SetNodeId(this.MacAddressBytes);
             return guid;
         }
 

@@ -23,7 +23,7 @@ namespace XstarS.GuidGenerators.Commands
 
             var count = 1;
             var domainArg = default(string);
-            var siteIDArg = default(string);
+            var siteIdArg = default(string);
             if (args[1].ToUpper().StartsWith("-C"))
             {
                 var countArg = args[1];
@@ -31,38 +31,38 @@ namespace XstarS.GuidGenerators.Commands
                 if (!cParsed || (count < 0)) { return false; }
                 if (args.Length == 2) { return false; }
                 domainArg = args[2];
-                if (args.Length == 4) { siteIDArg = args[3]; }
+                if (args.Length == 4) { siteIdArg = args[3]; }
             }
             else
             {
                 domainArg = args[1];
-                if (args.Length == 3) { siteIDArg = args[2]; }
+                if (args.Length == 3) { siteIdArg = args[2]; }
                 if (args.Length == 4) { return false; }
             }
 
-            var nSiteID = default(int?);
+            var nSiteId = default(int?);
             var dParsed = Enum.TryParse<DceSecurityDomain>(
                 domainArg, ignoreCase: true, out var domain);
             if (!dParsed) { return false; }
             if (domain is DceSecurityDomain.Person or DceSecurityDomain.Group)
             {
-                if (siteIDArg is not null) { return false; }
+                if (siteIdArg is not null) { return false; }
             }
             else if (domain is DceSecurityDomain.Org)
             {
-                if (siteIDArg is null) { return false; }
-                var iParsed = int.TryParse(siteIDArg, out var siteID);
+                if (siteIdArg is null) { return false; }
+                var iParsed = int.TryParse(siteIdArg, out var siteId);
                 if (!iParsed)
                 {
                     try
                     {
-                        siteID = Convert.ToInt32(siteIDArg, 16);
+                        siteId = Convert.ToInt32(siteIdArg, 16);
                         iParsed = true;
                     }
                     catch (Exception) { }
                 }
                 if (!iParsed) { return false; }
-                nSiteID = siteID;
+                nSiteId = siteId;
             }
             else
             {
@@ -72,7 +72,7 @@ namespace XstarS.GuidGenerators.Commands
             var guidGen = GuidGenerator.Version2;
             foreach (var current in ..count)
             {
-                var guid = guidGen.NewGuid(domain, nSiteID);
+                var guid = guidGen.NewGuid(domain, nSiteId);
                 Console.WriteLine(guid);
             }
             return true;

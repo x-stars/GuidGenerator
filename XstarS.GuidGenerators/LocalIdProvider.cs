@@ -5,22 +5,22 @@ using System.Text;
 
 namespace XstarS.GuidGenerators
 {
-    internal abstract class LocalIDProvider
+    internal abstract class LocalIdProvider
     {
         private static class Singleton
         {
-            internal static readonly LocalIDProvider Value =
-                LocalIDProvider.IsSupportedWindows ?
-                new LocalIDProvider.Windows() :
-                LocalIDProvider.IsSupportedUnixLike ?
-                new LocalIDProvider.UnixLike() :
-                new LocalIDProvider.Unknown();
+            internal static readonly LocalIdProvider Value =
+                LocalIdProvider.IsSupportedWindows ?
+                new LocalIdProvider.Windows() :
+                LocalIdProvider.IsSupportedUnixLike ?
+                new LocalIdProvider.UnixLike() :
+                new LocalIdProvider.Unknown();
         }
 
-        internal static LocalIDProvider Instance
+        internal static LocalIdProvider Instance
         {
             [MethodImpl(MethodImplOptions.NoInlining)]
-            get => LocalIDProvider.Singleton.Value;
+            get => LocalIdProvider.Singleton.Value;
         }
 
         private static bool IsSupportedWindows =>
@@ -30,15 +30,15 @@ namespace XstarS.GuidGenerators
             Environment.OSVersion.Platform == PlatformID.Unix ||
             Environment.OSVersion.Platform == PlatformID.MacOSX;
 
-        public abstract int GetLocalUserID();
+        public abstract int GetLocalUserId();
 
-        public abstract int GetLocalGroupID();
+        public abstract int GetLocalGroupId();
 
-        private sealed class Windows : LocalIDProvider
+        private sealed class Windows : LocalIdProvider
         {
             internal Windows() { }
 
-            public override int GetLocalUserID()
+            public override int GetLocalUserId()
             {
                 var whoamiProc = Process.Start(new ProcessStartInfo()
                 {
@@ -48,26 +48,26 @@ namespace XstarS.GuidGenerators
                     RedirectStandardOutput = true,
                     StandardOutputEncoding = Encoding.UTF8,
                 })!;
-                var firstUserID = default(string);
+                var firstUserId = default(string);
                 whoamiProc.OutputDataReceived += (sender, e) =>
                 {
                     if (e.Data?.StartsWith("SID:") ?? false)
                     {
-                        var userSID = e.Data.Replace("SID:", "").Trim();
-                        var sidFields = userSID.Split('-');
-                        if (firstUserID is null)
+                        var userSid = e.Data.Replace("SID:", "").Trim();
+                        var sidFields = userSid.Split('-');
+                        if (firstUserId is null)
                         {
-                            firstUserID = sidFields[^1];
+                            firstUserId = sidFields[^1];
                         }
                     }
                 };
                 whoamiProc.BeginOutputReadLine();
                 whoamiProc.WaitForExit();
-                var userID = firstUserID ?? "0";
-                return (int)ulong.Parse(userID);
+                var userId = firstUserId ?? "0";
+                return (int)ulong.Parse(userId);
             }
 
-            public override int GetLocalGroupID()
+            public override int GetLocalGroupId()
             {
                 var whoamiProc = Process.Start(new ProcessStartInfo()
                 {
@@ -77,50 +77,50 @@ namespace XstarS.GuidGenerators
                     RedirectStandardOutput = true,
                     StandardOutputEncoding = Encoding.UTF8,
                 })!;
-                var commonGroupID = default(string);
-                var userGroupID = default(string);
+                var commonGroupId = default(string);
+                var userGroupId = default(string);
                 whoamiProc.OutputDataReceived += (sender, e) =>
                 {
                     const int maxCommonFields = 5;
                     if (e.Data?.StartsWith("SID:") ?? false)
                     {
-                        var groupSID = e.Data.Replace("SID:", "").Trim();
-                        var sidFields = groupSID.Split('-');
+                        var groupSid = e.Data.Replace("SID:", "").Trim();
+                        var sidFields = groupSid.Split('-');
                         if (sidFields.Length <= maxCommonFields)
                         {
-                            if (commonGroupID is null)
+                            if (commonGroupId is null)
                             {
-                                commonGroupID = sidFields[^1];
+                                commonGroupId = sidFields[^1];
                             }
                         }
-                        else if (userGroupID is null)
+                        else if (userGroupId is null)
                         {
-                            userGroupID = sidFields[^1];
+                            userGroupId = sidFields[^1];
                         }
                     }
                 };
                 whoamiProc.BeginOutputReadLine();
                 whoamiProc.WaitForExit();
-                var groupID = userGroupID ?? commonGroupID ?? "0";
-                return (int)ulong.Parse(groupID);
+                var groupId = userGroupId ?? commonGroupId ?? "0";
+                return (int)ulong.Parse(groupId);
             }
         }
 
-        private sealed class UnixLike : LocalIDProvider
+        private sealed class UnixLike : LocalIdProvider
         {
             internal UnixLike() { }
 
-            public override int GetLocalUserID()
+            public override int GetLocalUserId()
             {
-                return this.GetLocalIDByType("-ru");
+                return this.GetLocalIdByType("-ru");
             }
 
-            public override int GetLocalGroupID()
+            public override int GetLocalGroupId()
             {
-                return this.GetLocalIDByType("-rg");
+                return this.GetLocalIdByType("-rg");
             }
 
-            private int GetLocalIDByType(string arguments)
+            private int GetLocalIdByType(string arguments)
             {
                 var idProc = Process.Start(new ProcessStartInfo()
                 {
@@ -130,31 +130,31 @@ namespace XstarS.GuidGenerators
                     RedirectStandardOutput = true,
                     StandardOutputEncoding = Encoding.UTF8,
                 })!;
-                var readID = default(string);
+                var read = default(string);
                 idProc.OutputDataReceived += (sender, e) =>
                 {
                     if (e.Data != null)
                     {
-                        readID = e.Data.Trim();
+                        read = e.Data.Trim();
                     }
                 };
                 idProc.BeginOutputReadLine();
                 idProc.WaitForExit();
-                var localID = readID ?? "0";
-                return (int)ulong.Parse(localID);
+                var localId = read ?? "0";
+                return (int)ulong.Parse(localId);
             }
         }
 
-        private sealed class Unknown : LocalIDProvider
+        private sealed class Unknown : LocalIdProvider
         {
             internal Unknown() { }
 
-            public override int GetLocalUserID()
+            public override int GetLocalUserId()
             {
                 throw new PlatformNotSupportedException();
             }
 
-            public override int GetLocalGroupID()
+            public override int GetLocalGroupId()
             {
                 throw new PlatformNotSupportedException();
             }

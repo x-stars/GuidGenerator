@@ -54,7 +54,7 @@ namespace XstarS.GuidGenerators
             var tsField = ((long)guid.TimeLow()) |
                 ((long)guid.TimeMid() << (4 * 8)) |
                 ((long)guid.TimeHi_Ver() << (6 * 8));
-            if (version.ContainsLocalID())
+            if (version.ContainsLocalId())
             {
                 tsField &= ~0xFFFFFFFFL;
             }
@@ -71,39 +71,39 @@ namespace XstarS.GuidGenerators
         /// <param name="guid">要获取时间戳的 <see cref="Guid"/>。</param>
         /// <param name="domain">当前 <see cref="Guid"/> 的 DCE Security 域。
         /// 如果 <see cref="Guid"/> 的版本不包含真实的本地 ID，则为默认值。</param>
-        /// <param name="localID">当前 <see cref="Guid"/> 表示的本地 ID。
+        /// <param name="localId">当前 <see cref="Guid"/> 表示的本地 ID。
         /// 如果 <see cref="Guid"/> 的版本不包含真实的本地 ID，则为默认值。</param>
         /// <returns>若当前 <see cref="Guid"/> 的版本为 <see cref="GuidVersion.Version2"/>，
         /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
-        public static bool TryGetDomainAndLocalID(
-            this Guid guid, out DceSecurityDomain domain, out int localID)
+        public static bool TryGetDomainAndLocalId(
+            this Guid guid, out DceSecurityDomain domain, out int localId)
         {
-            var hasLocalID = guid.GetVersion().ContainsLocalID();
-            domain = hasLocalID ? (DceSecurityDomain)guid.ClkSeqLow() : 0;
-            localID = hasLocalID ? (int)guid.TimeLow() : 0;
-            return hasLocalID;
+            var hasLocalId = guid.GetVersion().ContainsLocalId();
+            domain = hasLocalId ? (DceSecurityDomain)guid.ClkSeqLow() : 0;
+            localId = hasLocalId ? (int)guid.TimeLow() : 0;
+            return hasLocalId;
         }
 
         /// <summary>
         /// 尝试获取当前 <see cref="Guid"/> 表示的节点 ID。
         /// </summary>
         /// <param name="guid">要获取时间戳的 <see cref="Guid"/>。</param>
-        /// <param name="nodeID">当前 <see cref="Guid"/> 表示的节点 ID。
+        /// <param name="nodeId">当前 <see cref="Guid"/> 表示的节点 ID。
         /// 如果 <see cref="Guid"/> 的版本不包含真实的节点 ID，则为默认值。</param>
         /// <returns>若当前 <see cref="Guid"/> 的版本为
         /// <see cref="GuidVersion.Version1"/> 或 <see cref="GuidVersion.Version2"/>，
         /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
-        public static bool TryGetNodeID(this Guid guid, out byte[] nodeID)
+        public static bool TryGetNodeId(this Guid guid, out byte[] nodeId)
         {
             const int size = 6;
-            nodeID = new byte[size];
-            if (!guid.GetVersion().ContainsNodeID())
+            nodeId = new byte[size];
+            if (!guid.GetVersion().ContainsNodeId())
             {
                 return false;
             }
-            fixed (byte* pNodeID = &nodeID[0])
+            fixed (byte* pNodeId = &nodeId[0])
             {
-                Buffer.MemoryCopy(guid.NodeID(), pNodeID, size, size);
+                Buffer.MemoryCopy(guid.NodeId(), pNodeId, size, size);
             }
             return true;
         }
@@ -113,26 +113,26 @@ namespace XstarS.GuidGenerators
         /// <see cref="Guid"/>，其节点 ID 填充为指定字节数组中包含的数据。
         /// </summary>
         /// <param name="guid">要替换节点 ID 的 <see cref="Guid"/>。</param>
-        /// <param name="nodeID">作为节点 ID 的数据源的字节数组。</param>
+        /// <param name="nodeId">作为节点 ID 的数据源的字节数组。</param>
         /// <returns>将 <paramref name="guid"/> 的节点 ID 替换为
-        /// <paramref name="nodeID"/> 中的数据得到的新 <see cref="Guid"/>。</returns>
+        /// <paramref name="nodeId"/> 中的数据得到的新 <see cref="Guid"/>。</returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="nodeID"/> 为 <see langword="null"/>。</exception>
+        /// <paramref name="nodeId"/> 为 <see langword="null"/>。</exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="nodeID"/> 字节数组的长度小于 6。</exception>
-        public static Guid ReplaceNodeID(this Guid guid, byte[] nodeID)
+        /// <paramref name="nodeId"/> 字节数组的长度小于 6。</exception>
+        public static Guid ReplaceNodeId(this Guid guid, byte[] nodeId)
         {
-            if (nodeID is null)
+            if (nodeId is null)
             {
-                throw new ArgumentNullException(nameof(nodeID));
+                throw new ArgumentNullException(nameof(nodeId));
             }
-            if (nodeID.Length < 6)
+            if (nodeId.Length < 6)
             {
                 var inner = new IndexOutOfRangeException();
-                throw new ArgumentException(inner.Message, nameof(nodeID), inner);
+                throw new ArgumentException(inner.Message, nameof(nodeId), inner);
             }
 
-            guid.SetNodeID(nodeID);
+            guid.SetNodeId(nodeId);
             return guid;
         }
 

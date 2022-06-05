@@ -57,14 +57,14 @@ namespace XstarS.GuidGenerators
         /// 根据指定的 DCE Security 域和本地 ID 生成一个新的 <see cref="Guid"/> 实例。
         /// </summary>
         /// <param name="domain">生成 <see cref="Guid"/> 时使用的 DCE Security 域。</param>
-        /// <param name="localID">生成 <see cref="Guid"/> 时使用的自定义本地 ID。</param>
+        /// <param name="localId">生成 <see cref="Guid"/> 时使用的自定义本地 ID。</param>
         /// <returns>根据 <paramref name="domain"/> 和
-        /// <paramref name="localID"/> 生成的 <see cref="Guid"/> 实例。</returns>
+        /// <paramref name="localId"/> 生成的 <see cref="Guid"/> 实例。</returns>
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="domain"/> 不为有效的 <see cref="DceSecurityDomain"/> 枚举值。</exception>
         /// <exception cref="NotSupportedException">
         /// 当前实例不支持 DCE Security 的 <see cref="Guid"/> 生成模式。</exception>
-        public virtual Guid NewGuid(DceSecurityDomain domain, int? localID = null)
+        public virtual Guid NewGuid(DceSecurityDomain domain, int? localId = null)
         {
             throw new NotSupportedException();
         }

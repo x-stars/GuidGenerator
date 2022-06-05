@@ -93,16 +93,16 @@ namespace XstarS.GuidGenerators
         }
 
         [TestMethod]
-        public void NewGuid_Version2_GetInputDomainAndLocalID()
+        public void NewGuid_Version2_GetInputDomainAndLocalId()
         {
             var domain = DceSecurityDomain.Org;
-            var localID = 0x12345678;
-            var guid = GuidGenerator.Version2.NewGuid(domain, localID);
-            var hasLocalID = guid.TryGetDomainAndLocalID(
-                out var guidDomain, out var guidLocalID);
-            Assert.IsTrue(hasLocalID);
+            var localId = 0x12345678;
+            var guid = GuidGenerator.Version2.NewGuid(domain, localId);
+            var hasLocalId = guid.TryGetDomainAndLocalId(
+                out var guidDomain, out var guidLocalId);
+            Assert.IsTrue(hasLocalId);
             Assert.AreEqual(domain, guidDomain);
-            Assert.AreEqual(localID, guidLocalID);
+            Assert.AreEqual(localId, guidLocalId);
         }
 
         [TestMethod]

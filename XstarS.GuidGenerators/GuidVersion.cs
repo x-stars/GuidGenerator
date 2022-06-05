@@ -73,7 +73,7 @@ namespace XstarS.GuidGenerators
         /// <param name="version">要获取信息的 <see cref="GuidVersion"/>。</param>
         /// <returns>若 <paramref name="version"/> 生成的 <see cref="Guid"/> 包含节点 ID 信息，
         /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
-        public static bool ContainsNodeID(this GuidVersion version) =>
+        public static bool ContainsNodeId(this GuidVersion version) =>
             version == GuidVersion.Version1 ||
             version == GuidVersion.Version2;
 
@@ -83,7 +83,7 @@ namespace XstarS.GuidGenerators
         /// <param name="version">要获取信息的 <see cref="GuidVersion"/>。</param>
         /// <returns>若 <paramref name="version"/> 生成的 <see cref="Guid"/> 包含本地 ID 信息，
         /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
-        public static bool ContainsLocalID(this GuidVersion version) =>
+        public static bool ContainsLocalId(this GuidVersion version) =>
             version == GuidVersion.Version2;
     }
 }

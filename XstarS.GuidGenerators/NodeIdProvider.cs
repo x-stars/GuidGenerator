@@ -3,25 +3,25 @@ using System.Runtime.CompilerServices;
 
 namespace XstarS.GuidGenerators
 {
-    internal abstract class NodeIDProvider
+    internal abstract class NodeIdProvider
     {
         private static class Singleton
         {
-            internal static readonly NodeIDProvider Value =
-                new NodeIDProvider.Network();
+            internal static readonly NodeIdProvider Value =
+                new NodeIdProvider.Network();
         }
 
-        protected NodeIDProvider() { }
+        protected NodeIdProvider() { }
 
-        internal static NodeIDProvider Instance
+        internal static NodeIdProvider Instance
         {
             [MethodImpl(MethodImplOptions.NoInlining)]
-            get => NodeIDProvider.Singleton.Value;
+            get => NodeIdProvider.Singleton.Value;
         }
 
         public abstract byte[] GetMacAddressBytes();
 
-        private sealed class Network : NodeIDProvider
+        private sealed class Network : NodeIdProvider
         {
             internal Network() { }
 

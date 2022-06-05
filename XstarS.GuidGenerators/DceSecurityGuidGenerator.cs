@@ -11,15 +11,15 @@ namespace XstarS.GuidGenerators
                 new DceSecurityGuidGenerator();
         }
 
-        private readonly Lazy<int> LazyLocalUserID;
+        private readonly Lazy<int> LazyLocalUserId;
 
-        private readonly Lazy<int> LazyLocalGroupID;
+        private readonly Lazy<int> LazyLocalGroupId;
 
         private DceSecurityGuidGenerator()
         {
-            var provider = LocalIDProvider.Instance;
-            this.LazyLocalUserID = new Lazy<int>(provider.GetLocalUserID);
-            this.LazyLocalGroupID = new Lazy<int>(provider.GetLocalGroupID);
+            var provider = LocalIdProvider.Instance;
+            this.LazyLocalUserId = new Lazy<int>(provider.GetLocalUserId);
+            this.LazyLocalGroupId = new Lazy<int>(provider.GetLocalGroupId);
         }
 
         internal static new DceSecurityGuidGenerator Instance
@@ -30,20 +30,20 @@ namespace XstarS.GuidGenerators
 
         public override GuidVersion Version => GuidVersion.Version2;
 
-        private int LocalUserID => this.LazyLocalUserID.Value;
+        private int LocalUserId => this.LazyLocalUserId.Value;
 
-        private int LocalGroupID => this.LazyLocalGroupID.Value;
+        private int LocalGroupId => this.LazyLocalGroupId.Value;
 
         public override Guid NewGuid()
         {
             return this.NewGuid(DceSecurityDomain.Person, null);
         }
 
-        public override Guid NewGuid(DceSecurityDomain domain, int? localID = null)
+        public override Guid NewGuid(DceSecurityDomain domain, int? localId = null)
         {
             var guid = base.NewGuid();
-            var iLocalID = this.GetLocalID(domain, localID);
-            guid.TimeLow() = (uint)iLocalID;
+            var iLocalId = this.GetLocalId(domain, localId);
+            guid.TimeLow() = (uint)iLocalId;
             guid.ClkSeqHi_Var() = guid.ClkSeqLow();
             this.FillVariantField(ref guid);
             guid.ClkSeqLow() = (byte)domain;
@@ -51,11 +51,11 @@ namespace XstarS.GuidGenerators
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private int GetLocalID(DceSecurityDomain domain, int? localID) => domain switch
+        private int GetLocalId(DceSecurityDomain domain, int? localId) => domain switch
         {
-            DceSecurityDomain.Person => localID ?? this.LocalUserID,
-            DceSecurityDomain.Group => localID ?? this.LocalGroupID,
-            DceSecurityDomain.Org => localID ?? default(int),
+            DceSecurityDomain.Person => localId ?? this.LocalUserId,
+            DceSecurityDomain.Group => localId ?? this.LocalGroupId,
+            DceSecurityDomain.Org => localId ?? default(int),
             _ => throw new ArgumentOutOfRangeException(nameof(domain))
         };
     }
