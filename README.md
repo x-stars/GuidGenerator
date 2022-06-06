@@ -114,7 +114,7 @@ e129f27c-5103-5c5c-844b-cdf0a15e160d
 
 ## 性能基准测试
 
-``` Markdown
+``` PlainText
 BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
 AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
 .NET SDK=6.0.203
