@@ -27,22 +27,38 @@ namespace XstarS.GuidGenerators
 
             public override byte[] GetNodeIdBytes()
             {
-                var upIface = this.GetUpNetworkInterface();
-                if (upIface is null) { return new byte[6]; }
-                return upIface.GetPhysicalAddress().GetAddressBytes();
+                var validIface = this.GetValidNetworkInterface();
+                if (validIface is null) { return new byte[6]; }
+                return validIface.GetPhysicalAddress().GetAddressBytes();
             }
 
-            private NetworkInterface? GetUpNetworkInterface()
+            private NetworkInterface? GetValidNetworkInterface()
             {
+                var validIface = default(NetworkInterface);
+                var upValidIface = default(NetworkInterface);
                 var ifaces = NetworkInterface.GetAllNetworkInterfaces();
                 foreach (var iface in ifaces)
                 {
-                    if (iface.OperationalStatus == OperationalStatus.Up)
+                    if (this.IsValidNetworkInterface(iface))
                     {
-                        return iface;
+                        validIface ??= iface;
+                        var ifaceStatus = iface.OperationalStatus;
+                        if (ifaceStatus == OperationalStatus.Up)
+                        {
+                            upValidIface ??= iface;
+                        }
                     }
                 }
-                return null;
+                return upValidIface ?? validIface;
+            }
+
+            private bool IsValidNetworkInterface(NetworkInterface iface)
+            {
+                var ifaceType = iface.NetworkInterfaceType;
+                var macAddress = iface.GetPhysicalAddress();
+                return (ifaceType != NetworkInterfaceType.Loopback) &&
+                       (ifaceType != NetworkInterfaceType.Tunnel) &&
+                       (macAddress.GetAddressBytes().Length > 0);
             }
         }
     }

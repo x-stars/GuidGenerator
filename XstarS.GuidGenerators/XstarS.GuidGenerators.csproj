@@ -57,4 +57,10 @@
     <Compile Include="..\SharedItems\SkipLocalsInit\**\*.cs" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework.Split(`-`)[0])'=='net5.0' Or
+                        '$(TargetFramework.TrimEnd(`.0123456789`))'=='netcoreapp' Or
+                        '$(TargetFramework.TrimEnd(`.0123456789`))'=='netstandard'">
+    <PackageReference Include="System.Security.Principal.Windows" Version="4.0.0" />
+  </ItemGroup>
+
 </Project>

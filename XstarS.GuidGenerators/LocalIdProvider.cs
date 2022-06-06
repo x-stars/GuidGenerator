@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Text;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
 
 namespace XstarS.GuidGenerators
 {
@@ -10,11 +10,23 @@ namespace XstarS.GuidGenerators
         private static class Singleton
         {
             internal static readonly LocalIdProvider Value =
-                LocalIdProvider.IsSupportedWindows ?
-                new LocalIdProvider.Windows() :
-                LocalIdProvider.IsSupportedUnixLike ?
-                new LocalIdProvider.UnixLike() :
-                new LocalIdProvider.Unknown();
+                LocalIdProvider.Singleton.Create();
+
+            private static LocalIdProvider Create()
+            {
+                return Environment.OSVersion.Platform switch
+                {
+#if NET5_0_OR_GREATER
+                    PlatformID.Win32NT => OperatingSystem.IsWindows() ?
+                        new LocalIdProvider.Windows() : new LocalIdProvider.Unknown(),
+#else
+                    PlatformID.Win32NT => new LocalIdProvider.Windows(),
+#endif
+                    PlatformID.Unix => new LocalIdProvider.UnixLike(),
+                    PlatformID.MacOSX => new LocalIdProvider.UnixLike(),
+                    _ => new LocalIdProvider.Unknown(),
+                };
+            }
         }
 
         internal static LocalIdProvider Instance
@@ -23,125 +35,78 @@ namespace XstarS.GuidGenerators
             get => LocalIdProvider.Singleton.Value;
         }
 
-        private static bool IsSupportedWindows =>
-            Environment.OSVersion.Platform == PlatformID.Win32NT;
-
-        private static bool IsSupportedUnixLike =>
-            Environment.OSVersion.Platform == PlatformID.Unix ||
-            Environment.OSVersion.Platform == PlatformID.MacOSX;
-
         public abstract int GetLocalUserId();
 
         public abstract int GetLocalGroupId();
 
-        private sealed class Windows : LocalIdProvider
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#endif
+        private sealed unsafe class Windows : LocalIdProvider
         {
             internal Windows() { }
 
             public override int GetLocalUserId()
             {
-                var whoamiProc = Process.Start(new ProcessStartInfo()
+                var userSid = WindowsIdentity.GetCurrent().User;
+                if (userSid is null) { return 0; }
+                var sidBytes = new byte[userSid.BinaryLength];
+                userSid.GetBinaryForm(sidBytes, 0);
+                fixed (byte* pLastSubAuth = &sidBytes[^4])
                 {
-                    FileName = "WHOAMI.exe",
-                    Arguments = "/USER /FO LIST",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    StandardOutputEncoding = Encoding.UTF8,
-                })!;
-                var firstUserId = default(string);
-                whoamiProc.OutputDataReceived += (sender, e) =>
-                {
-                    if (e.Data?.StartsWith("SID:") ?? false)
-                    {
-                        var userSid = e.Data.Replace("SID:", "").Trim();
-                        var sidFields = userSid.Split('-');
-                        if (firstUserId is null)
-                        {
-                            firstUserId = sidFields[^1];
-                        }
-                    }
-                };
-                whoamiProc.BeginOutputReadLine();
-                whoamiProc.WaitForExit();
-                var userId = firstUserId ?? "0";
-                return (int)ulong.Parse(userId);
+                    return *(int*)pLastSubAuth;
+                }
             }
 
             public override int GetLocalGroupId()
             {
-                var whoamiProc = Process.Start(new ProcessStartInfo()
+                var groupIdRefs = WindowsIdentity.GetCurrent().Groups;
+                if (groupIdRefs is null) { return 0; }
+                var anyGroupSid = default(SecurityIdentifier);
+                var commonGroupSid = default(SecurityIdentifier);
+                foreach (var groupIdRef in groupIdRefs)
                 {
-                    FileName = "WHOAMI.exe",
-                    Arguments = "/GROUPS /FO LIST",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    StandardOutputEncoding = Encoding.UTF8,
-                })!;
-                var commonGroupId = default(string);
-                var userGroupId = default(string);
-                whoamiProc.OutputDataReceived += (sender, e) =>
-                {
-                    const int maxCommonFields = 5;
-                    if (e.Data?.StartsWith("SID:") ?? false)
+                    if (groupIdRef is SecurityIdentifier groupSid)
                     {
-                        var groupSid = e.Data.Replace("SID:", "").Trim();
-                        var sidFields = groupSid.Split('-');
-                        if (sidFields.Length <= maxCommonFields)
+                        anyGroupSid ??= groupSid;
+                        if (groupSid.BinaryLength > 16)
                         {
-                            if (commonGroupId is null)
-                            {
-                                commonGroupId = sidFields[^1];
-                            }
-                        }
-                        else if (userGroupId is null)
-                        {
-                            userGroupId = sidFields[^1];
+                            commonGroupSid ??= groupSid;
                         }
                     }
-                };
-                whoamiProc.BeginOutputReadLine();
-                whoamiProc.WaitForExit();
-                var groupId = userGroupId ?? commonGroupId ?? "0";
-                return (int)ulong.Parse(groupId);
+                }
+                var finalGroupSid = commonGroupSid ?? anyGroupSid;
+                if (finalGroupSid is null) { return 0; }
+                var sidBytes = new byte[finalGroupSid.BinaryLength];
+                finalGroupSid.GetBinaryForm(sidBytes, 0);
+                fixed (byte* pLastSubAuth = &sidBytes[^4])
+                {
+                    return *(int*)pLastSubAuth;
+                }
             }
         }
 
         private sealed class UnixLike : LocalIdProvider
         {
+            private static class SafeNativeMethods
+            {
+                [DllImport("libc", EntryPoint = "getuid")]
+                internal static extern int GetUserId();
+
+                [DllImport("libc", EntryPoint = "getgid")]
+                internal static extern int GetGroupId();
+            }
+
             internal UnixLike() { }
 
             public override int GetLocalUserId()
             {
-                return this.GetLocalIdByType("-ru");
+                return SafeNativeMethods.GetUserId();
             }
 
             public override int GetLocalGroupId()
             {
-                return this.GetLocalIdByType("-rg");
-            }
-
-            private int GetLocalIdByType(string arguments)
-            {
-                var idProc = Process.Start(new ProcessStartInfo()
-                {
-                    FileName = "id",
-                    Arguments = arguments,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    StandardOutputEncoding = Encoding.UTF8,
-                })!;
-                var read = default(string);
-                idProc.OutputDataReceived += (sender, e) =>
-                {
-                    if (e.Data != null)
-                    {
-                        read = e.Data.Trim();
-                    }
-                };
-                idProc.BeginOutputReadLine();
-                idProc.WaitForExit();
-                var localId = read ?? "0";
-                return (int)ulong.Parse(localId);
+                return SafeNativeMethods.GetGroupId();
             }
         }
 
