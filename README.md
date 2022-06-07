@@ -14,7 +14,7 @@ RFC 4122 定义了以下 5 种 UUID 版本：
 
 除此之外，还有一个特殊的 Nil UUID，与 .NET 的 `Guid.Empty` 等价。
 
-> * [RFC 4122 详细标准](http://www.webdav.org/specs/rfc4122.pdf)
+> * [RFC 4122 详细标准](https://www.rfc-editor.org/rfc/rfc4122)
 > * [DCE Security UUID 标准](https://pubs.opengroup.org/onlinepubs/9696989899/chap5.htm)
 
 ## GUID 生成库使用
