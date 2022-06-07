@@ -42,11 +42,11 @@ namespace XstarS.GuidGenerators
 #if NET5_0_OR_GREATER
         [System.Runtime.Versioning.SupportedOSPlatform("windows")]
 #endif
-        private sealed unsafe class Windows : LocalIdProvider
+        private sealed class Windows : LocalIdProvider
         {
             internal Windows() { }
 
-            public override int GetLocalUserId()
+            public override unsafe int GetLocalUserId()
             {
                 var userSid = WindowsIdentity.GetCurrent().User;
                 if (userSid is null) { return 0; }
@@ -58,7 +58,7 @@ namespace XstarS.GuidGenerators
                 }
             }
 
-            public override int GetLocalGroupId()
+            public override unsafe int GetLocalGroupId()
             {
                 var groupIdRefs = WindowsIdentity.GetCurrent().Groups;
                 if (groupIdRefs is null) { return 0; }
