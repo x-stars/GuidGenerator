@@ -18,7 +18,7 @@ namespace XstarS.GuidGenerators
 
         public sealed override Guid NewGuid()
         {
-            return this.NewGuid(Guid.Empty, string.Empty);
+            return this.NewGuid(Guid.Empty, Array.Empty<byte>());
         }
 
         public sealed override Guid NewGuid(Guid nsId, byte[] name)

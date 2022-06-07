@@ -36,7 +36,7 @@ namespace XstarS.GuidGenerators
 
         public override Guid NewGuid()
         {
-            return this.NewGuid(DceSecurityDomain.Person, null);
+            return this.NewGuid(DceSecurityDomain.Person);
         }
 
         public override Guid NewGuid(DceSecurityDomain domain, int? localId = null)
