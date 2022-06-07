@@ -150,7 +150,7 @@ namespace XstarS.GuidGenerators
         public void NewGuid_Version3NullName_CatchArgumentNullException()
         {
             Assert.ThrowsException<ArgumentNullException>(
-                () => GuidGenerator.Version3.NewGuid(Guid.Empty, null!));
+                () => GuidGenerator.Version3.NewGuid(Guid.Empty, default(string)!));
         }
 
         [TestMethod]
@@ -181,7 +181,7 @@ namespace XstarS.GuidGenerators
         public void NewGuid_Version5NullName_CatchArgumentNullException()
         {
             Assert.ThrowsException<ArgumentNullException>(
-                () => GuidGenerator.Version5.NewGuid(Guid.Empty, null!));
+                () => GuidGenerator.Version5.NewGuid(Guid.Empty, default(string)!));
         }
 
         [TestMethod]

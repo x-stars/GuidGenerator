@@ -21,7 +21,7 @@ namespace XstarS.GuidGenerators
             return this.NewGuid(Guid.Empty, string.Empty);
         }
 
-        public sealed override Guid NewGuid(Guid nsId, string name)
+        public sealed override Guid NewGuid(Guid nsId, byte[] name)
         {
             if (name is null)
             {
@@ -33,15 +33,25 @@ namespace XstarS.GuidGenerators
             return this.HashBytesToGuid(hashBytes);
         }
 
+        public sealed override Guid NewGuid(Guid nsId, string name)
+        {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            var nameBytes = Encoding.UTF8.GetBytes(name);
+            return this.NewGuid(nsId, nameBytes);
+        }
+
         protected abstract HashAlgorithm CreateHashing();
 
-        private unsafe byte[] CreateInput(Guid nsId, string name)
+        private unsafe byte[] CreateInput(Guid nsId, byte[] name)
         {
             const int guidSize = 16;
-            var nameBytes = Encoding.UTF8.GetBytes(name);
-            var input = new byte[guidSize + nameBytes.Length];
+            var input = new byte[guidSize + name.Length];
             fixed (byte* pInput = &input[0]) { nsId.CopyUuidBytes(pInput); }
-            Buffer.BlockCopy(nameBytes, 0, input, guidSize, nameBytes.Length);
+            Buffer.BlockCopy(name, 0, input, guidSize, name.Length);
             return input;
         }
 
