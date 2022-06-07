@@ -51,18 +51,18 @@ namespace XstarS.GuidGenerators.Commands
             else if (domain is DceSecurityDomain.Org)
             {
                 if (siteIdArg is null) { return false; }
-                var iParsed = int.TryParse(siteIdArg, out var siteId);
+                var iParsed = uint.TryParse(siteIdArg, out var siteId);
                 if (!iParsed)
                 {
                     try
                     {
-                        siteId = Convert.ToInt32(siteIdArg, 16);
+                        siteId = Convert.ToUInt32(siteIdArg, 16);
                         iParsed = true;
                     }
                     catch (Exception) { }
                 }
                 if (!iParsed) { return false; }
-                nSiteId = siteId;
+                nSiteId = (int)siteId;
             }
             else
             {
