@@ -21,26 +21,26 @@ namespace XstarS.GuidGenerators
             return this.NewGuid(Guid.Empty, string.Empty);
         }
 
-        public sealed override Guid NewGuid(Guid ns, string name)
+        public sealed override Guid NewGuid(Guid nsId, string name)
         {
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
 
-            var input = this.CreateInput(ns, name);
+            var input = this.CreateInput(nsId, name);
             var hashBytes = this.ComputeHash(input);
             return this.HashBytesToGuid(hashBytes);
         }
 
         protected abstract HashAlgorithm CreateHashing();
 
-        private unsafe byte[] CreateInput(Guid ns, string name)
+        private unsafe byte[] CreateInput(Guid nsId, string name)
         {
             const int guidSize = 16;
             var nameBytes = Encoding.UTF8.GetBytes(name);
             var input = new byte[guidSize + nameBytes.Length];
-            fixed (byte* pInput = &input[0]) { ns.CopyUuidBytes(pInput); }
+            fixed (byte* pInput = &input[0]) { nsId.CopyUuidBytes(pInput); }
             Buffer.BlockCopy(nameBytes, 0, input, guidSize, nameBytes.Length);
             return input;
         }

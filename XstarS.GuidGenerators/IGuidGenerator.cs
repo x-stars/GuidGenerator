@@ -38,15 +38,15 @@ namespace XstarS.GuidGenerators
     public interface INameBasedGuidGenerator : IGuidGeneratorInfo
     {
         /// <summary>
-        /// 根据指定的命名空间和名称生成一个新的 <see cref="Guid"/> 实例。
+        /// 根据指定的命名空间 ID 和名称生成一个新的 <see cref="Guid"/> 实例。
         /// </summary>
-        /// <param name="ns">生成 <see cref="Guid"/> 时使用的命名空间。</param>
+        /// <param name="nsId">生成 <see cref="Guid"/> 时使用的命名空间 ID。</param>
         /// <param name="name">生成 <see cref="Guid"/> 时使用的名称。</param>
-        /// <returns>根据 <paramref name="ns"/> 和
+        /// <returns>根据 <paramref name="nsId"/> 和
         /// <paramref name="name"/> 生成的 <see cref="Guid"/> 实例。</returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="name"/> 为 <see langword="null"/>。</exception>
-        Guid NewGuid(Guid ns, string name);
+        Guid NewGuid(Guid nsId, string name);
     }
 
     /// <summary>

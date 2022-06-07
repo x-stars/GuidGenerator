@@ -32,17 +32,17 @@ namespace XstarS.GuidGenerators.Commands
             }
 
             var readInput = args.Length == 2;
-            var nsArg = args[1].ToUpper();
-            var ns = Guid.Empty;
-            if (nsArg.StartsWith(":"))
+            var nsIdArg = args[1].ToUpper();
+            var nsId = Guid.Empty;
+            if (nsIdArg.StartsWith(":"))
             {
-                var nsName = nsArg[1..];
-                if (!this.TryParseNamespace(nsName, out ns))
+                var nsName = nsIdArg[1..];
+                if (!this.TryParseNamespace(nsName, out nsId))
                 {
                     return false;
                 }
             }
-            else if (!Guid.TryParse(nsArg, out ns))
+            else if (!Guid.TryParse(nsIdArg, out nsId))
             {
                 return false;
             }
@@ -53,22 +53,22 @@ namespace XstarS.GuidGenerators.Commands
                 var name = default(string);
                 while ((name = Console.ReadLine()) != null)
                 {
-                    var guid = guidGen.NewGuid(ns, name);
+                    var guid = guidGen.NewGuid(nsId, name);
                     Console.WriteLine(guid);
                 }
             }
             else
             {
                 var name = args[2];
-                var guid = guidGen.NewGuid(ns, name);
+                var guid = guidGen.NewGuid(nsId, name);
                 Console.WriteLine(guid);
             }
             return true;
         }
 
-        private bool TryParseNamespace(string name, out Guid ns)
+        private bool TryParseNamespace(string nsName, out Guid nsId)
         {
-            ns = name switch
+            nsId = nsName switch
             {
                 "DNS" => GuidNamespaces.Dns,
                 "URL" => GuidNamespaces.Url,
@@ -76,7 +76,7 @@ namespace XstarS.GuidGenerators.Commands
                 "X500" => GuidNamespaces.X500,
                 _ => Guid.Empty
             };
-            return ns != Guid.Empty;
+            return nsId != Guid.Empty;
         }
     }
 }

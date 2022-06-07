@@ -47,12 +47,12 @@ namespace XstarS.GuidGenerators
         }
 
         /// <summary>
-        /// 根据指定的命名空间和名称生成一个指定版本的 <see cref="Guid"/> 实例。
+        /// 根据指定的命名空间 ID 和名称生成一个指定版本的 <see cref="Guid"/> 实例。
         /// </summary>
         /// <param name="version">要生成的 <see cref="Guid"/> 的版本。</param>
-        /// <param name="ns">生成 <see cref="Guid"/> 时使用的命名空间。</param>
+        /// <param name="nsId">生成 <see cref="Guid"/> 时使用的命名空间 ID。</param>
         /// <param name="name">生成 <see cref="Guid"/> 时使用的名称。</param>
-        /// <returns>根据 <paramref name="ns"/> 和 <paramref name="name"/>
+        /// <returns>根据 <paramref name="nsId"/> 和 <paramref name="name"/>
         /// 生成的版本为 <paramref name="version"/> 的 <see cref="Guid"/> 实例。</returns>
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="version"/> 不为有效的 <see cref="GuidVersion"/> 枚举值。</exception>
@@ -60,9 +60,9 @@ namespace XstarS.GuidGenerators
         /// <paramref name="name"/> 为 <see langword="null"/>。</exception>
         /// <exception cref="NotSupportedException">
         /// <paramref name="version"/> 版本不支持基于名称的 <see cref="Guid"/> 生成模式。</exception>
-        public static Guid NewGuid(GuidVersion version, Guid ns, string name)
+        public static Guid NewGuid(GuidVersion version, Guid nsId, string name)
         {
-            return GuidGenerator.OfVersion(version).NewGuid(ns, name);
+            return GuidGenerator.OfVersion(version).NewGuid(nsId, name);
         }
 
         /// <summary>
