@@ -5,6 +5,12 @@ namespace XstarS.GuidGenerators
     partial class GuidGenerator
     {
         /// <summary>
+        /// 获取生成 <see cref="Guid.Empty"/> 的 <see cref="IGuidGenerator"/> 对象。
+        /// </summary>
+        /// <returns>生成 <see cref="Guid.Empty"/> 的 <see cref="IGuidGenerator"/> 对象。</returns>
+        public static IGuidGenerator Empty => EmptyGuidGenerator.Instance;
+
+        /// <summary>
         /// 获取 RFC 4122 UUID 版本 1 的 <see cref="IGuidGenerator"/> 对象。
         /// </summary>
         /// <returns>RFC 4122 UUID 版本 1 的 <see cref="IGuidGenerator"/> 对象。</returns>
