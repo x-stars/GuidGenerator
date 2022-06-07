@@ -69,7 +69,7 @@ namespace XstarS.GuidGenerators
                     if (groupIdRef is SecurityIdentifier groupSid)
                     {
                         anyGroupSid ??= groupSid;
-                        if (groupSid.BinaryLength > 16)
+                        if (!this.IsWellKnownSid(groupSid))
                         {
                             commonGroupSid ??= groupSid;
                         }
@@ -83,6 +83,24 @@ namespace XstarS.GuidGenerators
                 {
                     return *(int*)pLastSubAuth;
                 }
+            }
+
+            private bool IsWellKnownSid(SecurityIdentifier sid)
+            {
+                if (sid.BinaryLength <= 16)
+                {
+                    return true;
+                }
+                var enumValues = Enum.GetValues(typeof(WellKnownSidType));
+                var sidTypes = (WellKnownSidType[])enumValues;
+                foreach (var sidType in sidTypes)
+                {
+                    if (sid.IsWellKnown(sidType))
+                    {
+                        return true;
+                    }
+                }
+                return false;
             }
         }
 
