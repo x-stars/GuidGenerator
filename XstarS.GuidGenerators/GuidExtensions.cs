@@ -18,8 +18,12 @@ namespace XstarS.GuidGenerators
         /// </summary>
         /// <param name="guid">要获取版本的 <see cref="Guid"/>。</param>
         /// <returns>当前 <see cref="Guid"/> 的版本。</returns>
-        public static GuidVersion GetVersion(this Guid guid) =>
-            (GuidVersion)((guid.TimeHi_Ver() & 0xF000) >> (3 * 4));
+        public static GuidVersion GetVersion(this Guid guid)
+        {
+            var shiftVer = (int)guid.TimeHi_Ver() & 0xF000;
+            var version = shiftVer >> (3 * 4);
+            return (GuidVersion)version;
+        }
 
         /// <summary>
         /// 获取当前 <see cref="Guid"/> 的变体。
