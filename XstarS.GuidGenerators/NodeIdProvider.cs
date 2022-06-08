@@ -1,4 +1,5 @@
-﻿using System.Net.NetworkInformation;
+﻿using System;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 
 namespace XstarS.GuidGenerators
@@ -21,6 +22,33 @@ namespace XstarS.GuidGenerators
 
         public abstract byte[] GetNodeIdBytes();
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        protected byte[] GetRandomNodeIdBytes()
+        {
+            return RandomBytes.NodeIdBytes;
+        }
+
+        private sealed class RandomBytes : NodeIdProvider
+        {
+            internal static readonly byte[] NodeIdBytes =
+                RandomBytes.CreateNodeIdBytes();
+
+            internal RandomBytes() { }
+
+            private static byte[] CreateNodeIdBytes()
+            {
+                var nodeId = new byte[6];
+                new Random().NextBytes(nodeId);
+                nodeId[0] |= 0x01;
+                return nodeId;
+            }
+
+            public override byte[] GetNodeIdBytes()
+            {
+                return RandomBytes.NodeIdBytes;
+            }
+        }
+
         private sealed class MacAddress : NodeIdProvider
         {
             internal MacAddress() { }
@@ -28,8 +56,8 @@ namespace XstarS.GuidGenerators
             public override byte[] GetNodeIdBytes()
             {
                 var validIface = this.GetValidNetworkInterface();
-                if (validIface is null) { return new byte[6]; }
-                return validIface.GetPhysicalAddress().GetAddressBytes();
+                return (validIface is null) ? this.GetRandomNodeIdBytes() :
+                    validIface.GetPhysicalAddress().GetAddressBytes();
             }
 
             private NetworkInterface? GetValidNetworkInterface()
