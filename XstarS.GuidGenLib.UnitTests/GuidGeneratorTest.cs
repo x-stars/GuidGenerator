@@ -49,18 +49,23 @@ namespace XstarS.GuidGenerators
         }
 
         [TestMethod]
-        public void NewGuid_Version1_GetIncrementClockSeq()
+        public void NewGuid_Version1_GetIncClockSeqWhenTimeBackward()
         {
             var guid0 = GuidGenerator.Version1.NewGuid();
+            guid0.TryGetTimestamp(out var timestamp0);
             var guidBytes0 = guid0.ToByteArray();
             var clockSeq0 = (guidBytes0[8] << 8) | guidBytes0[9];
             clockSeq0 &= (ushort)(clockSeq0 & ~0xC000);
             var guid1 = GuidGenerator.Version1.NewGuid();
+            guid1.TryGetTimestamp(out var timestamp1);
             var guidBytes1 = guid1.ToByteArray();
             var clockSeq1 = (guidBytes1[8] << 8) | guidBytes1[9];
             clockSeq1 = (ushort)(clockSeq1 & ~0xC000);
-            var expected = (ushort)((clockSeq0 + 1) & ~0xC000);
-            Assert.AreEqual(expected, clockSeq1);
+            if (timestamp1.Ticks <= timestamp0.Ticks)
+            {
+                var expected = (ushort)((clockSeq0 + 1) & ~0xC000);
+                Assert.AreEqual(expected, clockSeq1);
+            }
         }
 
         [TestMethod]
@@ -106,19 +111,24 @@ namespace XstarS.GuidGenerators
         }
 
         [TestMethod]
-        public void NewGuid_Version2_GetIncrementClockSeq()
+        public void NewGuid_Version2_GetIncClockSeqWhenTimeBackward()
         {
             var domain = DceSecurityDomain.Person;
             var guid0 = GuidGenerator.Version2.NewGuid(domain);
+            guid0.TryGetTimestamp(out var timestamp0);
             var guidBytes0 = guid0.ToByteArray();
             var clockSeq0 = guidBytes0[8];
             clockSeq0 = (byte)(clockSeq0 & ~0xC0);
             var guid1 = GuidGenerator.Version2.NewGuid(domain);
+            guid1.TryGetTimestamp(out var timestamp1);
             var guidBytes1 = guid1.ToByteArray();
             var clockSeq1 = guidBytes1[8];
             clockSeq1 = (byte)(clockSeq1 & ~0xC0);
-            var expected = (byte)((clockSeq0 + 1) & ~0xC0);
-            Assert.AreEqual(expected, clockSeq1);
+            if (timestamp1.Ticks <= timestamp0.Ticks)
+            {
+                var expected = (byte)((clockSeq0 + 1) & ~0xC0);
+                Assert.AreEqual(expected, clockSeq1);
+            }
         }
 
         [TestMethod]
