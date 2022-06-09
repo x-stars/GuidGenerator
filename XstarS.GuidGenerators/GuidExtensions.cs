@@ -113,34 +113,6 @@ namespace XstarS.GuidGenerators
         }
 
         /// <summary>
-        /// 返回一个与当前 <see cref="Guid"/> 等价的
-        /// <see cref="Guid"/>，其节点 ID 填充为指定字节数组中包含的数据。
-        /// </summary>
-        /// <param name="guid">要替换节点 ID 的 <see cref="Guid"/>。</param>
-        /// <param name="nodeId">作为节点 ID 的数据源的字节数组。</param>
-        /// <returns>将 <paramref name="guid"/> 的节点 ID 替换为
-        /// <paramref name="nodeId"/> 中的数据得到的新 <see cref="Guid"/>。</returns>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="nodeId"/> 为 <see langword="null"/>。</exception>
-        /// <exception cref="ArgumentException">
-        /// <paramref name="nodeId"/> 字节数组的长度小于 6。</exception>
-        public static Guid ReplaceNodeId(this Guid guid, byte[] nodeId)
-        {
-            if (nodeId is null)
-            {
-                throw new ArgumentNullException(nameof(nodeId));
-            }
-            if (nodeId.Length < 6)
-            {
-                var inner = new IndexOutOfRangeException();
-                throw new ArgumentException(inner.Message, nameof(nodeId), inner);
-            }
-
-            guid.SetNodeId(nodeId);
-            return guid;
-        }
-
-        /// <summary>
         /// 返回包含当前 <see cref="Guid"/> 的值的字节数组，其字节序符合 RFC 4122 UUID 标准。
         /// </summary>
         /// <param name="guid">要获取字节数组的 <see cref="Guid"/>。</param>
