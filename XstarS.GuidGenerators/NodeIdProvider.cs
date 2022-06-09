@@ -6,57 +6,56 @@ namespace XstarS.GuidGenerators
 {
     internal abstract class NodeIdProvider
     {
-        private static class Singleton
-        {
-            internal static readonly NodeIdProvider Value =
-                new NodeIdProvider.MacAddress();
-        }
-
         private NodeIdProvider() { }
-
-        internal static NodeIdProvider Instance
-        {
-            [MethodImpl(MethodImplOptions.NoInlining)]
-            get => NodeIdProvider.Singleton.Value;
-        }
 
         public abstract byte[] GetNodeIdBytes();
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        protected byte[] GetRandomNodeIdBytes()
+        internal sealed class RandomNumber : NodeIdProvider
         {
-            return RandomBytes.NodeIdBytes;
-        }
+            private static class Singleton
+            {
+                internal static readonly NodeIdProvider.RandomNumber Value =
+                    new NodeIdProvider.RandomNumber();
+            }
 
-        private sealed class RandomBytes : NodeIdProvider
-        {
-            internal static readonly byte[] NodeIdBytes =
-                RandomBytes.CreateNodeIdBytes();
+            private RandomNumber() { }
 
-            internal RandomBytes() { }
+            internal static NodeIdProvider.RandomNumber Instance
+            {
+                [MethodImpl(MethodImplOptions.NoInlining)]
+                get => NodeIdProvider.RandomNumber.Singleton.Value;
+            }
 
-            private static byte[] CreateNodeIdBytes()
+            public override byte[] GetNodeIdBytes()
             {
                 var nodeId = new byte[6];
                 new Random().NextBytes(nodeId);
                 nodeId[0] |= 0x01;
                 return nodeId;
             }
-
-            public override byte[] GetNodeIdBytes()
-            {
-                return RandomBytes.NodeIdBytes;
-            }
         }
 
-        private sealed class MacAddress : NodeIdProvider
+        internal sealed class MacAddress : NodeIdProvider
         {
-            internal MacAddress() { }
+            private static class Singleton
+            {
+                internal static readonly NodeIdProvider.MacAddress Value =
+                    new NodeIdProvider.MacAddress();
+            }
+
+            private MacAddress() { }
+
+            internal static NodeIdProvider.MacAddress Instance
+            {
+                [MethodImpl(MethodImplOptions.NoInlining)]
+                get => NodeIdProvider.MacAddress.Singleton.Value;
+            }
 
             public override byte[] GetNodeIdBytes()
             {
                 var validIface = this.GetValidNetworkInterface();
-                return (validIface is null) ? this.GetRandomNodeIdBytes() :
+                return (validIface is null) ?
+                    NodeIdProvider.RandomNumber.Instance.GetNodeIdBytes() :
                     validIface.GetPhysicalAddress().GetAddressBytes();
             }
 
