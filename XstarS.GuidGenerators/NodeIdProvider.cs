@@ -12,7 +12,7 @@ namespace XstarS.GuidGenerators
                 new NodeIdProvider.MacAddress();
         }
 
-        protected NodeIdProvider() { }
+        private NodeIdProvider() { }
 
         internal static NodeIdProvider Instance
         {

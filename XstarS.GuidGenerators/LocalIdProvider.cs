@@ -29,6 +29,8 @@ namespace XstarS.GuidGenerators
             }
         }
 
+        private LocalIdProvider() { }
+
         internal static LocalIdProvider Instance
         {
             [MethodImpl(MethodImplOptions.NoInlining)]

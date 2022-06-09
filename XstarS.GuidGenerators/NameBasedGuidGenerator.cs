@@ -10,7 +10,7 @@ namespace XstarS.GuidGenerators
     {
         private readonly BlockingCollection<HashAlgorithm> Hashings;
 
-        protected NameBasedGuidGenerator()
+        private NameBasedGuidGenerator()
         {
             var concurrency = Environment.ProcessorCount * 2;
             this.Hashings = new BlockingCollection<HashAlgorithm>(concurrency);
