@@ -23,6 +23,11 @@ namespace XstarS.GuidGenerators
         private readonly Lazy<byte[]> LazyNodeIdBytes;
 
         protected TimeBasedGuidGenerator()
+            : this(NodeIdProvider.RandomNumber.Instance)
+        {
+        }
+
+        protected TimeBasedGuidGenerator(NodeIdProvider nodeIdProvider)
         {
             var nowTime = DateTime.UtcNow;
             this.HiResTimer = Stopwatch.StartNew();
@@ -30,8 +35,7 @@ namespace XstarS.GuidGenerators
             this.StartTimestamp = nowTime.Ticks - baseTime.Ticks;
             this.LastTimestamp = this.StartTimestamp;
             this.ClockSequence = new Random().Next();
-            var provider = NodeIdProvider.MacAddress.Instance;
-            this.LazyNodeIdBytes = new Lazy<byte[]>(provider.GetNodeIdBytes);
+            this.LazyNodeIdBytes = new Lazy<byte[]>(nodeIdProvider.GetNodeIdBytes);
         }
 
         internal static TimeBasedGuidGenerator Instance
@@ -47,6 +51,12 @@ namespace XstarS.GuidGenerators
         private long CurrentTimestamp => this.StartTimestamp + this.HiResTimer.ElapsedTicks;
 
         private byte[] NodeIdBytes => this.LazyNodeIdBytes.Value;
+
+        internal static TimeBasedGuidGenerator CreateWithRandomNodeId()
+        {
+            var randomNodeId = NodeIdProvider.RandomNumber.Instance;
+            return new TimeBasedGuidGenerator(randomNodeId);
+        }
 
         public override Guid NewGuid()
         {

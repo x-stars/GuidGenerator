@@ -41,6 +41,12 @@ namespace XstarS.GuidGenerators
         public static INameBasedGuidGenerator Version5 => NameBasedGuidGenerator.SHA1Hashing.Instance;
 
         /// <summary>
+        /// 创建一个使用随机数作为节点 ID 的 RFC 4122 UUID 版本 1 的 <see cref="IGuidGenerator"/> 对象。
+        /// </summary>
+        /// <returns>一个使用随机数作为节点 ID 的 RFC 4122 UUID 版本 1 的 <see cref="IGuidGenerator"/> 对象。</returns>
+        public static IGuidGenerator CreateVersion1R() => TimeBasedGuidGenerator.CreateWithRandomNodeId();
+
+        /// <summary>
         /// 生成一个指定版本的 <see cref="Guid"/> 实例。
         /// </summary>
         /// <param name="version">要生成的 <see cref="Guid"/> 的版本。</param>
