@@ -1,14 +1,22 @@
 ﻿using System;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace XstarS.GuidGenerators
 {
     internal abstract class NodeIdProvider
     {
-        private NodeIdProvider() { }
+        private volatile Lazy<byte[]> LazyNodeIdBytes;
 
-        public abstract byte[] GetNodeIdBytes();
+        private NodeIdProvider()
+        {
+            this.LazyNodeIdBytes = new Lazy<byte[]>(this.GetNodeIdBytes);
+        }
+
+        public byte[] NodeIdBytes => this.LazyNodeIdBytes.Value;
+
+        protected abstract byte[] GetNodeIdBytes();
 
         internal sealed class RandomNumber : NodeIdProvider
         {
@@ -18,7 +26,7 @@ namespace XstarS.GuidGenerators
                     new NodeIdProvider.RandomNumber();
             }
 
-            private RandomNumber() { }
+            internal RandomNumber() { }
 
             internal static NodeIdProvider.RandomNumber Instance
             {
@@ -26,10 +34,10 @@ namespace XstarS.GuidGenerators
                 get => NodeIdProvider.RandomNumber.Singleton.Value;
             }
 
-            public override byte[] GetNodeIdBytes()
+            protected override byte[] GetNodeIdBytes()
             {
                 var nodeId = new byte[6];
-                new Random().NextBytes(nodeId);
+                GlobalRandom.NextBytes(nodeId);
                 nodeId[0] |= 0x01;
                 return nodeId;
             }
@@ -43,7 +51,14 @@ namespace XstarS.GuidGenerators
                     new NodeIdProvider.MacAddress();
             }
 
-            private MacAddress() { }
+            private readonly Timer RefreshNodeIdTask;
+
+            private MacAddress()
+            {
+                const int refreshMs = 1 * 1000;
+                this.RefreshNodeIdTask = new Timer(this.RefreshNodeIdBytes);
+                this.RefreshNodeIdTask.Change(refreshMs, refreshMs);
+            }
 
             internal static NodeIdProvider.MacAddress Instance
             {
@@ -51,11 +66,11 @@ namespace XstarS.GuidGenerators
                 get => NodeIdProvider.MacAddress.Singleton.Value;
             }
 
-            public override byte[] GetNodeIdBytes()
+            protected override byte[] GetNodeIdBytes()
             {
                 var validIface = this.GetValidNetworkInterface();
                 return (validIface is null) ?
-                    NodeIdProvider.RandomNumber.Instance.GetNodeIdBytes() :
+                    NodeIdProvider.RandomNumber.Instance.NodeIdBytes :
                     validIface.GetPhysicalAddress().GetAddressBytes();
             }
 
@@ -86,6 +101,11 @@ namespace XstarS.GuidGenerators
                 return (ifaceType != NetworkInterfaceType.Loopback) &&
                        (ifaceType != NetworkInterfaceType.Tunnel) &&
                        (macAddress.GetAddressBytes().Length > 0);
+            }
+
+            private void RefreshNodeIdBytes(object? unused)
+            {
+                this.LazyNodeIdBytes = new Lazy<byte[]>(this.GetNodeIdBytes);
             }
         }
     }

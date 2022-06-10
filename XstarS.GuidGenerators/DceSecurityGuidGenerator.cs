@@ -11,15 +11,11 @@ namespace XstarS.GuidGenerators
                 new DceSecurityGuidGenerator();
         }
 
-        private readonly Lazy<int> LazyLocalUserId;
-
-        private readonly Lazy<int> LazyLocalGroupId;
+        private readonly LocalIdProvider LocalIdProvider;
 
         private DceSecurityGuidGenerator()
         {
-            var provider = LocalIdProvider.Instance;
-            this.LazyLocalUserId = new Lazy<int>(provider.GetLocalUserId);
-            this.LazyLocalGroupId = new Lazy<int>(provider.GetLocalGroupId);
+            this.LocalIdProvider = LocalIdProvider.Instance;
         }
 
         internal static new DceSecurityGuidGenerator Instance
@@ -32,9 +28,9 @@ namespace XstarS.GuidGenerators
 
         protected override int TimestampShift => 32;
 
-        private int LocalUserId => this.LazyLocalUserId.Value;
+        private int LocalUserId => this.LocalIdProvider.LocalUserId;
 
-        private int LocalGroupId => this.LazyLocalGroupId.Value;
+        private int LocalGroupId => this.LocalIdProvider.LocalGroupId;
 
         public override Guid NewGuid()
         {

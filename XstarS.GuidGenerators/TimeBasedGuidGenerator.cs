@@ -11,13 +11,15 @@ namespace XstarS.GuidGenerators
                 new TimeBasedGuidGenerator();
         }
 
+        private readonly TimestampProvider TimestampProvider;
+
+        private readonly NodeIdProvider NodeIdProvider;
+
         private long LastTimestamp;
 
         private volatile int ClockSequence;
 
-        private readonly TimestampProvider TimestampProvider;
-
-        private readonly Lazy<byte[]> LazyNodeIdBytes;
+        private volatile byte[]? LastNodeIdBytes;
 
         protected TimeBasedGuidGenerator()
             : this(NodeIdProvider.MacAddress.Instance)
@@ -27,9 +29,9 @@ namespace XstarS.GuidGenerators
         protected TimeBasedGuidGenerator(NodeIdProvider nodeIdProvider)
         {
             this.TimestampProvider = TimestampProvider.Instance;
+            this.NodeIdProvider = nodeIdProvider;
             this.LastTimestamp = this.CurrentTimestamp;
-            this.ClockSequence = new Random().Next();
-            this.LazyNodeIdBytes = new Lazy<byte[]>(nodeIdProvider.GetNodeIdBytes);
+            this.ClockSequence = GlobalRandom.Next();
         }
 
         internal static TimeBasedGuidGenerator Instance
@@ -44,21 +46,21 @@ namespace XstarS.GuidGenerators
 
         private long CurrentTimestamp => this.TimestampProvider.GetCurrentTimestamp();
 
-        private byte[] NodeIdBytes => this.LazyNodeIdBytes.Value;
+        private byte[] NodeIdBytes => this.NodeIdProvider.NodeIdBytes;
 
         internal static TimeBasedGuidGenerator CreateWithRandomNodeId()
         {
-            var randomNodeId = NodeIdProvider.RandomNumber.Instance;
+            var randomNodeId = new NodeIdProvider.RandomNumber();
             return new TimeBasedGuidGenerator(randomNodeId);
         }
 
         public override Guid NewGuid()
         {
             var guid = default(Guid);
+            this.FillNodeIdField(ref guid);
             this.FillTimeRelatedFields(ref guid);
             this.FillVersionField(ref guid);
             this.FillVariantField(ref guid);
-            guid.SetNodeId(this.NodeIdBytes);
             return guid;
         }
 
@@ -67,8 +69,8 @@ namespace XstarS.GuidGenerators
             var tsShift = this.TimestampShift;
             lock (this.TimestampProvider)
             {
-                var lastTs = this.LastTimestamp;
                 var timestamp = this.CurrentTimestamp;
+                var lastTs = this.LastTimestamp;
                 if ((timestamp >> tsShift) <= (lastTs >> tsShift))
                 {
                     this.ClockSequence++;
@@ -88,6 +90,37 @@ namespace XstarS.GuidGenerators
             guid.TimeHi_Ver() = (ushort)(timestamp >> (6 * 8));
             guid.ClkSeqLow() = (byte)(clockSeq >> (0 * 8));
             guid.ClkSeqHi_Var() = (byte)(clockSeq >> (1 * 8));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void FillNodeIdField(ref Guid guid)
+        {
+            var nodeId = this.NodeIdBytes;
+            var lastNodeId = this.LastNodeIdBytes;
+            if (nodeId != lastNodeId)
+            {
+                this.UpdateLastNodeIdBytes();
+            }
+            guid.SetNodeId(nodeId);
+        }
+
+        private unsafe void UpdateLastNodeIdBytes()
+        {
+            lock (this.TimestampProvider)
+            {
+                var nodeId = this.NodeIdBytes;
+                var lastNodeId = this.LastNodeIdBytes;
+                if ((nodeId != lastNodeId) && (lastNodeId is not null))
+                {
+                    fixed (byte* pLast = &lastNodeId[0], pNode = &nodeId[0])
+                    {
+                        var equals = (*(int*)pNode == *(int*)pLast) &&
+                            (*((short*)pLast + 2) == *((short*)pLast + 2));
+                        if (!equals) { this.ClockSequence = GlobalRandom.Next(); }
+                    }
+                }
+                this.LastNodeIdBytes = nodeId;
+            }
         }
     }
 }

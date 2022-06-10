@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Threading;
 
 namespace XstarS.GuidGenerators
 {
@@ -29,7 +30,20 @@ namespace XstarS.GuidGenerators
             }
         }
 
-        private LocalIdProvider() { }
+        private volatile Lazy<int> LazyLocalUserId;
+
+        private volatile Lazy<int> LazyLocalGroupId;
+
+        private readonly Timer RefreshLocalIdTask;
+
+        private LocalIdProvider()
+        {
+            const int refreshMs = 1 * 1000;
+            this.LazyLocalUserId = new Lazy<int>(this.GetLocalUserId);
+            this.LazyLocalGroupId = new Lazy<int>(this.GetLocalGroupId);
+            this.RefreshLocalIdTask = new Timer(this.RefreshLocalId);
+            this.RefreshLocalIdTask.Change(refreshMs, refreshMs);
+        }
 
         internal static LocalIdProvider Instance
         {
@@ -37,9 +51,19 @@ namespace XstarS.GuidGenerators
             get => LocalIdProvider.Singleton.Value;
         }
 
-        public abstract int GetLocalUserId();
+        public int LocalUserId => this.LazyLocalUserId.Value;
 
-        public abstract int GetLocalGroupId();
+        public int LocalGroupId => this.LazyLocalGroupId.Value;
+
+        protected abstract int GetLocalUserId();
+
+        protected abstract int GetLocalGroupId();
+
+        private void RefreshLocalId(object? unused)
+        {
+            this.LazyLocalUserId = new Lazy<int>(this.GetLocalUserId);
+            this.LazyLocalGroupId = new Lazy<int>(this.GetLocalGroupId);
+        }
 
 #if NET5_0_OR_GREATER
         [System.Runtime.Versioning.SupportedOSPlatform("windows")]
@@ -48,7 +72,7 @@ namespace XstarS.GuidGenerators
         {
             internal Windows() { }
 
-            public override unsafe int GetLocalUserId()
+            protected override unsafe int GetLocalUserId()
             {
                 var userSid = WindowsIdentity.GetCurrent().User;
                 if (userSid is null) { return 0; }
@@ -60,7 +84,7 @@ namespace XstarS.GuidGenerators
                 }
             }
 
-            public override unsafe int GetLocalGroupId()
+            protected override unsafe int GetLocalGroupId()
             {
                 var groupIdRefs = WindowsIdentity.GetCurrent().Groups;
                 if (groupIdRefs is null) { return 0; }
@@ -119,12 +143,12 @@ namespace XstarS.GuidGenerators
 
             internal UnixLike() { }
 
-            public override int GetLocalUserId()
+            protected override int GetLocalUserId()
             {
                 return SafeNativeMethods.GetUserId();
             }
 
-            public override int GetLocalGroupId()
+            protected override int GetLocalGroupId()
             {
                 return SafeNativeMethods.GetGroupId();
             }
@@ -134,12 +158,12 @@ namespace XstarS.GuidGenerators
         {
             internal Unknown() { }
 
-            public override int GetLocalUserId()
+            protected override int GetLocalUserId()
             {
                 throw new PlatformNotSupportedException();
             }
 
-            public override int GetLocalGroupId()
+            protected override int GetLocalGroupId()
             {
                 throw new PlatformNotSupportedException();
             }
