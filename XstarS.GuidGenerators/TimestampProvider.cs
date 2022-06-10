@@ -79,11 +79,7 @@ namespace XstarS.GuidGenerators
 
             private volatile int TicksOffset;
 
-            internal IncTimestamp()
-            {
-                this.LastTimeTicks = DateTime.UtcNow.Ticks;
-                this.TicksOffset = 0;
-            }
+            internal IncTimestamp() { }
 
             [MethodImpl(MethodImplOptions.Synchronized)]
             public override long GetCurrentTimestamp()
