@@ -14,7 +14,7 @@ RFC 4122 定义了以下 5 种 UUID 版本：
 
 除此之外，还有一个特殊的 Nil UUID，与 .NET 的 `Guid.Empty` 等价。
 
-> * [RFC 4122 详细标准](https://www.rfc-editor.org/rfc/rfc4122)
+> * [RFC 4122 UUID 标准](https://www.rfc-editor.org/rfc/rfc4122)
 > * [DCE Security UUID 标准](https://pubs.opengroup.org/onlinepubs/9696989899/chap5.htm)
 
 ## GUID 生成库使用
@@ -47,18 +47,6 @@ var guidV1 = guidGenV1.NewGuid();
 // name-based GUID generation.
 var guidGenV5 = GuidGenerator.OfVersion(GuidVersion.Version5);
 var guidV5 = guidGenV5.NewGuid(GuidNamespaces.DNS, "github.com");
-```
-
-### 直接调用静态生成方法生成 GUID
-
-``` C#
-using XstarS.GuidGenerators;
-
-// time-based GUID generation.
-var guidV1 = GuidGenerator.NewGuid(GuidVersion.Version1);
-
-// name-based GUID generation.
-var guidV5 = GuidGenerator.NewGuid(GuidVersion.Version5, GuidNamespaces.DNS, "github.com");
 ```
 
 ## GUID 生成命令行工具使用
