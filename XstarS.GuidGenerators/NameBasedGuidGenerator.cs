@@ -63,7 +63,10 @@ namespace XstarS.GuidGenerators
                 hashing = this.CreateHashing();
             }
             var hash = hashing.ComputeHash(input);
-            _ = hashings.TryAdd(hashing);
+            if (!hashings.TryAdd(hashing))
+            {
+                hashing.Dispose();
+            }
             return hash;
         }
 
