@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace XstarS.GuidGenerators
@@ -12,28 +11,23 @@ namespace XstarS.GuidGenerators
                 new TimeBasedGuidGenerator();
         }
 
-        private readonly Stopwatch HiResTimer;
-
-        private readonly long StartTimestamp;
-
         private long LastTimestamp;
 
         private volatile int ClockSequence;
 
+        private readonly TimestampProvider TimestampProvider;
+
         private readonly Lazy<byte[]> LazyNodeIdBytes;
 
         protected TimeBasedGuidGenerator()
-            : this(NodeIdProvider.RandomNumber.Instance)
+            : this(NodeIdProvider.MacAddress.Instance)
         {
         }
 
         protected TimeBasedGuidGenerator(NodeIdProvider nodeIdProvider)
         {
-            var nowTime = DateTime.UtcNow;
-            this.HiResTimer = Stopwatch.StartNew();
-            var baseTime = GuidExtensions.BaseTimestamp;
-            this.StartTimestamp = nowTime.Ticks - baseTime.Ticks;
-            this.LastTimestamp = this.StartTimestamp;
+            this.TimestampProvider = TimestampProvider.Instance;
+            this.LastTimestamp = this.CurrentTimestamp;
             this.ClockSequence = new Random().Next();
             this.LazyNodeIdBytes = new Lazy<byte[]>(nodeIdProvider.GetNodeIdBytes);
         }
@@ -48,7 +42,7 @@ namespace XstarS.GuidGenerators
 
         protected virtual int TimestampShift => 0;
 
-        private long CurrentTimestamp => this.StartTimestamp + this.HiResTimer.ElapsedTicks;
+        private long CurrentTimestamp => this.TimestampProvider.GetCurrentTimestamp();
 
         private byte[] NodeIdBytes => this.LazyNodeIdBytes.Value;
 
@@ -70,18 +64,17 @@ namespace XstarS.GuidGenerators
 
         private long GetTimestampAndClockSeq(out int clockSeq)
         {
-            lock (this.HiResTimer)
+            var tsShift = this.TimestampShift;
+            lock (this.TimestampProvider)
             {
-                var tsShift = this.TimestampShift;
                 var lastTs = this.LastTimestamp;
                 var timestamp = this.CurrentTimestamp;
-                var lClockSeq = this.ClockSequence;
                 if ((timestamp >> tsShift) <= (lastTs >> tsShift))
                 {
-                    this.ClockSequence = ++lClockSeq;
+                    this.ClockSequence++;
                 }
                 this.LastTimestamp = timestamp;
-                clockSeq = lClockSeq;
+                clockSeq = this.ClockSequence;
                 return timestamp;
             }
         }
