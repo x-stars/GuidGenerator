@@ -10,21 +10,21 @@ namespace XstarS.GuidGenerators
         [TestMethod]
         public void NewGuid_EmptyVersion_GetEmptyGuid()
         {
-            var guid = GuidGenerator.NewGuid(GuidVersion.Empty);
+            var guid = GuidGenerator.Empty.NewGuid();
             Assert.AreEqual(Guid.Empty, guid);
         }
 
         [TestMethod]
         public void NewGuid_EmptyVersion_GetGuidWithEmptyVersion()
         {
-            var guid = GuidGenerator.NewGuid(GuidVersion.Empty);
+            var guid = GuidGenerator.Empty.NewGuid();
             Assert.AreEqual(GuidVersion.Empty, guid.GetVersion());
         }
 
         [TestMethod]
         public void NewGuid_EmptyVersion_GetGuidWithNcsVariant()
         {
-            var guid = GuidGenerator.NewGuid(GuidVersion.Empty);
+            var guid = GuidGenerator.Empty.NewGuid();
             Assert.AreEqual(GuidVariant.Ncs, guid.GetVariant());
         }
 
@@ -195,10 +195,10 @@ namespace XstarS.GuidGenerators
         }
 
         [TestMethod]
-        public void NewGuid_InvalidVersionEnum_CatchArgumentOutOfRangeException()
+        public void OfVersion_InvalidVersionEnum_CatchArgumentOutOfRangeException()
         {
             Assert.ThrowsException<ArgumentOutOfRangeException>(
-                () => GuidGenerator.NewGuid((GuidVersion)(-1)));
+                () => GuidGenerator.OfVersion((GuidVersion)(-1)));
         }
     }
 }
