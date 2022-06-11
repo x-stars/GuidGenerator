@@ -18,6 +18,7 @@ namespace XstarS.GuidGenerators.Commands
                 yield return NewNameBasedGuidCommand.Version3;
                 yield return NewNoInputGuidCommand.Version4;
                 yield return NewNameBasedGuidCommand.Version5;
+                yield return NewNoInputGuidCommand.Version1R;
                 yield return ShowHelpCommand.Instance;
                 yield return InvalidSyntaxCommand.Instance;
             }

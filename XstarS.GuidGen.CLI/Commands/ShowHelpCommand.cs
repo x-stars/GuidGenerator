@@ -29,7 +29,7 @@ namespace XstarS.GuidGenerators.Commands
             IEnumerable<string> GetHelpMessage()
             {
                 var cmdName = this.GetCommandName();
-                yield return $"Usage:  {cmdName} [-V1|-V4] [-Cn]";
+                yield return $"Usage:  {cmdName} [-V1|-V4|-V1R] [-Cn]";
                 yield return $"        {cmdName} -V2 [-Cn] Domain [SiteID]";
                 yield return $"        {cmdName} -V3|-V5 :NS|GuidNS [Name]";
                 yield return $"        {cmdName} -?|-H|-Help";
@@ -39,6 +39,7 @@ namespace XstarS.GuidGenerators.Commands
                 yield return "    -V3     generate name-based GUID by MD5 hashing.";
                 yield return "    -V4     generate pseudo-random GUIDs (default).";
                 yield return "    -V5     generate name-based GUID by SHA1 hashing.";
+                yield return "    -V1R    generate time-based GUIDs (random node ID).";
                 yield return "    -Cn     generate n GUIDs of the current version.";
                 yield return "    Domain  specify a DCE security domain,";
                 yield return "            which can be Person, Group or Org.";

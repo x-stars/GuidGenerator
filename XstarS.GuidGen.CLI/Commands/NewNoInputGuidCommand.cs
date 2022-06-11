@@ -13,11 +13,22 @@ namespace XstarS.GuidGenerators.Commands
         internal static readonly NewNoInputGuidCommand Version4 =
             new NewNoInputGuidCommand(GuidVersion.Version4);
 
+        internal static readonly NewNoInputGuidCommand Version1R =
+            new NewNoInputGuidCommand(useRandomNodeId: true);
+
         private readonly GuidVersion Version;
+
+        private readonly bool UseRandomNodeId;
 
         private NewNoInputGuidCommand(GuidVersion version)
         {
             this.Version = version;
+        }
+
+        private NewNoInputGuidCommand(bool useRandomNodeId)
+            : this(GuidVersion.Version1)
+        {
+            this.UseRandomNodeId = useRandomNodeId;
         }
 
         public override bool TryExecute(string[] args)
@@ -29,7 +40,10 @@ namespace XstarS.GuidGenerators.Commands
             var verArg = args[0].ToUpper();
             var version = this.Version;
             var verNum = ((int)version).ToString();
-            if (verArg != $"-V{verNum}")
+            var useRandId = this.UseRandomNodeId;
+            var expVerArg = $"-V{verNum}";
+            if (useRandId) { expVerArg += "R"; }
+            if (verArg != expVerArg)
             {
                 return false;
             }
@@ -46,7 +60,9 @@ namespace XstarS.GuidGenerators.Commands
                 if (!cParsed || (count < 0)) { return false; }
             }
 
-            var guidGen = GuidGenerator.OfVersion(version);
+            var guidGen = useRandId ?
+                GuidGenerator.CreateVersion1R() :
+                GuidGenerator.OfVersion(version);
             foreach (var current in ..count)
             {
                 var guid = guidGen.NewGuid();
