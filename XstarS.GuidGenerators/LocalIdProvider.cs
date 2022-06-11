@@ -132,6 +132,7 @@ namespace XstarS.GuidGenerators
 
         private sealed class UnixLike : LocalIdProvider
         {
+            [System.Security.SuppressUnmanagedCodeSecurity]
             private static class SafeNativeMethods
             {
                 [DllImport("libc", EntryPoint = "getuid")]
