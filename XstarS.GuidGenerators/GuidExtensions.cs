@@ -43,7 +43,7 @@ namespace XstarS.GuidGenerators
         /// </summary>
         /// <param name="guid">要获取时间戳的 <see cref="Guid"/>。</param>
         /// <param name="timestamp">当前 <see cref="Guid"/> 表示的时间戳。
-        /// 如果 <see cref="Guid"/> 的版本不包含真实的时间戳，则为默认值。</param>
+        /// 如果 <see cref="Guid"/> 的版本不包含时间戳，则为默认值。</param>
         /// <returns>若当前 <see cref="Guid"/> 的版本为
         /// <see cref="GuidVersion.Version1"/> 或 <see cref="GuidVersion.Version2"/>，
         /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
@@ -58,14 +58,42 @@ namespace XstarS.GuidGenerators
             var tsField = ((long)guid.TimeLow()) |
                 ((long)guid.TimeMid() << (4 * 8)) |
                 ((long)guid.TimeHi_Ver() << (6 * 8));
+            tsField &= ~(0xF0L << (7 * 8));
             if (version.ContainsLocalId())
             {
                 tsField &= ~0xFFFFFFFFL;
             }
-            tsField &= ~(0xF0L << (7 * 8));
             var baseTicks = GuidExtensions.BaseTimestamp.Ticks;
             var tsTicks = tsField + baseTicks;
             timestamp = new DateTime(tsTicks, DateTimeKind.Utc);
+            return true;
+        }
+
+        /// <summary>
+        /// 尝试获取当前 <see cref="Guid"/> 包含的时钟序列。
+        /// </summary>
+        /// <param name="guid">要获取时钟序列的 <see cref="Guid"/>。</param>
+        /// <param name="clockSeq">当前 <see cref="Guid"/> 包含的时钟序列。
+        /// 如果 <see cref="Guid"/> 的版本不包含时间戳，则为默认值。</param>
+        /// <returns>若当前 <see cref="Guid"/> 的版本为
+        /// <see cref="GuidVersion.Version1"/> 或 <see cref="GuidVersion.Version2"/>，
+        /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
+        public static bool TryGetClockSequence(this Guid guid, out short clockSeq)
+        {
+            var version = guid.GetVersion();
+            if (!version.IsTimeBased())
+            {
+                clockSeq = default(int);
+                return false;
+            }
+            var csField = ((int)guid.ClkSeqLow()) |
+                ((int)guid.ClkSeqHi_Var() << (1 * 8));
+            csField &= ~(0xC0 << (1 * 8));
+            if (version.ContainsLocalId())
+            {
+                csField >>= (1 * 8);
+            }
+            clockSeq = (short)csField;
             return true;
         }
 
@@ -74,9 +102,9 @@ namespace XstarS.GuidGenerators
         /// </summary>
         /// <param name="guid">要获取时间戳的 <see cref="Guid"/>。</param>
         /// <param name="domain">当前 <see cref="Guid"/> 的 DCE Security 域。
-        /// 如果 <see cref="Guid"/> 的版本不包含真实的本地 ID，则为默认值。</param>
+        /// 如果 <see cref="Guid"/> 的版本不包含本地 ID，则为默认值。</param>
         /// <param name="localId">当前 <see cref="Guid"/> 表示的本地 ID。
-        /// 如果 <see cref="Guid"/> 的版本不包含真实的本地 ID，则为默认值。</param>
+        /// 如果 <see cref="Guid"/> 的版本不包含本地 ID，则为默认值。</param>
         /// <returns>若当前 <see cref="Guid"/> 的版本为 <see cref="GuidVersion.Version2"/>，
         /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
         public static bool TryGetDomainAndLocalId(
@@ -93,7 +121,7 @@ namespace XstarS.GuidGenerators
         /// </summary>
         /// <param name="guid">要获取时间戳的 <see cref="Guid"/>。</param>
         /// <param name="nodeId">当前 <see cref="Guid"/> 表示的节点 ID。
-        /// 如果 <see cref="Guid"/> 的版本不包含真实的节点 ID，则为默认值。</param>
+        /// 如果 <see cref="Guid"/> 的版本不包含节点 ID，则为默认值。</param>
         /// <returns>若当前 <see cref="Guid"/> 的版本为
         /// <see cref="GuidVersion.Version1"/> 或 <see cref="GuidVersion.Version2"/>，
         /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
