@@ -54,22 +54,6 @@ namespace XstarS.GuidGenerators
         }
 
         /// <summary>
-        /// 根据指定的命名空间 ID 和名称生成一个新的 <see cref="Guid"/> 实例。
-        /// </summary>
-        /// <param name="nsId">生成 <see cref="Guid"/> 时使用的命名空间 ID。</param>
-        /// <param name="name">生成 <see cref="Guid"/> 时使用的名称的字符串。</param>
-        /// <returns>根据 <paramref name="nsId"/> 和
-        /// <paramref name="name"/> 生成的 <see cref="Guid"/> 实例。</returns>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="name"/> 为 <see langword="null"/>。</exception>
-        /// <exception cref="NotSupportedException">
-        /// 当前实例不支持基于名称的 <see cref="Guid"/> 生成模式。</exception>
-        public virtual Guid NewGuid(Guid nsId, string name)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
         /// 根据指定的 DCE Security 域和本地 ID 生成一个新的 <see cref="Guid"/> 实例。
         /// </summary>
         /// <param name="domain">生成 <see cref="Guid"/> 时使用的 DCE Security 域。</param>

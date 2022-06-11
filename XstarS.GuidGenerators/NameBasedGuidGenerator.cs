@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace XstarS.GuidGenerators
 {
@@ -31,17 +30,6 @@ namespace XstarS.GuidGenerators
             var input = this.CreateInput(nsId, name);
             var hashBytes = this.ComputeHash(input);
             return this.HashBytesToGuid(hashBytes);
-        }
-
-        public sealed override Guid NewGuid(Guid nsId, string name)
-        {
-            if (name is null)
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-
-            var nameBytes = Encoding.UTF8.GetBytes(name);
-            return this.NewGuid(nsId, nameBytes);
         }
 
         protected abstract HashAlgorithm CreateHashing();
