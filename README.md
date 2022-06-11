@@ -59,7 +59,7 @@ GUID 生成命令行工具的工程位于 [XstarS.GuidGen.CLI](XstarS.GuidGen.CL
 
 ``` CMD
 > GuidGen -?
-Usage:  GuidGen[.exe] [-V1|-V4] [-Cn]
+Usage:  GuidGen[.exe] [-V1|-V4|-V1R] [-Cn]
         GuidGen[.exe] -V2 [-Cn] Domain [SiteID]
         GuidGen[.exe] -V3|-V5 :NS|GuidNS [Name]
         GuidGen[.exe] -?|-H|-Help
@@ -69,6 +69,7 @@ Parameters:
     -V3     generate name-based GUID by MD5 hashing.
     -V4     generate pseudo-random GUIDs (default).
     -V5     generate name-based GUID by SHA1 hashing.
+    -V1R    generate time-based GUIDs (random node ID).
     -Cn     generate n GUIDs of the current version.
     Domain  specify a DCE security domain,
             which can be Person, Group or Org.
