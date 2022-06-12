@@ -59,6 +59,7 @@ GUID 生成命令行工具的工程位于 [XstarS.GuidGen.CLI](XstarS.GuidGen.CL
 
 ``` CMD
 > GuidGen -?
+Generate RFC 4122 compliant GUIDs.
 Usage:  GuidGen[.exe] [-V1|-V4|-V1R] [-Cn]
         GuidGen[.exe] -V2 [-Cn] Domain [SiteID]
         GuidGen[.exe] -V3|-V5 :NS|GuidNS [Name]
