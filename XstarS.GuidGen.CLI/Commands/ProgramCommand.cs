@@ -8,6 +8,9 @@ namespace XstarS.GuidGenerators.Commands
     {
         protected ProgramCommand() { }
 
+        private bool SupportPathExt =>
+            Environment.OSVersion.Platform < PlatformID.Unix;
+
         public static bool Execute(string[] args)
         {
             static IEnumerable<ProgramCommand> GetCommandChain()
@@ -33,8 +36,7 @@ namespace XstarS.GuidGenerators.Commands
             return false;
         }
 
-        private bool SupportPathExt =>
-            Environment.OSVersion.Platform < PlatformID.Unix;
+        public abstract bool TryExecute(string[] args);
 
         protected string GetCommandName()
         {
@@ -45,7 +47,5 @@ namespace XstarS.GuidGenerators.Commands
             if (cmdExt.Length != 0) { cmdName += cmdExt; }
             return cmdName;
         }
-
-        public abstract bool TryExecute(string[] args);
     }
 }
