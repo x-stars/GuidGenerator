@@ -29,6 +29,7 @@ namespace XstarS.GuidGenerators.Commands
             IEnumerable<string> GetHelpMessage()
             {
                 var cmdName = this.GetCommandName();
+                yield return $"Generate RFC 4122 compliant GUIDs.";
                 yield return $"Usage:  {cmdName} [-V1|-V4|-V1R] [-Cn]";
                 yield return $"        {cmdName} -V2 [-Cn] Domain [SiteID]";
                 yield return $"        {cmdName} -V3|-V5 :NS|GuidNS [Name]";
