@@ -10,9 +10,16 @@ namespace XstarS.GuidGenerators
         internal static class Singleton
         {
             internal static readonly TimestampProvider Value =
-                Stopwatch.IsHighResolution ?
-                new TimestampProvider.PerfCounter() :
-                new TimestampProvider.IncTimestamp();
+                TimestampProvider.Singleton.Create();
+
+            private static TimestampProvider Create()
+            {
+                return TimestampProvider.IsDateTimeHiRes() ?
+                    new TimestampProvider.DirectTime() :
+                    Stopwatch.IsHighResolution ?
+                    new TimestampProvider.PerfCounter() :
+                    new TimestampProvider.IncTimestamp();
+            }
         }
 
         private TimestampProvider() { }
@@ -23,12 +30,46 @@ namespace XstarS.GuidGenerators
             get => TimestampProvider.Singleton.Value;
         }
 
+        internal static bool IsDateTimeHiRes()
+        {
+            var spinner = new SpinWait();
+            _ = DateTime.UtcNow;
+            _ = DateTime.UtcNow;
+            spinner.SpinOnce();
+            var time0 = DateTime.UtcNow;
+            spinner.SpinOnce();
+            var time1 = DateTime.UtcNow;
+            spinner.SpinOnce();
+            var time2 = DateTime.UtcNow;
+            spinner.SpinOnce();
+            var time3 = DateTime.UtcNow;
+            if (!Stopwatch.IsHighResolution) { return false; }
+            var period = Stopwatch.Frequency / 10000000.0;
+            var diff10 = (time1.Ticks - time0.Ticks) / period;
+            var diff21 = (time2.Ticks - time1.Ticks) / period;
+            var diff32 = (time3.Ticks - time2.Ticks) / period;
+            var matches = ((diff10 is > 0 and < 10) ? 1 : 0) +
+                          ((diff21 is > 0 and < 10) ? 1 : 0) +
+                          ((diff32 is > 0 and < 10) ? 1 : 0);
+            return matches >= 2;
+        }
+
         public abstract long GetCurrentTimestamp();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected long GetGuidTimestamp(long ticks)
         {
             return ticks - GuidExtensions.BaseTimestamp.Ticks;
+        }
+
+        private sealed class DirectTime : TimestampProvider
+        {
+            internal DirectTime() { }
+
+            public override long GetCurrentTimestamp()
+            {
+                return this.GetGuidTimestamp(DateTime.UtcNow.Ticks);
+            }
         }
 
         private sealed class PerfCounter : TimestampProvider
