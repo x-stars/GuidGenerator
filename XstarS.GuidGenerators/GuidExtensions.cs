@@ -151,7 +151,7 @@ namespace XstarS.GuidGenerators
             var uuidBytes = new byte[16];
             fixed (byte* pUuidBytes = &uuidBytes[0])
             {
-                guid.CopyUuidBytes(pUuidBytes);
+                guid.WriteUuidBytes(pUuidBytes);
             }
             return uuidBytes;
         }
@@ -161,7 +161,7 @@ namespace XstarS.GuidGenerators
         /// </summary>
         /// <param name="guid">作为字节数据来源的 <see cref="Guid"/>。</param>
         /// <param name="destination">要写入 <see cref="Guid"/> 的字节的目标地址。</param>
-        internal static unsafe void CopyUuidBytes(this Guid guid, byte* destination)
+        internal static unsafe void WriteUuidBytes(this Guid guid, byte* destination)
         {
             *(Guid*)destination = guid;
             if (BitConverter.IsLittleEndian)
