@@ -19,8 +19,8 @@ namespace XstarS.GuidGenerators
         /// 编码的 <paramref name="name"/> 生成的 <see cref="Guid"/> 实例。</returns>
         /// <exception cref="ArgumentNullException"><paramref name="guidGen"/>
         /// 或 <paramref name="name"/> 为 <see langword="null"/>。</exception>
-        /// <exception cref="NotSupportedException">
-        /// 当前实例不支持基于名称的 <see cref="Guid"/> 生成模式。</exception>
+        /// <exception cref="NotSupportedException"><paramref name="guidGen"/>
+        /// 不支持基于名称的 <see cref="Guid"/> 生成模式。</exception>
         public static Guid NewGuid(this GuidGenerator guidGen,
             Guid nsId, string name, Encoding? encoding = null)
         {
