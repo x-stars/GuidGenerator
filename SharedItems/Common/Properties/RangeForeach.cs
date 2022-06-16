@@ -21,9 +21,10 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
-[CompilerGenerated, DebuggerNonUserCode]
+[DebuggerNonUserCode, ExcludeFromCodeCoverage]
 [EditorBrowsable(EditorBrowsableState.Never)]
 [Obsolete("This type supports the range-foreach syntax " +
           "and should not be used directly in user code.")]
@@ -41,7 +42,7 @@ internal static class RangeEnumerable
     }
 #endif
 
-    [CompilerGenerated, DebuggerNonUserCode]
+    [DebuggerNonUserCode, ExcludeFromCodeCoverage]
     public struct Enumerator
     {
         private int CurrentIndex;
@@ -62,7 +63,7 @@ internal static class RangeEnumerable
     }
 
 #if STEPPED_RANGE
-    [CompilerGenerated, DebuggerNonUserCode]
+    [DebuggerNonUserCode, ExcludeFromCodeCoverage]
     public readonly struct Stepped : IEquatable<Stepped>
     {
         public Range Range { get; }
@@ -88,12 +89,12 @@ internal static class RangeEnumerable
             this.Range.GetHashCode() * 31 + this.Step;
 
         public override string ToString() =>
-            this.Range.ToString() + ".%" + this.Step.ToString();
+            this.Range.ToString() + ",:" + this.Step.ToString();
 
         private static ArgumentOutOfRangeException StepOutOfRange() =>
             new ArgumentOutOfRangeException("step", "Non-zero number required.");
 
-        [CompilerGenerated, DebuggerNonUserCode]
+        [DebuggerNonUserCode, ExcludeFromCodeCoverage]
         public struct Enumerator
         {
             private int CurrentIndex;
@@ -126,3 +127,16 @@ internal static class RangeEnumerable
     }
 #endif
 }
+
+#if !(NET40_OR_GREATER || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER)
+#if !(EXCLUDE_FROM_CODE_COVERAGE || NETCOREAPP3_0_OR_GREATER)
+namespace System.Diagnostics.CodeAnalysis
+{
+    [SuppressMessage("Microsoft.Design",
+                     "CA1018:MarkAttributesWithAttributeUsageAttribute")]
+    internal sealed partial class ExcludeFromCodeCoverageAttribute : Attribute
+    {
+    }
+}
+#endif
+#endif

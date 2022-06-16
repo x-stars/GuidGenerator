@@ -1,18 +1,17 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable enable
-
 #if !(NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
 namespace System
 {
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.CompilerServices;
 
     /// <summary>
     /// Represents a type that can be used to index a collection either from the start or the end.
     /// </summary>
-    [CompilerGenerated, DebuggerNonUserCode]
+    [DebuggerNonUserCode, ExcludeFromCodeCoverage]
     internal readonly struct Index : IEquatable<Index>
     {
         private readonly int _value;
@@ -136,7 +135,7 @@ namespace System
     /// <summary>
     /// Represents a range that has start and end indexes.
     /// </summary>
-    [CompilerGenerated, DebuggerNonUserCode]
+    [DebuggerNonUserCode, ExcludeFromCodeCoverage]
     internal readonly struct Range : IEquatable<Range>
     {
         /// <summary>
@@ -235,4 +234,17 @@ namespace System
 #endif
     }
 }
+#endif
+
+#if !(NET40_OR_GREATER || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER)
+#if !(EXCLUDE_FROM_CODE_COVERAGE || NETCOREAPP3_0_OR_GREATER)
+namespace System.Diagnostics.CodeAnalysis
+{
+    [SuppressMessage("Microsoft.Design",
+                     "CA1018:MarkAttributesWithAttributeUsageAttribute")]
+    internal sealed partial class ExcludeFromCodeCoverageAttribute : Attribute
+    {
+    }
+}
+#endif
 #endif
