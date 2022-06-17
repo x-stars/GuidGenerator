@@ -5,18 +5,24 @@ namespace XstarS.GuidGenerators
 {
     internal sealed class EmptyGuidGenerator : GuidGenerator, IGuidGenerator
     {
-        private static class Singleton
-        {
-            internal static readonly EmptyGuidGenerator Value =
-                new EmptyGuidGenerator();
-        }
+        private static volatile EmptyGuidGenerator? Singleton;
 
         private EmptyGuidGenerator() { }
 
         internal static EmptyGuidGenerator Instance
         {
-            [MethodImpl(MethodImplOptions.NoInlining)]
-            get => EmptyGuidGenerator.Singleton.Value;
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                [MethodImpl(MethodImplOptions.Synchronized)]
+                static EmptyGuidGenerator Initialize()
+                {
+                    return EmptyGuidGenerator.Singleton ??=
+                        new EmptyGuidGenerator();
+                }
+
+                return EmptyGuidGenerator.Singleton ?? Initialize();
+            }
         }
 
         public override GuidVersion Version => GuidVersion.Empty;

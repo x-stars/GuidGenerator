@@ -73,18 +73,24 @@ namespace XstarS.GuidGenerators
 
         internal sealed class MD5Hashing : NameBasedGuidGenerator
         {
-            private static class Singleton
-            {
-                internal static readonly NameBasedGuidGenerator.MD5Hashing Value =
-                    new NameBasedGuidGenerator.MD5Hashing();
-            }
+            private static volatile NameBasedGuidGenerator.MD5Hashing? Singleton;
 
             private MD5Hashing() { }
 
             internal static NameBasedGuidGenerator.MD5Hashing Instance
             {
-                [MethodImpl(MethodImplOptions.NoInlining)]
-                get => NameBasedGuidGenerator.MD5Hashing.Singleton.Value;
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    [MethodImpl(MethodImplOptions.Synchronized)]
+                    static NameBasedGuidGenerator.MD5Hashing Initialize()
+                    {
+                        return NameBasedGuidGenerator.MD5Hashing.Singleton ??=
+                            new NameBasedGuidGenerator.MD5Hashing();
+                    }
+
+                    return NameBasedGuidGenerator.MD5Hashing.Singleton ?? Initialize();
+                }
             }
 
             public override GuidVersion Version => GuidVersion.Version3;
@@ -94,18 +100,24 @@ namespace XstarS.GuidGenerators
 
         internal sealed class SHA1Hashing : NameBasedGuidGenerator
         {
-            private static class Singleton
-            {
-                internal static readonly NameBasedGuidGenerator.SHA1Hashing Value =
-                    new NameBasedGuidGenerator.SHA1Hashing();
-            }
+            private static volatile NameBasedGuidGenerator.SHA1Hashing? Singleton;
 
             private SHA1Hashing() { }
 
             internal static NameBasedGuidGenerator.SHA1Hashing Instance
             {
-                [MethodImpl(MethodImplOptions.NoInlining)]
-                get => NameBasedGuidGenerator.SHA1Hashing.Singleton.Value;
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    [MethodImpl(MethodImplOptions.Synchronized)]
+                    static NameBasedGuidGenerator.SHA1Hashing Initialize()
+                    {
+                        return NameBasedGuidGenerator.SHA1Hashing.Singleton ??=
+                            new NameBasedGuidGenerator.SHA1Hashing();
+                    }
+
+                    return NameBasedGuidGenerator.SHA1Hashing.Singleton ?? Initialize();
+                }
             }
 
             public override GuidVersion Version => GuidVersion.Version5;

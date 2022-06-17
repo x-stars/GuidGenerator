@@ -5,11 +5,7 @@ namespace XstarS.GuidGenerators
 {
     internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
     {
-        private static class Singleton
-        {
-            internal static readonly TimeBasedGuidGenerator Value =
-                new TimeBasedGuidGenerator();
-        }
+        private static volatile TimeBasedGuidGenerator? Singleton;
 
         private readonly TimestampProvider TimestampProvider;
 
@@ -36,8 +32,18 @@ namespace XstarS.GuidGenerators
 
         internal static TimeBasedGuidGenerator Instance
         {
-            [MethodImpl(MethodImplOptions.NoInlining)]
-            get => TimeBasedGuidGenerator.Singleton.Value;
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                [MethodImpl(MethodImplOptions.Synchronized)]
+                static TimeBasedGuidGenerator Initialize()
+                {
+                    return TimeBasedGuidGenerator.Singleton ??=
+                        new TimeBasedGuidGenerator();
+                }
+
+                return TimeBasedGuidGenerator.Singleton ?? Initialize();
+            }
         }
 
         public override GuidVersion Version => GuidVersion.Version1;

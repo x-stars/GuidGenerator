@@ -20,18 +20,24 @@ namespace XstarS.GuidGenerators
 
         internal sealed class RandomNumber : NodeIdProvider
         {
-            private static class Singleton
-            {
-                internal static readonly NodeIdProvider.RandomNumber Value =
-                    new NodeIdProvider.RandomNumber();
-            }
+            private static volatile NodeIdProvider.RandomNumber? Singleton;
 
             internal RandomNumber() { }
 
             internal static NodeIdProvider.RandomNumber Instance
             {
-                [MethodImpl(MethodImplOptions.NoInlining)]
-                get => NodeIdProvider.RandomNumber.Singleton.Value;
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    [MethodImpl(MethodImplOptions.Synchronized)]
+                    static NodeIdProvider.RandomNumber Initialize()
+                    {
+                        return NodeIdProvider.RandomNumber.Singleton ??=
+                            new NodeIdProvider.RandomNumber();
+                    }
+
+                    return NodeIdProvider.RandomNumber.Singleton ?? Initialize();
+                }
             }
 
             protected override byte[] GetNodeIdBytes()
@@ -45,11 +51,7 @@ namespace XstarS.GuidGenerators
 
         internal sealed class MacAddress : NodeIdProvider
         {
-            private static class Singleton
-            {
-                internal static readonly NodeIdProvider.MacAddress Value =
-                    new NodeIdProvider.MacAddress();
-            }
+            private static volatile NodeIdProvider.MacAddress? Singleton;
 
             private readonly Timer RefreshNodeIdTask;
 
@@ -62,8 +64,18 @@ namespace XstarS.GuidGenerators
 
             internal static NodeIdProvider.MacAddress Instance
             {
-                [MethodImpl(MethodImplOptions.NoInlining)]
-                get => NodeIdProvider.MacAddress.Singleton.Value;
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    [MethodImpl(MethodImplOptions.Synchronized)]
+                    static NodeIdProvider.MacAddress Initialize()
+                    {
+                        return NodeIdProvider.MacAddress.Singleton ??=
+                            new NodeIdProvider.MacAddress();
+                    }
+
+                    return NodeIdProvider.MacAddress.Singleton ?? Initialize();
+                }
             }
 
             protected override byte[] GetNodeIdBytes()

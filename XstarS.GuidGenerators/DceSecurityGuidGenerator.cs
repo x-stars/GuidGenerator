@@ -5,11 +5,7 @@ namespace XstarS.GuidGenerators
 {
     internal sealed class DceSecurityGuidGenerator : TimeBasedGuidGenerator, IDceSecurityGuidGenerator
     {
-        private static class Singleton
-        {
-            internal static readonly DceSecurityGuidGenerator Value =
-                new DceSecurityGuidGenerator();
-        }
+        private static volatile DceSecurityGuidGenerator? Singleton;
 
         private readonly LocalIdProvider LocalIdProvider;
 
@@ -20,8 +16,18 @@ namespace XstarS.GuidGenerators
 
         internal static new DceSecurityGuidGenerator Instance
         {
-            [MethodImpl(MethodImplOptions.NoInlining)]
-            get => DceSecurityGuidGenerator.Singleton.Value;
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                [MethodImpl(MethodImplOptions.Synchronized)]
+                static DceSecurityGuidGenerator Initialize()
+                {
+                    return DceSecurityGuidGenerator.Singleton ??=
+                        new DceSecurityGuidGenerator();
+                }
+
+                return DceSecurityGuidGenerator.Singleton ?? Initialize();
+            }
         }
 
         public override GuidVersion Version => GuidVersion.Version2;

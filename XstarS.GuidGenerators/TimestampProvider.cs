@@ -7,30 +7,36 @@ namespace XstarS.GuidGenerators
 {
     internal abstract class TimestampProvider
     {
-        internal static class Singleton
-        {
-            internal static readonly TimestampProvider Value =
-                TimestampProvider.Singleton.Create();
-
-            private static TimestampProvider Create()
-            {
-                return TimestampProvider.IsDateTimeHiRes() ?
-                    new TimestampProvider.DirectTime() :
-                    Stopwatch.IsHighResolution ?
-                    new TimestampProvider.PerfCounter() :
-                    new TimestampProvider.IncTimestamp();
-            }
-        }
+        private static volatile TimestampProvider? Singleton;
 
         private TimestampProvider() { }
 
         internal static TimestampProvider Instance
         {
-            [MethodImpl(MethodImplOptions.NoInlining)]
-            get => TimestampProvider.Singleton.Value;
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                [MethodImpl(MethodImplOptions.Synchronized)]
+                static TimestampProvider Initialize()
+                {
+                    return TimestampProvider.Singleton ??=
+                            TimestampProvider.Create();
+                }
+
+                return TimestampProvider.Singleton ?? Initialize();
+            }
         }
 
-        internal static bool IsDateTimeHiRes()
+        private static TimestampProvider Create()
+        {
+            return TimestampProvider.IsDateTimeHiRes() ?
+                new TimestampProvider.DirectTime() :
+                Stopwatch.IsHighResolution ?
+                new TimestampProvider.PerfCounter() :
+                new TimestampProvider.IncTimestamp();
+        }
+
+        private static bool IsDateTimeHiRes()
         {
             var spinner = new SpinWait();
             _ = DateTime.UtcNow;

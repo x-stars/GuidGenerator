@@ -5,18 +5,24 @@ namespace XstarS.GuidGenerators
 {
     internal sealed class RandomizedGuidGenerator : GuidGenerator, IGuidGenerator
     {
-        private static class Singleton
-        {
-            internal static readonly RandomizedGuidGenerator Value =
-                new RandomizedGuidGenerator();
-        }
+        private static volatile RandomizedGuidGenerator? Singleton;
 
         private RandomizedGuidGenerator() { }
 
         internal static RandomizedGuidGenerator Instance
         {
-            [MethodImpl(MethodImplOptions.NoInlining)]
-            get => RandomizedGuidGenerator.Singleton.Value;
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                [MethodImpl(MethodImplOptions.Synchronized)]
+                static RandomizedGuidGenerator Initialize()
+                {
+                    return RandomizedGuidGenerator.Singleton ??=
+                        new RandomizedGuidGenerator();
+                }
+
+                return RandomizedGuidGenerator.Singleton ?? Initialize();
+            }
         }
 
         public override GuidVersion Version => GuidVersion.Version4;

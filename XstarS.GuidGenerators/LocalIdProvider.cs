@@ -8,27 +8,7 @@ namespace XstarS.GuidGenerators
 {
     internal abstract class LocalIdProvider
     {
-        private static class Singleton
-        {
-            internal static readonly LocalIdProvider Value =
-                LocalIdProvider.Singleton.Create();
-
-            private static LocalIdProvider Create()
-            {
-                return Environment.OSVersion.Platform switch
-                {
-#if NET5_0_OR_GREATER
-                    PlatformID.Win32NT => OperatingSystem.IsWindows() ?
-                        new LocalIdProvider.Windows() : new LocalIdProvider.Unknown(),
-#else
-                    PlatformID.Win32NT => new LocalIdProvider.Windows(),
-#endif
-                    PlatformID.Unix => new LocalIdProvider.UnixLike(),
-                    PlatformID.MacOSX => new LocalIdProvider.UnixLike(),
-                    _ => new LocalIdProvider.Unknown(),
-                };
-            }
-        }
+        private static volatile LocalIdProvider? Singleton;
 
         private volatile Lazy<int> LazyLocalUserId;
 
@@ -47,13 +27,39 @@ namespace XstarS.GuidGenerators
 
         internal static LocalIdProvider Instance
         {
-            [MethodImpl(MethodImplOptions.NoInlining)]
-            get => LocalIdProvider.Singleton.Value;
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                [MethodImpl(MethodImplOptions.Synchronized)]
+                static LocalIdProvider Initialize()
+                {
+                    return LocalIdProvider.Singleton ??=
+                            LocalIdProvider.Create();
+                }
+
+                return LocalIdProvider.Singleton ?? Initialize();
+            }
         }
 
         public int LocalUserId => this.LazyLocalUserId.Value;
 
         public int LocalGroupId => this.LazyLocalGroupId.Value;
+
+        private static LocalIdProvider Create()
+        {
+            return Environment.OSVersion.Platform switch
+            {
+#if NET5_0_OR_GREATER
+                PlatformID.Win32NT => OperatingSystem.IsWindows() ?
+                    new LocalIdProvider.Windows() : new LocalIdProvider.Unknown(),
+#else
+                PlatformID.Win32NT => new LocalIdProvider.Windows(),
+#endif
+                PlatformID.Unix => new LocalIdProvider.UnixLike(),
+                PlatformID.MacOSX => new LocalIdProvider.UnixLike(),
+                _ => new LocalIdProvider.Unknown(),
+            };
+        }
 
         protected abstract int GetLocalUserId();
 
