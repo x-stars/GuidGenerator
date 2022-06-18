@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace XstarS.GuidGenerators
 {
@@ -73,6 +74,7 @@ namespace XstarS.GuidGenerators
         /// 填充指定的 <see cref="Guid"/> 中表示 GUID 版本的字段。
         /// </summary>
         /// <param name="guid">要填充字段的 <see cref="Guid"/>。</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void FillVersionField(ref Guid guid)
         {
             var shiftVer = (int)this.Version << (3 * 4);
@@ -84,6 +86,7 @@ namespace XstarS.GuidGenerators
         /// 填充指定的 <see cref="Guid"/> 中表示 GUID 变体的字段。
         /// </summary>
         /// <param name="guid">要填充字段的 <see cref="Guid"/>。</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void FillVariantField(ref Guid guid)
         {
             var shiftVar = -1 << (8 - (int)this.Variant);
