@@ -3,17 +3,17 @@
 // https://opensource.org/licenses/MIT
 
 // Provide the range-foreach syntax for C# 9.0 or higher.
-// Requires: System.Index and System.Range types.
+// Requires: struct System.Index, struct System.Range.
 // Reference this file to write foreach-loops like this:
-//   foreach (var index in 0..100) { /* ... */ }
+//   foreach (var index in 0..100) { }
 // which is equivalent to the legacy for-loop below:
-//   for (int i = 0; i < 100; i++) { /* ... */ }
+//   for (int index = 0; index < 100; index++) { }
 // NOTE: Use '^' to represent negative numbers,
 //       e.g. ^100..0 (instead of -100..0).
 // If STEPPED_RANGE is defined, this can also be used:
-//   foreach (var index in (99..^1).Step(-2)) { /* ... */ }
+//   foreach (var index in (99..^1).Step(-2)) { }
 // which is equivalent to the legacy for-loop below:
-//   for (int i = 100 - 1; i >= 0; i += -2) { /* ... */ }
+//   for (int index = 99; index >= 0; index -= 2) { }
 
 #nullable disable
 //#define STEPPED_RANGE
@@ -34,13 +34,6 @@ internal static class RangeEnumerable
     {
         return new Enumerator(in range);
     }
-
-#if STEPPED_RANGE
-    public static Stepped Step(this Range range, int step)
-    {
-        return new Stepped(range, step);
-    }
-#endif
 
     [DebuggerNonUserCode, ExcludeFromCodeCoverage]
     public struct Enumerator
@@ -63,8 +56,13 @@ internal static class RangeEnumerable
     }
 
 #if STEPPED_RANGE
+    public static Stepped Step(this Range range, int step)
+    {
+        return new Stepped(range, step);
+    }
+
     [DebuggerNonUserCode, ExcludeFromCodeCoverage]
-    public readonly struct Stepped : IEquatable<Stepped>
+    public readonly struct Stepped
     {
         public Range Range { get; }
 
@@ -78,18 +76,6 @@ internal static class RangeEnumerable
         }
 
         public Enumerator GetEnumerator() => new Enumerator(in this);
-
-        public bool Equals(Stepped other) =>
-            this.Range.Equals(other.Range) && (this.Step == other.Step);
-
-        public override bool Equals(object obj) =>
-            (obj is Stepped other) && this.Equals(other);
-
-        public override int GetHashCode() =>
-            this.Range.GetHashCode() * 31 + this.Step;
-
-        public override string ToString() =>
-            this.Range.ToString() + ",:" + this.Step.ToString();
 
         private static ArgumentOutOfRangeException StepOutOfRange() =>
             new ArgumentOutOfRangeException("step", "Non-zero number required.");
