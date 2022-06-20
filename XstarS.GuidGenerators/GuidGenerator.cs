@@ -1,98 +1,97 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace XstarS.GuidGenerators
+namespace XstarS.GuidGenerators;
+
+/// <summary>
+/// 提供生成 <see cref="Guid"/> 的方法。
+/// </summary>
+public abstract partial class GuidGenerator : IGuidGeneratorInfo, IGuidGenerator
 {
     /// <summary>
-    /// 提供生成 <see cref="Guid"/> 的方法。
+    /// 初始化 <see cref="GuidGenerator"/> 类的新实例。
     /// </summary>
-    public abstract partial class GuidGenerator : IGuidGeneratorInfo, IGuidGenerator
+    protected GuidGenerator() { }
+
+    /// <summary>
+    /// 获取当前实例生成的 <see cref="Guid"/> 的版本。
+    /// </summary>
+    /// <returns>当前实例生成的 <see cref="Guid"/> 的版本。</returns>
+    public abstract GuidVersion Version { get; }
+
+    /// <summary>
+    /// 获取当前实例生成的 <see cref="Guid"/> 的变体。
+    /// </summary>
+    /// <returns>当前实例生成的 <see cref="Guid"/> 的变体。</returns>
+    public virtual GuidVariant Variant => GuidVariant.Rfc4122;
+
+    /// <summary>
+    /// 获取当前实例生成的 <see cref="Guid"/> 是否依赖于输入参数。
+    /// </summary>
+    /// <returns>若当前实例生成的 <see cref="Guid"/> 依赖于输入参数，
+    /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
+    public virtual bool RequiresInput => this.Version.IsNameBased();
+
+    /// <summary>
+    /// 生成一个新的 <see cref="Guid"/> 实例。
+    /// </summary>
+    /// <returns>一个新的 <see cref="Guid"/> 实例。</returns>
+    public abstract Guid NewGuid();
+
+    /// <summary>
+    /// 根据指定的命名空间 ID 和名称生成一个新的 <see cref="Guid"/> 实例。
+    /// </summary>
+    /// <param name="nsId">生成 <see cref="Guid"/> 时使用的命名空间 ID。</param>
+    /// <param name="name">生成 <see cref="Guid"/> 时使用的名称的字节数组。</param>
+    /// <returns>根据 <paramref name="nsId"/> 和
+    /// <paramref name="name"/> 生成的 <see cref="Guid"/> 实例。</returns>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="name"/> 为 <see langword="null"/>。</exception>
+    /// <exception cref="NotSupportedException">
+    /// 当前实例不支持基于名称的 <see cref="Guid"/> 生成模式。</exception>
+    public virtual Guid NewGuid(Guid nsId, byte[] name)
     {
-        /// <summary>
-        /// 初始化 <see cref="GuidGenerator"/> 类的新实例。
-        /// </summary>
-        protected GuidGenerator() { }
+        throw new NotSupportedException();
+    }
 
-        /// <summary>
-        /// 获取当前实例生成的 <see cref="Guid"/> 的版本。
-        /// </summary>
-        /// <returns>当前实例生成的 <see cref="Guid"/> 的版本。</returns>
-        public abstract GuidVersion Version { get; }
+    /// <summary>
+    /// 根据指定的 DCE Security 域和本地 ID 生成一个新的 <see cref="Guid"/> 实例。
+    /// </summary>
+    /// <param name="domain">生成 <see cref="Guid"/> 时使用的 DCE Security 域。</param>
+    /// <param name="localId">生成 <see cref="Guid"/> 时使用的自定义本地 ID。</param>
+    /// <returns>根据 <paramref name="domain"/> 和
+    /// <paramref name="localId"/> 生成的 <see cref="Guid"/> 实例。</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="domain"/> 不为有效的 <see cref="DceSecurityDomain"/> 枚举值。</exception>
+    /// <exception cref="NotSupportedException">
+    /// 当前实例不支持 DCE Security 的 <see cref="Guid"/> 生成模式。</exception>
+    public virtual Guid NewGuid(DceSecurityDomain domain, int? localId = null)
+    {
+        throw new NotSupportedException();
+    }
 
-        /// <summary>
-        /// 获取当前实例生成的 <see cref="Guid"/> 的变体。
-        /// </summary>
-        /// <returns>当前实例生成的 <see cref="Guid"/> 的变体。</returns>
-        public virtual GuidVariant Variant => GuidVariant.Rfc4122;
+    /// <summary>
+    /// 填充指定的 <see cref="Guid"/> 中表示 GUID 版本的字段。
+    /// </summary>
+    /// <param name="guid">要填充字段的 <see cref="Guid"/>。</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected void FillVersionField(ref Guid guid)
+    {
+        var shiftVer = (int)this.Version << (3 * 4);
+        ref var timeHi_Ver = ref guid.TimeHi_Ver();
+        timeHi_Ver = (ushort)(timeHi_Ver & ~0xF000 | shiftVer);
+    }
 
-        /// <summary>
-        /// 获取当前实例生成的 <see cref="Guid"/> 是否依赖于输入参数。
-        /// </summary>
-        /// <returns>若当前实例生成的 <see cref="Guid"/> 依赖于输入参数，
-        /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
-        public virtual bool RequiresInput => this.Version.IsNameBased();
-
-        /// <summary>
-        /// 生成一个新的 <see cref="Guid"/> 实例。
-        /// </summary>
-        /// <returns>一个新的 <see cref="Guid"/> 实例。</returns>
-        public abstract Guid NewGuid();
-
-        /// <summary>
-        /// 根据指定的命名空间 ID 和名称生成一个新的 <see cref="Guid"/> 实例。
-        /// </summary>
-        /// <param name="nsId">生成 <see cref="Guid"/> 时使用的命名空间 ID。</param>
-        /// <param name="name">生成 <see cref="Guid"/> 时使用的名称的字节数组。</param>
-        /// <returns>根据 <paramref name="nsId"/> 和
-        /// <paramref name="name"/> 生成的 <see cref="Guid"/> 实例。</returns>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="name"/> 为 <see langword="null"/>。</exception>
-        /// <exception cref="NotSupportedException">
-        /// 当前实例不支持基于名称的 <see cref="Guid"/> 生成模式。</exception>
-        public virtual Guid NewGuid(Guid nsId, byte[] name)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// 根据指定的 DCE Security 域和本地 ID 生成一个新的 <see cref="Guid"/> 实例。
-        /// </summary>
-        /// <param name="domain">生成 <see cref="Guid"/> 时使用的 DCE Security 域。</param>
-        /// <param name="localId">生成 <see cref="Guid"/> 时使用的自定义本地 ID。</param>
-        /// <returns>根据 <paramref name="domain"/> 和
-        /// <paramref name="localId"/> 生成的 <see cref="Guid"/> 实例。</returns>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// <paramref name="domain"/> 不为有效的 <see cref="DceSecurityDomain"/> 枚举值。</exception>
-        /// <exception cref="NotSupportedException">
-        /// 当前实例不支持 DCE Security 的 <see cref="Guid"/> 生成模式。</exception>
-        public virtual Guid NewGuid(DceSecurityDomain domain, int? localId = null)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// 填充指定的 <see cref="Guid"/> 中表示 GUID 版本的字段。
-        /// </summary>
-        /// <param name="guid">要填充字段的 <see cref="Guid"/>。</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void FillVersionField(ref Guid guid)
-        {
-            var shiftVer = (int)this.Version << (3 * 4);
-            ref var timeHi_Ver = ref guid.TimeHi_Ver();
-            timeHi_Ver = (ushort)(timeHi_Ver & ~0xF000 | shiftVer);
-        }
-
-        /// <summary>
-        /// 填充指定的 <see cref="Guid"/> 中表示 GUID 变体的字段。
-        /// </summary>
-        /// <param name="guid">要填充字段的 <see cref="Guid"/>。</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void FillVariantField(ref Guid guid)
-        {
-            var shiftVar = -1 << (8 - (int)this.Variant);
-            var varMask = 0xE0 & (shiftVar >> 1);
-            ref var clkSeqHi_Var = ref guid.ClkSeqHi_Var();
-            clkSeqHi_Var = (byte)(clkSeqHi_Var & ~varMask | shiftVar);
-        }
+    /// <summary>
+    /// 填充指定的 <see cref="Guid"/> 中表示 GUID 变体的字段。
+    /// </summary>
+    /// <param name="guid">要填充字段的 <see cref="Guid"/>。</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected void FillVariantField(ref Guid guid)
+    {
+        var shiftVar = -1 << (8 - (int)this.Variant);
+        var varMask = 0xE0 & (shiftVar >> 1);
+        ref var clkSeqHi_Var = ref guid.ClkSeqHi_Var();
+        clkSeqHi_Var = (byte)(clkSeqHi_Var & ~varMask | shiftVar);
     }
 }

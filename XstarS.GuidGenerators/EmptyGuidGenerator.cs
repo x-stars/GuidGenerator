@@ -1,34 +1,33 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace XstarS.GuidGenerators
+namespace XstarS.GuidGenerators;
+
+internal sealed class EmptyGuidGenerator : GuidGenerator, IGuidGenerator
 {
-    internal sealed class EmptyGuidGenerator : GuidGenerator, IGuidGenerator
+    private static volatile EmptyGuidGenerator? Singleton;
+
+    private EmptyGuidGenerator() { }
+
+    internal static EmptyGuidGenerator Instance
     {
-        private static volatile EmptyGuidGenerator? Singleton;
-
-        private EmptyGuidGenerator() { }
-
-        internal static EmptyGuidGenerator Instance
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            static EmptyGuidGenerator Initialize()
             {
-                [MethodImpl(MethodImplOptions.Synchronized)]
-                static EmptyGuidGenerator Initialize()
-                {
-                    return EmptyGuidGenerator.Singleton ??=
-                        new EmptyGuidGenerator();
-                }
-
-                return EmptyGuidGenerator.Singleton ?? Initialize();
+                return EmptyGuidGenerator.Singleton ??=
+                    new EmptyGuidGenerator();
             }
+
+            return EmptyGuidGenerator.Singleton ?? Initialize();
         }
-
-        public override GuidVersion Version => GuidVersion.Empty;
-
-        public override GuidVariant Variant => GuidVariant.Ncs;
-
-        public override Guid NewGuid() => Guid.Empty;
     }
+
+    public override GuidVersion Version => GuidVersion.Empty;
+
+    public override GuidVariant Variant => GuidVariant.Ncs;
+
+    public override Guid NewGuid() => Guid.Empty;
 }

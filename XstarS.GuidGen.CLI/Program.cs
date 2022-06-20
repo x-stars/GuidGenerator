@@ -1,13 +1,12 @@
 ﻿using XstarS.GuidGenerators.Commands;
 
-namespace XstarS.GuidGenerators
+namespace XstarS.GuidGenerators;
+
+internal static class Program
 {
-    internal static class Program
+    internal static int Main(string[] args)
     {
-        internal static int Main(string[] args)
-        {
-            var result = ProgramCommand.Execute(args);
-            return result ? 0 : 1;
-        }
+        var result = ProgramCommand.Execute(args);
+        return result ? 0 : 1;
     }
 }

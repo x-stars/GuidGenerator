@@ -4,176 +4,175 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Threading;
 
-namespace XstarS.GuidGenerators
+namespace XstarS.GuidGenerators;
+
+internal abstract class LocalIdProvider
 {
-    internal abstract class LocalIdProvider
+    private static volatile LocalIdProvider? Singleton;
+
+    private volatile Lazy<int> LazyLocalUserId;
+
+    private volatile Lazy<int> LazyLocalGroupId;
+
+    private readonly Timer RefreshLocalIdTask;
+
+    private LocalIdProvider()
     {
-        private static volatile LocalIdProvider? Singleton;
+        const int refreshMs = 1 * 1000;
+        this.LazyLocalUserId = new Lazy<int>(this.GetLocalUserId);
+        this.LazyLocalGroupId = new Lazy<int>(this.GetLocalGroupId);
+        this.RefreshLocalIdTask = new Timer(this.RefreshLocalId);
+        this.RefreshLocalIdTask.Change(refreshMs, refreshMs);
+    }
 
-        private volatile Lazy<int> LazyLocalUserId;
-
-        private volatile Lazy<int> LazyLocalGroupId;
-
-        private readonly Timer RefreshLocalIdTask;
-
-        private LocalIdProvider()
+    internal static LocalIdProvider Instance
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
         {
-            const int refreshMs = 1 * 1000;
-            this.LazyLocalUserId = new Lazy<int>(this.GetLocalUserId);
-            this.LazyLocalGroupId = new Lazy<int>(this.GetLocalGroupId);
-            this.RefreshLocalIdTask = new Timer(this.RefreshLocalId);
-            this.RefreshLocalIdTask.Change(refreshMs, refreshMs);
-        }
-
-        internal static LocalIdProvider Instance
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            static LocalIdProvider Initialize()
             {
-                [MethodImpl(MethodImplOptions.Synchronized)]
-                static LocalIdProvider Initialize()
-                {
-                    return LocalIdProvider.Singleton ??=
-                            LocalIdProvider.Create();
-                }
-
-                return LocalIdProvider.Singleton ?? Initialize();
+                return LocalIdProvider.Singleton ??=
+                        LocalIdProvider.Create();
             }
+
+            return LocalIdProvider.Singleton ?? Initialize();
         }
+    }
 
-        public int LocalUserId => this.LazyLocalUserId.Value;
+    public int LocalUserId => this.LazyLocalUserId.Value;
 
-        public int LocalGroupId => this.LazyLocalGroupId.Value;
+    public int LocalGroupId => this.LazyLocalGroupId.Value;
 
-        private static LocalIdProvider Create()
+    private static LocalIdProvider Create()
+    {
+        return Environment.OSVersion.Platform switch
         {
-            return Environment.OSVersion.Platform switch
-            {
 #if NET5_0_OR_GREATER
-                PlatformID.Win32NT => OperatingSystem.IsWindows() ?
-                    new LocalIdProvider.Windows() : new LocalIdProvider.Unknown(),
+            PlatformID.Win32NT => OperatingSystem.IsWindows() ?
+                new LocalIdProvider.Windows() : new LocalIdProvider.Unknown(),
 #else
-                PlatformID.Win32NT => new LocalIdProvider.Windows(),
+            PlatformID.Win32NT => new LocalIdProvider.Windows(),
 #endif
-                PlatformID.Unix => new LocalIdProvider.UnixLike(),
-                PlatformID.MacOSX => new LocalIdProvider.UnixLike(),
-                _ => new LocalIdProvider.Unknown(),
-            };
-        }
+            PlatformID.Unix => new LocalIdProvider.UnixLike(),
+            PlatformID.MacOSX => new LocalIdProvider.UnixLike(),
+            _ => new LocalIdProvider.Unknown(),
+        };
+    }
 
-        protected abstract int GetLocalUserId();
+    protected abstract int GetLocalUserId();
 
-        protected abstract int GetLocalGroupId();
+    protected abstract int GetLocalGroupId();
 
-        private void RefreshLocalId(object? unused)
-        {
-            this.LazyLocalUserId = new Lazy<int>(this.GetLocalUserId);
-            this.LazyLocalGroupId = new Lazy<int>(this.GetLocalGroupId);
-        }
+    private void RefreshLocalId(object? unused)
+    {
+        this.LazyLocalUserId = new Lazy<int>(this.GetLocalUserId);
+        this.LazyLocalGroupId = new Lazy<int>(this.GetLocalGroupId);
+    }
 
 #if NET5_0_OR_GREATER
-        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
 #endif
-        private sealed class Windows : LocalIdProvider
+    private sealed class Windows : LocalIdProvider
+    {
+        internal Windows() { }
+
+        protected override unsafe int GetLocalUserId()
         {
-            internal Windows() { }
-
-            protected override unsafe int GetLocalUserId()
+            var userSid = WindowsIdentity.GetCurrent().User;
+            if (userSid is null) { return 0; }
+            var sidBytes = new byte[userSid.BinaryLength];
+            userSid.GetBinaryForm(sidBytes, 0);
+            fixed (byte* pLastSubAuth = &sidBytes[^4])
             {
-                var userSid = WindowsIdentity.GetCurrent().User;
-                if (userSid is null) { return 0; }
-                var sidBytes = new byte[userSid.BinaryLength];
-                userSid.GetBinaryForm(sidBytes, 0);
-                fixed (byte* pLastSubAuth = &sidBytes[^4])
-                {
-                    return *(int*)pLastSubAuth;
-                }
+                return *(int*)pLastSubAuth;
             }
+        }
 
-            protected override unsafe int GetLocalGroupId()
+        protected override unsafe int GetLocalGroupId()
+        {
+            var groupIdRefs = WindowsIdentity.GetCurrent().Groups;
+            if (groupIdRefs is null) { return 0; }
+            var anyGroupSid = default(SecurityIdentifier);
+            var commonGroupSid = default(SecurityIdentifier);
+            foreach (var groupIdRef in groupIdRefs)
             {
-                var groupIdRefs = WindowsIdentity.GetCurrent().Groups;
-                if (groupIdRefs is null) { return 0; }
-                var anyGroupSid = default(SecurityIdentifier);
-                var commonGroupSid = default(SecurityIdentifier);
-                foreach (var groupIdRef in groupIdRefs)
+                if (groupIdRef is SecurityIdentifier groupSid)
                 {
-                    if (groupIdRef is SecurityIdentifier groupSid)
+                    anyGroupSid ??= groupSid;
+                    if (!this.IsWellKnownSid(groupSid))
                     {
-                        anyGroupSid ??= groupSid;
-                        if (!this.IsWellKnownSid(groupSid))
-                        {
-                            commonGroupSid ??= groupSid;
-                        }
+                        commonGroupSid ??= groupSid;
                     }
                 }
-                var finalGroupSid = commonGroupSid ?? anyGroupSid;
-                if (finalGroupSid is null) { return 0; }
-                var sidBytes = new byte[finalGroupSid.BinaryLength];
-                finalGroupSid.GetBinaryForm(sidBytes, 0);
-                fixed (byte* pLastSubAuth = &sidBytes[^4])
-                {
-                    return *(int*)pLastSubAuth;
-                }
             }
-
-            private bool IsWellKnownSid(SecurityIdentifier sid)
+            var finalGroupSid = commonGroupSid ?? anyGroupSid;
+            if (finalGroupSid is null) { return 0; }
+            var sidBytes = new byte[finalGroupSid.BinaryLength];
+            finalGroupSid.GetBinaryForm(sidBytes, 0);
+            fixed (byte* pLastSubAuth = &sidBytes[^4])
             {
-                if (sid.BinaryLength <= 16)
+                return *(int*)pLastSubAuth;
+            }
+        }
+
+        private bool IsWellKnownSid(SecurityIdentifier sid)
+        {
+            if (sid.BinaryLength <= 16)
+            {
+                return true;
+            }
+            var enumValues = Enum.GetValues(typeof(WellKnownSidType));
+            var sidTypes = (WellKnownSidType[])enumValues;
+            foreach (var sidType in sidTypes)
+            {
+                if (sid.IsWellKnown(sidType))
                 {
                     return true;
                 }
-                var enumValues = Enum.GetValues(typeof(WellKnownSidType));
-                var sidTypes = (WellKnownSidType[])enumValues;
-                foreach (var sidType in sidTypes)
-                {
-                    if (sid.IsWellKnown(sidType))
-                    {
-                        return true;
-                    }
-                }
-                return false;
             }
+            return false;
+        }
+    }
+
+    private sealed class UnixLike : LocalIdProvider
+    {
+        [System.Security.SuppressUnmanagedCodeSecurity]
+        private static class SafeNativeMethods
+        {
+            [DllImport("libc", EntryPoint = "getuid")]
+            internal static extern int GetUserId();
+
+            [DllImport("libc", EntryPoint = "getgid")]
+            internal static extern int GetGroupId();
         }
 
-        private sealed class UnixLike : LocalIdProvider
+        internal UnixLike() { }
+
+        protected override int GetLocalUserId()
         {
-            [System.Security.SuppressUnmanagedCodeSecurity]
-            private static class SafeNativeMethods
-            {
-                [DllImport("libc", EntryPoint = "getuid")]
-                internal static extern int GetUserId();
-
-                [DllImport("libc", EntryPoint = "getgid")]
-                internal static extern int GetGroupId();
-            }
-
-            internal UnixLike() { }
-
-            protected override int GetLocalUserId()
-            {
-                return SafeNativeMethods.GetUserId();
-            }
-
-            protected override int GetLocalGroupId()
-            {
-                return SafeNativeMethods.GetGroupId();
-            }
+            return SafeNativeMethods.GetUserId();
         }
 
-        private sealed class Unknown : LocalIdProvider
+        protected override int GetLocalGroupId()
         {
-            internal Unknown() { }
+            return SafeNativeMethods.GetGroupId();
+        }
+    }
 
-            protected override int GetLocalUserId()
-            {
-                throw new PlatformNotSupportedException();
-            }
+    private sealed class Unknown : LocalIdProvider
+    {
+        internal Unknown() { }
 
-            protected override int GetLocalGroupId()
-            {
-                throw new PlatformNotSupportedException();
-            }
+        protected override int GetLocalUserId()
+        {
+            throw new PlatformNotSupportedException();
+        }
+
+        protected override int GetLocalGroupId()
+        {
+            throw new PlatformNotSupportedException();
         }
     }
 }
