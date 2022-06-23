@@ -24,7 +24,7 @@ GUID 生成库的工程位于 [XstarS.GuidGenerators](XstarS.GuidGenerators)。
 ### 静态属性获取实例后调用
 
 ``` C#
-using XstarS.GuidGenerators;
+using XNetEx.Guids.Generators;
 
 // time-based GUID generation.
 var guidGenV1 = GuidGenerator.Version1;
@@ -32,13 +32,14 @@ var guidV1 = guidGenV1.NewGuid();
 
 // name-based GUID generation.
 var guidGenV5 = GuidGenerator.Version5;
-var guidV5 = guidGenV5.NewGuid(GuidNamespaces.DNS, "github.com");
+var guidV5 = guidGenV5.NewGuid(GuidNamespaces.Dns, "github.com");
 ```
 
 ### 工厂方法获取实例后调用
 
 ``` C#
-using XstarS.GuidGenerators;
+using XNetEx.Guids;
+using XNetEx.Guids.Generators;
 
 // time-based GUID generation.
 var guidGenV1 = GuidGenerator.OfVersion(GuidVersion.Version1);
@@ -46,7 +47,7 @@ var guidV1 = guidGenV1.NewGuid();
 
 // name-based GUID generation.
 var guidGenV5 = GuidGenerator.OfVersion(GuidVersion.Version5);
-var guidV5 = guidGenV5.NewGuid(GuidNamespaces.DNS, "github.com");
+var guidV5 = guidGenV5.NewGuid(GuidNamespaces.Dns, "github.com");
 ```
 
 ## GUID 生成命令行工具使用
