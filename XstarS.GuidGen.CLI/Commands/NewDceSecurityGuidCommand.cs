@@ -1,6 +1,8 @@
 ﻿using System;
+using XNetEx.Guids;
+using XNetEx.Guids.Generators;
 
-namespace XstarS.GuidGenerators.Commands;
+namespace XstarS.GuidGen.Commands;
 
 internal sealed class NewDceSecurityGuidCommand : ProgramCommand
 {

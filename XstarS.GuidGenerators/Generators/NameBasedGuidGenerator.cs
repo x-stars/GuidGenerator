@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 
-namespace XstarS.GuidGenerators;
+namespace XNetEx.Guids.Generators;
 
 internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGenerator
 {

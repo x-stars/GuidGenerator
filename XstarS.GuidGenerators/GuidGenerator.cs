@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace XstarS.GuidGenerators;
+namespace XNetEx.Guids.Generators;
 
 /// <summary>
 /// 提供生成 <see cref="Guid"/> 的方法。

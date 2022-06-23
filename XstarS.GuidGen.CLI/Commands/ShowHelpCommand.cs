@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace XstarS.GuidGenerators.Commands;
+namespace XstarS.GuidGen.Commands;
 
 internal sealed class ShowHelpCommand : ProgramCommand
 {

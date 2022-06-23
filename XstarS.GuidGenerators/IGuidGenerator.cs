@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace XstarS.GuidGenerators;
+namespace XNetEx.Guids.Generators;
 
 /// <summary>
 /// 提供生成 <see cref="Guid"/> 所需要的信息。

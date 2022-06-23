@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace XstarS.GuidGenerators;
+namespace XNetEx.Guids;
 
 /// <summary>
 /// 提供 <see cref="Guid"/> 的扩展方法。

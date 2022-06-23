@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace XstarS.GuidGenerators;
+namespace XNetEx.Guids.Generators;
 
 internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 {

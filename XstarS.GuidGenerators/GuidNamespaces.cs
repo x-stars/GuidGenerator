@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace XstarS.GuidGenerators;
+namespace XNetEx.Guids;
 
 /// <summary>
 /// 提供由 RFC 4122 定义的 <see cref="Guid"/> 命名空间 ID。

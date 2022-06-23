@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Threading;
 
-namespace XstarS.GuidGenerators;
+namespace XNetEx.Guids.Generators;
 
 internal abstract class LocalIdProvider
 {

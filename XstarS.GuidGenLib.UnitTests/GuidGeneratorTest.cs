@@ -1,7 +1,7 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace XstarS.GuidGenerators;
+namespace XNetEx.Guids.Generators;
 
 [TestClass]
 [DoNotParallelize]

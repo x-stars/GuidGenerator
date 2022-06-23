@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace XstarS.GuidGenerators;
+namespace XNetEx.Guids;
 
 /// <summary>
 /// 表示 <see cref="Guid"/> 的变体。

@@ -1,7 +1,7 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
 
-namespace XstarS.GuidGenerators;
+namespace XNetEx.Guids.Generators;
 
 using static GuidVersion;
 

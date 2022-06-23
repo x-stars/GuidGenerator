@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
-namespace XstarS.GuidGenerators;
+namespace XNetEx.Guids.Generators;
 
 internal abstract class TimestampProvider
 {

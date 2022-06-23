@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace XstarS.GuidGenerators.Commands;
+namespace XstarS.GuidGen.Commands;
 
 internal abstract class ProgramCommand
 {

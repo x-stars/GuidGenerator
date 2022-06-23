@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace XstarS.GuidGenerators;
+namespace XNetEx.Guids.Generators;
 
 partial class GuidGenerator
 {

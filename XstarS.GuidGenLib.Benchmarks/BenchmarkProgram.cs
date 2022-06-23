@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Running;
 
-namespace XstarS.GuidGenerators;
+namespace XNetEx.Guids;
 
 internal static class BenchmarkProgram
 {

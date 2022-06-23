@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace XstarS.GuidGenerators;
+namespace XNetEx.Guids.Generators;
 
 /// <summary>
 /// 提供 <see cref="GuidGenerator"/> 的扩展方法。

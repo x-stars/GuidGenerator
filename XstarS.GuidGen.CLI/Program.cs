@@ -1,6 +1,6 @@
-﻿using XstarS.GuidGenerators.Commands;
+﻿using XstarS.GuidGen.Commands;
 
-namespace XstarS.GuidGenerators;
+namespace XstarS.GuidGen;
 
 internal static class Program
 {
