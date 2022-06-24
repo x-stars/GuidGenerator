@@ -3,21 +3,21 @@
 namespace XNetEx.Guids;
 
 /// <summary>
-/// 提供 <see cref="Guid"/> 的扩展方法。
+/// Provides extension methods for <see cref="Guid"/>.
 /// </summary>
 public static class GuidExtensions
 {
     /// <summary>
-    /// 表示 <see cref="Guid"/> 使用的基准时间戳。
+    /// Represents the epoch timestamp of a time-based <see cref="Guid"/>.
     /// </summary>
     internal static readonly DateTime BaseTimestamp =
         new DateTime(1582, 10, 15, 0, 0, 0, DateTimeKind.Utc);
 
     /// <summary>
-    /// 获取当前 <see cref="Guid"/> 的版本。
+    /// Gets the version of the <see cref="Guid"/>.
     /// </summary>
-    /// <param name="guid">要获取版本的 <see cref="Guid"/>。</param>
-    /// <returns>当前 <see cref="Guid"/> 的版本。</returns>
+    /// <param name="guid">The <see cref="Guid"/>.</param>
+    /// <returns>The version of the <see cref="Guid"/>.</returns>
     public static GuidVersion GetVersion(this Guid guid)
     {
         var shiftVer = (int)guid.TimeHi_Ver() & 0xF000;
@@ -26,10 +26,10 @@ public static class GuidExtensions
     }
 
     /// <summary>
-    /// 获取当前 <see cref="Guid"/> 的变体。
+    /// Gets the variant of the <see cref="Guid"/>.
     /// </summary>
-    /// <param name="guid">要获取变体的 <see cref="Guid"/>。</param>
-    /// <returns>当前 <see cref="Guid"/> 的变体。</returns>
+    /// <param name="guid">The <see cref="Guid"/>.</param>
+    /// <returns>The variant of the <see cref="Guid"/>.</returns>
     public static GuidVariant GetVariant(this Guid guid)
     {
         var variant = -1;
@@ -39,14 +39,14 @@ public static class GuidExtensions
     }
 
     /// <summary>
-    /// 尝试获取当前 <see cref="Guid"/> 表示的时间戳。
+    /// Tries to get the timestamp represented by the <see cref="Guid"/>.
     /// </summary>
-    /// <param name="guid">要获取时间戳的 <see cref="Guid"/>。</param>
-    /// <param name="timestamp">当前 <see cref="Guid"/> 表示的时间戳。
-    /// 如果 <see cref="Guid"/> 的版本不包含时间戳，则为默认值。</param>
-    /// <returns>若当前 <see cref="Guid"/> 的版本为
-    /// <see cref="GuidVersion.Version1"/> 或 <see cref="GuidVersion.Version2"/>，
-    /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
+    /// <param name="guid">The <see cref="Guid"/>.</param>
+    /// <param name="timestamp">When this method returns, contains the timestamp
+    /// represented by the <see cref="Guid"/> if the <see cref="Guid"/> is time-based;
+    /// otherwise, the default value of <see cref="DateTime"/>.</param>
+    /// <returns><see langword="true"/> if the <see cref="Guid"/>
+    /// is time-based; otherwise, <see langword="false"/>.</returns>
     public static bool TryGetTimestamp(this Guid guid, out DateTime timestamp)
     {
         var version = guid.GetVersion();
@@ -70,14 +70,14 @@ public static class GuidExtensions
     }
 
     /// <summary>
-    /// 尝试获取当前 <see cref="Guid"/> 包含的时钟序列。
+    /// Tries to get the clock sequence represented by the <see cref="Guid"/>.
     /// </summary>
-    /// <param name="guid">要获取时钟序列的 <see cref="Guid"/>。</param>
-    /// <param name="clockSeq">当前 <see cref="Guid"/> 包含的时钟序列。
-    /// 如果 <see cref="Guid"/> 的版本不包含时间戳，则为默认值。</param>
-    /// <returns>若当前 <see cref="Guid"/> 的版本为
-    /// <see cref="GuidVersion.Version1"/> 或 <see cref="GuidVersion.Version2"/>，
-    /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
+    /// <param name="guid">The <see cref="Guid"/>.</param>
+    /// <param name="clockSeq">When this method returns, contains the clock sequence
+    /// represented by the <see cref="Guid"/> if the <see cref="Guid"/> is time-based;
+    /// otherwise, the default value of <see cref="short"/>.</param>
+    /// <returns><see langword="true"/> if the <see cref="Guid"/>
+    /// is time-based; otherwise, <see langword="false"/>.</returns>
     public static bool TryGetClockSequence(this Guid guid, out short clockSeq)
     {
         var version = guid.GetVersion();
@@ -98,15 +98,17 @@ public static class GuidExtensions
     }
 
     /// <summary>
-    /// 尝试获取当前 <see cref="Guid"/> 表示的 DCE Security 域和本地 ID。
+    /// Tries to get the DCE Security domain and the local ID represented by the <see cref="Guid"/>.
     /// </summary>
-    /// <param name="guid">要获取时间戳的 <see cref="Guid"/>。</param>
-    /// <param name="domain">当前 <see cref="Guid"/> 的 DCE Security 域。
-    /// 如果 <see cref="Guid"/> 的版本不包含本地 ID，则为默认值。</param>
-    /// <param name="localId">当前 <see cref="Guid"/> 表示的本地 ID。
-    /// 如果 <see cref="Guid"/> 的版本不包含本地 ID，则为默认值。</param>
-    /// <returns>若当前 <see cref="Guid"/> 的版本为 <see cref="GuidVersion.Version2"/>，
-    /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
+    /// <param name="guid">The <see cref="Guid"/>.</param>
+    /// <param name="domain">When this method returns, contains the DCE Security domain
+    /// represented by the <see cref="Guid"/> if the <see cref="Guid"/> is a DCE security UUID;
+    /// otherwise, the default value of <see cref="DceSecurityDomain"/>.</param>
+    /// <param name="localId">When this method returns, contains the local ID
+    /// represented by the <see cref="Guid"/> if the <see cref="Guid"/> is a DCE security UUID;
+    /// otherwise, the default value of <see cref="int"/>.</param>
+    /// <returns><see langword="true"/> if the <see cref="Guid"/>
+    /// is a DCE security UUID; otherwise, <see langword="false"/>.</returns>
     public static bool TryGetDomainAndLocalId(
         this Guid guid, out DceSecurityDomain domain, out int localId)
     {
@@ -117,14 +119,14 @@ public static class GuidExtensions
     }
 
     /// <summary>
-    /// 尝试获取当前 <see cref="Guid"/> 表示的节点 ID。
+    /// Tries to get the node ID represented by the <see cref="Guid"/>.
     /// </summary>
-    /// <param name="guid">要获取时间戳的 <see cref="Guid"/>。</param>
-    /// <param name="nodeId">当前 <see cref="Guid"/> 表示的节点 ID。
-    /// 如果 <see cref="Guid"/> 的版本不包含节点 ID，则为默认值。</param>
-    /// <returns>若当前 <see cref="Guid"/> 的版本为
-    /// <see cref="GuidVersion.Version1"/> 或 <see cref="GuidVersion.Version2"/>，
-    /// 则为 <see langword="true"/>；否则为 <see langword="false"/>。</returns>
+    /// <param name="guid">The <see cref="Guid"/>.</param>
+    /// <param name="nodeId">When this method returns, contains the node ID
+    /// represented by the <see cref="Guid"/> if the <see cref="Guid"/> is time-based;
+    /// otherwise, a 16-element byte array filled with default values.</param>
+    /// <returns><see langword="true"/> if the <see cref="Guid"/>
+    /// is time-based; otherwise, <see langword="false"/>.</returns>
     public static unsafe bool TryGetNodeId(this Guid guid, out byte[] nodeId)
     {
         const int size = 6;
@@ -141,11 +143,12 @@ public static class GuidExtensions
     }
 
     /// <summary>
-    /// 返回包含当前 <see cref="Guid"/> 的值的字节数组，其字节序符合 RFC 4122 UUID 标准。
+    /// Returns a 16-element byte array that contains the value of the <see cref="Guid"/>.
+    /// The byte order of its all fields is the big-endian (RFC 4122 compatible).
     /// </summary>
-    /// <param name="guid">要获取字节数组的 <see cref="Guid"/>。</param>
-    /// <returns>包含 <paramref name="guid"/> 的值的 16 元素字节数组，
-    /// 其 0-3、4-5 以及 6-7 字节均按照大端序排列，以符合 RFC 4122 UUID 标准。</returns>
+    /// <param name="guid">The <see cref="Guid"/>.</param>
+    /// <returns>A 16-element byte array that contains the value of the <see cref="Guid"/>.
+    /// The byte order of its all fields is the big-endian (RFC 4122 compatible).</returns>
     public static unsafe byte[] ToUuidByteArray(this Guid guid)
     {
         var uuidBytes = new byte[16];
@@ -157,10 +160,11 @@ public static class GuidExtensions
     }
 
     /// <summary>
-    /// 将当前 <see cref="Guid"/> 的值按字节复制到指定地址，其字节序符合 RFC 4122 UUID 标准。
+    /// Tries to write the value of the <see cref="Guid"/> into the specified address.
+    /// The byte order of its all fields is the big-endian (RFC 4122 compatible).
     /// </summary>
-    /// <param name="guid">作为字节数据来源的 <see cref="Guid"/>。</param>
-    /// <param name="destination">要写入 <see cref="Guid"/> 的字节的目标地址。</param>
+    /// <param name="guid">The <see cref="Guid"/>.</param>
+    /// <param name="destination">The destination address to data into.</param>
     internal static unsafe void WriteUuidBytes(this Guid guid, byte* destination)
     {
         *(Guid*)destination = guid;

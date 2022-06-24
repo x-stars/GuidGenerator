@@ -3,12 +3,12 @@
 namespace XNetEx.Guids;
 
 /// <summary>
-/// 提供由 RFC 4122 定义的 <see cref="Guid"/> 命名空间 ID。
+/// Provides <see cref="Guid"/> namespace IDs specified in RFC 4122.
 /// </summary>
 public static class GuidNamespaces
 {
     /// <summary>
-    /// 表示完整域名的命名空间 ID。
+    /// Represents the namespace ID of a fully-qualified domain name.
     /// </summary>
     public static readonly Guid Dns = new Guid(
         // 6ba7b810-9dad-11d1-80b4-00c04fd430c8
@@ -16,7 +16,7 @@ public static class GuidNamespaces
         0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8);
 
     /// <summary>
-    /// 表示 URL 的命名空间 ID。
+    /// Represents the namespace ID of a URL.
     /// </summary>
     public static readonly Guid Url = new Guid(
         // 6ba7b811-9dad-11d1-80b4-00c04fd430c8
@@ -24,7 +24,7 @@ public static class GuidNamespaces
         0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8);
 
     /// <summary>
-    /// 表示 ISO OID 的命名空间 ID。
+    /// Represents the namespace ID of an ISO OID.
     /// </summary>
     public static readonly Guid Oid = new Guid(
         // 6ba7b812-9dad-11d1-80b4-00c04fd430c8
@@ -32,7 +32,7 @@ public static class GuidNamespaces
         0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8);
 
     /// <summary>
-    /// 表示 X.500 DN 的命名空间 ID。
+    /// Represents the namespace ID of an X.500 DN.
     /// </summary>
     public static readonly Guid X500 = new Guid(
         // 6ba7b814-9dad-11d1-80b4-00c04fd430c8

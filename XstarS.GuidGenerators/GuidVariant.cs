@@ -3,24 +3,24 @@
 namespace XNetEx.Guids;
 
 /// <summary>
-/// 表示 <see cref="Guid"/> 的变体。
+/// Represents the variant of a <see cref="Guid"/>.
 /// </summary>
 public enum GuidVariant
 {
     /// <summary>
-    /// 保留，用于向后兼容 NCS UUID。
+    /// Reserved for NCS UUID backward compatibility.
     /// </summary>
     Ncs = 0,
     /// <summary>
-    /// 表示 RFC 4122 定义的 UUID 变体。
+    /// Represents the variant specified in RFC 4122.
     /// </summary>
     Rfc4122 = 1,
     /// <summary>
-    /// 保留，用于向后兼容 Microsoft 早期 GUID。
+    /// Reserved for Microsoft legacy GUID backward compatibility.
     /// </summary>
     Microsoft = 2,
     /// <summary>
-    /// 保留供将来使用。
+    /// Reserved for future definition.
     /// </summary>
     Reserved = 3,
 }
