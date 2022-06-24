@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <RootNamespace>XstarS.GuidGenerators</RootNamespace>
+    <RootNamespace>XstarS.GuidGen</RootNamespace>
     <TargetFrameworks>net461;net472;netcoreapp3.1;net6.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
