@@ -5,54 +5,54 @@ namespace XNetEx.Guids.Generators;
 partial class GuidGenerator
 {
     /// <summary>
-    /// 获取生成 <see cref="Guid.Empty"/> 的 <see cref="IGuidGenerator"/> 对象。
+    /// Gets the <see cref="IGuidGenerator"/> instance of <see cref="Guid.Empty"/>.
     /// </summary>
-    /// <returns>生成 <see cref="Guid.Empty"/> 的 <see cref="IGuidGenerator"/> 对象。</returns>
+    /// <returns>The <see cref="IGuidGenerator"/> instance of <see cref="Guid.Empty"/>.</returns>
     public static IGuidGenerator Empty => EmptyGuidGenerator.Instance;
 
     /// <summary>
-    /// 获取 RFC 4122 UUID 版本 1 的 <see cref="IGuidGenerator"/> 对象。
+    /// Gets the <see cref="IGuidGenerator"/> instance of the RFC 4122 UUID version 1.
     /// </summary>
-    /// <returns>RFC 4122 UUID 版本 1 的 <see cref="IGuidGenerator"/> 对象。</returns>
+    /// <returns>The <see cref="IGuidGenerator"/> instance of the RFC 4122 UUID version 1.</returns>
     public static IGuidGenerator Version1 => TimeBasedGuidGenerator.Instance;
 
     /// <summary>
-    /// 获取 RFC 4122 UUID 版本 2 的 <see cref="IDceSecurityGuidGenerator"/> 对象。
+    /// Gets the <see cref="IDceSecurityGuidGenerator"/> instance of the RFC 4122 UUID version 2.
     /// </summary>
-    /// <returns>RFC 4122 UUID 版本 2 的 <see cref="IDceSecurityGuidGenerator"/> 对象。</returns>
+    /// <returns>The <see cref="IDceSecurityGuidGenerator"/> instance of the RFC 4122 UUID version 2.</returns>
     public static IDceSecurityGuidGenerator Version2 => DceSecurityGuidGenerator.Instance;
 
     /// <summary>
-    /// 获取 RFC 4122 UUID 版本 3 的 <see cref="INameBasedGuidGenerator"/> 对象。
+    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of the RFC 4122 UUID version 3.
     /// </summary>
-    /// <returns>RFC 4122 UUID 版本 3 的 <see cref="INameBasedGuidGenerator"/> 对象。</returns>
+    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of the RFC 4122 UUID version 3.</returns>
     public static INameBasedGuidGenerator Version3 => NameBasedGuidGenerator.MD5Hashing.Instance;
 
     /// <summary>
-    /// 获取 RFC 4122 UUID 版本 4 的 <see cref="IGuidGenerator"/> 对象。
+    /// Gets the <see cref="IGuidGenerator"/> instance of the RFC 4122 UUID version 4.
     /// </summary>
-    /// <returns>RFC 4122 UUID 版本 4 的 <see cref="IGuidGenerator"/> 对象。</returns>
+    /// <returns>The <see cref="IGuidGenerator"/> instance of the RFC 4122 UUID version 4.</returns>
     public static IGuidGenerator Version4 => RandomizedGuidGenerator.Instance;
 
     /// <summary>
-    /// 获取 RFC 4122 UUID 版本 5 的 <see cref="INameBasedGuidGenerator"/> 对象。
+    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of the RFC 4122 UUID version 5.
     /// </summary>
-    /// <returns>RFC 4122 UUID 版本 5 的 <see cref="INameBasedGuidGenerator"/> 对象。</returns>
+    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of the RFC 4122 UUID version 5.</returns>
     public static INameBasedGuidGenerator Version5 => NameBasedGuidGenerator.SHA1Hashing.Instance;
 
     /// <summary>
-    /// 创建一个使用随机数作为节点 ID 的 RFC 4122 UUID 版本 1 的 <see cref="IGuidGenerator"/> 对象。
+    /// Creates a <see cref="IGuidGenerator"/> instance of the RFC 4122 UUID version 1 using a random node ID.
     /// </summary>
-    /// <returns>一个使用随机数作为节点 ID 的 RFC 4122 UUID 版本 1 的 <see cref="IGuidGenerator"/> 对象。</returns>
+    /// <returns>A <see cref="IGuidGenerator"/> instance of the RFC 4122 UUID version 1 using a random node ID.</returns>
     public static IGuidGenerator CreateVersion1R() => TimeBasedGuidGenerator.CreateWithRandomNodeId();
 
     /// <summary>
-    /// 获取指定 <see cref="GuidVersion"/> 版本的 <see cref="GuidGenerator"/> 对象。
+    /// Gets the <see cref="GuidGenerator"/> instance of the specified <see cref="GuidVersion"/>.
     /// </summary>
-    /// <param name="version">要生成的 <see cref="Guid"/> 的版本。</param>
-    /// <returns>版本为 <paramref name="version"/> 的 <see cref="GuidGenerator"/>。</returns>
+    /// <param name="version">The version of the <see cref="Guid"/> to generate.</param>
+    /// <returns>The <see cref="GuidGenerator"/> instance of <paramref name="version"/>.</returns>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="version"/> 不为有效的 <see cref="GuidVersion"/> 枚举值。</exception>
+    /// <paramref name="version"/> is not a valid <see cref="GuidVersion"/> value.</exception>
     public static GuidGenerator OfVersion(GuidVersion version) => version switch
     {
         GuidVersion.Empty => EmptyGuidGenerator.Instance,

@@ -4,23 +4,23 @@ using System.Text;
 namespace XNetEx.Guids.Generators;
 
 /// <summary>
-/// 提供 <see cref="GuidGenerator"/> 的扩展方法。
+/// Provides extension methods for <see cref="GuidGenerator"/>.
 /// </summary>
 public static class GuidGeneratorExtensions
 {
     /// <summary>
-    /// 根据指定的命名空间 ID 和名称生成一个新的 <see cref="Guid"/> 实例。
+    /// Generates a new <see cref="Guid"/> instance based on the specified namespace ID and name.
     /// </summary>
-    /// <param name="guidGen">当前 <see cref="GuidGenerator"/> 实例。</param>
-    /// <param name="nsId">生成 <see cref="Guid"/> 时使用的命名空间 ID。</param>
-    /// <param name="name">生成 <see cref="Guid"/> 时使用的名称的字符串。</param>
-    /// <param name="encoding">指定用于编码名称的 <see cref="Encoding"/>。</param>
-    /// <returns>根据 <paramref name="nsId"/> 和以 <paramref name="encoding"/>
-    /// 编码的 <paramref name="name"/> 生成的 <see cref="Guid"/> 实例。</returns>
+    /// <param name="guidGen">The <see cref="GuidGenerator"/>.</param>
+    /// <param name="nsId">The namespace ID used to generate the <see cref="Guid"/>.</param>
+    /// <param name="name">The name string used to generate the <see cref="Guid"/>.</param>
+    /// <param name="encoding">The <see cref="Encoding"/> used to encode the name string.</param>
+    /// <returns>A new <see cref="Guid"/> instance generated based on
+    /// <paramref name="nsId"/> and <paramref name="name"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="guidGen"/>
-    /// 或 <paramref name="name"/> 为 <see langword="null"/>。</exception>
-    /// <exception cref="NotSupportedException"><paramref name="guidGen"/>
-    /// 不支持基于名称的 <see cref="Guid"/> 生成模式。</exception>
+    /// or <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="NotSupportedException">
+    /// This instance dose not support generating a name-based <see cref="Guid"/>.</exception>
     public static Guid NewGuid(this GuidGenerator guidGen,
         Guid nsId, string name, Encoding? encoding = null)
     {
@@ -39,16 +39,18 @@ public static class GuidGeneratorExtensions
     }
 
     /// <summary>
-    /// 根据指定的命名空间 ID 和名称生成一个新的 <see cref="Guid"/> 实例。
+    /// Generates a new <see cref="Guid"/> instance based on the specified namespace ID and name.
     /// </summary>
-    /// <param name="guidGen">当前 <see cref="INameBasedGuidGenerator"/> 实例。</param>
-    /// <param name="nsId">生成 <see cref="Guid"/> 时使用的命名空间 ID。</param>
-    /// <param name="name">生成 <see cref="Guid"/> 时使用的名称的字符串。</param>
-    /// <param name="encoding">指定用于编码名称的 <see cref="Encoding"/>。</param>
-    /// <returns>根据 <paramref name="nsId"/> 和以 <paramref name="encoding"/>
-    /// 编码的 <paramref name="name"/> 生成的 <see cref="Guid"/> 实例。</returns>
+    /// <param name="guidGen">The <see cref="INameBasedGuidGenerator"/>.</param>
+    /// <param name="nsId">The namespace ID used to generate the <see cref="Guid"/>.</param>
+    /// <param name="name">The name string used to generate the <see cref="Guid"/>.</param>
+    /// <param name="encoding">The <see cref="Encoding"/> used to encode the name string.</param>
+    /// <returns>A new <see cref="Guid"/> instance generated based on
+    /// <paramref name="nsId"/> and <paramref name="name"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="guidGen"/>
-    /// 或 <paramref name="name"/> 为 <see langword="null"/>。</exception>
+    /// or <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="NotSupportedException">
+    /// This instance dose not support generating a name-based <see cref="Guid"/>.</exception>
     public static Guid NewGuid(this INameBasedGuidGenerator guidGen,
         Guid nsId, string name, Encoding? encoding = null)
     {
