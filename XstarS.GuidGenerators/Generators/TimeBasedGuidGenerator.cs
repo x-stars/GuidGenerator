@@ -118,11 +118,13 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
             var lastNodeId = this.LastNodeIdBytes;
             if ((nodeId != lastNodeId) && (lastNodeId is not null))
             {
-                fixed (byte* pLast = &lastNodeId[0], pNode = &nodeId[0])
+                fixed (byte* pNode = &nodeId[0], pLast = &lastNodeId[0])
                 {
-                    var equals = (*(int*)pNode == *(int*)pLast) &&
-                        (*((short*)pLast + 2) == *((short*)pLast + 2));
-                    if (!equals) { this.ClockSequence = GlobalRandom.Next(); }
+                    if ((((int*)pNode)[0] != ((int*)pLast)[0]) ||
+                        (((short*)pNode)[2] != ((short*)pLast)[2]))
+                    {
+                        this.ClockSequence = GlobalRandom.Next();
+                    }
                 }
             }
             this.LastNodeIdBytes = nodeId;
