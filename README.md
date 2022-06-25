@@ -115,18 +115,18 @@ AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
 
 |           Method | GuidCount |           Mean |        StdDev | Ratio | RatioSD |
 |----------------- |----------:|---------------:|--------------:|------:|--------:|
-|    `GuidNewGuid` |         1 |      47.772 ns |     0.7705 ns |  1.00 |    0.00 |
-|  `EmptyGenerate` |         1 |       2.998 ns |     0.0240 ns |  0.06 |    0.00 |
-| `GuidV1Generate` |         1 |      52.220 ns |     0.7339 ns |  1.10 |    0.02 |
-| `GuidV2Generate` |         1 |      70.052 ns |     2.2812 ns |  1.49 |    0.06 |
-| `GuidV3Generate` |         1 |     298.858 ns |     1.2365 ns |  6.27 |    0.10 |
-| `GuidV4Generate` |         1 |      45.355 ns |     0.1256 ns |  0.95 |    0.01 |
-| `GuidV5Generate` |         1 |     288.718 ns |     1.1817 ns |  6.04 |    0.09 |
+|    `GuidNewGuid` |         1 |      45.730 ns |     0.6073 ns |  1.00 |    0.00 |
+|  `EmptyGenerate` |         1 |       3.303 ns |     0.0242 ns |  0.07 |    0.00 |
+| `GuidV1Generate` |         1 |      52.571 ns |     0.6960 ns |  1.15 |    0.02 |
+| `GuidV2Generate` |         1 |      70.437 ns |     2.0033 ns |  1.55 |    0.05 |
+| `GuidV3Generate` |         1 |     292.193 ns |     1.8137 ns |  6.39 |    0.10 |
+| `GuidV4Generate` |         1 |      17.686 ns |     0.0571 ns |  0.39 |    0.01 |
+| `GuidV5Generate` |         1 |     298.274 ns |     5.0662 ns |  6.53 |    0.16 |
 |                  |           |                |               |       |         |
-|    `GuidNewGuid` |      1000 |  44,449.182 ns |   398.1891 ns |  1.00 |    0.00 |
-|  `EmptyGenerate` |      1000 |   1,152.626 ns |     2.6736 ns |  0.03 |    0.00 |
-| `GuidV1Generate` |      1000 |  50,680.336 ns | 1,073.2930 ns |  1.14 |    0.02 |
-| `GuidV2Generate` |      1000 |  67,808.225 ns | 2,577.7272 ns |  1.51 |    0.05 |
-| `GuidV3Generate` |      1000 | 296,458.447 ns | 2,140.8958 ns |  6.67 |    0.09 |
-| `GuidV4Generate` |      1000 |  45,204.720 ns |    42.4372 ns |  1.02 |    0.01 |
-| `GuidV5Generate` |      1000 | 283,622.656 ns | 2,482.2860 ns |  6.38 |    0.05 |
+|    `GuidNewGuid` |      1000 |  45,503.427 ns |    88.4931 ns |  1.00 |    0.00 |
+|  `EmptyGenerate` |      1000 |   1,154.960 ns |     2.1231 ns |  0.03 |    0.00 |
+| `GuidV1Generate` |      1000 |  50,888.715 ns |   735.9581 ns |  1.12 |    0.02 |
+| `GuidV2Generate` |      1000 |  67,488.634 ns | 2,209.6733 ns |  1.49 |    0.06 |
+| `GuidV3Generate` |      1000 | 290,308.876 ns | 2,142.5288 ns |  6.38 |    0.04 |
+| `GuidV4Generate` |      1000 |  15,928.203 ns |    70.8751 ns |  0.35 |    0.00 |
+| `GuidV5Generate` |      1000 | 288,628.431 ns | 1,988.7368 ns |  6.34 |    0.04 |
