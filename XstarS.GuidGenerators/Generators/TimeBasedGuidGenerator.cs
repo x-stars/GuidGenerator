@@ -27,7 +27,7 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         this.TimestampProvider = TimestampProvider.Instance;
         this.NodeIdProvider = nodeIdProvider;
         this.LastTimestamp = this.CurrentTimestamp;
-        this.ClockSequence = GlobalRandom.Next();
+        this.ClockSequence = GlobalRandom.Next<int>();
     }
 
     internal static TimeBasedGuidGenerator Instance
@@ -123,7 +123,7 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
                     if ((((int*)pNode)[0] != ((int*)pLast)[0]) ||
                         (((short*)pNode)[2] != ((short*)pLast)[2]))
                     {
-                        this.ClockSequence = GlobalRandom.Next();
+                        this.ClockSequence = GlobalRandom.Next<int>();
                     }
                 }
             }
