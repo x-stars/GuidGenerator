@@ -6,15 +6,15 @@
 public enum DceSecurityDomain : byte
 {
     /// <summary>
-    /// Represents the DCE Security Person domain.
+    /// Represents the DCE Security principal domain.
     /// </summary>
     Person = 0,
     /// <summary>
-    /// Represents the DCE Security Group domain.
+    /// Represents the DCE Security group domain.
     /// </summary>
     Group = 1,
     /// <summary>
-    /// Represents the DCE Security Org domain.
+    /// Represents the DCE Security organization domain.
     /// </summary>
     Org = 2,
 }

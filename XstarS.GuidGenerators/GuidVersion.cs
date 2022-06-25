@@ -12,34 +12,34 @@ public enum GuidVersion : byte
     /// </summary>
     Empty = 0,
     /// <summary>
-    /// Represents the RFC 4122 UUID version 1, the time-based version.
+    /// Represents RFC 4122 UUID version 1, the time-based version.
     /// </summary>
     Version1 = 1,
     /// <summary>
-    /// Represents the RFC 4122 UUID version 2, DCE Security version with embedded UIDs.
+    /// Represents RFC 4122 UUID version 2, DCE Security version with embedded UIDs.
     /// </summary>
     Version2 = 2,
     /// <summary>
-    /// Represents the RFC 4122 UUID version 3, the name-based version using the MD5 hashing.
+    /// Represents RFC 4122 UUID version 3, the name-based version using the MD5 hashing.
     /// </summary>
     Version3 = 3,
     /// <summary>
-    /// Represents the RFC 4122 UUID version 4, the randomly generated version.
+    /// Represents RFC 4122 UUID version 4, the randomly generated version.
     /// </summary>
     Version4 = 4,
     /// <summary>
-    /// Represents the RFC 4122 UUID version 5, the name-based version using the SHA-1 hashing.
+    /// Represents RFC 4122 UUID version 5, the name-based version using the SHA-1 hashing.
     /// </summary>
     Version5 = 5,
 }
 
 /// <summary>
-/// Provides the metadata of <see cref="GuidVersion"/>.
+/// Provides metadata for <see cref="GuidVersion"/>.
 /// </summary>
 public static class GuidVersionInfo
 {
     /// <summary>
-    /// Get a value that indicates whether a <see cref="Guid"/> of
+    /// Gets a value that indicates whether a <see cref="Guid"/> of
     /// the <see cref="GuidVersion"/> is generated based on the current time.
     /// </summary>
     /// <param name="version">The <see cref="GuidVersion"/>.</param>
@@ -51,7 +51,7 @@ public static class GuidVersionInfo
         version == GuidVersion.Version2;
 
     /// <summary>
-    /// Get a value that indicates whether a <see cref="Guid"/> of
+    /// Gets a value that indicates whether a <see cref="Guid"/> of
     /// the <see cref="GuidVersion"/> is generated based on the input name.
     /// </summary>
     /// <param name="version">The <see cref="GuidVersion"/>.</param>
@@ -63,7 +63,7 @@ public static class GuidVersionInfo
         version == GuidVersion.Version5;
 
     /// <summary>
-    /// Get a value that indicates whether a <see cref="Guid"/> of
+    /// Gets a value that indicates whether a <see cref="Guid"/> of
     /// the <see cref="GuidVersion"/> is generated randomly.
     /// </summary>
     /// <param name="version">The <see cref="GuidVersion"/>.</param>
@@ -74,7 +74,7 @@ public static class GuidVersionInfo
         version == GuidVersion.Version4;
 
     /// <summary>
-    /// Get a value that indicates whether a <see cref="Guid"/> of
+    /// Gets a value that indicates whether a <see cref="Guid"/> of
     /// the <see cref="GuidVersion"/> contains node ID data.
     /// </summary>
     /// <param name="version">The <see cref="GuidVersion"/>.</param>
@@ -86,7 +86,7 @@ public static class GuidVersionInfo
         version == GuidVersion.Version2;
 
     /// <summary>
-    /// Get a value that indicates whether a <see cref="Guid"/> of
+    /// Gets a value that indicates whether a <see cref="Guid"/> of
     /// the <see cref="GuidVersion"/> contains local ID data.
     /// </summary>
     /// <param name="version">The <see cref="GuidVersion"/>.</param>
