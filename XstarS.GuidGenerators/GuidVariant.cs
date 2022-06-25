@@ -5,7 +5,7 @@ namespace XNetEx.Guids;
 /// <summary>
 /// Represents the variant of a <see cref="Guid"/>.
 /// </summary>
-public enum GuidVariant
+public enum GuidVariant : byte
 {
     /// <summary>
     /// Reserved for NCS UUID backward compatibility.

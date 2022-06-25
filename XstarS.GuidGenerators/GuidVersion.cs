@@ -5,7 +5,7 @@ namespace XNetEx.Guids;
 /// <summary>
 /// Represents the version of a <see cref="Guid"/>.
 /// </summary>
-public enum GuidVersion
+public enum GuidVersion : byte
 {
     /// <summary>
     /// Represents the version of the nil UUID (<see cref="Guid.Empty"/>).

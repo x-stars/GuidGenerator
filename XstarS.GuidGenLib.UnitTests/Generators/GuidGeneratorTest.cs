@@ -143,7 +143,7 @@ public class GuidGeneratorTest
     public void NewGuid_Version2InvalidDomain_CatchArgumentOutOfRangeException()
     {
         Assert.ThrowsException<ArgumentOutOfRangeException>(
-            () => GuidGenerator.Version2.NewGuid((DceSecurityDomain)(-1)));
+            () => GuidGenerator.Version2.NewGuid((DceSecurityDomain)0xFF));
     }
 
     [TestMethod]
@@ -198,6 +198,6 @@ public class GuidGeneratorTest
     public void OfVersion_InvalidVersionEnum_CatchArgumentOutOfRangeException()
     {
         Assert.ThrowsException<ArgumentOutOfRangeException>(
-            () => GuidGenerator.OfVersion((GuidVersion)(-1)));
+            () => GuidGenerator.OfVersion((GuidVersion)0x0F));
     }
 }

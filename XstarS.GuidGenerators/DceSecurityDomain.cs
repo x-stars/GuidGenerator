@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents domains used by DCE Security (<see cref="GuidVersion.Version2"/>) UUIDs.
 /// </summary>
-public enum DceSecurityDomain
+public enum DceSecurityDomain : byte
 {
     /// <summary>
     /// Represents the DCE Security Person domain.
