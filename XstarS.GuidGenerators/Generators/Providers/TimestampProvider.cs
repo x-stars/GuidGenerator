@@ -65,7 +65,7 @@ internal abstract class TimestampProvider
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected long GetGuidTimestamp(long ticks)
     {
-        return ticks - GuidExtensions.BaseTimestamp.Ticks;
+        return ticks - GuidExtensions.TimeBasedEpoch.Ticks;
     }
 
     private sealed class DirectTime : TimestampProvider

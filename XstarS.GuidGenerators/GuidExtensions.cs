@@ -10,7 +10,7 @@ public static class GuidExtensions
     /// <summary>
     /// Represents the epoch timestamp of a time-based <see cref="Guid"/>.
     /// </summary>
-    internal static readonly DateTime BaseTimestamp =
+    internal static readonly DateTime TimeBasedEpoch =
         new DateTime(1582, 10, 15, 0, 0, 0, DateTimeKind.Utc);
 
     /// <summary>
@@ -63,7 +63,7 @@ public static class GuidExtensions
         {
             tsField &= ~0xFFFFFFFFL;
         }
-        var tsTicks = GuidExtensions.BaseTimestamp.Ticks + tsField;
+        var tsTicks = GuidExtensions.TimeBasedEpoch.Ticks + tsField;
         timestamp = new DateTime(tsTicks, DateTimeKind.Utc);
         return true;
     }
