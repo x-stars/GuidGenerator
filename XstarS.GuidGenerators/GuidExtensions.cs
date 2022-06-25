@@ -63,8 +63,7 @@ public static class GuidExtensions
         {
             tsField &= ~0xFFFFFFFFL;
         }
-        var baseTicks = GuidExtensions.BaseTimestamp.Ticks;
-        var tsTicks = tsField + baseTicks;
+        var tsTicks = GuidExtensions.BaseTimestamp.Ticks + tsField;
         timestamp = new DateTime(tsTicks, DateTimeKind.Utc);
         return true;
     }
@@ -98,7 +97,7 @@ public static class GuidExtensions
     }
 
     /// <summary>
-    /// Tries to get the DCE Security domain and the local ID represented by the <see cref="Guid"/>.
+    /// Tries to get the DCE Security domain and local ID represented by the <see cref="Guid"/>.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
     /// <param name="domain">When this method returns, contains the DCE Security domain
@@ -124,7 +123,7 @@ public static class GuidExtensions
     /// <param name="guid">The <see cref="Guid"/>.</param>
     /// <param name="nodeId">When this method returns, contains the node ID
     /// represented by the <see cref="Guid"/> if the <see cref="Guid"/> is time-based;
-    /// otherwise, a 16-element byte array filled with default values.</param>
+    /// otherwise, a 6-element byte array filled with zero values.</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/>
     /// is time-based; otherwise, <see langword="false"/>.</returns>
     public static unsafe bool TryGetNodeId(this Guid guid, out byte[] nodeId)
@@ -143,12 +142,12 @@ public static class GuidExtensions
     }
 
     /// <summary>
-    /// Returns a 16-element byte array that contains the value of the <see cref="Guid"/>.
-    /// The byte order of its all fields is the big-endian (RFC 4122 compatible).
+    /// Returns a 16-element byte array that contains fields of
+    /// the <see cref="Guid"/> in big-endian order (RFC 4122 compliant).
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
-    /// <returns>A 16-element byte array that contains the value of the <see cref="Guid"/>.
-    /// The byte order of its all fields is the big-endian (RFC 4122 compatible).</returns>
+    /// <returns>A 16-element byte array that contains fields of
+    /// the <see cref="Guid"/> in big-endian order (RFC 4122 compliant).</returns>
     public static unsafe byte[] ToUuidByteArray(this Guid guid)
     {
         var uuidBytes = new byte[16];
@@ -160,11 +159,11 @@ public static class GuidExtensions
     }
 
     /// <summary>
-    /// Tries to write the value of the <see cref="Guid"/> into the specified address.
-    /// The byte order of its all fields is the big-endian (RFC 4122 compatible).
+    /// Tries to write fields of the <see cref="Guid"/>
+    /// in big-endian order (RFC 4122 compliant) into the specified address.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
-    /// <param name="destination">The destination address to data into.</param>
+    /// <param name="destination">The destination address to write data into.</param>
     internal static unsafe void WriteUuidBytes(this Guid guid, byte* destination)
     {
         *(Guid*)destination = guid;
