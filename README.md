@@ -1,6 +1,6 @@
 ﻿# .NET GUID 生成器
 
-提供 .NET 平台与 RFC 4122 UUID 标准兼容的 GUID 生成器。
+为 .NET 平台提供符合 RFC 4122 UUID 标准的 GUID 生成器。
 
 ## RFC 4122 UUID 标准
 
@@ -24,6 +24,7 @@ GUID 生成库的工程位于 [XstarS.GuidGenerators](XstarS.GuidGenerators)。
 ### 静态属性获取实例后调用
 
 ``` C#
+using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
 // time-based GUID generation.
