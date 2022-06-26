@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 namespace XNetEx.Guids.Generators;
 
 /// <summary>
-/// Provides the methods to generate a <see cref="Guid"/>.
+/// Provides methods to generate a <see cref="Guid"/>.
 /// </summary>
 public abstract partial class GuidGenerator : IGuidGeneratorInfo, IGuidGenerator
 {

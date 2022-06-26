@@ -11,39 +11,39 @@ partial class GuidGenerator
     public static IGuidGenerator Empty => EmptyGuidGenerator.Instance;
 
     /// <summary>
-    /// Gets the <see cref="IGuidGenerator"/> instance of the RFC 4122 UUID version 1.
+    /// Gets the <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 1.
     /// </summary>
-    /// <returns>The <see cref="IGuidGenerator"/> instance of the RFC 4122 UUID version 1.</returns>
+    /// <returns>The <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 1.</returns>
     public static IGuidGenerator Version1 => TimeBasedGuidGenerator.Instance;
 
     /// <summary>
-    /// Gets the <see cref="IDceSecurityGuidGenerator"/> instance of the RFC 4122 UUID version 2.
+    /// Gets the <see cref="IDceSecurityGuidGenerator"/> instance of RFC 4122 UUID version 2.
     /// </summary>
-    /// <returns>The <see cref="IDceSecurityGuidGenerator"/> instance of the RFC 4122 UUID version 2.</returns>
+    /// <returns>The <see cref="IDceSecurityGuidGenerator"/> instance of RFC 4122 UUID version 2.</returns>
     public static IDceSecurityGuidGenerator Version2 => DceSecurityGuidGenerator.Instance;
 
     /// <summary>
-    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of the RFC 4122 UUID version 3.
+    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID version 3.
     /// </summary>
-    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of the RFC 4122 UUID version 3.</returns>
+    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID version 3.</returns>
     public static INameBasedGuidGenerator Version3 => NameBasedGuidGenerator.MD5Hashing.Instance;
 
     /// <summary>
-    /// Gets the <see cref="IGuidGenerator"/> instance of the RFC 4122 UUID version 4.
+    /// Gets the <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 4.
     /// </summary>
-    /// <returns>The <see cref="IGuidGenerator"/> instance of the RFC 4122 UUID version 4.</returns>
+    /// <returns>The <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 4.</returns>
     public static IGuidGenerator Version4 => RandomizedGuidGenerator.Instance;
 
     /// <summary>
-    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of the RFC 4122 UUID version 5.
+    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID version 5.
     /// </summary>
-    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of the RFC 4122 UUID version 5.</returns>
+    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID version 5.</returns>
     public static INameBasedGuidGenerator Version5 => NameBasedGuidGenerator.SHA1Hashing.Instance;
 
     /// <summary>
-    /// Creates a <see cref="IGuidGenerator"/> instance of the RFC 4122 UUID version 1 using a random node ID.
+    /// Creates a <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 1 using a random node ID.
     /// </summary>
-    /// <returns>A <see cref="IGuidGenerator"/> instance of the RFC 4122 UUID version 1 using a random node ID.</returns>
+    /// <returns>A <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 1 using a random node ID.</returns>
     public static IGuidGenerator CreateVersion1R() => TimeBasedGuidGenerator.CreateWithRandomNodeId();
 
     /// <summary>
