@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace XNetEx.Guids.Generators;
 
@@ -11,7 +12,7 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     private readonly NodeIdProvider NodeIdProvider;
 
-    private long LastTimestamp;
+    private long VolatileLastTimestamp;
 
     private volatile int ClockSequence;
 
@@ -53,6 +54,12 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
     private long CurrentTimestamp => this.TimestampProvider.GetCurrentTimestamp();
 
     private byte[] NodeIdBytes => this.NodeIdProvider.NodeIdBytes;
+
+    private long LastTimestamp
+    {
+        get => Volatile.Read(ref this.VolatileLastTimestamp);
+        set => Volatile.Write(ref this.VolatileLastTimestamp, value);
+    }
 
     internal static TimeBasedGuidGenerator CreateWithRandomNodeId()
     {

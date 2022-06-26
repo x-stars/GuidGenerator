@@ -80,7 +80,7 @@ internal abstract class TimestampProvider
 
     private sealed class PerfCounter : TimestampProvider
     {
-        private long StartTimestamp;
+        private long VolatileStartTimestamp;
 
         private readonly Stopwatch HiResTimer;
 
@@ -96,6 +96,12 @@ internal abstract class TimestampProvider
             this.HiResTimer = hiResTimer;
             this.UpdateTimeTask = new Timer(this.UpdateSystemTime);
             this.UpdateTimeTask.Change(updateMs, updateMs);
+        }
+
+        private long StartTimestamp
+        {
+            get => Volatile.Read(ref this.VolatileStartTimestamp);
+            set => Volatile.Write(ref this.VolatileStartTimestamp, value);
         }
 
         public override long GetCurrentTimestamp()
