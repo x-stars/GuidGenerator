@@ -16,7 +16,7 @@ public enum GuidVariant : byte
     /// </summary>
     Rfc4122 = 1,
     /// <summary>
-    /// Reserved for Microsoft legacy GUID backward compatibility.
+    /// Represents the variant of Microsoft legacy GUIDs.
     /// </summary>
     Microsoft = 2,
     /// <summary>
