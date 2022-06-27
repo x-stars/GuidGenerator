@@ -35,12 +35,12 @@ internal sealed class ShowHelpCommand : ProgramCommand
             yield return $"        {cmdName} -V3|-V5 :NS|GuidNS [Name]";
             yield return $"        {cmdName} -?|-H|-Help";
             yield return "Parameters:";
-            yield return "    -V1     generate time-based GUIDs.";
-            yield return "    -V2     generate DCE security GUIDs.";
+            yield return "    -V1     generate time-based GUID.";
+            yield return "    -V2     generate DCE security GUID.";
             yield return "    -V3     generate name-based GUID by MD5 hashing.";
-            yield return "    -V4     generate pseudo-random GUIDs (default).";
+            yield return "    -V4     generate pseudo-random GUID (default).";
             yield return "    -V5     generate name-based GUID by SHA1 hashing.";
-            yield return "    -V1R    generate time-based GUIDs (random node ID).";
+            yield return "    -V1R    generate time-based GUID (random node ID).";
             yield return "    -Cn     generate n GUIDs of the current version.";
             yield return "    Domain  specify a DCE security domain,";
             yield return "            which can be Person, Group or Org.";
