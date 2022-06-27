@@ -60,6 +60,6 @@ internal sealed class DceSecurityGuidGenerator : TimeBasedGuidGenerator, IDceSec
         DceSecurityDomain.Person => localId ?? this.LocalUserId,
         DceSecurityDomain.Group => localId ?? this.LocalGroupId,
         DceSecurityDomain.Org => localId ?? default(int),
-        _ => throw new ArgumentOutOfRangeException(nameof(domain))
+        _ => throw new ArgumentOutOfRangeException(nameof(domain)),
     };
 }

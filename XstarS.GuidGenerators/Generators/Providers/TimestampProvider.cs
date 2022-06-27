@@ -20,7 +20,7 @@ internal abstract class TimestampProvider
             static TimestampProvider Initialize()
             {
                 return TimestampProvider.Singleton ??=
-                        TimestampProvider.Create();
+                    TimestampProvider.Create();
             }
 
             return TimestampProvider.Singleton ?? Initialize();

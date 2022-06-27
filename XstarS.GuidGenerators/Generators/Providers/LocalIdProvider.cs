@@ -34,7 +34,7 @@ internal abstract class LocalIdProvider
             static LocalIdProvider Initialize()
             {
                 return LocalIdProvider.Singleton ??=
-                        LocalIdProvider.Create();
+                    LocalIdProvider.Create();
             }
 
             return LocalIdProvider.Singleton ?? Initialize();

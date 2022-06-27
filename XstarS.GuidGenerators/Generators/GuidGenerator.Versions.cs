@@ -61,6 +61,6 @@ partial class GuidGenerator
         GuidVersion.Version3 => NameBasedGuidGenerator.MD5Hashing.Instance,
         GuidVersion.Version4 => RandomizedGuidGenerator.Instance,
         GuidVersion.Version5 => NameBasedGuidGenerator.SHA1Hashing.Instance,
-        _ => throw new ArgumentOutOfRangeException(nameof(version))
+        _ => throw new ArgumentOutOfRangeException(nameof(version)),
     };
 }

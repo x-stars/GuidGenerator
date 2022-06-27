@@ -76,7 +76,7 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
             "URL" => GuidNamespaces.Url,
             "OID" => GuidNamespaces.Oid,
             "X500" => GuidNamespaces.X500,
-            _ => Guid.Empty
+            _ => Guid.Empty,
         };
         return nsId != Guid.Empty;
     }
