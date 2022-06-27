@@ -12,7 +12,7 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     private readonly NodeIdProvider NodeIdProvider;
 
-    private long VolatileLastTimestamp;
+    private long Volatile_LastTimestamp;
 
     private volatile int ClockSequence;
 
@@ -57,8 +57,8 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     private long LastTimestamp
     {
-        get => Volatile.Read(ref this.VolatileLastTimestamp);
-        set => Volatile.Write(ref this.VolatileLastTimestamp, value);
+        get => Volatile.Read(ref this.Volatile_LastTimestamp);
+        set => Volatile.Write(ref this.Volatile_LastTimestamp, value);
     }
 
     internal static TimeBasedGuidGenerator CreateWithRandomNodeId()
