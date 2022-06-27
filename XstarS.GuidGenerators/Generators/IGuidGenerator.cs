@@ -3,7 +3,7 @@
 namespace XNetEx.Guids.Generators;
 
 /// <summary>
-/// Provides the information of the generated <see cref="Guid"/>.
+/// Provides information of the generated <see cref="Guid"/>.
 /// </summary>
 public interface IGuidGeneratorInfo
 {
@@ -21,7 +21,7 @@ public interface IGuidGeneratorInfo
 }
 
 /// <summary>
-/// Provides the method to generate a <see cref="Guid"/>.
+/// Provides a method to generate a <see cref="Guid"/>.
 /// </summary>
 public interface IGuidGenerator : IGuidGeneratorInfo
 {
@@ -33,7 +33,7 @@ public interface IGuidGenerator : IGuidGeneratorInfo
 }
 
 /// <summary>
-/// Provides the method to generate a name-based <see cref="Guid"/>.
+/// Provides a method to generate a name-based <see cref="Guid"/>.
 /// </summary>
 public interface INameBasedGuidGenerator : IGuidGeneratorInfo
 {
@@ -50,7 +50,7 @@ public interface INameBasedGuidGenerator : IGuidGeneratorInfo
 }
 
 /// <summary>
-/// Provides the method to generate a DCE Security <see cref="Guid"/>.
+/// Provides a method to generate a DCE Security <see cref="Guid"/>.
 /// </summary>
 public interface IDceSecurityGuidGenerator : IGuidGeneratorInfo
 {
