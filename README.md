@@ -67,12 +67,12 @@ Usage:  GuidGen[.exe] [-V1|-V4|-V1R] [-Cn]
         GuidGen[.exe] -V3|-V5 :NS|GuidNS [Name]
         GuidGen[.exe] -?|-H|-Help
 Parameters:
-    -V1     generate time-based GUIDs.
-    -V2     generate DCE security GUIDs.
+    -V1     generate time-based GUID.
+    -V2     generate DCE security GUID.
     -V3     generate name-based GUID by MD5 hashing.
-    -V4     generate pseudo-random GUIDs (default).
+    -V4     generate pseudo-random GUID (default).
     -V5     generate name-based GUID by SHA1 hashing.
-    -V1R    generate time-based GUIDs (random node ID).
+    -V1R    generate time-based GUID (random node ID).
     -Cn     generate n GUIDs of the current version.
     Domain  specify a DCE security domain,
             which can be Person, Group or Org.
