@@ -2,8 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 #nullable enable
+#pragma warning disable
 
-#if !(NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
+#if !(NULLABLE_ATTRIBUTES || NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
 namespace System.Diagnostics.CodeAnalysis
 {
     /// <summary>
@@ -201,7 +202,7 @@ namespace System.Diagnostics.CodeAnalysis
 }
 #endif
 
-#if !NET5_0_OR_GREATER
+#if !(NULLABLE_ATTRIBUTES || NET5_0_OR_GREATER)
 namespace System.Diagnostics.CodeAnalysis
 {
     /// <summary>
@@ -298,12 +299,11 @@ namespace System.Diagnostics.CodeAnalysis
 }
 #endif
 
+#if !(EXCLUDE_FROM_CODE_COVERAGE_ATTRIBUTE || NETCOREAPP3_0_OR_GREATER)
 #if !(NET40_OR_GREATER || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER)
-#if !(EXCLUDE_FROM_CODE_COVERAGE || NETCOREAPP3_0_OR_GREATER)
 namespace System.Diagnostics.CodeAnalysis
 {
-    [SuppressMessage("Microsoft.Design",
-                     "CA1018:MarkAttributesWithAttributeUsageAttribute")]
+    // Excludes the attributed code from code coverage information.
     internal sealed partial class ExcludeFromCodeCoverageAttribute : Attribute
     {
     }

@@ -2,62 +2,63 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 #nullable enable
+#pragma warning disable
 
-#if !NET5_0_OR_GREATER
+#if !(CALLER_INFO_ATTRIBUTES || NET45_OR_GREATER || NETCOREAPP || NETSTANDARD)
 namespace System.Runtime.CompilerServices
 {
-    using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Reserved to be used by the compiler for tracking metadata.
-    /// This class should not be used by developers in source code.
+    /// Allows you to obtain the full path of the source file that contains the caller.
+    /// This is the file path at the time of compile.
     /// </summary>
     [DebuggerNonUserCode, ExcludeFromCodeCoverage]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    internal static class IsExternalInit
-    {
-    }
-
-    /// <summary>
-    /// Used to indicate to the compiler that a method should be called
-    /// in its containing module's initializer.
-    /// </summary>
-    [DebuggerNonUserCode, ExcludeFromCodeCoverage]
-    [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-    internal sealed class ModuleInitializerAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
+    internal sealed class CallerFilePathAttribute : Attribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModuleInitializerAttribute"/> class.
+        /// Initializes a new instance of the <see cref="CallerFilePathAttribute"/> class.
         /// </summary>
-        public ModuleInitializerAttribute()
+        public CallerFilePathAttribute()
         {
         }
     }
 
     /// <summary>
-    /// Indicates to the compiler that the .locals init flag
-    /// should not be set in nested method headers when emitting to metadata.
+    /// Allows you to obtain the line number in the source file at which the method is called.
     /// </summary>
     [DebuggerNonUserCode, ExcludeFromCodeCoverage]
-    [AttributeUsage(
-        AttributeTargets.Module | AttributeTargets.Class | AttributeTargets.Struct |
-        AttributeTargets.Interface | AttributeTargets.Constructor | AttributeTargets.Method |
-        AttributeTargets.Property | AttributeTargets.Event, Inherited = false)]
-    internal sealed class SkipLocalsInitAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
+    internal sealed class CallerLineNumberAttribute : Attribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SkipLocalsInitAttribute"/> class.
+        /// Initializes a new instance of the <see cref="CallerLineNumberAttribute"/> class.
         /// </summary>
-        public SkipLocalsInitAttribute()
+        public CallerLineNumberAttribute()
+        {
+        }
+    }
+
+    /// <summary>
+    /// Allows you to obtain the method or property name of the caller to the method.
+    /// </summary>
+    [DebuggerNonUserCode, ExcludeFromCodeCoverage]
+    [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
+    internal sealed class CallerMemberNameAttribute : Attribute
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CallerMemberNameAttribute"/> class.
+        /// </summary>
+        public CallerMemberNameAttribute()
         {
         }
     }
 }
 #endif
 
-#if !NETCOREAPP3_0_OR_GREATER
+#if !(CALLER_INFO_ATTRIBUTES || NETCOREAPP3_0_OR_GREATER)
 namespace System.Runtime.CompilerServices
 {
     using System.Diagnostics;
@@ -88,12 +89,11 @@ namespace System.Runtime.CompilerServices
 }
 #endif
 
+#if !(EXCLUDE_FROM_CODE_COVERAGE_ATTRIBUTE || NETCOREAPP3_0_OR_GREATER)
 #if !(NET40_OR_GREATER || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER)
-#if !(EXCLUDE_FROM_CODE_COVERAGE || NETCOREAPP3_0_OR_GREATER)
 namespace System.Diagnostics.CodeAnalysis
 {
-    [SuppressMessage("Microsoft.Design",
-                     "CA1018:MarkAttributesWithAttributeUsageAttribute")]
+    // Excludes the attributed code from code coverage information.
     internal sealed partial class ExcludeFromCodeCoverageAttribute : Attribute
     {
     }

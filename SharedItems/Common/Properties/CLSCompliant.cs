@@ -1,4 +1,9 @@
-﻿using System;
+﻿// Copyright (c) 2022 XstarS
+// This file is released under the MIT License.
+// https://opensource.org/licenses/MIT
 
-// 指示程序元素是否使用公共语言规范进行编译。
-[assembly: CLSCompliant(true)]
+#pragma warning disable // IDE0001: Simplify name
+
+// Indicates whether this assembly is compliant
+// with the Common Language Specification (CLS).
+[assembly: System.CLSCompliantAttribute(true)]

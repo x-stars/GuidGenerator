@@ -2,8 +2,8 @@
 // This file is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-// Provide the range-foreach syntax for C# 9.0 or higher.
-// Requires: struct System.Index, struct System.Range.
+// Provides the range-foreach syntax for C# 9.0 or higher.
+// Requires: System.Index struct, System.Range struct.
 // Reference this file to write foreach-loops like this:
 //   foreach (var index in 0..100) { }
 // which is equivalent to the legacy for-loop below:
@@ -16,6 +16,7 @@
 //   for (int index = 99; index >= 0; index -= 2) { }
 
 #nullable disable
+#pragma warning disable
 //#define STEPPED_RANGE
 
 using System;
@@ -64,9 +65,9 @@ internal static class RangeEnumerable
     [DebuggerNonUserCode, ExcludeFromCodeCoverage]
     public readonly struct Stepped
     {
-        public Range Range { get; }
+        public readonly Range Range;
 
-        public int Step { get; }
+        public readonly int Step;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Stepped(Range range, int step)
@@ -114,12 +115,11 @@ internal static class RangeEnumerable
 #endif
 }
 
+#if !(EXCLUDE_FROM_CODE_COVERAGE_ATTRIBUTE || NETCOREAPP3_0_OR_GREATER)
 #if !(NET40_OR_GREATER || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER)
-#if !(EXCLUDE_FROM_CODE_COVERAGE || NETCOREAPP3_0_OR_GREATER)
 namespace System.Diagnostics.CodeAnalysis
 {
-    [SuppressMessage("Microsoft.Design",
-                     "CA1018:MarkAttributesWithAttributeUsageAttribute")]
+    // Excludes the attributed code from code coverage information.
     internal sealed partial class ExcludeFromCodeCoverageAttribute : Attribute
     {
     }
