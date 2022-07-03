@@ -30,6 +30,7 @@
     <PackageIconUrl></PackageIconUrl>
     <RepositoryUrl>https://github.com/x-stars/GuidGenerator</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageTags>guid guid-generator rfc-4122 uuid</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup>
