@@ -12,9 +12,8 @@
     <Company>XstarS</Company>
     <Version>1.0.0</Version>
     <Product>XstarS GUID Generator</Product>
-    <Description>$(Product) UnitTests</Description>
+    <AssemblyTitle>$(Product) UnitTests</AssemblyTitle>
     <Copyright>Copyright © $(Company) 2022</Copyright>
-    <AssemblyTitle>$(Description)</AssemblyTitle>
   </PropertyGroup>
 
   <PropertyGroup>

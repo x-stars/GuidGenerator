@@ -17,17 +17,16 @@
     <Company>XstarS</Company>
     <Version>1.0.0</Version>
     <Product>XstarS GUID Generator</Product>
-    <Description>$(Product) Library</Description>
+    <AssemblyTitle>$(Product) Library</AssemblyTitle>
     <Copyright>Copyright © $(Company) 2022</Copyright>
-    <AssemblyTitle>$(Description)</AssemblyTitle>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageId>$(AssemblyName)</PackageId>
-    <PackageVersion>$(Version)</PackageVersion>
+    <PackageVersion>$(Version)-desc</PackageVersion>
+    <Description>Provides RFC 4122 UUID compliant GUID generators for .NET platform.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/x-stars/GuidGenerator</PackageProjectUrl>
-    <PackageIconUrl></PackageIconUrl>
     <RepositoryUrl>https://github.com/x-stars/GuidGenerator</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>guid guid-generator rfc-4122 uuid</PackageTags>
