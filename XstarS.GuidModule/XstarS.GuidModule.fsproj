@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>XNetEx</RootNamespace>
+    <TargetFrameworks>
+      net461;net472;netcoreapp3.1;net6.0;netstandard2.0;netstandard2.1
+    </TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <IsTrimmable>true</IsTrimmable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>XstarS</Authors>
+    <Company>XstarS</Company>
+    <Version>1.0.1</Version>
+    <Product>XstarS GUID Generator</Product>
+    <AssemblyTitle>$(Product) F# Module</AssemblyTitle>
+    <Copyright>Copyright © $(Company) 2022</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>$(AssemblyName)</PackageId>
+    <PackageVersion>$(Version)</PackageVersion>
+    <Description>Provides RFC 4122 UUID compliant GUID generator module for F#.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/x-stars/GuidGenerator</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/x-stars/GuidGenerator</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>guid guid-generator rfc-4122 uuid fsharp</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\GuidGenerator.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>obj\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.fs" />
+    <Compile Include="GuidModule.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="XstarS.GuidGenerators" Version="$(Version)" />
+  </ItemGroup>
+
+</Project>
