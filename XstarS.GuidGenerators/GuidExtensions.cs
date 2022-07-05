@@ -49,8 +49,8 @@ public static class GuidExtensions
     /// is time-based; otherwise, <see langword="false"/>.</returns>
     public static bool TryGetTimestamp(this Guid guid, out DateTime timestamp)
     {
-        var version = guid.GetVersion();
-        if (!version.IsTimeBased())
+        if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
+            !guid.GetVersion().IsTimeBased())
         {
             timestamp = default(DateTime);
             return false;
@@ -59,7 +59,7 @@ public static class GuidExtensions
             ((long)guid.TimeMid() << (4 * 8)) |
             ((long)guid.TimeHi_Ver() << (6 * 8));
         tsField &= ~(0xF0L << (7 * 8));
-        if (version.ContainsLocalId())
+        if (guid.GetVersion().ContainsLocalId())
         {
             tsField &= ~0xFFFFFFFFL;
         }
@@ -79,8 +79,8 @@ public static class GuidExtensions
     /// is time-based; otherwise, <see langword="false"/>.</returns>
     public static bool TryGetClockSequence(this Guid guid, out short clockSeq)
     {
-        var version = guid.GetVersion();
-        if (!version.IsTimeBased())
+        if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
+            !guid.GetVersion().IsTimeBased())
         {
             clockSeq = default(int);
             return false;
@@ -88,7 +88,7 @@ public static class GuidExtensions
         var csField = ((int)guid.ClkSeqLow()) |
             ((int)guid.ClkSeqHi_Var() << (1 * 8));
         csField &= ~(0xC0 << (1 * 8));
-        if (version.ContainsLocalId())
+        if (guid.GetVersion().ContainsLocalId())
         {
             csField >>= (1 * 8);
         }
@@ -111,10 +111,16 @@ public static class GuidExtensions
     public static bool TryGetDomainAndLocalId(
         this Guid guid, out DceSecurityDomain domain, out int localId)
     {
-        var hasLocalId = guid.GetVersion().ContainsLocalId();
-        domain = hasLocalId ? (DceSecurityDomain)guid.ClkSeqLow() : 0;
-        localId = hasLocalId ? (int)guid.TimeLow() : 0;
-        return hasLocalId;
+        if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
+            !guid.GetVersion().ContainsLocalId())
+        {
+            domain = default(DceSecurityDomain);
+            localId = default(int);
+            return false;
+        }
+        domain = (DceSecurityDomain)guid.ClkSeqLow();
+        localId = (int)guid.TimeLow();
+        return true;
     }
 
     /// <summary>
@@ -130,7 +136,8 @@ public static class GuidExtensions
     {
         const int size = 6;
         nodeId = new byte[size];
-        if (!guid.GetVersion().ContainsNodeId())
+        if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
+            !guid.GetVersion().ContainsNodeId())
         {
             return false;
         }
