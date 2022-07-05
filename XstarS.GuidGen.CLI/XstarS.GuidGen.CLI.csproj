@@ -21,13 +21,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>$(AssemblyName)</PackageId>
-    <PackageVersion>$(Version).1</PackageVersion>
-    <Description>Provides RFC 4122 UUID compliant GUID generators for .NET platform.</Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/x-stars/GuidGenerator</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/x-stars/GuidGenerator</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup>
