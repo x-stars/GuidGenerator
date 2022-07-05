@@ -49,8 +49,6 @@ public static class GuidGeneratorExtensions
     /// <paramref name="nsId"/> and <paramref name="name"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="guidGen"/>
     /// or <paramref name="name"/> is <see langword="null"/>.</exception>
-    /// <exception cref="NotSupportedException">
-    /// This instance dose not support generating a name-based <see cref="Guid"/>.</exception>
     public static Guid NewGuid(this INameBasedGuidGenerator guidGen,
         Guid nsId, string name, Encoding? encoding = null)
     {
