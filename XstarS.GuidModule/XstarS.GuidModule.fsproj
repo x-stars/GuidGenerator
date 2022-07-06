@@ -7,6 +7,7 @@
     </TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <IsTrimmable>true</IsTrimmable>
+    <NoWarn>FS0009</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -55,7 +56,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="XstarS.GuidGenerators" Version="$(Version)" />
+    <ProjectReference Include="..\XstarS.GuidGenerators\XstarS.GuidGenerators.csproj" />
   </ItemGroup>
 
 </Project>
