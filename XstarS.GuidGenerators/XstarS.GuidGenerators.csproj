@@ -2,9 +2,8 @@
 
   <PropertyGroup>
     <RootNamespace>XNetEx.Guids</RootNamespace>
-    <TargetFrameworks>
-      net461;net472;netcoreapp3.1;net6.0;netstandard2.0;netstandard2.1
-    </TargetFrameworks>
+    <TargetFrameworks>net461;net472;netcoreapp3.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>$(TargetFrameworks);netstandard2.0;netstandard2.1</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <IsTrimmable>true</IsTrimmable>
@@ -35,12 +34,7 @@
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\GuidGenerator.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <DocumentationFile>
-      obj\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml
-    </DocumentationFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
