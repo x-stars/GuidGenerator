@@ -70,6 +70,11 @@ module Guid =
     [<CompiledName("NewVersion1")>]
     let newV1 () = Generator.Version1.NewGuid()
 
+    [<CompiledName("NewVersion1RSequence")>]
+    let newV1RSeq () =
+        let guidGen = Generator.CreateVersion1R()
+        Seq.initInfinite (fun _ -> guidGen.NewGuid())
+
     [<CompiledName("NewVersion2")>]
     let newV2 (domain: Domain) =
         Generator.Version2.NewGuid(domain)
@@ -106,7 +111,7 @@ module Guid =
         Generator.Version5.NewGuid(nsId, name, enc)
 
     [<CompiledName("OfFields")>]
-    let ofFields (a: int) b c d e f g h i j k =
+    let ofFields (a: int) b c (d, e) (f, g, h, i, j, k) =
         Guid(a, b, c, d, e, f, g, h, i, j, k)
 
     [<CompiledName("OfByteArray")>]
