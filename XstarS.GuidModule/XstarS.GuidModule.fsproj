@@ -14,14 +14,14 @@
     <Company>XstarS</Company>
     <Version>1.0.1</Version>
     <Product>XstarS GUID Generator</Product>
-    <AssemblyTitle>$(Product) F# Module</AssemblyTitle>
+    <AssemblyTitle>$(Product) Module</AssemblyTitle>
     <Copyright>Copyright © $(Company) 2022</Copyright>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageId>$(AssemblyName)</PackageId>
     <PackageVersion>$(Version)</PackageVersion>
-    <Description>Provides RFC 4122 UUID compliant GUID generator module for F#.</Description>
+    <Description>Provides RFC 4122 UUID compliant GUID operations for F#.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/x-stars/GuidGenerator</PackageProjectUrl>
     <RepositoryUrl>https://github.com/x-stars/GuidGenerator</RepositoryUrl>
