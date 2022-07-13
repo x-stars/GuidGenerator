@@ -15,8 +15,8 @@ module Guid =
         [<FieldOffset( 0)>] val mutable Guid: Guid
         [<FieldOffset( 0)>] val mutable TimeLow: int
         [<FieldOffset( 4)>] val mutable TimeMid: int16
-        [<FieldOffset( 6)>] val mutable TimeHi_Var: int16
-        [<FieldOffset( 8)>] val mutable ClkSeqHi_Ver: byte
+        [<FieldOffset( 6)>] val mutable TimeHi_Ver: int16
+        [<FieldOffset( 8)>] val mutable ClkSeqHi_Var: byte
         [<FieldOffset( 9)>] val mutable ClkSeqLow: byte
         [<FieldOffset(10)>] val mutable NodeId0: byte
         [<FieldOffset(11)>] val mutable NodeId1: byte
@@ -131,8 +131,8 @@ module Guid =
     [<CompiledName("ToFields")>]
     let toFields (guid: Guid) =
         let fields = Rfc4122Fields(Guid = guid)
-        struct (fields.TimeLow, fields.TimeMid, fields.TimeHi_Var,
-                struct (fields.ClkSeqHi_Ver, fields.ClkSeqLow),
+        struct (fields.TimeLow, fields.TimeMid, fields.TimeHi_Ver,
+                struct (fields.ClkSeqHi_Var, fields.ClkSeqLow),
                 struct (fields.NodeId0, fields.NodeId1, fields.NodeId2,
                         fields.NodeId3, fields.NodeId4, fields.NodeId5))
 
