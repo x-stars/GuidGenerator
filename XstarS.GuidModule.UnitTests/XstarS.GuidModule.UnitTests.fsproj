@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.fs" />
+    <Compile Include="Properties\AssertModule.MSTest.fs" />
     <Compile Include="GuidModuleTest.fs" />
   </ItemGroup>
 
