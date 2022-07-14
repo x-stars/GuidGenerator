@@ -28,7 +28,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XstarS.GuidGen.CLI", "Xstar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XstarS.GuidGenLib.Benchmarks", "XstarS.GuidGenLib.Benchmarks\XstarS.GuidGenLib.Benchmarks.csproj", "{E9FD2D6C-AD2A-420B-9C74-B71C789CDF82}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "XstarS.GuidModule", "XstarS.GuidModule\XstarS.GuidModule.fsproj", "{CC7C8A43-24F6-4710-8CA0-412BDF5DB3B2}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "XstarS.GuidModule", "XstarS.GuidModule\XstarS.GuidModule.fsproj", "{CC7C8A43-24F6-4710-8CA0-412BDF5DB3B2}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "XstarS.GuidModule.UnitTests", "XstarS.GuidModule.UnitTests\XstarS.GuidModule.UnitTests.fsproj", "{AF229643-0A49-482C-B559-BDD4D844FDFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +58,10 @@ Global
 		{CC7C8A43-24F6-4710-8CA0-412BDF5DB3B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC7C8A43-24F6-4710-8CA0-412BDF5DB3B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC7C8A43-24F6-4710-8CA0-412BDF5DB3B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF229643-0A49-482C-B559-BDD4D844FDFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF229643-0A49-482C-B559-BDD4D844FDFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF229643-0A49-482C-B559-BDD4D844FDFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF229643-0A49-482C-B559-BDD4D844FDFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
