@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>XNetEx</RootNamespace>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <RootNamespace>XNetEx</RootNamespace>
     <LangVersion>latest</LangVersion>
     <IsTrimmable>true</IsTrimmable>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <NoWarn>FS0009</NoWarn>
   </PropertyGroup>
 
