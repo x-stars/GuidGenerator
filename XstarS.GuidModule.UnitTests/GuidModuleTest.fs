@@ -1,7 +1,8 @@
 namespace XNetEx
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
-open XNetEx.UnitTesting.Adapters.MSTest
+open XNetEx.UnitTesting
+open XNetEx.UnitTesting.MSTest
 
 [<TestClass>]
 type GuidModuleTest() =

@@ -1,27 +1,29 @@
-﻿namespace XNetEx.UnitTesting.Adapters.MSTest
-
-open System
-open System.Collections
-open System.Text.RegularExpressions
-open Microsoft.FSharp.Core.LanguagePrimitives
-open Microsoft.VisualStudio.TestTools.UnitTesting
+﻿namespace XNetEx.UnitTesting
 
 [<AutoOpen>]
 module internal AssertOperators =
 
     [<CompiledName("EnumOfValue")>]
     let inline enum<'T, 'Enum when 'Enum: enum<'T>> value =
-        EnumOfValue<'T, 'Enum>(value)
+        LanguagePrimitives.EnumOfValue<'T, 'Enum> value
 
     [<CompiledName("TeeAction")>]
     let inline tee (action: 'T -> unit) value =
         action value
         value
 
+namespace XNetEx.UnitTesting.MSTest
+
+open System
+open System.Collections
+open System.Text.RegularExpressions
+open Microsoft.VisualStudio.TestTools.UnitTesting
+
 [<RequireQualifiedAccess>]
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module internal Assert =
 
+    [<Sealed>]
     type private SeqWrapper<'T>(source: seq<'T>) =
         interface ICollection with
             member _.Count = Seq.length source
@@ -94,6 +96,7 @@ module internal Assert =
     let exception'<'T when 'T :> exn> action =
         Assert.ThrowsException<'T>(Action(action)) |> ignore
 
+    [<RequireQualifiedAccess>]
     module Seq =
 
         [<CompiledName("AllNotNull")>]
@@ -157,6 +160,7 @@ module internal Assert =
             CollectionAssert.IsNotSubsetOf(
                 SeqWrapper<'T>(subset), SeqWrapper<'T>(sequence))
 
+    [<RequireQualifiedAccess>]
     module String =
 
         [<CompiledName("Contains")>]
