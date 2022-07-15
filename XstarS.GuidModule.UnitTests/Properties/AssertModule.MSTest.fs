@@ -1,16 +1,24 @@
-﻿namespace XNetEx.UnitTesting
+﻿// Copyright (c) 2022 XstarS
+// This file is released under the MIT License.
+// https://opensource.org/licenses/MIT
+
+namespace XNetEx.UnitTesting
 
 [<AutoOpen>]
-module internal AssertOperators =
+module internal UnitTestOperators =
 
-    [<CompiledName("EnumOfValue")>]
-    let inline enum<'T, 'Enum when 'Enum: enum<'T>> value =
-        LanguagePrimitives.EnumOfValue<'T, 'Enum> value
+    let inline ( |- ) value (action: 'T -> unit) =
+        action value
+        value
 
     [<CompiledName("TeeAction")>]
     let inline tee (action: 'T -> unit) value =
         action value
         value
+
+    [<CompiledName("EnumOfValue")>]
+    let inline enumof<'T, 'Enum when 'Enum: enum<'T>> value =
+        LanguagePrimitives.EnumOfValue<'T, 'Enum> value
 
 namespace XNetEx.UnitTesting.MSTest
 
@@ -43,15 +51,15 @@ module internal Assert =
     [<CompiledName("True")>]
     let true' condition = Assert.IsTrue(condition)
 
-    [<CompiledName("TrueWith")>]
-    let trueWith message condition =
+    [<CompiledName("TrueOrElse")>]
+    let trueOrElse message condition =
         Assert.IsTrue(condition, message)
 
     [<CompiledName("False")>]
     let false' condition = Assert.IsFalse(condition)
 
-    [<CompiledName("FalseWith")>]
-    let falseWith message condition =
+    [<CompiledName("FalseOrElse")>]
+    let falseOrElse message condition =
         Assert.IsFalse(condition, message)
 
     [<CompiledName("Null")>]
