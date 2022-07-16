@@ -7,6 +7,7 @@
     <IsTrimmable>true</IsTrimmable>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <NoWarn>FS0009</NoWarn>
+    <WarnOn>FS3390</WarnOn>
   </PropertyGroup>
 
   <PropertyGroup>
