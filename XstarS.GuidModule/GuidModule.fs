@@ -133,15 +133,15 @@ module Guid =
     let newV1 () = Generator.Version1.NewGuid()
 
     /// <summary>
-    /// Generates a sequence of <see cref="T:System.Guid"/> instances
-    /// of RFC 4122 UUID version 1 using a random node ID.
+    /// Creates a new unlimited sequence that generates <see cref="T:System.Guid"/>
+    /// instances of RFC 4122 UUID version 1 using a random node ID.
     /// </summary>
-    /// <returns>A sequence of <see cref="T:System.Guid"/> instances
-    /// of RFC 4122 UUID version 1 using a random node ID.</returns>
+    /// <returns>A new unlimited sequence that generates <see cref="T:System.Guid"/>
+    /// instances of RFC 4122 UUID version 1 using a random node ID.</returns>
     [<CompiledName("NewVersion1RSequence")>]
     let newV1RSeq () =
-        let guidGen = Generator.CreateVersion1R()
-        Seq.initInfinite (fun _ -> guidGen.NewGuid())
+        seq { let guidGen = Generator.CreateVersion1R()
+              while true do yield guidGen.NewGuid() }
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
@@ -149,7 +149,7 @@ module Guid =
     /// </summary>
     /// <param name="domain">The DCE Security domain.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 2.</returns>
-    /// <exception cref="T:Systen.ArgumentOutOfRangeException">
+    /// <exception cref="T:System.ArgumentOutOfRangeException">
     /// <paramref name="domain"/> is not a valid <see cref="T:XNetEx.Guid.Domain"/> value.</exception>
     [<CompiledName("NewVersion2")>]
     let newV2 (domain: Domain) =
@@ -172,7 +172,7 @@ module Guid =
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 3.</returns>
-    /// <exception cref="T:Systen.ArgumentNullException">
+    /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion3")>]
     let newV3 (nsId: Guid) (name: byte[]) =
@@ -185,7 +185,7 @@ module Guid =
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string (encoded in UTF-8).</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 3.</returns>
-    /// <exception cref="T:Systen.ArgumentNullException">
+    /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion3ByString")>]
     let newV3S (nsId: Guid) (name: string) =
@@ -199,8 +199,8 @@ module Guid =
     /// <param name="name">The name string (encoded in <paramref name="enc"/>).</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 3.</returns>
-    /// <exception cref="T:Systen.ArgumentNullException">
-    /// <paramref name="name"/> or <paramref name="enc"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion3ByEncoding")>]
     let newV3Enc (nsId: Guid) (enc: Text.Encoding) (name: string) =
         Generator.Version3.NewGuid(nsId, name, enc)
@@ -219,7 +219,7 @@ module Guid =
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 5.</returns>
-    /// <exception cref="T:Systen.ArgumentNullException">
+    /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion5")>]
     let newV5 (nsId: Guid) (name: byte[]) =
@@ -232,7 +232,7 @@ module Guid =
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string (encoded in UTF-8).</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 5.</returns>
-    /// <exception cref="T:Systen.ArgumentNullException">
+    /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion5ByString")>]
     let newV5S (nsId: Guid) (name: string) =
@@ -246,8 +246,8 @@ module Guid =
     /// <param name="name">The name string (encoded in <paramref name="enc"/>).</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 5.</returns>
-    /// <exception cref="T:Systen.ArgumentNullException">
-    /// <paramref name="name"/> or <paramref name="enc"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion5ByEncoding")>]
     let newV5Enc (nsId: Guid) (enc: Text.Encoding) (name: string) =
         Generator.Version5.NewGuid(nsId, name, enc)
@@ -277,11 +277,12 @@ module Guid =
     /// Creates a new <see cref="T:System.Guid"/> instance
     /// by using the specified byte array of fields in little-endian order.
     /// </summary>
-    /// <param name="bytes">A 16-element byte array containing values of the GUID.</param>
+    /// <param name="bytes">A 16-element byte array containing
+    /// fields of the GUID in little-endian order.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of the specified byte array.</returns>
-    /// <exception cref="T:Systen.ArgumentNullException">
+    /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="bytes"/> is <see langword="null"/>.</exception>
-    /// <exception cref="T:Systen.ArgumentException">
+    /// <exception cref="T:System.ArgumentException">
     /// <paramref name="bytes"/> not 16 bytes long.</exception>
     [<CompiledName("OfByteArray")>]
     let ofBytes (bytes: byte[]) = Guid(bytes)
@@ -290,11 +291,12 @@ module Guid =
     /// Creates a new <see cref="T:System.Guid"/> instance
     /// by using the specified byte array of fields in big-endian order (RFC 4122 compliant).
     /// </summary>
-    /// <param name="bytes">A 16-element byte array containing values of the GUID.</param>
+    /// <param name="bytes">A 16-element byte array containing
+    /// fields of the GUID in big-endian order (RFC 4122 compliant).</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of the specified byte array.</returns>
-    /// <exception cref="T:Systen.ArgumentNullException">
+    /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="bytes"/> is <see langword="null"/>.</exception>
-    /// <exception cref="T:Systen.ArgumentException">
+    /// <exception cref="T:System.ArgumentException">
     /// <paramref name="bytes"/> not 16 bytes long.</exception>
     [<CompiledName("OfUuidByteArray")>]
     let ofBytesUuid (bytes: byte[]) =
@@ -345,9 +347,9 @@ module Guid =
     /// </summary>
     /// <param name="input">The string to convert.</param>
     /// <returns>A <see cref="T:System.Guid"/> instance that contains the value that was parsed.</returns>
-    /// <exception cref="T:Systen.ArgumentNullException">
+    /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="input"/> is <see langword="null"/>.</exception>
-    /// <exception cref="T:Systen.FormatException">
+    /// <exception cref="T:System.FormatException">
     /// <paramref name="input"/> is not in a recognized format.</exception>
     [<CompiledName("Parse")>]
     let parse (input: string) = Guid.Parse(input)
@@ -360,9 +362,9 @@ module Guid =
     /// to use when interpreting input: "N", "D", "B", "P", or "X".</param>
     /// <param name="input">The string to convert.</param>
     /// <returns>A <see cref="T:System.Guid"/> instance that contains the value that was parsed.</returns>
-    /// <exception cref="T:Systen.ArgumentNullException">
+    /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="input"/> or <paramref name="format"/> is <see langword="null"/>.</exception>
-    /// <exception cref="T:Systen.FormatException">
+    /// <exception cref="T:System.FormatException">
     /// <paramref name="input"/> is not in the format specified by <paramref name="format"/>.</exception>
     [<CompiledName("ParseExact")>]
     let parseExact (format: string) (input: string) =
@@ -394,7 +396,7 @@ module Guid =
         Guid.TryParseExact(input, format) |> toVOption
 
     /// <summary>
-    /// Returns a string representation of the value of the <see cref="T:System.Guid"/> instance,
+    /// Returns a string representation of the value of the <see cref="T:System.Guid"/>,
     /// according to the provided format specifier.
     /// </summary>
     /// <param name="format">A single format specifier that indicates
@@ -403,6 +405,9 @@ module Guid =
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>The value of the <see cref="T:System.Guid"/>, represented as a series
     /// of lowercase hexadecimal digits in the specified format.</returns>
+    /// <exception cref="T:System.FormatException">
+    /// The value of format is not <see langword="null"/>,
+    /// an empty string (""), "N", "D", "B", "P", or "X".</exception>
     [<CompiledName("Format")>]
     let format (format: string) (guid: Guid) =
         guid.ToString(format)
