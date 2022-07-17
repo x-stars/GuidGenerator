@@ -51,6 +51,59 @@ var guidGenV5 = GuidGenerator.OfVersion(GuidVersion.Version5);
 var guidV5 = guidGenV5.NewGuid(GuidNamespaces.Dns, "github.com");
 ```
 
+## F# GUID 模块使用
+
+F# GUID 模块工程位于 [XstarS.GuidModule](XstarS.GuidModule)。
+
+核心模块：`XNetEx.Guid`，此模块提供了一套符合 RFC 4122 标准的 GUID 相关操作，并根据 F# 管道模式对输入参数顺序进行了适当调整。
+
+### RFC 4122 GUID 生成
+
+``` F#
+open XNetEx
+
+// time-based GUID generation.
+let guidV1 = Guid.newV1 ()
+// randomized GUID generation.
+let guidV4 = Guid.newV4 ()
+
+// name-based GUID generation.
+let guidV3 = Guid.newV3S Guid.nsDns "github.com"
+let guidV5 = "github.com" |> Guid.newV5S Guid.nsDns
+```
+
+### 常见 GUID 相关操作
+
+``` F#
+open XNetEx
+
+// GUID parsing and formatting.
+let guid1 = Guid.parse "6ba7b810-9dad-11d1-80b4-00c04fd430c8"
+let guid2 = "{6ba7b810-9dad-11d1-80b4-00c04fd430c8}"
+            |> Guid.parseExact "B"
+printfn (guid2 |> Guid.format "X")
+
+// GUID construction and deconstruction.
+let guid3 = Guid.ofFields
+    0x00112233 0x4455s 0x6677s (0x88uy, 0x99uy)
+    (0xAAuy, 0xBBuy, 0xCCuy, 0xDDuy, 0xEEuy, 0xFFuy)
+let guid3Fields = guid3 |> Guid.toFields
+
+let guid4 = Array.map byte
+    [| 0x00; 0x11; 0x22; 0x33; 0x44; 0x55; 0x66; 0x77
+       0x88; 0x99; 0xAA; 0xBB; 0xCC; 0xDD; 0xEE; 0xFF |]
+    |> Guid.ofBytesUuid
+let guid4Bytes = Guid.toBytes guid4
+assert (guid3 = guid4)
+
+let guid5 = Array.map byte
+    [| 0x33; 0x22; 0x11; 0x00; 0x55; 0x44; 0x77; 0x66
+       0x88; 0x99; 0xAA; 0xBB; 0xCC; 0xDD; 0xEE; 0xFF |]
+    |> Guid.ofBytes
+let guid5Bytes = Guid.toBytesUuid guid5
+assert (guid3 = guid5)
+```
+
 ## GUID 生成命令行工具使用
 
 GUID 生成命令行工具的工程位于 [XstarS.GuidGen.CLI](XstarS.GuidGen.CLI)。
