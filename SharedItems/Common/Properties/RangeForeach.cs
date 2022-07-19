@@ -43,11 +43,14 @@ internal static class RangeEnumerable
 
         private readonly int EndIndex;
 
+        private readonly long Padding;
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal Enumerator(in Range range)
         {
             this.CurrentIndex = range.Start.GetOffset(0) - 1;
             this.EndIndex = range.End.GetOffset(0);
+            this.Padding = default(long);
         }
 
         public int Current => this.CurrentIndex;
@@ -92,6 +95,7 @@ internal static class RangeEnumerable
 
             private readonly int StepValue;
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             internal Enumerator(in Stepped stepped)
             {
                 var range = stepped.Range;
