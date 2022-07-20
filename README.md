@@ -23,7 +23,7 @@ GUID 生成库的工程位于 [XstarS.GuidGenerators](XstarS.GuidGenerators)。
 
 ### 静态属性获取实例后调用
 
-``` C#
+``` CSharp
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
@@ -38,7 +38,7 @@ var guidV5 = guidGenV5.NewGuid(GuidNamespaces.Dns, "github.com");
 
 ### 工厂方法获取实例后调用
 
-``` C#
+``` CSharp
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
@@ -59,7 +59,7 @@ F# GUID 模块工程位于 [XstarS.GuidModule](XstarS.GuidModule)。
 
 ### RFC 4122 GUID 生成
 
-``` F#
+``` FSharp
 open XNetEx
 
 // time-based GUID generation.
@@ -74,7 +74,7 @@ let guidV5 = "github.com" |> Guid.newV5S Guid.nsDns
 
 ### 常见 GUID 相关操作
 
-``` F#
+``` FSharp
 open XNetEx
 
 // GUID parsing and formatting.
@@ -112,7 +112,7 @@ GUID 生成命令行工具的工程位于 [XstarS.GuidGen.CLI](XstarS.GuidGen.CL
 
 ### 命令行帮助信息
 
-``` CMD
+``` Batch
 > GuidGen -?
 Generate RFC 4122 compliant GUIDs.
 Usage:  GuidGen[.exe] [-V1|-V4|-V1R] [-Cn]
@@ -142,7 +142,7 @@ Parameters:
 
 ### 命令行工具使用例
 
-``` CMD
+``` Batch
 > GuidGen
 7603eaf0-9aa8-47e6-a90b-009f9e7bbdf4
 > GuidGen -V4 -C3
