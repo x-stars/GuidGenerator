@@ -80,7 +80,7 @@ module internal Assert =
     /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
     /// Always raised.</exception>
     [<CompiledName("FailWith")>]
-    let failWith message = Assert.Fail(message)
+    let inline failWith message = Assert.Fail(message)
 
     /// <summary>
     /// Raises an <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertInconclusiveException"/>.
@@ -90,7 +90,7 @@ module internal Assert =
     /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertInconclusiveException">
     /// Always raised.</exception>
     [<CompiledName("Inconclusive")>]
-    let inconclusive message = Assert.Inconclusive(message)
+    let inline inconclusive message = Assert.Inconclusive(message)
 
     /// <summary>
     /// Tests whether the specified condition is <see langword="true"/>
@@ -100,7 +100,7 @@ module internal Assert =
     /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
     /// Raised if <paramref name="condition"/> is <see langword="false"/>.</exception>
     [<CompiledName("True")>]
-    let true' condition = Assert.IsTrue(condition)
+    let inline true' condition = Assert.IsTrue(condition)
 
     /// <summary>
     /// Tests whether the specified condition is <see langword="true"/>
@@ -113,7 +113,7 @@ module internal Assert =
     /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
     /// Raised if <paramref name="condition"/> is <see langword="false"/>.</exception>
     [<CompiledName("TrueOrElse")>]
-    let trueOrElse message condition =
+    let inline trueOrElse message condition =
         Assert.IsTrue(condition, message)
 
     /// <summary>
@@ -124,7 +124,7 @@ module internal Assert =
     /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
     /// Raised if <paramref name="condition"/> is <see langword="true"/>.</exception>
     [<CompiledName("False")>]
-    let false' condition = Assert.IsFalse(condition)
+    let inline false' condition = Assert.IsFalse(condition)
 
     /// <summary>
     /// Tests whether the specified condition is <see langword="false"/>
@@ -137,7 +137,7 @@ module internal Assert =
     /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
     /// Raised if <paramref name="condition"/> is <see langword="true"/>.</exception>
     [<CompiledName("FalseOrElse")>]
-    let falseOrElse message condition =
+    let inline falseOrElse message condition =
         Assert.IsFalse(condition, message)
 
     /// <summary>
@@ -147,7 +147,7 @@ module internal Assert =
     /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
     /// Raised if <paramref name="value"/> is not <see langword="null"/>.</exception>
     [<CompiledName("Null")>]
-    let null' (value: obj) = Assert.IsNull(value)
+    let inline null' (value: obj) = Assert.IsNull(value)
 
     /// <summary>
     /// Tests whether the specified object is non-<see langword="null"/>
@@ -157,7 +157,7 @@ module internal Assert =
     /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
     /// Raised if <paramref name="value"/> is <see langword="null"/>.</exception>
     [<CompiledName("NotNull")>]
-    let notNull (value: obj) = Assert.IsNotNull(value)
+    let inline notNull (value: obj) = Assert.IsNotNull(value)
 
     /// <summary>
     /// Tests whether the specified values are equal
@@ -171,7 +171,7 @@ module internal Assert =
     /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
     /// Raised if <paramref name="expected"/> is not equal to <paramref name="actual"/>.</exception>
     [<CompiledName("EqualTo")>]
-    let equalTo<'T> expected actual =
+    let inline equalTo<'T> expected actual =
         Assert.AreEqual<'T>(expected, actual)
 
     /// <summary>
@@ -186,7 +186,7 @@ module internal Assert =
     /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
     /// Raised if <paramref name="notExpected"/> is equal to <paramref name="actual"/>.</exception>
     [<CompiledName("NotEqualTo")>]
-    let notEqualTo<'T> notExpected actual =
+    let inline notEqualTo<'T> notExpected actual =
         Assert.AreNotEqual<'T>(notExpected, actual)
 
     /// <summary>
@@ -201,7 +201,7 @@ module internal Assert =
     /// Raised if <paramref name="expected"/> does not refer to
     /// the same object as <paramref name="actual"/>.</exception>
     [<CompiledName("SameAs")>]
-    let sameAs (expected: obj) (actual: obj) =
+    let inline sameAs (expected: obj) (actual: obj) =
         Assert.AreSame(expected, actual)
 
     /// <summary>
@@ -216,7 +216,7 @@ module internal Assert =
     /// Raised if <paramref name="notExpected"/> refers to
     /// the same object as <paramref name="actual"/>.</exception>
     [<CompiledName("NotSameAs")>]
-    let notSameAs (notExpected: obj) (actual: obj) =
+    let inline notSameAs (notExpected: obj) (actual: obj) =
         Assert.AreNotSame(notExpected, actual)
 
     /// <summary>
@@ -229,7 +229,7 @@ module internal Assert =
     /// Raised if <paramref name="value"/> is <see langword="null"/> or <typeparamref name="T"/>
     /// is not in the inheritance hierarchy of <paramref name="value"/>.</exception>
     [<CompiledName("OfType")>]
-    let ofType<'T> (value: obj) =
+    let inline ofType<'T> (value: obj) =
         Assert.IsInstanceOfType(value, typeof<'T>)
 
     /// <summary>
@@ -242,7 +242,7 @@ module internal Assert =
     /// Raised if <paramref name="value"/> is not <see langword="null"/> and <typeparamref name="T"/>
     /// is in the inheritance hierarchy of <paramref name="value"/>.</exception>
     [<CompiledName("NotOfType")>]
-    let notOfType<'T> (value: obj) =
+    let inline notOfType<'T> (value: obj) =
         Assert.IsNotInstanceOfType(value, typeof<'T>)
 
     /// <summary>
@@ -255,7 +255,7 @@ module internal Assert =
     /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
     /// Raised if <paramref name="element"/> is not found in <paramref name="sequence"/>.</exception>
     [<CompiledName("InSequence")>]
-    let inSeq<'T> sequence (element: 'T) =
+    let inline inSeq<'T> sequence (element: 'T) =
         CollectionAssert.Contains(SeqWrapper<'T>(sequence), element)
 
     /// <summary>
@@ -268,7 +268,7 @@ module internal Assert =
     /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
     /// Raised if <paramref name="element"/> is found in <paramref name="sequence"/>.</exception>
     [<CompiledName("NotInSequence")>]
-    let notInSeq<'T> sequence (element: 'T) =
+    let inline notInSeq<'T> sequence (element: 'T) =
         CollectionAssert.DoesNotContain(SeqWrapper<'T>(sequence), element)
 
     /// <summary>
@@ -282,7 +282,7 @@ module internal Assert =
     /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
     /// Raised if <paramref name="action"/> does not raises exception of type <typeparamref name="T"/>.</exception>
     [<CompiledName("Exception")>]
-    let exception'<'T when 'T :> exn> action =
+    let inline exception'<'T when 'T :> exn> action =
         Assert.ThrowsException<'T>(Action(action)) |> ignore
 
     /// <summary>
@@ -301,7 +301,7 @@ module internal Assert =
         /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
         /// Raised if a <see langword="null"/> element is found in <paramref name="sequence"/>.</exception>
         [<CompiledName("AllNotNull")>]
-        let allNotNull<'T> sequence =
+        let inline allNotNull<'T> sequence =
             CollectionAssert.AllItemsAreNotNull(SeqWrapper<'T>(sequence))
 
         /// <summary>
@@ -317,7 +317,7 @@ module internal Assert =
         /// or <typeparamref name="T"/> is not in the inheritance hierarchy
         /// of an element in <paramref name="sequence"/>.</exception>
         [<CompiledName("AllOfType")>]
-        let allOfType<'T> sequence =
+        let inline allOfType<'T> sequence =
             CollectionAssert.AllItemsAreInstancesOfType(SeqWrapper(Seq.cast<obj> sequence), typeof<'T>)
 
         /// <summary>
@@ -329,7 +329,7 @@ module internal Assert =
         /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
         /// Raised if a two or more equal elements are found in <paramref name="sequence"/>.</exception>
         [<CompiledName("ItemsUnique")>]
-        let itemsUnique<'T> sequence =
+        let inline itemsUnique<'T> sequence =
             CollectionAssert.AllItemsAreUnique(SeqWrapper<'T>(sequence))
 
         /// <summary>
@@ -345,7 +345,7 @@ module internal Assert =
         /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
         /// Raised if <paramref name="expected"/> is not equal to <paramref name="actual"/>.</exception>
         [<CompiledName("EqualTo")>]
-        let equalTo<'T> expected actual =
+        let inline equalTo<'T> expected actual =
             CollectionAssert.AreEqual(SeqWrapper<'T>(expected), SeqWrapper<'T>(actual))
 
         /// <summary>
@@ -361,7 +361,7 @@ module internal Assert =
         /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
         /// Raised if <paramref name="notExpected"/> is equal to <paramref name="actual"/>.</exception>
         [<CompiledName("NotEqualTo")>]
-        let notEqualTo<'T> notExpected actual =
+        let inline notEqualTo<'T> notExpected actual =
             CollectionAssert.AreNotEqual(SeqWrapper<'T>(notExpected), SeqWrapper<'T>(actual))
 
         /// <summary>
@@ -376,7 +376,7 @@ module internal Assert =
         /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
         /// Raised if an element was found in one of the sequences but not the other.</exception>
         [<CompiledName("SetEqualTo")>]
-        let setEqualTo<'T> expected actual =
+        let inline setEqualTo<'T> expected actual =
             CollectionAssert.AreEquivalent(SeqWrapper<'T>(expected), SeqWrapper<'T>(actual))
 
         /// <summary>
@@ -392,7 +392,7 @@ module internal Assert =
         /// Raised if the two sequences contained the same elements,
         /// including the same number of duplicate occurrences of each element.</exception>
         [<CompiledName("NotSetEqualTo")>]
-        let notSetEqualTo<'T> notExpected actual =
+        let inline notSetEqualTo<'T> notExpected actual =
             CollectionAssert.AreNotEquivalent(SeqWrapper<'T>(notExpected), SeqWrapper<'T>(actual))
 
         /// <summary>
@@ -405,7 +405,7 @@ module internal Assert =
         /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
         /// Raised if <paramref name="element"/> is not found in <paramref name="sequence"/>.</exception>
         [<CompiledName("Contains")>]
-        let contains<'T> (element: 'T) sequence =
+        let inline contains<'T> (element: 'T) sequence =
             CollectionAssert.Contains(SeqWrapper<'T>(sequence), element)
 
         /// <summary>
@@ -418,7 +418,7 @@ module internal Assert =
         /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
         /// Raised if <paramref name="element"/> is found in <paramref name="sequence"/>.</exception>
         [<CompiledName("NotContains")>]
-        let notContains<'T> (element: 'T) sequence =
+        let inline notContains<'T> (element: 'T) sequence =
             CollectionAssert.DoesNotContain(SeqWrapper<'T>(sequence), element)
 
         /// <summary>
@@ -434,7 +434,7 @@ module internal Assert =
         /// Raised if an element in <paramref name="superset"/>
         /// is not found in <paramref name="superset"/>.</exception>
         [<CompiledName("SubsetOf")>]
-        let subsetOf<'T> superset sequence =
+        let inline subsetOf<'T> superset sequence =
             CollectionAssert.IsSubsetOf(SeqWrapper<'T>(sequence), SeqWrapper<'T>(superset))
 
         /// <summary>
@@ -450,7 +450,7 @@ module internal Assert =
         /// Raised if every element in <paramref name="sequence"/>
         /// is also found in <paramref name="superset"/>.</exception>
         [<CompiledName("NotSubsetOf")>]
-        let notSubsetOf<'T> superset sequence =
+        let inline notSubsetOf<'T> superset sequence =
             CollectionAssert.IsNotSubsetOf(SeqWrapper<'T>(sequence), SeqWrapper<'T>(superset))
 
         /// <summary>
@@ -466,7 +466,7 @@ module internal Assert =
         /// Raised if an element in <paramref name="subset"/>
         /// is not found in <paramref name="sequence"/>.</exception>
         [<CompiledName("SupersetOf")>]
-        let supersetOf<'T> subset sequence =
+        let inline supersetOf<'T> subset sequence =
             CollectionAssert.IsSubsetOf(SeqWrapper<'T>(subset), SeqWrapper<'T>(sequence))
 
         /// <summary>
@@ -482,7 +482,7 @@ module internal Assert =
         /// Raised if every element in <paramref name="subset"/>
         /// is also found in <paramref name="sequence"/>.</exception>
         [<CompiledName("NotSupersetOf")>]
-        let notSupersetOf<'T> subset sequence =
+        let inline notSupersetOf<'T> subset sequence =
             CollectionAssert.IsNotSubsetOf(SeqWrapper<'T>(subset), SeqWrapper<'T>(sequence))
 
     /// <summary>
@@ -501,7 +501,7 @@ module internal Assert =
         /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
         /// Raised if <paramref name="substring"/> is not found in <paramref name="value"/>.</exception>
         [<CompiledName("Contains")>]
-        let contains substring value =
+        let inline contains substring value =
             StringAssert.Contains(value, substring)
 
         /// <summary>
@@ -514,7 +514,7 @@ module internal Assert =
         /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
         /// Raised if <paramref name="substring"/> is not found in <paramref name="value"/>.</exception>
         [<CompiledName("ContainsWithOption")>]
-        let containsOpt (option: StringComparison) substring value =
+        let inline containsOpt (option: StringComparison) substring value =
             StringAssert.Contains(value, substring, option)
 
         /// <summary>
@@ -526,7 +526,7 @@ module internal Assert =
         /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
         /// Raised if <paramref name="value"/> does not begin with <paramref name="substring"/>.</exception>
         [<CompiledName("StartsWith")>]
-        let startsWith substring value =
+        let inline startsWith substring value =
             StringAssert.StartsWith(value, substring)
 
         /// <summary>
@@ -539,7 +539,7 @@ module internal Assert =
         /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
         /// Raised if <paramref name="value"/> does not begin with <paramref name="substring"/>.</exception>
         [<CompiledName("StartsWithOption")>]
-        let startsWithOpt (option: StringComparison) substring value =
+        let inline startsWithOpt (option: StringComparison) substring value =
             StringAssert.StartsWith(value, substring, option)
 
         /// <summary>
@@ -551,7 +551,7 @@ module internal Assert =
         /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
         /// Raised if <paramref name="value"/> does not end with <paramref name="substring"/>.</exception>
         [<CompiledName("EndsWith")>]
-        let endsWith substring value =
+        let inline endsWith substring value =
             StringAssert.EndsWith(value, substring)
 
         /// <summary>
@@ -564,7 +564,7 @@ module internal Assert =
         /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
         /// Raised if <paramref name="value"/> does not end with <paramref name="substring"/>.</exception>
         [<CompiledName("EndsWithOption")>]
-        let endsWithOpt (option: StringComparison) substring value =
+        let inline endsWithOpt (option: StringComparison) substring value =
             StringAssert.EndsWith(value, substring, option)
 
         /// <summary>
@@ -577,7 +577,7 @@ module internal Assert =
         /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
         /// Raised if <paramref name="value"/> does not match <paramref name="pattern"/>.</exception>
         [<CompiledName("Match")>]
-        let match' pattern value =
+        let inline match' pattern value =
             StringAssert.Matches(value, Regex(pattern))
 
         /// <summary>
@@ -592,7 +592,7 @@ module internal Assert =
         /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
         /// Raised if <paramref name="value"/> does not match <paramref name="pattern"/>.</exception>
         [<CompiledName("MatchWithOptions")>]
-        let matchOpt (options: RegexOptions) pattern value =
+        let inline matchOpt (options: RegexOptions) pattern value =
             StringAssert.Matches(value, Regex(pattern, options))
 
         /// <summary>
@@ -605,7 +605,7 @@ module internal Assert =
         /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
         /// Raised if <paramref name="value"/> matches <paramref name="pattern"/>.</exception>
         [<CompiledName("NotMatch")>]
-        let notMatch pattern value =
+        let inline notMatch pattern value =
             StringAssert.DoesNotMatch(value, Regex(pattern))
 
         /// <summary>
@@ -620,5 +620,5 @@ module internal Assert =
         /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
         /// Raised if <paramref name="value"/> matches <paramref name="pattern"/>.</exception>
         [<CompiledName("NotMatchWithOptions")>]
-        let notMatchOpt (options: RegexOptions) pattern value =
+        let inline notMatchOpt (options: RegexOptions) pattern value =
             StringAssert.DoesNotMatch(value, Regex(pattern, options))
