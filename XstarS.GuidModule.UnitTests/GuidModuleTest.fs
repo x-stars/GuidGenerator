@@ -12,7 +12,8 @@ type GuidModuleTest() =
     member _.EmptyGuid_GetPropertyValue_GetAllFieldsZero() =
         Guid.empty
         |> Guid.toFields
-        |> Assert.equalTo (0, 0s, 0s, (0uy, 0uy), (0uy, 0uy, 0uy, 0uy, 0uy, 0uy))
+        |> Assert.equalTo (0, 0s, 0s, (0uy, 0uy),
+                           (0uy, 0uy, 0uy, 0uy, 0uy, 0uy))
 
     [<TestMethod>]
     member _.NewVersion1_WithoutInput_GetGuidOfVersion1() =
@@ -27,7 +28,7 @@ type GuidModuleTest() =
         |> tee (Seq.map Guid.version
                 >> Seq.iter (Assert.equalTo Guid.Version.Version1))
         |> Seq.map Guid.tryGetNodeId
-        |> tee (Assert.true' << Seq.forall ValueOption.isSome)
+        |> tee (Seq.iter (Assert.true' << ValueOption.isSome))
         |> Seq.map ValueOption.get
         |> Seq.toArray
         |> fun nodes -> (nodes.[0], nodes.[1])
