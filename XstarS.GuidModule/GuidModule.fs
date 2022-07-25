@@ -1,4 +1,4 @@
-﻿namespace XNetEx
+﻿namespace XNetEx.FSharp.Core
 
 open System
 open System.Runtime.InteropServices
@@ -149,8 +149,8 @@ module Guid =
     /// </summary>
     /// <param name="domain">The DCE Security domain.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 2.</returns>
-    /// <exception cref="T:System.ArgumentOutOfRangeException">
-    /// <paramref name="domain"/> is not a valid <see cref="T:XNetEx.Guid.Domain"/> value.</exception>
+    /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="domain"/>
+    /// is not a valid <see cref="T:XNetEx.Guids.DceSecurityDomain"/> value.</exception>
     [<CompiledName("NewVersion2")>]
     let newV2 (domain: Domain) =
         Generator.Version2.NewGuid(domain)
@@ -430,7 +430,7 @@ module Guid =
 
     /// <summary>
     /// Gets a value that indicates whether a <see cref="T:System.Guid"/>
-    /// is of the RFC 4122 variant (<see cref="F:XNetEx.Guid.Variant.Rfc4122"/>).
+    /// is of the RFC 4122 variant (<see cref="F:XNetEx.Guids.GuidVariant.Rfc4122"/>).
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns><see langword="true"/> if a <see cref="T:System.Guid"/>

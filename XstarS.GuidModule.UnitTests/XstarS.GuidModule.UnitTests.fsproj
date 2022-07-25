@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net461;net472;netcoreapp3.1;net6.0</TargetFrameworks>
-    <RootNamespace>XNetEx</RootNamespace>
+    <RootNamespace>XNetEx.FSharp.Core</RootNamespace>
     <LangVersion>latest</LangVersion>
     <WarnOn>FS3390</WarnOn>
   </PropertyGroup>

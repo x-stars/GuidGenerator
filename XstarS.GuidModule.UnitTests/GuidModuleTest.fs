@@ -1,9 +1,8 @@
-namespace XNetEx
+namespace XNetEx.FSharp.Core
 
 open System
 open Microsoft.VisualStudio.TestTools.UnitTesting
-open XNetEx.UnitTesting
-open XNetEx.UnitTesting.MSTest
+open XNetEx.FSharp.UnitTesting.MSTest
 
 [<TestClass>]
 type GuidModuleTest() =
