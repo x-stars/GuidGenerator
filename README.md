@@ -55,12 +55,14 @@ var guidV5 = guidGenV5.NewGuid(GuidNamespaces.Dns, "github.com");
 
 F# GUID 模块工程位于 [XstarS.GuidModule](XstarS.GuidModule)。
 
-核心模块：`XNetEx.Guid`，此模块提供了一套符合 RFC 4122 标准的 GUID 相关操作，并根据 F# 管道模式对输入参数顺序进行了适当调整。
+核心模块：`XNetEx.FSharp.Core.Guid`。
+
+提供一套符合 RFC 4122 标准的 GUID 相关操作，并根据 F# 管道模式对输入参数顺序进行了适当调整。
 
 ### RFC 4122 GUID 生成
 
 ``` FSharp
-open XNetEx
+open XNetEx.FSharp.Core
 
 // time-based GUID generation.
 let guidV1 = Guid.newV1 ()
@@ -75,7 +77,7 @@ let guidV5 = "github.com" |> Guid.newV5S Guid.nsDns
 ### 常见 GUID 相关操作
 
 ``` FSharp
-open XNetEx
+open XNetEx.FSharp.Core
 
 // GUID parsing and formatting.
 let guid1 = Guid.parse "6ba7b810-9dad-11d1-80b4-00c04fd430c8"
