@@ -47,7 +47,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.fs" />
+    <Compile Include="..\SharedItems\FSharp\Common\**\*.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="GuidModule.fs" />
   </ItemGroup>
 

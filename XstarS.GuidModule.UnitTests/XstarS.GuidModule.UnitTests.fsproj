@@ -31,8 +31,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.fs" />
-    <Compile Include="Properties\AssertModule.MSTest.fs" />
+    <Compile Include="..\SharedItems\FSharp\Common\**\*.fs" />
+    <Compile Include="..\SharedItems\FSharp\UnitTesting\**\*.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="GuidModuleTest.fs" />
   </ItemGroup>
 
