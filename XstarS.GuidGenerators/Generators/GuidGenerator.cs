@@ -50,7 +50,7 @@ public abstract partial class GuidGenerator : IGuidGeneratorInfo, IGuidGenerator
     /// <exception cref="ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="NotSupportedException">
-    /// This instance dose not support generating a name-based <see cref="Guid"/>.</exception>
+    /// This instance does not support generating a name-based <see cref="Guid"/>.</exception>
     public virtual Guid NewGuid(Guid nsId, byte[] name)
     {
         throw new NotSupportedException();
@@ -66,7 +66,7 @@ public abstract partial class GuidGenerator : IGuidGeneratorInfo, IGuidGenerator
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="domain"/> is not a valid <see cref="DceSecurityDomain"/> value.</exception>
     /// <exception cref="NotSupportedException">
-    /// This instance dose not support generating a DCE Security <see cref="Guid"/>.</exception>
+    /// This instance does not support generating a DCE Security <see cref="Guid"/>.</exception>
     public virtual Guid NewGuid(DceSecurityDomain domain, int? localId = null)
     {
         throw new NotSupportedException();
