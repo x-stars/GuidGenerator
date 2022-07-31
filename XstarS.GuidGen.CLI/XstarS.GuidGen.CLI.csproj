@@ -26,8 +26,11 @@
 
   <PropertyGroup>
     <PublishTrimmed>true</PublishTrimmed>
-    <PublishSingleFile>true</PublishSingleFile>
-    <PublishReadyToRun>true</PublishReadyToRun>
+    <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+    <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <StripSymbols>true</StripSymbols>
+    <TrimMode>Link</TrimMode>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -56,6 +59,10 @@
                         '$(TargetFramework.TrimEnd(`.0123456789`))'=='netcoreapp' Or
                         '$(TargetFramework.TrimEnd(`.0123456789`))'=='netstandard'">
     <PackageReference Include="System.Security.Principal.Windows" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework.Split(`-`)[0])'=='net6.0'">
+    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0-*" />
   </ItemGroup>
 
 </Project>
