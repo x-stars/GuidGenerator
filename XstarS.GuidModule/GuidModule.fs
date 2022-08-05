@@ -1,7 +1,6 @@
 ﻿namespace XNetEx.FSharp.Core
 
 open System
-open System.Runtime.InteropServices
 open XNetEx.Guids
 open XNetEx.Guids.Generators
 
@@ -11,25 +10,6 @@ open XNetEx.Guids.Generators
 [<RequireQualifiedAccess>]
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Guid =
-
-    /// <summary>
-    /// Provides the fields of a <see cref="T:System.Guid"/> defined in RFC 4122.
-    /// </summary>
-    [<Struct; StructLayout(LayoutKind.Explicit)>]
-    [<NoEquality; NoComparison; AutoSerializable(false)>]
-    type internal Rfc4122Fields =
-        [<FieldOffset( 0)>] val mutable Guid: Guid
-        [<FieldOffset( 0)>] val mutable TimeLow: int
-        [<FieldOffset( 4)>] val mutable TimeMid: int16
-        [<FieldOffset( 6)>] val mutable TimeHi_Ver: int16
-        [<FieldOffset( 8)>] val mutable ClkSeqHi_Var: byte
-        [<FieldOffset( 9)>] val mutable ClkSeqLow: byte
-        [<FieldOffset(10)>] val mutable NodeId0: byte
-        [<FieldOffset(11)>] val mutable NodeId1: byte
-        [<FieldOffset(12)>] val mutable NodeId2: byte
-        [<FieldOffset(13)>] val mutable NodeId3: byte
-        [<FieldOffset(14)>] val mutable NodeId4: byte
-        [<FieldOffset(15)>] val mutable NodeId5: byte
 
     /// <summary>
     /// An abbreviation for the type <see cref="T:XNetEx.Guids.GuidVariant"/>.
@@ -300,14 +280,7 @@ module Guid =
     /// <paramref name="bytes"/> not 16 bytes long.</exception>
     [<CompiledName("OfUuidByteArray")>]
     let ofBytesUuid (bytes: byte[]) =
-        Guid(bytes) |> ignore
-        let revBytes index =
-            match index with
-            | 0 | 1 | 2 | 3 -> bytes.[(0 + 3) - index]
-            | 4 | 5 -> bytes.[(4 + 5) - index]
-            | 6 | 7 -> bytes.[(6 + 7) - index]
-            | _ -> bytes.[index]
-        Guid(Array.init 16 revBytes)
+        GuidExtensions.FromUuidByteArray(bytes)
 
     /// <summary>
     /// Returns fields of integers and bytes of the <see cref="T:System.Guid"/>.
@@ -316,11 +289,8 @@ module Guid =
     /// <returns>An 11-element tuple that contains fields of the <see cref="T:System.Guid"/>.</returns>
     [<CompiledName("ToFields")>]
     let toFields (guid: Guid) =
-        let fields = Rfc4122Fields(Guid = guid)
-        struct (fields.TimeLow, fields.TimeMid, fields.TimeHi_Ver,
-                struct (fields.ClkSeqHi_Var, fields.ClkSeqLow),
-                struct (fields.NodeId0, fields.NodeId1, fields.NodeId2,
-                        fields.NodeId3, fields.NodeId4, fields.NodeId5))
+        let (a, b, c, d, e, f, g, h, i, j, k) = guid.Deconstruct()
+        struct (a, b, c, struct (d, e), struct (f, g, h, i, j, k))
 
     /// <summary>
     /// Returns a 16-element byte array that contains fields
