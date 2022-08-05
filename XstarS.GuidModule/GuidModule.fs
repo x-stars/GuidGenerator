@@ -140,8 +140,8 @@ module Guid =
     /// instances of RFC 4122 UUID version 1 using a random node ID.</returns>
     [<CompiledName("NewVersion1RSequence")>]
     let newV1RSeq () =
-        seq { let guidGen = Generator.CreateVersion1R()
-              while true do yield guidGen.NewGuid() }
+        let guidGen = Generator.CreateVersion1R()
+        seq { while true do yield guidGen.NewGuid() }
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
