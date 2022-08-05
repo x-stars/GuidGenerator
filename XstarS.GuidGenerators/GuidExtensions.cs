@@ -14,6 +14,34 @@ public static class GuidExtensions
         new DateTime(1582, 10, 15, 0, 0, 0, DateTimeKind.Utc);
 
     /// <summary>
+    /// Deconstructs the <see cref="Guid"/> into fields of integers and bytes.
+    /// </summary>
+    /// <param name="guid">The <see cref="Guid"/>.</param>
+    /// <param name="a">The first 4 bytes of the GUID.</param>
+    /// <param name="b">The next 2 bytes of the GUID.</param>
+    /// <param name="c">The next 2 bytes of the GUID.</param>
+    /// <param name="d">The next byte of the GUID.</param>
+    /// <param name="e">The next byte of the GUID.</param>
+    /// <param name="f">The next byte of the GUID.</param>
+    /// <param name="g">The next byte of the GUID.</param>
+    /// <param name="h">The next byte of the GUID.</param>
+    /// <param name="i">The next byte of the GUID.</param>
+    /// <param name="j">The next byte of the GUID.</param>
+    /// <param name="k">The next byte of the GUID.</param>
+    public static unsafe void Deconstruct(this Guid guid,
+        out int a, out short b, out short c, out byte d, out byte e,
+        out byte f, out byte g, out byte h, out byte i, out byte j, out byte k)
+    {
+        a = (int)guid.TimeLow();
+        b = (short)guid.TimeMid();
+        c = (short)guid.TimeHi_Ver();
+        d = guid.ClkSeqHi_Var(); e = guid.ClkSeqLow();
+        var nodeId = guid.NodeId();
+        f = nodeId[0]; g = nodeId[1]; h = nodeId[2];
+        i = nodeId[3]; j = nodeId[4]; k = nodeId[5];
+    }
+
+    /// <summary>
     /// Gets the version of the <see cref="Guid"/>.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
@@ -149,6 +177,28 @@ public static class GuidExtensions
     }
 
     /// <summary>
+    /// Creates a new <see cref="Guid"/> instance
+    /// by using the specified byte array of fields in big-endian order (RFC 4122 compliant).
+    /// </summary>
+    /// <param name="bytes">A 16-element byte array containing
+    /// fields of the GUID in big-endian order (RFC 4122 compliant).</param>
+    /// <returns>A new <see cref="Guid"/> instance of the specified byte array.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="bytes"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="bytes"/> not 16 bytes long.</exception>
+    public static unsafe Guid FromUuidByteArray(byte[] bytes)
+    {
+        var guid = new Guid(bytes);
+        fixed (byte* pBytes = &bytes[0])
+        {
+            var uuid = *(Guid*)pBytes;
+            uuid.WriteUuidBytes((byte*)&guid);
+        }
+        return guid;
+    }
+
+    /// <summary>
     /// Returns a 16-element byte array that contains fields of
     /// the <see cref="Guid"/> in big-endian order (RFC 4122 compliant).
     /// </summary>
@@ -166,7 +216,7 @@ public static class GuidExtensions
     }
 
     /// <summary>
-    /// Tries to write fields of the <see cref="Guid"/>
+    /// Writes fields of the <see cref="Guid"/>
     /// in big-endian order (RFC 4122 compliant) into the specified address.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
