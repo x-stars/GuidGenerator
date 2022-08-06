@@ -12,12 +12,12 @@ public class GuidExtensionsTest
         var guid = new Guid(0x00112233, 0x4455, 0x6677,
             0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF);
         var (a, b, c, d, e, f, g, h, i, j, k) = guid;
-        Assert.AreEqual(a, 0x00112233);
-        Assert.AreEqual(b, 0x4455); Assert.AreEqual(c, 0x6677);
-        Assert.AreEqual(d, 0x88); Assert.AreEqual(e, 0x99);
-        Assert.AreEqual(f, 0xAA); Assert.AreEqual(g, 0xBB);
-        Assert.AreEqual(h, 0xCC); Assert.AreEqual(i, 0xDD);
-        Assert.AreEqual(j, 0xEE); Assert.AreEqual(k, 0xFF);
+        Assert.AreEqual(0x00112233, a);
+        Assert.AreEqual(0x4455, b); Assert.AreEqual(0x6677, c);
+        Assert.AreEqual(0x88, d); Assert.AreEqual(0x99, e);
+        Assert.AreEqual(0xAA, f); Assert.AreEqual(0xBB, g);
+        Assert.AreEqual(0xCC, h); Assert.AreEqual(0xDD, i);
+        Assert.AreEqual(0xEE, j); Assert.AreEqual(0xFF, k);
     }
 
     [TestMethod]
