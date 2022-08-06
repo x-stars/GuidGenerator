@@ -5,6 +5,7 @@ namespace XNetEx.Guids.Generators;
 
 using static GuidVersion;
 
+[MemoryDiagnoser]
 public class GuidGeneratorBenchmark
 {
     [CLSCompliant(false)]
