@@ -63,7 +63,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework.Split(`-`)[0])'=='net6.0'">
-    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0-*" />
+    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0-preview.*" />
   </ItemGroup>
 
 </Project>
