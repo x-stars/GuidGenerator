@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.NetworkInformation;
+﻿using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -7,14 +6,18 @@ namespace XNetEx.Guids.Generators;
 
 internal abstract class NodeIdProvider
 {
-    private volatile Lazy<byte[]> LazyNodeIdBytes;
+    private readonly RefreshingCache<byte[]> NodeIdBytesCache;
 
     private NodeIdProvider()
     {
-        this.LazyNodeIdBytes = new Lazy<byte[]>(this.GetNodeIdBytes);
+        const int beforeSleep = 10;
+        this.NodeIdBytesCache = new RefreshingCache<byte[]>(
+            this.GetNodeIdBytes, this.RefreshPeriod, beforeSleep);
     }
 
-    public byte[] NodeIdBytes => this.LazyNodeIdBytes.Value;
+    public byte[] NodeIdBytes => this.NodeIdBytesCache.Value;
+
+    protected virtual int RefreshPeriod => 1 * 1000;
 
     protected abstract byte[] GetNodeIdBytes();
 
@@ -40,6 +43,8 @@ internal abstract class NodeIdProvider
             }
         }
 
+        protected override int RefreshPeriod => Timeout.Infinite;
+
         protected override byte[] GetNodeIdBytes()
         {
             var nodeId = new byte[6];
@@ -53,14 +58,7 @@ internal abstract class NodeIdProvider
     {
         private static volatile NodeIdProvider.MacAddress? Singleton;
 
-        private readonly Timer RefreshNodeIdTask;
-
-        private MacAddress()
-        {
-            const int refreshMs = 1 * 1000;
-            this.RefreshNodeIdTask = new Timer(this.RefreshNodeIdBytes);
-            this.RefreshNodeIdTask.Change(refreshMs, refreshMs);
-        }
+        private MacAddress() { }
 
         internal static NodeIdProvider.MacAddress Instance
         {
@@ -113,11 +111,6 @@ internal abstract class NodeIdProvider
             return (ifaceType != NetworkInterfaceType.Loopback) &&
                    (ifaceType != NetworkInterfaceType.Tunnel) &&
                    (macAddress.GetAddressBytes().Length > 0);
-        }
-
-        private void RefreshNodeIdBytes(object? unused)
-        {
-            this.LazyNodeIdBytes = new Lazy<byte[]>(this.GetNodeIdBytes);
         }
     }
 }

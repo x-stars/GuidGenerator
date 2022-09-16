@@ -109,6 +109,7 @@ internal abstract class TimestampProvider
             return this.StartTimestamp + this.HiResTimer.ElapsedTicks;
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         private void UpdateSystemTime(object? unused)
         {
             const long secTicks = 10 * 1000 * 1000;

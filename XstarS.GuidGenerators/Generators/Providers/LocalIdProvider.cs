@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using System.Threading;
 
 namespace XNetEx.Guids.Generators;
 
@@ -10,19 +9,17 @@ internal abstract class LocalIdProvider
 {
     private static volatile LocalIdProvider? Singleton;
 
-    private volatile Lazy<int> LazyLocalUserId;
+    private readonly RefreshingCache<int> LocalUserIdCache;
 
-    private volatile Lazy<int> LazyLocalGroupId;
-
-    private readonly Timer RefreshLocalIdTask;
+    private readonly RefreshingCache<int> LocalGroupIdCache;
 
     private LocalIdProvider()
     {
-        const int refreshMs = 1 * 1000;
-        this.LazyLocalUserId = new Lazy<int>(this.GetLocalUserId);
-        this.LazyLocalGroupId = new Lazy<int>(this.GetLocalGroupId);
-        this.RefreshLocalIdTask = new Timer(this.RefreshLocalId);
-        this.RefreshLocalIdTask.Change(refreshMs, refreshMs);
+        const int beforeSleep = 10;
+        this.LocalUserIdCache = new RefreshingCache<int>(
+            this.GetLocalUserId, this.RefreshPeriod, beforeSleep);
+        this.LocalGroupIdCache = new RefreshingCache<int>(
+            this.GetLocalGroupId, this.RefreshPeriod, beforeSleep);
     }
 
     internal static LocalIdProvider Instance
@@ -41,9 +38,11 @@ internal abstract class LocalIdProvider
         }
     }
 
-    public int LocalUserId => this.LazyLocalUserId.Value;
+    public int LocalUserId => this.LocalUserIdCache.Value;
 
-    public int LocalGroupId => this.LazyLocalGroupId.Value;
+    public int LocalGroupId => this.LocalGroupIdCache.Value;
+
+    protected virtual int RefreshPeriod => 1 * 1000;
 
     private static LocalIdProvider Create()
     {
@@ -64,12 +63,6 @@ internal abstract class LocalIdProvider
     protected abstract int GetLocalUserId();
 
     protected abstract int GetLocalGroupId();
-
-    private void RefreshLocalId(object? unused)
-    {
-        this.LazyLocalUserId = new Lazy<int>(this.GetLocalUserId);
-        this.LazyLocalGroupId = new Lazy<int>(this.GetLocalGroupId);
-    }
 
 #if NET5_0_OR_GREATER
     [System.Runtime.Versioning.SupportedOSPlatform("windows")]
