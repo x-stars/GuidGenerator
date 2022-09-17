@@ -5,13 +5,13 @@ using System.Threading;
 
 namespace XNetEx.Guids.Generators;
 
-internal sealed class RefreshingCache<T>
+internal sealed class AutoRefreshCache<T>
 {
     private readonly Func<T> RefreshFunc;
 
     private readonly int RefreshPeriod;
 
-    private readonly int BeforeSleep;
+    private readonly int SleepAfter;
 
     private readonly Timer RefreshTask;
 
@@ -19,14 +19,14 @@ internal sealed class RefreshingCache<T>
 
     private volatile StrongBox<T>? CachedValueBox;
 
-    public RefreshingCache(Func<T> refreshFunc, int refreshPeriod, int beforeSleep)
+    public AutoRefreshCache(Func<T> refreshFunc, int refreshPeriod, int sleepAfter)
     {
-        Debug.Assert(beforeSleep >= 0);
+        Debug.Assert(sleepAfter >= 0);
         this.RefreshFunc = refreshFunc;
         this.RefreshPeriod = refreshPeriod;
-        this.BeforeSleep = beforeSleep;
+        this.SleepAfter = sleepAfter;
         this.RefreshTask = new Timer(this.RefreshOrSleep);
-        this.SleepCountdown = beforeSleep;
+        this.SleepCountdown = sleepAfter;
         this.CachedValueBox = null;
     }
 
@@ -47,7 +47,7 @@ internal sealed class RefreshingCache<T>
         }
 
         var valueBox = this.CachedValueBox ?? ForcedRefresh();
-        this.SleepCountdown = this.BeforeSleep;
+        this.SleepCountdown = this.SleepAfter;
         return valueBox.Value!;
     }
 

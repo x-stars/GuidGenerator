@@ -6,13 +6,13 @@ namespace XNetEx.Guids.Generators;
 
 internal abstract class NodeIdProvider
 {
-    private readonly RefreshingCache<byte[]> NodeIdBytesCache;
+    private readonly AutoRefreshCache<byte[]> NodeIdBytesCache;
 
     private NodeIdProvider()
     {
-        const int beforeSleep = 10;
-        this.NodeIdBytesCache = new RefreshingCache<byte[]>(
-            this.GetNodeIdBytes, this.RefreshPeriod, beforeSleep);
+        const int sleepAfter = 10;
+        this.NodeIdBytesCache = new AutoRefreshCache<byte[]>(
+            this.GetNodeIdBytes, this.RefreshPeriod, sleepAfter);
     }
 
     public byte[] NodeIdBytes => this.NodeIdBytesCache.Value;

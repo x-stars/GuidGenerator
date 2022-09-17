@@ -9,17 +9,17 @@ internal abstract class LocalIdProvider
 {
     private static volatile LocalIdProvider? Singleton;
 
-    private readonly RefreshingCache<int> LocalUserIdCache;
+    private readonly AutoRefreshCache<int> LocalUserIdCache;
 
-    private readonly RefreshingCache<int> LocalGroupIdCache;
+    private readonly AutoRefreshCache<int> LocalGroupIdCache;
 
     private LocalIdProvider()
     {
-        const int beforeSleep = 10;
-        this.LocalUserIdCache = new RefreshingCache<int>(
-            this.GetLocalUserId, this.RefreshPeriod, beforeSleep);
-        this.LocalGroupIdCache = new RefreshingCache<int>(
-            this.GetLocalGroupId, this.RefreshPeriod, beforeSleep);
+        const int sleepAfter = 10;
+        this.LocalUserIdCache = new AutoRefreshCache<int>(
+            this.GetLocalUserId, this.RefreshPeriod, sleepAfter);
+        this.LocalGroupIdCache = new AutoRefreshCache<int>(
+            this.GetLocalGroupId, this.RefreshPeriod, sleepAfter);
     }
 
     internal static LocalIdProvider Instance
