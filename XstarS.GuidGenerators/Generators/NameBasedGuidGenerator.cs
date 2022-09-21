@@ -27,16 +27,16 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
             throw new ArgumentNullException(nameof(name));
         }
 
-#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         return this.NewGuid(nsId, (ReadOnlySpan<byte>)name);
 #else
         var input = this.CreateInput(nsId, name);
-        var hashBytes = this.ComputeHash(input);
-        return this.HashBytesToGuid(hashBytes);
+        var hash = this.ComputeHash(input);
+        return this.HashBytesToGuid(hash);
 #endif
     }
 
-#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     public sealed override Guid NewGuid(Guid nsId, ReadOnlySpan<byte> name)
     {
         const int guidSize = 16;
@@ -63,7 +63,7 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
 
     protected abstract HashAlgorithm CreateHashing();
 
-#if !(MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
+#if !(NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
     private unsafe byte[] CreateInput(Guid nsId, byte[] name)
     {
         const int guidSize = 16;
@@ -90,7 +90,7 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
 #endif
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     private unsafe Guid HashBytesToGuid(ReadOnlySpan<byte> hash)
 #else
     private unsafe Guid HashBytesToGuid(byte[] hash)

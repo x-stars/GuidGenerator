@@ -34,7 +34,7 @@ public static class GuidGeneratorExtensions
         }
         encoding ??= Encoding.UTF8;
 
-#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         return guidGen.NewGuid(nsId, (ReadOnlySpan<char>)name, encoding);
 #else
         var nameBytes = encoding.GetBytes(name);
@@ -42,7 +42,7 @@ public static class GuidGeneratorExtensions
 #endif
     }
 
-#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     /// <summary>
     /// Generates a new <see cref="Guid"/> instance based on the specified namespace ID and name.
     /// </summary>
@@ -97,7 +97,7 @@ public static class GuidGeneratorExtensions
         }
         encoding ??= Encoding.UTF8;
 
-#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         return guidGen.NewGuid(nsId, (ReadOnlySpan<char>)name, encoding);
 #else
         var nameBytes = encoding.GetBytes(name);
@@ -105,7 +105,7 @@ public static class GuidGeneratorExtensions
 #endif
     }
 
-#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     /// <summary>
     /// Generates a new <see cref="Guid"/> instance based on the specified namespace ID and name.
     /// </summary>

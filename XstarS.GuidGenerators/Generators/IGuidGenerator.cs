@@ -48,7 +48,7 @@ public interface INameBasedGuidGenerator : IGuidGeneratorInfo
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     Guid NewGuid(Guid nsId, byte[] name);
 
-#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     /// <summary>
     /// Generates a new <see cref="Guid"/> instance based on the specified namespace ID and name.
     /// </summary>

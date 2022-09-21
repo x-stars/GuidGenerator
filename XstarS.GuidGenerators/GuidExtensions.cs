@@ -176,7 +176,7 @@ public static class GuidExtensions
         return true;
     }
 
-#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     /// <summary>
     /// Tries to write the node ID represented by the <see cref="Guid"/> into a span of bytes.
     /// </summary>
@@ -225,7 +225,7 @@ public static class GuidExtensions
         return guid;
     }
 
-#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     /// <summary>
     /// Creates a new <see cref="Guid"/> instance by using the specified
     /// read-only byte span in big-endian order (RFC 4122 compliant).
@@ -264,7 +264,7 @@ public static class GuidExtensions
         return uuidBytes;
     }
 
-#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     /// <summary>
     /// Tries to write the fields of the <see cref="Guid"/>
     /// into a span of bytes in big-endian order (RFC 4122 compliant).
