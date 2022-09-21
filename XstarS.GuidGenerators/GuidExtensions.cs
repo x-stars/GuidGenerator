@@ -233,8 +233,6 @@ public static class GuidExtensions
     /// <param name="bytes">A 16-element read-only span containing the bytes of
     /// the fields of the GUID in big-endian order (RFC 4122 compliant).</param>
     /// <returns>A new <see cref="Guid"/> instance of the specified byte span.</returns>
-    /// <exception cref="ArgumentNullException">
-    /// <paramref name="bytes"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">
     /// <paramref name="bytes"/> is not 16 bytes long.</exception>
     public static unsafe Guid FromUuidBytes(ReadOnlySpan<byte> bytes)
@@ -279,9 +277,9 @@ public static class GuidExtensions
     public static unsafe bool TryWriteUuidBytes(this Guid guid, Span<byte> destination)
     {
         if (destination.Length < 16) { return false; }
-        fixed (byte* pDestination = &destination[0])
+        fixed (byte* pUuidBytes = &destination[0])
         {
-            guid.WriteUuidBytes(pDestination);
+            guid.WriteUuidBytes(pUuidBytes);
         }
         return true;
     }
