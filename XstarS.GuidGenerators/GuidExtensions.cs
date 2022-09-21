@@ -176,17 +176,44 @@ public static class GuidExtensions
         return true;
     }
 
+#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     /// <summary>
-    /// Creates a new <see cref="Guid"/> instance
-    /// by using the specified byte array of fields in big-endian order (RFC 4122 compliant).
+    /// Tries to write the node ID represented by the <see cref="Guid"/> into a span of bytes.
+    /// </summary>
+    /// <param name="guid">The <see cref="Guid"/>.</param>
+    /// <param name="destination">When this method returns, contains the node ID
+    /// represented by the <see cref="Guid"/> if the <see cref="Guid"/> is time-based.</param>
+    /// <returns><see langword="true"/> if the <see cref="Guid"/>
+    /// is time-based and the node ID is successfully written to the specified span;
+    /// otherwise, <see langword="false"/>.</returns>
+    public static unsafe bool TryWriteNodeId(this Guid guid, Span<byte> destination)
+    {
+        const int size = 6;
+        if (destination.Length < size) { return false; }
+        if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
+            !guid.GetVersion().ContainsNodeId())
+        {
+            return false;
+        }
+        fixed (byte* pNodeId = &destination[0])
+        {
+            Buffer.MemoryCopy(guid.NodeId(), pNodeId, size, size);
+        }
+        return true;
+    }
+#endif
+
+    /// <summary>
+    /// Creates a new <see cref="Guid"/> instance by using
+    /// the specified byte array in big-endian order (RFC 4122 compliant).
     /// </summary>
     /// <param name="bytes">A 16-element byte array containing
-    /// fields of the GUID in big-endian order (RFC 4122 compliant).</param>
+    /// the fields of the GUID in big-endian order (RFC 4122 compliant).</param>
     /// <returns>A new <see cref="Guid"/> instance of the specified byte array.</returns>
     /// <exception cref="ArgumentNullException">
     /// <paramref name="bytes"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">
-    /// <paramref name="bytes"/> not 16 bytes long.</exception>
+    /// <paramref name="bytes"/> is not 16 bytes long.</exception>
     public static unsafe Guid FromUuidByteArray(byte[] bytes)
     {
         var guid = new Guid(bytes);
@@ -198,12 +225,36 @@ public static class GuidExtensions
         return guid;
     }
 
+#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     /// <summary>
-    /// Returns a 16-element byte array that contains fields of
+    /// Creates a new <see cref="Guid"/> instance by using the specified
+    /// read-only byte span in big-endian order (RFC 4122 compliant).
+    /// </summary>
+    /// <param name="bytes">A 16-element read-only span containing the bytes of
+    /// the fields of the GUID in big-endian order (RFC 4122 compliant).</param>
+    /// <returns>A new <see cref="Guid"/> instance of the specified byte span.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="bytes"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="bytes"/> is not 16 bytes long.</exception>
+    public static unsafe Guid FromUuidBytes(ReadOnlySpan<byte> bytes)
+    {
+        var guid = new Guid(bytes);
+        fixed (byte* pBytes = &bytes[0])
+        {
+            var uuid = *(Guid*)pBytes;
+            uuid.WriteUuidBytes((byte*)&guid);
+        }
+        return guid;
+    }
+#endif
+
+    /// <summary>
+    /// Returns a 16-element byte array that contains the fields of
     /// the <see cref="Guid"/> in big-endian order (RFC 4122 compliant).
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
-    /// <returns>A 16-element byte array that contains fields of
+    /// <returns>A 16-element byte array that contains the fields of
     /// the <see cref="Guid"/> in big-endian order (RFC 4122 compliant).</returns>
     public static unsafe byte[] ToUuidByteArray(this Guid guid)
     {
@@ -215,9 +266,30 @@ public static class GuidExtensions
         return uuidBytes;
     }
 
+#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     /// <summary>
-    /// Writes fields of the <see cref="Guid"/>
-    /// in big-endian order (RFC 4122 compliant) into the specified address.
+    /// Tries to write the fields of the <see cref="Guid"/>
+    /// into a span of bytes in big-endian order (RFC 4122 compliant).
+    /// </summary>
+    /// <param name="guid">The <see cref="Guid"/>.</param>
+    /// <param name="destination">When this method returns, contains the fields of
+    /// the <see cref="Guid"/> in big-endian order (RFC 4122 compliant).</param>
+    /// <returns><see langword="true"/> if the <see cref="Guid"/> is successfully
+    /// written to the specified span; otherwise, <see langword="false"/>.</returns>
+    public static unsafe bool TryWriteUuidBytes(this Guid guid, Span<byte> destination)
+    {
+        if (destination.Length < 16) { return false; }
+        fixed (byte* pDestination = &destination[0])
+        {
+            guid.WriteUuidBytes(pDestination);
+        }
+        return true;
+    }
+#endif
+
+    /// <summary>
+    /// Writes the fields of the <see cref="Guid"/>
+    /// into the specified address in big-endian order (RFC 4122 compliant).
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
     /// <param name="destination">The destination address to write data into.</param>
