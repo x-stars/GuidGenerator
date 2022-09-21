@@ -56,6 +56,22 @@ public abstract partial class GuidGenerator : IGuidGeneratorInfo, IGuidGenerator
         throw new NotSupportedException();
     }
 
+#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    /// <summary>
+    /// Generates a new <see cref="Guid"/> instance based on the specified namespace ID and name.
+    /// </summary>
+    /// <param name="nsId">The namespace ID used to generate the <see cref="Guid"/>.</param>
+    /// <param name="name">The name byte span used to generate the <see cref="Guid"/>.</param>
+    /// <returns>A new <see cref="Guid"/> instance generated based on
+    /// <paramref name="nsId"/> and <paramref name="name"/>.</returns>
+    /// <exception cref="NotSupportedException">
+    /// This instance does not support generating a name-based <see cref="Guid"/>.</exception>
+    public virtual Guid NewGuid(Guid nsId, ReadOnlySpan<byte> name)
+    {
+        return this.NewGuid(nsId, name.ToArray());
+    }
+#endif
+
     /// <summary>
     /// Generates a new <see cref="Guid"/> instance based on the specified DCE Security domain and local ID.
     /// </summary>

@@ -47,6 +47,26 @@ public interface INameBasedGuidGenerator : IGuidGeneratorInfo
     /// <exception cref="ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     Guid NewGuid(Guid nsId, byte[] name);
+
+#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    /// <summary>
+    /// Generates a new <see cref="Guid"/> instance based on the specified namespace ID and name.
+    /// </summary>
+    /// <param name="nsId">The namespace ID used to generate the <see cref="Guid"/>.</param>
+    /// <param name="name">The name byte span used to generate the <see cref="Guid"/>.</param>
+    /// <returns>A new <see cref="Guid"/> instance generated based on
+    /// <paramref name="nsId"/> and <paramref name="name"/>.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="name"/> is <see langword="null"/>.</exception>
+#if NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    Guid NewGuid(Guid nsId, ReadOnlySpan<byte> name)
+    {
+        return this.NewGuid(nsId, name.ToArray());
+    }
+#else
+    Guid NewGuid(Guid nsId, ReadOnlySpan<byte> name);
+#endif
+#endif
 }
 
 /// <summary>

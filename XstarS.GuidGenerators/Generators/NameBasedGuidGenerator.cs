@@ -27,13 +27,43 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
             throw new ArgumentNullException(nameof(name));
         }
 
+#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        return this.NewGuid(nsId, (ReadOnlySpan<byte>)name);
+#else
         var input = this.CreateInput(nsId, name);
         var hashBytes = this.ComputeHash(input);
         return this.HashBytesToGuid(hashBytes);
+#endif
     }
+
+#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    public sealed override Guid NewGuid(Guid nsId, ReadOnlySpan<byte> name)
+    {
+        const int guidSize = 16;
+        var inputLength = guidSize + name.Length;
+        var input = (name.Length <= 1024) ?
+            (stackalloc byte[inputLength]) : (new byte[inputLength]);
+        _ = nsId.TryWriteUuidBytes(input);
+        name.CopyTo(input[guidSize..]);
+        var hashings = this.Hashings;
+        if (!hashings.TryTake(out var hashing))
+        {
+            hashing = this.CreateHashing();
+        }
+        var hashSize = hashing.HashSize / 8;
+        var hash = (stackalloc byte[hashSize]);
+        _ = hashing.TryComputeHash(input, hash, out _);
+        if (!hashings.TryAdd(hashing))
+        {
+            hashing.Dispose();
+        }
+        return this.HashBytesToGuid(hash);
+    }
+#endif
 
     protected abstract HashAlgorithm CreateHashing();
 
+#if !(MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
     private unsafe byte[] CreateInput(Guid nsId, byte[] name)
     {
         const int guidSize = 16;
@@ -57,13 +87,19 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
         }
         return hash;
     }
+#endif
 
-    private unsafe Guid HashBytesToGuid(byte[] hashBytes)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if MEMORY_SPAN || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    private unsafe Guid HashBytesToGuid(ReadOnlySpan<byte> hash)
+#else
+    private unsafe Guid HashBytesToGuid(byte[] hash)
+#endif
     {
         var guid = default(Guid);
-        fixed (byte* pHashBytes = &hashBytes[0])
+        fixed (byte* pHash = &hash[0])
         {
-            var uuid = *(Guid*)pHashBytes;
+            var uuid = *(Guid*)pHash;
             uuid.WriteUuidBytes((byte*)&guid);
         }
         this.FillVersionField(ref guid);
