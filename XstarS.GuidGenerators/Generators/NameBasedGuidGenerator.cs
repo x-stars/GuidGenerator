@@ -17,7 +17,11 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
 
     public sealed override Guid NewGuid()
     {
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        return this.NewGuid(Guid.Empty, ReadOnlySpan<byte>.Empty);
+#else
         return this.NewGuid(Guid.Empty, Array.Empty<byte>());
+#endif
     }
 
     public sealed override Guid NewGuid(Guid nsId, byte[] name)
@@ -32,7 +36,7 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
 #else
         var input = this.CreateInput(nsId, name);
         var hash = this.ComputeHash(input);
-        return this.HashBytesToGuid(hash);
+        return this.HashToGuid(hash);
 #endif
     }
 
@@ -57,7 +61,7 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
         {
             hashing.Dispose();
         }
-        return this.HashBytesToGuid(hash);
+        return this.HashToGuid(hash);
     }
 #endif
 
@@ -91,9 +95,9 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-    private unsafe Guid HashBytesToGuid(ReadOnlySpan<byte> hash)
+    private unsafe Guid HashToGuid(ReadOnlySpan<byte> hash)
 #else
-    private unsafe Guid HashBytesToGuid(byte[] hash)
+    private unsafe Guid HashToGuid(byte[] hash)
 #endif
     {
         var guid = default(Guid);

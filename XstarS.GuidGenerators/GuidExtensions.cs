@@ -256,12 +256,12 @@ public static class GuidExtensions
     /// the <see cref="Guid"/> in big-endian order (RFC 4122 compliant).</returns>
     public static unsafe byte[] ToUuidByteArray(this Guid guid)
     {
-        var uuidBytes = new byte[16];
-        fixed (byte* pUuidBytes = &uuidBytes[0])
+        var bytes = new byte[16];
+        fixed (byte* pBytes = &bytes[0])
         {
-            guid.WriteUuidBytes(pUuidBytes);
+            guid.WriteUuidBytes(pBytes);
         }
-        return uuidBytes;
+        return bytes;
     }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -277,9 +277,9 @@ public static class GuidExtensions
     public static unsafe bool TryWriteUuidBytes(this Guid guid, Span<byte> destination)
     {
         if (destination.Length < 16) { return false; }
-        fixed (byte* pUuidBytes = &destination[0])
+        fixed (byte* pBytes = &destination[0])
         {
-            guid.WriteUuidBytes(pUuidBytes);
+            guid.WriteUuidBytes(pBytes);
         }
         return true;
     }
