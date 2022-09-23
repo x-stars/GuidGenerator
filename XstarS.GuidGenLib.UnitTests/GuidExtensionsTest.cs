@@ -106,6 +106,19 @@ public class GuidExtensionsTest
         CollectionAssert.AreEqual(expected, nodeId);
     }
 
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    [TestMethod]
+    public void TryWriteNodeId_Version1Guid_GetExpectedBytes()
+    {
+        var guid = Guid.Parse("6ba7b810-9dad-21d1-8002-00c04fd430c8");
+        var nodeId = (stackalloc byte[6]);
+        var result = guid.TryWriteNodeId(nodeId);
+        Assert.IsTrue(result);
+        var expected = (stackalloc byte[] { 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8 });
+        Assert.IsTrue(expected.SequenceEqual(nodeId));
+    }
+#endif
+
     [TestMethod]
     public void TryGetAllFields_Version4Guid_GetAllFalseResults()
     {
@@ -114,6 +127,10 @@ public class GuidExtensionsTest
         Assert.IsFalse(guid.TryGetClockSequence(out _));
         Assert.IsFalse(guid.TryGetDomainAndLocalId(out _, out _));
         Assert.IsFalse(guid.TryGetNodeId(out _));
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        var nodeId = (stackalloc byte[6]);
+        Assert.IsFalse(guid.TryWriteNodeId(nodeId));
+#endif
     }
 
     [TestMethod]
@@ -125,13 +142,36 @@ public class GuidExtensionsTest
             0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
         };
         var guid = GuidExtensions.FromUuidByteArray(uuidBytes);
-        var guidBytes = new byte[]
+        var expected = new byte[]
         {
             0x33, 0x22, 0x11, 0x00, 0x55, 0x44, 0x77, 0x66,
             0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
         };
-        CollectionAssert.AreEqual(guidBytes, guid.ToByteArray());
+        var guidBytes = guid.ToByteArray();
+        CollectionAssert.AreEqual(expected, guidBytes);
     }
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    [TestMethod]
+    public void FromUuidBytes_TryWriteBytes_GetReversedByteOrderFields()
+    {
+        var uuidBytes = (stackalloc byte[]
+        {
+            0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+            0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
+        });
+        var guid = GuidExtensions.FromUuidBytes(uuidBytes);
+        var guidBytes = (stackalloc byte[16]);
+        var result = guid.TryWriteBytes(guidBytes);
+        Assert.IsTrue(result);
+        var expected = (stackalloc byte[]
+        {
+            0x33, 0x22, 0x11, 0x00, 0x55, 0x44, 0x77, 0x66,
+            0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
+        });
+        Assert.IsTrue(expected.SequenceEqual(guidBytes));
+    }
+#endif
 
     [TestMethod]
     public void ToUuidByteArray_NewByByteArray_GetReversedByteOrderFields()
@@ -142,11 +182,34 @@ public class GuidExtensionsTest
             0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
         };
         var guid = new Guid(guidBytes);
-        var uuidBytes = new byte[]
+        var expected = new byte[]
         {
             0x33, 0x22, 0x11, 0x00, 0x55, 0x44, 0x77, 0x66,
             0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
         };
-        CollectionAssert.AreEqual(uuidBytes, guid.ToUuidByteArray());
+        var uuidBytes = guid.ToUuidByteArray();
+        CollectionAssert.AreEqual(expected, uuidBytes);
     }
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    [TestMethod]
+    public void TryWriteUuidBytes_NewByByteSpan_GetReversedByteOrderFields()
+    {
+        var guidBytes = (stackalloc byte[]
+        {
+            0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+            0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
+        });
+        var guid = new Guid(guidBytes);
+        var uuidBytes = (stackalloc byte[16]);
+        var result = guid.TryWriteUuidBytes(uuidBytes);
+        Assert.IsTrue(result);
+        var expected = (stackalloc byte[]
+        {
+            0x33, 0x22, 0x11, 0x00, 0x55, 0x44, 0x77, 0x66,
+            0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
+        });
+        Assert.IsTrue(expected.SequenceEqual(uuidBytes));
+    }
+#endif
 }
