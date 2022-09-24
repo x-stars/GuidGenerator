@@ -47,9 +47,12 @@ type GuidModuleTest() =
         |> Assert.equalTo 0x01234567
 
     [<TestMethod>]
-    member _.NewVersion2_InvaildDomain_CatchArgumentOutofRangeException() =
-        fun () -> Guid.newV2 (enumof 0xFFuy) |> ignore
-        |> Assert.exception'<ArgumentOutOfRangeException>
+    member _.NewVersion2_UnknownDomain_GetGuidWithInputDomain() =
+        Guid.newV2 (enumof 0xFFuy)
+        |> Guid.tryGetLocalId
+        |> tee (Assert.true' << ValueOption.isSome)
+        |> ValueOption.get
+        |> Assert.equalTo ((enumof 0xFFuy), 0)
 
     [<TestMethod>]
     member _.NewVersion3ByString_SpecifiedUrl_GetExpectedGuid() =

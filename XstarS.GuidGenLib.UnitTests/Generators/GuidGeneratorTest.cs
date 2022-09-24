@@ -140,10 +140,15 @@ public class GuidGeneratorTest
     }
 
     [TestMethod]
-    public void NewGuid_Version2InvalidDomain_CatchArgumentOutOfRangeException()
+    public void NewGuid_Version2UnknownDomain_GetGuidWithInputDomain()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(
-            () => GuidGenerator.Version2.NewGuid((DceSecurityDomain)0xFF));
+        var domain = (DceSecurityDomain)0xFF;
+        var guid = GuidGenerator.Version2.NewGuid(domain);
+        var hasLocalId = guid.TryGetDomainAndLocalId(
+            out var guidDomain, out var guidLocalId);
+        Assert.IsTrue(hasLocalId);
+        Assert.AreEqual(domain, guidDomain);
+        Assert.AreEqual(guidLocalId, default(int));
     }
 
     [TestMethod]
