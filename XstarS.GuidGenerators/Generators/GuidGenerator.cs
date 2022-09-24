@@ -79,8 +79,6 @@ public abstract partial class GuidGenerator : IGuidGeneratorInfo, IGuidGenerator
     /// <param name="localId">The site-defined local ID used to generate the <see cref="Guid"/>.</param>
     /// <returns>A new <see cref="Guid"/> instance generated based on
     /// <paramref name="domain"/> and <paramref name="localId"/>.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="domain"/> is not a valid <see cref="DceSecurityDomain"/> value.</exception>
     /// <exception cref="NotSupportedException">
     /// This instance does not support generating a DCE Security <see cref="Guid"/>.</exception>
     public virtual Guid NewGuid(DceSecurityDomain domain, int? localId = null)

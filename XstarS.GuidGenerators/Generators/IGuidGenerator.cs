@@ -56,8 +56,6 @@ public interface INameBasedGuidGenerator : IGuidGeneratorInfo
     /// <param name="name">The name byte span used to generate the <see cref="Guid"/>.</param>
     /// <returns>A new <see cref="Guid"/> instance generated based on
     /// <paramref name="nsId"/> and <paramref name="name"/>.</returns>
-    /// <exception cref="ArgumentNullException">
-    /// <paramref name="name"/> is <see langword="null"/>.</exception>
 #if NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     Guid NewGuid(Guid nsId, ReadOnlySpan<byte> name)
     {
@@ -81,7 +79,5 @@ public interface IDceSecurityGuidGenerator : IGuidGeneratorInfo
     /// <param name="localId">The site-defined local ID used to generate the <see cref="Guid"/>.</param>
     /// <returns>A new <see cref="Guid"/> instance generated based on
     /// <paramref name="domain"/> and <paramref name="localId"/>.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="domain"/> is not a valid <see cref="DceSecurityDomain"/> value.</exception>
     Guid NewGuid(DceSecurityDomain domain, int? localId = null);
 }
