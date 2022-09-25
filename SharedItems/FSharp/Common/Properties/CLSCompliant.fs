@@ -1,4 +1,8 @@
-﻿namespace global
+﻿// Copyright (c) 2022 XstarS
+// This file is released under the MIT License.
+// https://opensource.org/licenses/MIT
+
+namespace global
 
 // Indicates whether this assembly is compliant
 // with the Common Language Specification (CLS).

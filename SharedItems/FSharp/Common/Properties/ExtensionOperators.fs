@@ -2,7 +2,7 @@
 // This file is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-namespace XNetEx.FSharp.Core
+namespace global
 
 /// <summary>
 /// Contains a set of extension operators and functions.
