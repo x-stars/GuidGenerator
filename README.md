@@ -162,27 +162,27 @@ e129f27c-5103-5c5c-844b-cdf0a15e160d
 ## 性能基准测试
 
 ``` PlainText
-BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
+BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22621
 AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
-.NET SDK=6.0.301
-  [Host]     : .NET 6.0.6 (6.0.622.26707), X64 RyuJIT
-  DefaultJob : .NET 6.0.6 (6.0.622.26707), X64 RyuJIT
+.NET SDK=6.0.304
+  [Host]     : .NET 6.0.9 (6.0.922.41905), X64 RyuJIT
+  DefaultJob : .NET 6.0.9 (6.0.922.41905), X64 RyuJIT
 ```
 
-|           Method | GuidCount |           Mean |        StdDev | Ratio | RatioSD |
-|----------------- |----------:|---------------:|--------------:|------:|--------:|
-|    `GuidNewGuid` |         1 |      45.730 ns |     0.6073 ns |  1.00 |    0.00 |
-|  `EmptyGenerate` |         1 |       3.303 ns |     0.0242 ns |  0.07 |    0.00 |
-| `GuidV1Generate` |         1 |      52.571 ns |     0.6960 ns |  1.15 |    0.02 |
-| `GuidV2Generate` |         1 |      70.437 ns |     2.0033 ns |  1.55 |    0.05 |
-| `GuidV3Generate` |         1 |     292.193 ns |     1.8137 ns |  6.39 |    0.10 |
-| `GuidV4Generate` |         1 |      17.686 ns |     0.0571 ns |  0.39 |    0.01 |
-| `GuidV5Generate` |         1 |     298.274 ns |     5.0662 ns |  6.53 |    0.16 |
-|                  |           |                |               |       |         |
-|    `GuidNewGuid` |      1000 |  45,503.427 ns |    88.4931 ns |  1.00 |    0.00 |
-|  `EmptyGenerate` |      1000 |   1,154.960 ns |     2.1231 ns |  0.03 |    0.00 |
-| `GuidV1Generate` |      1000 |  50,888.715 ns |   735.9581 ns |  1.12 |    0.02 |
-| `GuidV2Generate` |      1000 |  67,488.634 ns | 2,209.6733 ns |  1.49 |    0.06 |
-| `GuidV3Generate` |      1000 | 290,308.876 ns | 2,142.5288 ns |  6.38 |    0.04 |
-| `GuidV4Generate` |      1000 |  15,928.203 ns |    70.8751 ns |  0.35 |    0.00 |
-| `GuidV5Generate` |      1000 | 288,628.431 ns | 1,988.7368 ns |  6.34 |    0.04 |
+|           Method | GuidCount |           Mean |      StdDev | Ratio | RatioSD |
+|----------------- |----------:|---------------:|------------:|------:|--------:|
+|    `GuidNewGuid` |         1 |      46.488 ns |   1.2043 ns |  1.00 |    0.00 |
+|  `EmptyGenerate` |         1 |       3.177 ns |   0.0261 ns |  0.07 |    0.00 |
+| `GuidV1Generate` |         1 |      51.163 ns |   0.3451 ns |  1.09 |    0.03 |
+| `GuidV2Generate` |         1 |      70.599 ns |   1.2852 ns |  1.51 |    0.04 |
+| `GuidV3Generate` |         1 |     243.117 ns |   2.7778 ns |  5.19 |    0.12 |
+| `GuidV4Generate` |         1 |      18.118 ns |   0.2180 ns |  0.39 |    0.01 |
+| `GuidV5Generate` |         1 |     241.255 ns |   2.4715 ns |  5.17 |    0.14 |
+|                  |           |                |             |       |         |
+|    `GuidNewGuid` |      1000 |  43,878.010 ns | 146.4745 ns |  1.00 |    0.00 |
+|  `EmptyGenerate` |      1000 |   1,147.336 ns |   2.3396 ns |  0.03 |    0.00 |
+| `GuidV1Generate` |      1000 |  49,276.941 ns | 141.2186 ns |  1.12 |    0.00 |
+| `GuidV2Generate` |      1000 |  64,438.105 ns | 143.3498 ns |  1.47 |    0.01 |
+| `GuidV3Generate` |      1000 | 233,424.961 ns | 602.3159 ns |  5.32 |    0.02 |
+| `GuidV4Generate` |      1000 |  15,829.455 ns |  67.0868 ns |  0.36 |    0.00 |
+| `GuidV5Generate` |      1000 | 237,677.926 ns | 390.2081 ns |  5.42 |    0.02 |
