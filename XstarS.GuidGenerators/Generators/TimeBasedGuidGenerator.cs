@@ -77,23 +77,6 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         return guid;
     }
 
-    private long GetTimestampAndClockSeq(out int clockSeq)
-    {
-        var tsShift = this.TimestampShift;
-        lock (this.TimestampProvider)
-        {
-            var timestamp = this.CurrentTimestamp;
-            var lastTs = this.LastTimestamp;
-            if ((timestamp >> tsShift) <= (lastTs >> tsShift))
-            {
-                this.ClockSequence++;
-            }
-            this.LastTimestamp = timestamp;
-            clockSeq = this.ClockSequence;
-            return timestamp;
-        }
-    }
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void FillTimeRelatedFields(ref Guid guid)
     {
@@ -117,21 +100,36 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         guid.SetNodeId(nodeId);
     }
 
+    private long GetTimestampAndClockSeq(out int clockSeq)
+    {
+        var tsShift = this.TimestampShift;
+        lock (this.TimestampProvider)
+        {
+            var timestamp = this.CurrentTimestamp;
+            var lastTs = this.LastTimestamp;
+            if ((timestamp >> tsShift) <= (lastTs >> tsShift))
+            {
+                this.ClockSequence++;
+            }
+            this.LastTimestamp = timestamp;
+            clockSeq = this.ClockSequence;
+            return timestamp;
+        }
+    }
+
     private unsafe void UpdateLastNodeIdBytes()
     {
         lock (this.TimestampProvider)
         {
             var nodeId = this.NodeIdBytes;
-            var lastNodeId = this.LastNodeIdBytes;
-            if ((nodeId != lastNodeId) && (lastNodeId is not null))
+            var lastId = this.LastNodeIdBytes;
+            if ((nodeId != lastId) && (lastId is not null))
             {
-                fixed (byte* pNode = &nodeId[0], pLast = &lastNodeId[0])
+                if ((nodeId[0] != lastId[0]) || (nodeId[1] != lastId[1]) ||
+                    (nodeId[2] != lastId[2]) || (nodeId[3] != lastId[3]) ||
+                    (nodeId[4] != lastId[4]) || (nodeId[5] != lastId[5]))
                 {
-                    if ((((int*)pNode)[0] != ((int*)pLast)[0]) ||
-                        (((short*)pNode)[2] != ((short*)pLast)[2]))
-                    {
-                        this.ClockSequence = GlobalRandom.Next<int>();
-                    }
+                    this.ClockSequence = GlobalRandom.Next<int>();
                 }
             }
             this.LastNodeIdBytes = nodeId;

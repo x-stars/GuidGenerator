@@ -80,10 +80,17 @@ internal abstract class LocalIdProvider
             if (userSid is null) { return 0; }
             var sidBytes = new byte[userSid.BinaryLength];
             userSid.GetBinaryForm(sidBytes, 0);
+#if NETCOREAPP3_0_OR_GREATER
+            return Unsafe.ReadUnaligned<int>(ref sidBytes[^4]);
+#elif NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            return MemoryMarshal.Read<int>(
+                ((ReadOnlySpan<byte>)sidBytes)[^4..]);
+#else
             fixed (byte* pLastSubAuth = &sidBytes[^4])
             {
                 return *(int*)pLastSubAuth;
             }
+#endif
         }
 
         protected override unsafe int GetLocalGroupId()
@@ -107,10 +114,17 @@ internal abstract class LocalIdProvider
             if (finalGroupSid is null) { return 0; }
             var sidBytes = new byte[finalGroupSid.BinaryLength];
             finalGroupSid.GetBinaryForm(sidBytes, 0);
+#if NETCOREAPP3_0_OR_GREATER
+            return Unsafe.ReadUnaligned<int>(ref sidBytes[^4]);
+#elif NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            return MemoryMarshal.Read<int>(
+                ((ReadOnlySpan<byte>)sidBytes)[^4..]);
+#else
             fixed (byte* pLastSubAuth = &sidBytes[^4])
             {
                 return *(int*)pLastSubAuth;
             }
+#endif
         }
 
         private bool IsWellKnownSid(SecurityIdentifier sid)

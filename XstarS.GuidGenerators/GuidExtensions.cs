@@ -36,9 +36,9 @@ public static class GuidExtensions
         b = (short)guid.TimeMid();
         c = (short)guid.TimeHi_Ver();
         d = guid.ClkSeqHi_Var(); e = guid.ClkSeqLow();
-        var nodeId = guid.NodeId();
-        f = nodeId[0]; g = nodeId[1]; h = nodeId[2];
-        i = nodeId[3]; j = nodeId[4]; k = nodeId[5];
+        f = guid.NodeId(0); g = guid.NodeId(1);
+        h = guid.NodeId(2); i = guid.NodeId(3);
+        j = guid.NodeId(4); k = guid.NodeId(5);
     }
 
     /// <summary>
@@ -164,16 +164,20 @@ public static class GuidExtensions
     {
         const int size = 6;
         nodeId = new byte[size];
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        return guid.TryWriteNodeId((Span<byte>)nodeId);
+#else
         if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
             !guid.GetVersion().ContainsNodeId())
         {
             return false;
         }
-        fixed (byte* pNodeId = &nodeId[0])
+        fixed (byte* pGuidNodeId = &guid.NodeId(0), pNodeId = &nodeId[0])
         {
-            Buffer.MemoryCopy(guid.NodeId(), pNodeId, size, size);
+            Buffer.MemoryCopy(pGuidNodeId, pNodeId, size, size);
         }
         return true;
+#endif
     }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -186,7 +190,7 @@ public static class GuidExtensions
     /// <returns><see langword="true"/> if the <see cref="Guid"/>
     /// is time-based and the node ID is successfully written to the specified span;
     /// otherwise, <see langword="false"/>.</returns>
-    public static unsafe bool TryWriteNodeId(this Guid guid, Span<byte> destination)
+    public static bool TryWriteNodeId(this Guid guid, Span<byte> destination)
     {
         const int size = 6;
         if (destination.Length < size) { return false; }
@@ -195,10 +199,7 @@ public static class GuidExtensions
         {
             return false;
         }
-        fixed (byte* pNodeId = &destination[0])
-        {
-            Buffer.MemoryCopy(guid.NodeId(), pNodeId, size, size);
-        }
+        guid.NodeId().CopyTo(destination);
         return true;
     }
 #endif
@@ -216,13 +217,16 @@ public static class GuidExtensions
     /// <paramref name="bytes"/> is not 16 bytes long.</exception>
     public static unsafe Guid FromUuidByteArray(byte[] bytes)
     {
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        return GuidExtensions.FromUuidBytes((ReadOnlySpan<byte>)bytes);
+#else
         var guid = new Guid(bytes);
         fixed (byte* pBytes = &bytes[0])
         {
-            var uuid = *(Guid*)pBytes;
-            uuid.WriteUuidBytes((byte*)&guid);
+            guid = *(Guid*)pBytes;
         }
-        return guid;
+        return guid.ToBigEndian();
+#endif
     }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -235,15 +239,11 @@ public static class GuidExtensions
     /// <returns>A new <see cref="Guid"/> instance of the specified byte span.</returns>
     /// <exception cref="ArgumentException">
     /// <paramref name="bytes"/> is not 16 bytes long.</exception>
-    public static unsafe Guid FromUuidBytes(ReadOnlySpan<byte> bytes)
+    public static Guid FromUuidBytes(ReadOnlySpan<byte> bytes)
     {
         var guid = new Guid(bytes);
-        fixed (byte* pBytes = &bytes[0])
-        {
-            var uuid = *(Guid*)pBytes;
-            uuid.WriteUuidBytes((byte*)&guid);
-        }
-        return guid;
+        guid = GuidMemory.Read(bytes);
+        return guid.ToBigEndian();
     }
 #endif
 
@@ -257,10 +257,14 @@ public static class GuidExtensions
     public static unsafe byte[] ToUuidByteArray(this Guid guid)
     {
         var bytes = new byte[16];
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        _ = guid.TryWriteUuidBytes((Span<byte>)bytes);
+#else
         fixed (byte* pBytes = &bytes[0])
         {
-            guid.WriteUuidBytes(pBytes);
+            *(Guid*)pBytes = guid.ToBigEndian();
         }
+#endif
         return bytes;
     }
 
@@ -274,37 +278,11 @@ public static class GuidExtensions
     /// the <see cref="Guid"/> in big-endian order (RFC 4122 compliant).</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/> is successfully
     /// written to the specified span; otherwise, <see langword="false"/>.</returns>
-    public static unsafe bool TryWriteUuidBytes(this Guid guid, Span<byte> destination)
+    public static bool TryWriteUuidBytes(this Guid guid, Span<byte> destination)
     {
         if (destination.Length < 16) { return false; }
-        fixed (byte* pBytes = &destination[0])
-        {
-            guid.WriteUuidBytes(pBytes);
-        }
+        GuidMemory.Write(destination, guid.ToBigEndian());
         return true;
     }
 #endif
-
-    /// <summary>
-    /// Writes the fields of the <see cref="Guid"/>
-    /// into the specified address in big-endian order (RFC 4122 compliant).
-    /// </summary>
-    /// <param name="guid">The <see cref="Guid"/>.</param>
-    /// <param name="destination">The destination address to write data into.</param>
-    internal static unsafe void WriteUuidBytes(this Guid guid, byte* destination)
-    {
-        *(Guid*)destination = guid;
-        if (BitConverter.IsLittleEndian)
-        {
-            var pGuidBytes = (byte*)&guid;
-            destination[0] = pGuidBytes[3];
-            destination[1] = pGuidBytes[2];
-            destination[2] = pGuidBytes[1];
-            destination[3] = pGuidBytes[0];
-            destination[4] = pGuidBytes[5];
-            destination[5] = pGuidBytes[4];
-            destination[6] = pGuidBytes[7];
-            destination[7] = pGuidBytes[6];
-        }
-    }
 }

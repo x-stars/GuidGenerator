@@ -72,7 +72,10 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
     {
         const int guidSize = 16;
         var input = new byte[guidSize + name.Length];
-        fixed (byte* pInput = &input[0]) { nsId.WriteUuidBytes(pInput); }
+        fixed (byte* pInput = &input[0])
+        {
+            *(Guid*)pInput = nsId.ToBigEndian();
+        }
         Buffer.BlockCopy(name, 0, input, guidSize, name.Length);
         return input;
     }
@@ -95,21 +98,28 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-    private unsafe Guid HashToGuid(ReadOnlySpan<byte> hash)
-#else
-    private unsafe Guid HashToGuid(byte[] hash)
-#endif
+    private Guid HashToGuid(ReadOnlySpan<byte> hash)
     {
-        var guid = default(Guid);
-        fixed (byte* pHash = &hash[0])
-        {
-            var uuid = *(Guid*)pHash;
-            uuid.WriteUuidBytes((byte*)&guid);
-        }
+        var uuid = GuidMemory.Read(hash);
+        var guid = uuid.ToBigEndian();
         this.FillVersionField(ref guid);
         this.FillVariantField(ref guid);
         return guid;
     }
+#else
+    private unsafe Guid HashToGuid(byte[] hash)
+    {
+        var uuid = default(Guid);
+        fixed (byte* pHash = &hash[0])
+        {
+            uuid = *(Guid*)pHash;
+        }
+        var guid = uuid.ToBigEndian();
+        this.FillVersionField(ref guid);
+        this.FillVariantField(ref guid);
+        return guid;
+    }
+#endif
 
     internal sealed class MD5Hashing : NameBasedGuidGenerator
     {
