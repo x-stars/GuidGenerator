@@ -85,27 +85,6 @@ module Guid =
     let domainOrg: Domain = Domain.Org
 
     /// <summary>
-    /// Converts the result of a C#-style try-operation to a <see cref="T:Microsoft.FSharp.Core.voption`1"/>.
-    /// </summary>
-    /// <param name="res">The value indicates whether the try-operation was successful.</param>
-    /// <param name="out">The output value the try-operation.</param>
-    /// <returns>A <see cref="T:Microsoft.FSharp.Core.voption`1"/> of the try-operation result.</returns>
-    [<CompiledName("ToValueOption")>]
-    let inline private toVOption (res, out) =
-        if res then ValueSome out else ValueNone
-
-    /// <summary>
-    /// Converts the result of a C#-style try-operation to a <see cref="T:Microsoft.FSharp.Core.voption`1"/>.
-    /// </summary>
-    /// <param name="res">The value indicates whether the try-operation was successful.</param>
-    /// <param name="out1">The first output value the try-operation.</param>
-    /// <param name="out2">The second output value the try-operation.</param>
-    /// <returns>A <see cref="T:Microsoft.FSharp.Core.voption`1"/> of the try-operation result.</returns>
-    [<CompiledName("ToValueOption2")>]
-    let inline private toVOption2 (res, out1, out2) =
-        if res then ValueSome struct (out1, out2) else ValueNone
-
-    /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 1.
     /// </summary>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 1.</returns>
@@ -349,7 +328,7 @@ module Guid =
     /// or <c>ValueNone</c> if the parse operation was failed.</returns>
     [<CompiledName("TryParse")>]
     let tryParse (input: string) =
-        Guid.TryParse(input) |> toVOption
+        Guid.TryParse(input) |> TryResult.toVOption
 
     /// <summary>
     /// Tries to convert the string representation of a GUID to the equivalent
@@ -363,7 +342,7 @@ module Guid =
     /// or <c>ValueNone</c> if the parse operation was failed.</returns>
     [<CompiledName("TryParseExact")>]
     let tryParseExact (format: string) (input: string) =
-        Guid.TryParseExact(input, format) |> toVOption
+        Guid.TryParseExact(input, format) |> TryResult.toVOption
 
     /// <summary>
     /// Returns a string representation of the value of the <see cref="T:System.Guid"/>,
@@ -400,14 +379,14 @@ module Guid =
 
     /// <summary>
     /// Gets a value that indicates whether a <see cref="T:System.Guid"/>
-    /// is of the RFC 4122 variant (<see cref="F:XNetEx.Guids.GuidVariant.Rfc4122"/>).
+    /// is of the RFC 4122 variant (<see cref="F:XNetEx.FSharp.Core.Guid.Variant.Rfc4122"/>).
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns><see langword="true"/> if a <see cref="T:System.Guid"/>
     /// is of the RFC 4122 variant; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("IsRfc4122Uuid")>]
     let internal isRfc4122 (guid: Guid) =
-        variant guid = GuidVariant.Rfc4122
+        variant guid = Variant.Rfc4122
 
     /// <summary>
     /// Gets a value that indicates whether a <see cref="T:System.Guid"/>
@@ -470,7 +449,7 @@ module Guid =
     /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not time-based.</returns>
     [<CompiledName("TryGetTimestamp")>]
     let tryGetTime (guid: Guid) : DateTime voption =
-        guid.TryGetTimestamp() |> toVOption
+        guid.TryGetTimestamp() |> TryResult.toVOption
 
     /// <summary>
     /// Tries to get the clock sequence represented by the <see cref="T:System.Guid"/>.
@@ -481,7 +460,7 @@ module Guid =
     /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not time-based.</returns>
     [<CompiledName("TryGetClockSequence")>]
     let tryGetClockSeq (guid: Guid) : int16 voption =
-        guid.TryGetClockSequence() |> toVOption
+        guid.TryGetClockSequence() |> TryResult.toVOption
 
     /// <summary>
     /// Tries to get the DCE Security domain and local ID represented by the <see cref="T:System.Guid"/>.
@@ -492,7 +471,7 @@ module Guid =
     /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not a DCE security UUID.</returns>
     [<CompiledName("TryGetDomainAndLocalId")>]
     let tryGetLocalId (guid: Guid) : struct (Domain * int) voption =
-        guid.TryGetDomainAndLocalId() |> toVOption2
+        guid.TryGetDomainAndLocalId() |> TryResult.toVOption2
 
     /// <summary>
     /// Tries to get the node ID represented by the <see cref="T:System.Guid"/>.
@@ -503,4 +482,4 @@ module Guid =
     /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not time-based.</returns>
     [<CompiledName("TryGetNodeId")>]
     let tryGetNodeId (guid: Guid) : byte[] voption =
-        guid.TryGetNodeId() |> toVOption
+        guid.TryGetNodeId() |> TryResult.toVOption
