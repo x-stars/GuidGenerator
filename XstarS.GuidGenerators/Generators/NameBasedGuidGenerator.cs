@@ -2,6 +2,9 @@
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+using System.Runtime.InteropServices;
+#endif
 
 namespace XNetEx.Guids.Generators;
 
@@ -100,7 +103,7 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     private Guid HashToGuid(ReadOnlySpan<byte> hash)
     {
-        var uuid = GuidMemory.Read(hash);
+        var uuid = MemoryMarshal.Read<Guid>(hash);
         var guid = uuid.ToBigEndian();
         this.FillVersionField(ref guid);
         this.FillVariantField(ref guid);

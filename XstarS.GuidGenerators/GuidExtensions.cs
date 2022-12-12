@@ -1,4 +1,7 @@
 ﻿using System;
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+using System.Runtime.InteropServices;
+#endif
 
 namespace XNetEx.Guids;
 
@@ -28,7 +31,7 @@ public static class GuidExtensions
     /// <param name="i">The next byte of the GUID.</param>
     /// <param name="j">The next byte of the GUID.</param>
     /// <param name="k">The next byte of the GUID.</param>
-    public static unsafe void Deconstruct(this Guid guid,
+    public static void Deconstruct(this Guid guid,
         out int a, out short b, out short c, out byte d, out byte e,
         out byte f, out byte g, out byte h, out byte i, out byte j, out byte k)
     {
@@ -220,12 +223,12 @@ public static class GuidExtensions
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         return GuidExtensions.FromUuidBytes((ReadOnlySpan<byte>)bytes);
 #else
-        var guid = new Guid(bytes);
+        var uuid = new Guid(bytes);
         fixed (byte* pBytes = &bytes[0])
         {
-            guid = *(Guid*)pBytes;
+            uuid = *(Guid*)pBytes;
         }
-        return guid.ToBigEndian();
+        return uuid.ToBigEndian();
 #endif
     }
 
@@ -241,9 +244,9 @@ public static class GuidExtensions
     /// <paramref name="bytes"/> is not 16 bytes long.</exception>
     public static Guid FromUuidBytes(ReadOnlySpan<byte> bytes)
     {
-        var guid = new Guid(bytes);
-        guid = GuidMemory.Read(bytes);
-        return guid.ToBigEndian();
+        var uuid = new Guid(bytes);
+        uuid = MemoryMarshal.Read<Guid>(bytes);
+        return uuid.ToBigEndian();
     }
 #endif
 
@@ -260,9 +263,10 @@ public static class GuidExtensions
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         _ = guid.TryWriteUuidBytes((Span<byte>)bytes);
 #else
+        var uuid = guid.ToBigEndian();
         fixed (byte* pBytes = &bytes[0])
         {
-            *(Guid*)pBytes = guid.ToBigEndian();
+            *(Guid*)pBytes = uuid;
         }
 #endif
         return bytes;
@@ -281,7 +285,8 @@ public static class GuidExtensions
     public static bool TryWriteUuidBytes(this Guid guid, Span<byte> destination)
     {
         if (destination.Length < 16) { return false; }
-        GuidMemory.Write(destination, guid.ToBigEndian());
+        var uuid = guid.ToBigEndian();
+        MemoryMarshal.Write(destination, ref uuid);
         return true;
     }
 #endif
