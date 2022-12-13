@@ -47,12 +47,12 @@ type GuidModuleTest() =
         |> Assert.equalTo 0x01234567
 
     [<TestMethod>]
-    member _.NewVersion2_UnknownDomain_GetGuidWithInputDomain() =
-        Guid.newV2 (enumof 0xFFuy)
+    member _.NewVersion2OfOther_UnknownDomain_GetGuidWithInputDomainAndLocalId() =
+        Guid.newV2Other (enumof 0xFFuy) 0xFFFF
         |> Guid.tryGetLocalId
         |> tee (Assert.true' << ValueOption.isSome)
         |> ValueOption.get
-        |> Assert.equalTo ((enumof 0xFFuy), 0)
+        |> Assert.equalTo ((enumof 0xFFuy), 0xFFFF)
 
     [<TestMethod>]
     member _.NewVersion3ByString_SpecifiedUrl_GetExpectedGuid() =

@@ -67,24 +67,6 @@ module Guid =
     let nsX500: Guid = Namespace.X500
 
     /// <summary>
-    /// Represents the DCE Security principal domain.
-    /// </summary>
-    [<CompiledName("DomainPerson")>]
-    let domainPerson: Domain = Domain.Person
-
-    /// <summary>
-    /// Represents the DCE Security group domain.
-    /// </summary>
-    [<CompiledName("DomainGroup")>]
-    let domainGroup: Domain = Domain.Group
-
-    /// <summary>
-    /// Represents the DCE Security organization domain.
-    /// </summary>
-    [<CompiledName("DomainOrg")>]
-    let domainOrg: Domain = Domain.Org
-
-    /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 1.
     /// </summary>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 1.</returns>
@@ -122,7 +104,18 @@ module Guid =
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 2.</returns>
     [<CompiledName("NewVersion2OfOrg")>]
     let newV2Org (localId: int) =
-        Generator.Version2.NewGuid(domainOrg, localId)
+        Generator.Version2.NewGuid(Domain.Org, localId)
+
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance
+    /// of RFC 4122 UUID version 2 based on the specified DCE Security domain and local ID.
+    /// </summary>
+    /// <param name="domain">The DCE Security domain.</param>
+    /// <param name="localId">The local ID of the domain.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 2.</returns>
+    [<CompiledName("NewVersion2OfOther")>]
+    let newV2Other (domain: Domain) (localId: int) =
+        Generator.Version2.NewGuid(domain, localId)
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
