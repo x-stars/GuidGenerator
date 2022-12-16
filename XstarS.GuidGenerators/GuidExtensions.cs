@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Runtime.InteropServices;
 #endif
@@ -73,9 +74,8 @@ public static class GuidExtensions
     /// Tries to get the timestamp represented by the <see cref="Guid"/>.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
-    /// <param name="timestamp">When this method returns, contains the timestamp
-    /// represented by the <see cref="Guid"/> if the <see cref="Guid"/> is time-based;
-    /// otherwise, the default value of <see cref="DateTime"/>.</param>
+    /// <param name="timestamp">When this method returns <see langword="true"/>,
+    /// contains the timestamp represented by the <see cref="Guid"/>.</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/>
     /// is time-based; otherwise, <see langword="false"/>.</returns>
     public static bool TryGetTimestamp(this Guid guid, out DateTime timestamp)
@@ -103,9 +103,8 @@ public static class GuidExtensions
     /// Tries to get the clock sequence represented by the <see cref="Guid"/>.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
-    /// <param name="clockSeq">When this method returns, contains the clock sequence
-    /// represented by the <see cref="Guid"/> if the <see cref="Guid"/> is time-based;
-    /// otherwise, the default value of <see cref="short"/>.</param>
+    /// <param name="clockSeq">When this method returns <see langword="true"/>,
+    /// contains the clock sequence represented by the <see cref="Guid"/>.</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/>
     /// is time-based; otherwise, <see langword="false"/>.</returns>
     public static bool TryGetClockSequence(this Guid guid, out short clockSeq)
@@ -131,12 +130,10 @@ public static class GuidExtensions
     /// Tries to get the DCE Security domain and local ID represented by the <see cref="Guid"/>.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
-    /// <param name="domain">When this method returns, contains the DCE Security domain
-    /// represented by the <see cref="Guid"/> if the <see cref="Guid"/> is a DCE security UUID;
-    /// otherwise, the default value of <see cref="DceSecurityDomain"/>.</param>
-    /// <param name="localId">When this method returns, contains the local ID
-    /// represented by the <see cref="Guid"/> if the <see cref="Guid"/> is a DCE security UUID;
-    /// otherwise, the default value of <see cref="int"/>.</param>
+    /// <param name="domain">When this method returns <see langword="true"/>,
+    /// contains the DCE Security domain represented by the <see cref="Guid"/>.</param>
+    /// <param name="localId">When this method returns <see langword="true"/>,
+    /// contains the local ID represented by the <see cref="Guid"/>.</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/>
     /// is a DCE security UUID; otherwise, <see langword="false"/>.</returns>
     public static bool TryGetDomainAndLocalId(
@@ -158,29 +155,29 @@ public static class GuidExtensions
     /// Tries to get the node ID represented by the <see cref="Guid"/>.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
-    /// <param name="nodeId">When this method returns, contains the node ID
-    /// represented by the <see cref="Guid"/> if the <see cref="Guid"/> is time-based;
-    /// otherwise, a 6-element byte array filled with zero values.</param>
+    /// <param name="nodeId">When this method returns <see langword="true"/>,
+    /// contains the node ID represented by the <see cref="Guid"/>.</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/>
     /// is time-based; otherwise, <see langword="false"/>.</returns>
-    public static unsafe bool TryGetNodeId(this Guid guid, out byte[] nodeId)
+    public static unsafe bool TryGetNodeId(this Guid guid, [NotNullWhen(true)] out byte[]? nodeId)
     {
         const int size = 6;
-        nodeId = new byte[size];
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        return guid.TryWriteNodeId((Span<byte>)nodeId);
-#else
         if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
             !guid.GetVersion().ContainsNodeId())
         {
+            nodeId = null;
             return false;
         }
+        nodeId = new byte[size];
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        guid.NodeId().CopyTo((Span<byte>)nodeId);
+#else
         fixed (byte* pGuidNodeId = &guid.NodeId(0), pNodeId = &nodeId[0])
         {
             Buffer.MemoryCopy(pGuidNodeId, pNodeId, size, size);
         }
-        return true;
 #endif
+        return true;
     }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -188,8 +185,8 @@ public static class GuidExtensions
     /// Tries to write the node ID represented by the <see cref="Guid"/> into a span of bytes.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
-    /// <param name="destination">When this method returns, contains the node ID
-    /// represented by the <see cref="Guid"/> if the <see cref="Guid"/> is time-based.</param>
+    /// <param name="destination">When this method returns <see langword="true"/>,
+    /// contains the node ID represented by the <see cref="Guid"/>.</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/>
     /// is time-based and the node ID is successfully written to the specified span;
     /// otherwise, <see langword="false"/>.</returns>
@@ -220,16 +217,16 @@ public static class GuidExtensions
     /// <paramref name="bytes"/> is not 16 bytes long.</exception>
     public static unsafe Guid FromUuidByteArray(byte[] bytes)
     {
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        return GuidExtensions.FromUuidBytes((ReadOnlySpan<byte>)bytes);
-#else
         var uuid = new Guid(bytes);
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        uuid = MemoryMarshal.Read<Guid>((ReadOnlySpan<byte>)bytes);
+#else
         fixed (byte* pBytes = &bytes[0])
         {
             uuid = *(Guid*)pBytes;
         }
-        return uuid.ToBigEndian();
 #endif
+        return uuid.ToBigEndian();
     }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -260,10 +257,10 @@ public static class GuidExtensions
     public static unsafe byte[] ToUuidByteArray(this Guid guid)
     {
         var bytes = new byte[16];
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        _ = guid.TryWriteUuidBytes((Span<byte>)bytes);
-#else
         var uuid = guid.ToBigEndian();
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        MemoryMarshal.Write((Span<byte>)bytes, ref uuid);
+#else
         fixed (byte* pBytes = &bytes[0])
         {
             *(Guid*)pBytes = uuid;
@@ -278,8 +275,8 @@ public static class GuidExtensions
     /// into a span of bytes in big-endian order (RFC 4122 compliant).
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
-    /// <param name="destination">When this method returns, contains the fields of
-    /// the <see cref="Guid"/> in big-endian order (RFC 4122 compliant).</param>
+    /// <param name="destination">When this method returns <see langword="true"/>,
+    /// contains the fields of the <see cref="Guid"/> in big-endian order (RFC 4122 compliant).</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/> is successfully
     /// written to the specified span; otherwise, <see langword="false"/>.</returns>
     public static bool TryWriteUuidBytes(this Guid guid, Span<byte> destination)
