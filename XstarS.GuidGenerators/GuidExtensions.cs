@@ -205,11 +205,11 @@ public static class GuidExtensions
 #endif
 
     /// <summary>
-    /// Creates a new <see cref="Guid"/> instance by using
-    /// the specified byte array in big-endian order (RFC 4122 compliant).
+    /// Creates a new <see cref="Guid"/> instance
+    /// by using the specified byte array in big-endian order.
     /// </summary>
-    /// <param name="bytes">A 16-element byte array containing
-    /// the fields of the GUID in big-endian order (RFC 4122 compliant).</param>
+    /// <param name="bytes">A 16-element byte array
+    /// containing the fields of the GUID in big-endian order.</param>
     /// <returns>A new <see cref="Guid"/> instance of the specified byte array.</returns>
     /// <exception cref="ArgumentNullException">
     /// <paramref name="bytes"/> is <see langword="null"/>.</exception>
@@ -231,11 +231,11 @@ public static class GuidExtensions
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     /// <summary>
-    /// Creates a new <see cref="Guid"/> instance by using the specified
-    /// read-only byte span in big-endian order (RFC 4122 compliant).
+    /// Creates a new <see cref="Guid"/> instance
+    /// by using the specified read-only byte span in big-endian order.
     /// </summary>
-    /// <param name="bytes">A 16-element read-only span containing the bytes of
-    /// the fields of the GUID in big-endian order (RFC 4122 compliant).</param>
+    /// <param name="bytes">A 16-element read-only span
+    /// containing the bytes of the fields of the GUID in big-endian order.</param>
     /// <returns>A new <see cref="Guid"/> instance of the specified byte span.</returns>
     /// <exception cref="ArgumentException">
     /// <paramref name="bytes"/> is not 16 bytes long.</exception>
@@ -248,12 +248,12 @@ public static class GuidExtensions
 #endif
 
     /// <summary>
-    /// Returns a 16-element byte array that contains the fields of
-    /// the <see cref="Guid"/> in big-endian order (RFC 4122 compliant).
+    /// Returns a 16-element byte array that contains the fields
+    /// of the <see cref="Guid"/> in big-endian order.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
-    /// <returns>A 16-element byte array that contains the fields of
-    /// the <see cref="Guid"/> in big-endian order (RFC 4122 compliant).</returns>
+    /// <returns>A 16-element byte array that contains the fields
+    /// of the <see cref="Guid"/> in big-endian order.</returns>
     public static unsafe byte[] ToUuidByteArray(this Guid guid)
     {
         var bytes = new byte[16];
@@ -272,11 +272,11 @@ public static class GuidExtensions
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     /// <summary>
     /// Tries to write the fields of the <see cref="Guid"/>
-    /// into a span of bytes in big-endian order (RFC 4122 compliant).
+    /// into a span of bytes in big-endian order.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
     /// <param name="destination">When this method returns <see langword="true"/>,
-    /// contains the fields of the <see cref="Guid"/> in big-endian order (RFC 4122 compliant).</param>
+    /// contains the fields of the <see cref="Guid"/> in big-endian order.</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/> is successfully
     /// written to the specified span; otherwise, <see langword="false"/>.</returns>
     public static bool TryWriteUuidBytes(this Guid guid, Span<byte> destination)

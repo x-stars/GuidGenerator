@@ -135,7 +135,7 @@ module Guid =
     /// of RFC 4122 UUID version 3 based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
-    /// <param name="name">The name string (encoded in UTF-8).</param>
+    /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 3.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -148,8 +148,8 @@ module Guid =
     /// of RFC 4122 UUID version 3 based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
-    /// <param name="name">The name string (encoded in <paramref name="enc"/>).</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
+    /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 3.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -182,7 +182,7 @@ module Guid =
     /// of RFC 4122 UUID version 5 based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
-    /// <param name="name">The name string (encoded in UTF-8).</param>
+    /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 5.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -195,8 +195,8 @@ module Guid =
     /// of RFC 4122 UUID version 5 based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
-    /// <param name="name">The name string (encoded in <paramref name="enc"/>).</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
+    /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 5.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -229,8 +229,8 @@ module Guid =
     /// Creates a new <see cref="T:System.Guid"/> instance
     /// by using the specified byte array of fields in little-endian order.
     /// </summary>
-    /// <param name="bytes">A 16-element byte array containing
-    /// fields of the GUID in little-endian order.</param>
+    /// <param name="bytes">A 16-element byte array
+    /// containing fields of the GUID in little-endian order.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of the specified byte array.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="bytes"/> is <see langword="null"/>.</exception>
@@ -241,10 +241,10 @@ module Guid =
 
     /// <summary>
     /// Creates a new <see cref="T:System.Guid"/> instance
-    /// by using the specified byte array of fields in big-endian order (RFC 4122 compliant).
+    /// by using the specified byte array of fields in big-endian order.
     /// </summary>
-    /// <param name="bytes">A 16-element byte array containing
-    /// fields of the GUID in big-endian order (RFC 4122 compliant).</param>
+    /// <param name="bytes">A 16-element byte array
+    /// containing fields of the GUID in big-endian order.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of the specified byte array.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="bytes"/> is <see langword="null"/>.</exception>
@@ -276,11 +276,11 @@ module Guid =
 
     /// <summary>
     /// Returns a 16-element byte array that contains fields
-    /// in big-endian order of the <see cref="T:System.Guid"/> (RFC 4122 compliant).
+    /// in big-endian order of the <see cref="T:System.Guid"/>.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>A 16-element byte array that contains fields
-    /// of the <see cref="T:System.Guid"/> in big-endian order (RFC 4122 compliant).</returns>
+    /// of the <see cref="T:System.Guid"/> in big-endian order.</returns>
     [<CompiledName("ToUuidByteArray")>]
     let toBytesUuid (guid: Guid) = guid.ToUuidByteArray()
 
@@ -371,8 +371,7 @@ module Guid =
     let version (guid: Guid) : Version = guid.GetVersion()
 
     /// <summary>
-    /// Gets a value that indicates whether a <see cref="T:System.Guid"/>
-    /// is of the RFC 4122 variant (<see cref="F:XNetEx.FSharp.Core.Guid.Variant.Rfc4122"/>).
+    /// Gets a value that indicates whether a <see cref="T:System.Guid"/> is of the RFC 4122 variant.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns><see langword="true"/> if a <see cref="T:System.Guid"/>
