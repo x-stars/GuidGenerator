@@ -28,7 +28,7 @@ using System.Runtime.CompilerServices;
 [EditorBrowsable(EditorBrowsableState.Never)]
 [Obsolete("This type supports the range-foreach syntax " +
           "and should not be used directly in user code.")]
-internal static class RangeEnumerable
+internal static class __RangeEnumerable
 {
     public static Enumerator GetEnumerator(this Range range)
     {
@@ -42,14 +42,14 @@ internal static class RangeEnumerable
 
         private readonly int EndIndex;
 
-        private readonly long Padding;
+        private readonly long Padding__;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal Enumerator(in Range range)
         {
             this.CurrentIndex = range.Start.GetOffset(0) - 1;
             this.EndIndex = range.End.GetOffset(0);
-            this.Padding = default(long);
+            this.Padding__ = default(long);
         }
 
         public int Current => this.CurrentIndex;
