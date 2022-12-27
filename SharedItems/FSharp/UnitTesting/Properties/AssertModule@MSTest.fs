@@ -239,12 +239,13 @@ module internal Assert =
     /// if code does not raises exception or raises exception of type other than <typeparamref name="T"/>.
     /// </summary>
     /// <typeparam name="T">Type of exception expected to be raised.</typeparam>
+    /// <returns>The exception that was thrown.</returns>
     /// <param name="action">Function of code to be tested and which is expected to raise exception.</param>
     /// <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">
     /// Raised if <paramref name="action"/> does not raises exception of type <typeparamref name="T"/>.</exception>
     [<CompiledName("Exception")>]
     let inline exception'<'T when 'T :> exn> action =
-        Assert.ThrowsException<'T>(Action(action)) |> ignore
+        Assert.ThrowsException<'T>(Action(action))
 
     /// <summary>
     /// A collection of functions to test various conditions associated with sequences within unit tests.
