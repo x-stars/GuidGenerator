@@ -1,4 +1,5 @@
-﻿using System.Net.NetworkInformation;
+﻿using System;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -45,10 +46,19 @@ internal abstract class NodeIdProvider
 
         protected override int RefreshPeriod => Timeout.Infinite;
 
-        protected override byte[] GetNodeIdBytes()
+        protected override unsafe byte[] GetNodeIdBytes()
         {
-            var nodeId = new byte[6];
-            GlobalRandom.NextBytes(nodeId);
+            const int size = 6;
+            var newGuid = Guid.NewGuid();
+            var nodeId = new byte[size];
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            newGuid.NodeId().CopyTo((Span<byte>)nodeId);
+#else
+            fixed (byte* pGuidNodeId = &newGuid.NodeId(0), pNodeId = &nodeId[0])
+            {
+                Buffer.MemoryCopy(pGuidNodeId, pNodeId, size, size);
+            }
+#endif
             nodeId[0] |= 0x01;
             return nodeId;
         }
