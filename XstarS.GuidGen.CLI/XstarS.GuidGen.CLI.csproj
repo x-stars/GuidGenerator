@@ -30,7 +30,7 @@
     <StripSymbols>true</StripSymbols>
     <InvariantGlobalization>true</InvariantGlobalization>
     <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
-    <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+    <IlcGenerateStackTraceData>true</IlcGenerateStackTraceData>
     <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
   </PropertyGroup>
 
@@ -52,8 +52,9 @@
     <PackageReference Include="System.Security.Principal.Windows" Version="4.0.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework.Split(`-`)[0])'=='net6.0'">
-    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0-preview.*" />
+  <ItemGroup Condition="'$(TargetFramework.Split(`-`)[0].TrimEnd(`.0123456789`))'=='net' And
+                        '$(TargetFramework.Split(`-`)[0].CompareTo(`net6.0`))'&gt;='0'">
+    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0" />
   </ItemGroup>
 
 </Project>
