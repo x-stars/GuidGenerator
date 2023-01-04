@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net461;net472;netcoreapp3.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>net461;net472;netcoreapp3.1;net6.0;net7.0</TargetFrameworks>
     <RootNamespace>XstarS.GuidGen</RootNamespace>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
@@ -24,7 +24,9 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework.Split(`-`)[0].TrimEnd(`.0123456789`))'=='net' And
+                            '$(TargetFramework.Split(`-`)[0].CompareTo(`net7.0`))'&gt;='0'">
+    <PublishAot>true</PublishAot>
     <PublishTrimmed>true</PublishTrimmed>
     <TrimMode>Link</TrimMode>
     <StripSymbols>true</StripSymbols>
@@ -50,11 +52,6 @@
                         '$(TargetFramework.TrimEnd(`.0123456789`))'=='netcoreapp' Or
                         '$(TargetFramework.TrimEnd(`.0123456789`))'=='netstandard'">
     <PackageReference Include="System.Security.Principal.Windows" Version="4.0.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework.Split(`-`)[0].TrimEnd(`.0123456789`))'=='net' And
-                        '$(TargetFramework.Split(`-`)[0].CompareTo(`net6.0`))'&gt;='0'">
-    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0" />
   </ItemGroup>
 
 </Project>
