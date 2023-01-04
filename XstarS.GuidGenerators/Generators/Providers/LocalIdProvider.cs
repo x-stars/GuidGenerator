@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Threading;
 
 namespace XNetEx.Guids.Generators;
 
@@ -70,7 +71,11 @@ internal abstract class LocalIdProvider
     private sealed class Windows : LocalIdProvider
     {
         private static readonly WellKnownSidType[] SidTypes =
+#if NET5_0_OR_GREATER
+            Enum.GetValues<WellKnownSidType>();
+#else
             (WellKnownSidType[])Enum.GetValues(typeof(WellKnownSidType));
+#endif
 
         internal Windows() { }
 
@@ -173,6 +178,8 @@ internal abstract class LocalIdProvider
     private sealed class Unknown : LocalIdProvider
     {
         internal Unknown() { }
+
+        protected override int RefreshPeriod => Timeout.Infinite;
 
         protected override int GetLocalUserId()
         {
