@@ -105,7 +105,7 @@ public abstract partial class GuidGenerator : IGuidGeneratorInfo, IGuidGenerator
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected void FillVariantField(ref Guid guid)
     {
-        var shiftVar = 0xE0 << (3 - (int)this.Variant);
+        var shiftVar = -1 << (8 - (int)this.Variant);
         var varMask = (shiftVar >> 1) & 0xE0;
         ref var clkSeqHi_Var = ref guid.ClkSeqHi_Var();
         clkSeqHi_Var = (byte)(clkSeqHi_Var & ~varMask | shiftVar);
