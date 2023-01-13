@@ -15,6 +15,10 @@
     <Product>XstarS GUID Generator</Product>
     <AssemblyTitle>$(Product) Benchmarks</AssemblyTitle>
     <Copyright>Copyright © $(Company) 2022</Copyright>
+    <FileVersion>$(Version.Split('-')[0]).0</FileVersion>
+    <VersionMajor>$(Version.Split('.')[0])</VersionMajor>
+    <VersionMinor>$(Version.Split('.')[1])</VersionMinor>
+    <AssemblyVersion>$(VersionMajor).$(VersionMinor).0.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup>
