@@ -1,8 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#nullable enable
 #pragma warning disable
+#nullable enable
 
 #if !(MODULE_INITIALIZER_ATTRIBUTE || NET5_0_OR_GREATER)
 namespace System.Runtime.CompilerServices

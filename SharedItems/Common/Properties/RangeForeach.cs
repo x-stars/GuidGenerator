@@ -15,8 +15,8 @@
 // NOTE: Use '^' to represent negative numbers,
 //       e.g. ^100..0 (instead of -100..0).
 
-#nullable disable
 #pragma warning disable
+#nullable disable
 
 using System;
 using System.ComponentModel;
