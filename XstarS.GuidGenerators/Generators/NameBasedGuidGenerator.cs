@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 #endif
 
@@ -50,7 +51,8 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
         var inputLength = guidSize + name.Length;
         var input = (name.Length <= 4096) ?
             (stackalloc byte[inputLength]) : (new byte[inputLength]);
-        _ = nsId.TryWriteUuidBytes(input);
+        var writeResult = nsId.TryWriteUuidBytes(input);
+        Debug.Assert(writeResult);
         name.CopyTo(input[guidSize..]);
         var hashings = this.Hashings;
         if (!hashings.TryTake(out var hashing))
@@ -59,7 +61,9 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
         }
         var hashSize = hashing.HashSize / 8;
         var hash = (stackalloc byte[hashSize]);
-        _ = hashing.TryComputeHash(input, hash, out _);
+        var hashResult = hashing.TryComputeHash(
+            input, hash, out var bytesWritten);
+        Debug.Assert(hashResult && (bytesWritten == hashSize));
         if (!hashings.TryAdd(hashing))
         {
             hashing.Dispose();

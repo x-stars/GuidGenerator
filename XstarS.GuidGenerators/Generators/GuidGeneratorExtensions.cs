@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Text;
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+using System.Diagnostics;
+#endif
 
 namespace XNetEx.Guids.Generators;
 
@@ -68,7 +71,8 @@ public static class GuidGeneratorExtensions
         var nameLength = encoding.GetByteCount(name);
         var nameBytes = (nameLength <= 4096) ?
             (stackalloc byte[nameLength]) : (new byte[nameLength]);
-        _ = encoding.GetBytes(name, nameBytes);
+        var bytesWritten = encoding.GetBytes(name, nameBytes);
+        Debug.Assert(bytesWritten == nameLength);
         return guidGen.NewGuid(nsId, nameBytes);
     }
 #endif
@@ -129,7 +133,8 @@ public static class GuidGeneratorExtensions
         var nameLength = encoding.GetByteCount(name);
         var nameBytes = (nameLength <= 4096) ?
             (stackalloc byte[nameLength]) : (new byte[nameLength]);
-        _ = encoding.GetBytes(name, nameBytes);
+        var bytesWritten = encoding.GetBytes(name, nameBytes);
+        Debug.Assert(bytesWritten == nameLength);
         return guidGen.NewGuid(nsId, nameBytes);
     }
 #endif
