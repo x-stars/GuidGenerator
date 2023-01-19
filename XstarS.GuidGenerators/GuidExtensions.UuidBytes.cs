@@ -1,4 +1,7 @@
 ﻿using System;
+#if NET7_0_OR_GREATER
+using System.Buffers.Binary;
+#endif
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Runtime.InteropServices;
 #endif
@@ -7,6 +10,29 @@ namespace XNetEx.Guids;
 
 static partial class GuidExtensions
 {
+#if NET7_0_OR_GREATER
+    /// <summary>
+    /// Creates a new <see cref="Guid"/> instance
+    /// by using the specified 128-bit unsigned integer.
+    /// </summary>
+    /// <param name="value">A 128-bit unsigned integer
+    /// containing the value of the GUID.</param>
+    /// <returns>A new <see cref="Guid"/> instance
+    /// of the specified 128-bit unsigned integer.</returns>
+    [CLSCompliant(false)]
+    public static Guid FromUInt128(UInt128 value)
+    {
+        var guid = default(Guid);
+        var upper = (ulong)(value >> 64);
+        guid.TimeLow() = (uint)(upper >> (64 - (4 * 8)));
+        guid.TimeMid() = (ushort)(upper >> (64 - (6 * 8)));
+        guid.TimeHi_Ver() = (ushort)(upper >> (64 - (8 * 8)));
+        var guidLower = MemoryMarshal.CreateSpan(ref guid.ClkSeqHi_Var(), 8);
+        BinaryPrimitives.WriteUInt64BigEndian(guidLower, (ulong)value);
+        return guid;
+    }
+#endif
+
     /// <summary>
     /// Creates a new <see cref="Guid"/> instance
     /// by using the specified byte array in big-endian order.
@@ -47,6 +73,27 @@ static partial class GuidExtensions
         var uuid = new Guid(bytes);
         uuid = MemoryMarshal.Read<Guid>(bytes);
         return uuid.ToBigEndian();
+    }
+#endif
+
+#if NET7_0_OR_GREATER
+    /// <summary>
+    /// Returns a 128-bit unsigned integer
+    /// that contains the value of the <see cref="Guid"/>.
+    /// </summary>
+    /// <param name="guid">The <see cref="Guid"/>.</param>
+    /// <returns>A 128-bit unsigned integer
+    /// that contains the value of the <see cref="Guid"/>.</returns>
+    [CLSCompliant(false)]
+    public static UInt128 ToUInt128(this Guid guid)
+    {
+        var upper =
+            (ulong)guid.TimeLow() << (64 - (4 * 8)) |
+            (ulong)guid.TimeMid() << (64 - (6 * 8)) |
+            (ulong)guid.TimeHi_Ver() << (64 - (8 * 8));
+        var lower = BinaryPrimitives.ReadUInt64BigEndian(
+            MemoryMarshal.CreateReadOnlySpan(ref guid.ClkSeqHi_Var(), 8));
+        return new UInt128(upper, lower);
     }
 #endif
 
