@@ -160,7 +160,7 @@ module Guid =
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 4.
     /// </summary>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 5.</returns>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 4.</returns>
     [<CompiledName("NewVersion4")>]
     let newV4 () = Generator.Version4.NewGuid()
 
@@ -313,6 +313,20 @@ module Guid =
         Guid.ParseExact(input, format)
 
     /// <summary>
+    /// Converts the string representation of a GUID to the equivalent <see cref="T:System.Guid"/> instance,
+    /// provided that the string is in the URN format.
+    /// </summary>
+    /// <param name="input">The string to convert.</param>
+    /// <returns>A <see cref="T:System.Guid"/> instance that contains the value that was parsed.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="input"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.FormatException">
+    /// <paramref name="input"/> is not in the URN format.</exception>
+    [<CompiledName("ParseUrn")>]
+    let parseUrn (input: string) =
+        GuidExtensions.ParseUrn(input)
+
+    /// <summary>
     /// Tries to convert the string representation of a GUID to the equivalent
     /// <see cref="T:System.Guid"/> instance. Returns <c>ValueNone</c> if the parse operation was failed.
     /// </summary>
@@ -338,6 +352,18 @@ module Guid =
         Guid.TryParseExact(input, format) |> TryResult.toVOption
 
     /// <summary>
+    /// Tries to convert the string representation of a GUID to the equivalent
+    /// <see cref="T:System.Guid"/> instance. provided that the string is in the URN format.
+    /// Returns <c>ValueNone</c> if the parse operation was failed.
+    /// </summary>
+    /// <param name="input">The string to convert.</param>
+    /// <returns>A <see cref="T:System.Guid"/> instance that contains the value that was parsed,
+    /// or <c>ValueNone</c> if the parse operation was failed.</returns>
+    [<CompiledName("TryParseUrn")>]
+    let tryParseUrn (input: string) =
+        GuidExtensions.TryParseUrn(input) |> TryResult.toVOption
+
+    /// <summary>
     /// Returns a string representation of the value of the <see cref="T:System.Guid"/>,
     /// according to the provided format specifier.
     /// </summary>
@@ -353,6 +379,15 @@ module Guid =
     [<CompiledName("Format")>]
     let format (format: string) (guid: Guid) =
         guid.ToString(format)
+
+    /// <summary>
+    /// Returns a URN string representation of the value of the <see cref="T:System.Guid"/>.
+    /// </summary>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>The value of the <see cref="T:System.Guid"/>, represented as a series
+    /// of lowercase hexadecimal digits in the URN format.</returns>
+    [<CompiledName("FormatUrn")>]
+    let formatUrn (guid: Guid) = guid.ToUrnString()
 
     /// <summary>
     /// Gets the variant of the <see cref="T:System.Guid"/>.
