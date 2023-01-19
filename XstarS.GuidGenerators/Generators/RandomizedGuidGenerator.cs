@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace XNetEx.Guids.Generators;
@@ -27,5 +28,11 @@ internal sealed class RandomizedGuidGenerator : GuidGenerator, IGuidGenerator
 
     public override GuidVersion Version => GuidVersion.Version4;
 
-    public override Guid NewGuid() => Guid.NewGuid();
+    public override Guid NewGuid()
+    {
+        var guid = Guid.NewGuid();
+        Debug.Assert(guid.GetVersion() == this.Version);
+        Debug.Assert(guid.GetVariant() == this.Variant);
+        return guid;
+    }
 }

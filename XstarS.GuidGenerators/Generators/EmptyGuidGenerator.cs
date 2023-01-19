@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace XNetEx.Guids.Generators;
@@ -29,5 +30,11 @@ internal sealed class EmptyGuidGenerator : GuidGenerator, IGuidGenerator
 
     public override GuidVariant Variant => GuidVariant.Ncs;
 
-    public override Guid NewGuid() => Guid.Empty;
+    public override Guid NewGuid()
+    {
+        var guid = Guid.Empty;
+        Debug.Assert(guid.GetVersion() == this.Version);
+        Debug.Assert(guid.GetVariant() == this.Variant);
+        return guid;
+    }
 }
