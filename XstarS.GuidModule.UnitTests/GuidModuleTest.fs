@@ -8,7 +8,7 @@ open XNetEx.FSharp.UnitTesting.MSTest
 type GuidModuleTest() =
 
     [<TestMethod>]
-    member _.EmptyGuid_GetPropertyValue_GetAllFieldsZero() =
+    member _.EmptyGuid_ToFields_GetAllFieldsZero() =
         Guid.empty
         |> Guid.toFields
         |> Assert.equalTo (0, 0s, 0s, (0uy, 0uy),
@@ -111,7 +111,8 @@ type GuidModuleTest() =
            Guid.tryParseExact "B" "{00112233-4455-6677-8899-aabbccddeeff}"
            Guid.tryParseExact "P" "(00112233-4455-6677-8899-aabbccddeeff)"
            Guid.tryParseExact "X" ("{0x00112233,0x4455,0x6677," +
-                                   "{0x88,0x99,0xaa,0xbb,0xcc,0xdd,0xee,0xff}}") |]
+                                   "{0x88,0x99,0xaa,0xbb,0xcc,0xdd,0xee,0xff}}")
+           Guid.tryParseUrn "urn:uuid:00112233-4455-6677-8899-aabbccddeeff" |]
         |> Array.iter (
             tee (Assert.true' << ValueOption.isSome)
             >> ValueOption.get
@@ -131,6 +132,8 @@ type GuidModuleTest() =
         |- (Guid.format "X"
             >> Assert.equalTo ("{0x00112233,0x4455,0x6677," +
                                "{0x88,0x99,0xaa,0xbb,0xcc,0xdd,0xee,0xff}}"))
+        |- (Guid.formatUrn
+            >> Assert.equalTo "urn:uuid:00112233-4455-6677-8899-aabbccddeeff")
         |> ignore
 
     [<TestMethod>]

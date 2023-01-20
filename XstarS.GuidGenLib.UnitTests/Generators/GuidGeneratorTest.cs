@@ -59,7 +59,7 @@ public class GuidGeneratorTest
         guid1.TryGetClockSequence(out var clockSeq1);
         if (timestamp1.Ticks <= timestamp0.Ticks)
         {
-            var expected = (ushort)((clockSeq0 + 1) & ~0xC000);
+            var expected = (short)((clockSeq0 + 1) & ~0xC000);
             Assert.AreEqual(expected, clockSeq1);
         }
     }

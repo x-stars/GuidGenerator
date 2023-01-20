@@ -12,16 +12,16 @@ static partial class GuidExtensions
     /// of the value of this <see cref="Guid"/> instance.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
-    /// <returns>The value of this <see cref="Guid"/>. represented as a series
+    /// <returns>The value of this <see cref="Guid"/>, represented as a series
     /// of lowercase hexadecimal digits in the URN format.</returns>
     public static string ToUrnString(this Guid guid)
     {
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         const int urnFormatLength = 9 + 36;
-        var urnFormatBuffer = (stackalloc char[urnFormatLength]);
-        var result = guid.TryFormatUrn(urnFormatBuffer, out var charsWritten);
+        var guidUrnBuffer = (stackalloc char[urnFormatLength]);
+        var result = guid.TryFormatUrn(guidUrnBuffer, out var charsWritten);
         Debug.Assert(result && (charsWritten == urnFormatLength));
-        return new string(urnFormatBuffer);
+        return new string(guidUrnBuffer);
 #else
         return "urn:uuid:" + guid.ToString("D");
 #endif

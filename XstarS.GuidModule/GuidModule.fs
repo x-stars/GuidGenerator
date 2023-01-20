@@ -353,7 +353,7 @@ module Guid =
 
     /// <summary>
     /// Tries to convert the string representation of a GUID to the equivalent
-    /// <see cref="T:System.Guid"/> instance. provided that the string is in the URN format.
+    /// <see cref="T:System.Guid"/> instance, provided that the string is in the URN format.
     /// Returns <c>ValueNone</c> if the parse operation was failed.
     /// </summary>
     /// <param name="input">The string to convert.</param>
