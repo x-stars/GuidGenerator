@@ -252,7 +252,7 @@ module Guid =
     /// <paramref name="bytes"/> not 16 bytes long.</exception>
     [<CompiledName("OfUuidByteArray")>]
     let ofBytesUuid (bytes: byte[]) =
-        GuidExtensions.FromUuidByteArray(bytes)
+        Uuid.FromByteArray(bytes)
 
     /// <summary>
     /// Returns fields of integers and bytes of the <see cref="T:System.Guid"/>.
@@ -323,8 +323,7 @@ module Guid =
     /// <exception cref="T:System.FormatException">
     /// <paramref name="input"/> is not in the URN format.</exception>
     [<CompiledName("ParseUrn")>]
-    let parseUrn (input: string) =
-        GuidExtensions.ParseUrn(input)
+    let parseUrn (input: string) = Uuid.ParseUrn(input)
 
     /// <summary>
     /// Tries to convert the string representation of a GUID to the equivalent
@@ -361,7 +360,7 @@ module Guid =
     /// or <c>ValueNone</c> if the parse operation was failed.</returns>
     [<CompiledName("TryParseUrn")>]
     let tryParseUrn (input: string) =
-        GuidExtensions.TryParseUrn(input) |> TryResult.toVOption
+        Uuid.TryParseUrn(input) |> TryResult.toVOption
 
     /// <summary>
     /// Returns a string representation of the value of the <see cref="T:System.Guid"/>,
