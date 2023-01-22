@@ -32,8 +32,6 @@ internal sealed class DceSecurityGuidGenerator : TimeBasedGuidGenerator, IDceSec
 
     public override GuidVersion Version => GuidVersion.Version2;
 
-    protected override int TimestampShift => 32;
-
     private int LocalUserId => this.LocalIdProvider.LocalUserId;
 
     private int LocalGroupId => this.LocalIdProvider.LocalGroupId;

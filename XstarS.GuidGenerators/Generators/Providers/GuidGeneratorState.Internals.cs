@@ -53,7 +53,7 @@ static partial class GuidGeneratorState
         return Task.Run(GuidGeneratorState.SaveToStorage);
     }
 
-    internal static int RefreshState(byte[]? nodeId, long timestamp, int tsShift = 0)
+    internal static int RefreshState(byte[]? nodeId, long timestamp)
     {
         lock (GuidGeneratorState.SyncRoot)
         {
@@ -78,7 +78,7 @@ static partial class GuidGeneratorState
             }
 
             var lastTs = GuidGeneratorState.LastTimestamp;
-            if ((timestamp >> tsShift) <= (lastTs >> tsShift))
+            if (timestamp <= lastTs)
             {
                 GuidGeneratorState.ClockSequence++;
             }

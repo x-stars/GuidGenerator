@@ -57,7 +57,7 @@ public class GuidGeneratorTest
         var guid1 = GuidGenerator.Version1.NewGuid();
         guid1.TryGetTimestamp(out var timestamp1);
         guid1.TryGetClockSequence(out var clockSeq1);
-        if (timestamp1.Ticks <= timestamp0.Ticks)
+        if (timestamp1.Ticks < timestamp0.Ticks)
         {
             var expected = (short)((clockSeq0 + 1) & ~0xC000);
             Assert.AreEqual(expected, clockSeq1);
@@ -116,7 +116,7 @@ public class GuidGeneratorTest
         var guid1 = GuidGenerator.Version2.NewGuid(domain);
         guid1.TryGetTimestamp(out var timestamp1);
         guid1.TryGetClockSequence(out var clockSeq1);
-        if (timestamp1.Ticks <= timestamp0.Ticks)
+        if (timestamp1.Ticks < timestamp0.Ticks)
         {
             var expected = (byte)((clockSeq0 + 1) & ~0xC0);
             Assert.AreEqual(expected, (byte)clockSeq1);

@@ -40,8 +40,6 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     public override GuidVersion Version => GuidVersion.Version1;
 
-    protected virtual int TimestampShift => 0;
-
     private long CurrentTimestamp => this.TimestampProvider.GetCurrentTimestamp();
 
     private byte[] NodeIdBytes => this.NodeIdProvider.NodeIdBytes;
@@ -66,9 +64,8 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         var nodeId = this.NodeIdBytes;
         var isRandomNodeId = (nodeId[0] & 0x01) == 0x01;
         var timestamp = this.CurrentTimestamp;
-        var tsShift = this.TimestampShift;
         var clockSeq = GuidGeneratorState.RefreshState(
-            isRandomNodeId ? null : nodeId, timestamp, tsShift);
+            isRandomNodeId ? null : nodeId, timestamp);
         guid.TimeLow() = (uint)(timestamp >> (0 * 8));
         guid.TimeMid() = (ushort)(timestamp >> (4 * 8));
         guid.TimeHi_Ver() = (ushort)(timestamp >> (6 * 8));
