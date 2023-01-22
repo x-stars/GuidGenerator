@@ -18,15 +18,17 @@ internal abstract class NodeIdProvider
 
     public byte[] NodeIdBytes => this.NodeIdBytesCache.Value;
 
+    public virtual bool IsNonVolatile => true;
+
     protected virtual int RefreshPeriod => 1 * 1000;
 
     protected abstract byte[] GetNodeIdBytes();
 
-    internal sealed class RandomNumber : NodeIdProvider
+    internal class RandomNumber : NodeIdProvider
     {
         private static volatile NodeIdProvider.RandomNumber? Singleton;
 
-        internal RandomNumber() { }
+        private RandomNumber() { }
 
         internal static NodeIdProvider.RandomNumber Instance
         {
@@ -37,14 +39,21 @@ internal abstract class NodeIdProvider
                 static NodeIdProvider.RandomNumber Initialize()
                 {
                     return NodeIdProvider.RandomNumber.Singleton ??=
-                        new NodeIdProvider.RandomNumber();
+                        new NodeIdProvider.RandomNumber.NonVolatile();
                 }
 
                 return NodeIdProvider.RandomNumber.Singleton ?? Initialize();
             }
         }
 
+        public override bool IsNonVolatile => false;
+
         protected override int RefreshPeriod => Timeout.Infinite;
+
+        internal static NodeIdProvider.RandomNumber Create()
+        {
+            return new NodeIdProvider.RandomNumber();
+        }
 
         protected override unsafe byte[] GetNodeIdBytes()
         {
@@ -61,6 +70,21 @@ internal abstract class NodeIdProvider
 #endif
             nodeId[0] |= 0x01;
             return nodeId;
+        }
+
+        private sealed class NonVolatile : NodeIdProvider.RandomNumber
+        {
+            internal NonVolatile() { }
+
+            public override bool IsNonVolatile => true;
+
+            protected override byte[] GetNodeIdBytes()
+            {
+                var nodeId = GuidGeneratorState.RandomNodeIdBytes;
+                nodeId ??= base.GetNodeIdBytes();
+                nodeId[0] |= 0x01;
+                return nodeId;
+            }
         }
     }
 

@@ -26,7 +26,9 @@ static partial class GuidGeneratorState
     private static volatile bool LastLoadingResult = GuidGeneratorState.LoadFromStorage();
 
     private static readonly AutoRefreshCache<Task<bool>> LastSavingAsyncResultCache =
-        new AutoRefreshCache<Task<bool>>(GuidGeneratorState.SaveToStorageAsync, 1 * 1000, 0);
+        new AutoRefreshCache<Task<bool>>(GuidGeneratorState.SaveToStorageAsync, 10 * 1000, 0);
+
+    internal static byte[]? RandomNodeIdBytes => GuidGeneratorState.LastRandomNodeIdBytes;
 
     private static long LastTimestamp
     {

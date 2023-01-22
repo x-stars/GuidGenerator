@@ -74,11 +74,20 @@ module Guid =
     let newV1 () = Generator.Version1.NewGuid()
 
     /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 1
+    /// using a non-volatile random node ID.
+    /// </summary>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 1
+    /// using a non-volatile random node ID.</returns>
+    [<CompiledName("NewVersion1R")>]
+    let newV1R () = Generator.Version1R.NewGuid()
+
+    /// <summary>
     /// Creates a new unlimited sequence that generates <see cref="T:System.Guid"/>
-    /// instances of RFC 4122 UUID version 1 using a random node ID.
+    /// instances of RFC 4122 UUID version 1 using a volatile random node ID.
     /// </summary>
     /// <returns>A new unlimited sequence that generates <see cref="T:System.Guid"/>
-    /// instances of RFC 4122 UUID version 1 using a random node ID.</returns>
+    /// instances of RFC 4122 UUID version 1 using a volatile random node ID.</returns>
     [<CompiledName("NewVersion1RSequence")>]
     let newV1RSeq () =
         let guidGen = Generator.CreateVersion1R()

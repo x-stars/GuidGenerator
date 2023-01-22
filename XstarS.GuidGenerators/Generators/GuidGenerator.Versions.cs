@@ -41,10 +41,20 @@ partial class GuidGenerator
     public static INameBasedGuidGenerator Version5 => NameBasedGuidGenerator.SHA1Hashing.Instance;
 
     /// <summary>
-    /// Creates a <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 1 using a random node ID.
+    /// Gets the <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 1
+    /// using a non-volatile random node ID.
     /// </summary>
-    /// <returns>A <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 1 using a random node ID.</returns>
-    public static IGuidGenerator CreateVersion1R() => TimeBasedGuidGenerator.CreateWithRandomNodeId();
+    /// <returns>The <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 1
+    /// using a non-volatile random node ID.</returns>
+    public static IGuidGenerator Version1R => TimeBasedGuidGenerator.InstanceR;
+
+    /// <summary>
+    /// Creates a <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 1
+    /// using a volatile random node ID.
+    /// </summary>
+    /// <returns>A <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 1
+    /// using a volatile random node ID.</returns>
+    public static IGuidGenerator CreateVersion1R() => TimeBasedGuidGenerator.CreateInstanceR();
 
     /// <summary>
     /// Gets the <see cref="GuidGenerator"/> instance of the specified <see cref="GuidVersion"/>.

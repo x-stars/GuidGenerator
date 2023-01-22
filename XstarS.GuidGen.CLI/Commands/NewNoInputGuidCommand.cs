@@ -63,7 +63,7 @@ internal class NewNoInputGuidCommand : ProgramCommand
         }
 
         var guidGen = useRandId ?
-            GuidGenerator.CreateVersion1R() :
+            GuidGenerator.Version1R :
             GuidGenerator.OfVersion(version);
         foreach (var current in ..count)
         {
