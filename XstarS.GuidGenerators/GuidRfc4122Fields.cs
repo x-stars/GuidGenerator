@@ -63,7 +63,7 @@ internal static class GuidRfc4122Fields
 #endif
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static unsafe ref T FieldAt<T>(this ref Guid guid, int offset)
+    private static unsafe ref T FieldAt<T>(this ref Guid guid, int offset)
         where T : unmanaged
     {
 #if NETCOREAPP3_0_OR_GREATER
