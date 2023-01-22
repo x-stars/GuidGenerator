@@ -1,6 +1,7 @@
 ﻿using System;
 #if NET7_0_OR_GREATER
 using System.Buffers.Binary;
+using System.Runtime.CompilerServices;
 #endif
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Runtime.InteropServices;
@@ -22,6 +23,11 @@ static partial class GuidExtensions
     [CLSCompliant(false)]
     public static Guid FromUInt128(UInt128 value)
     {
+        if (!BitConverter.IsLittleEndian)
+        {
+            return Unsafe.As<UInt128, Guid>(ref value);
+        }
+
         var guid = default(Guid);
         var upper = (ulong)(value >> 64);
         guid.TimeLow() = (uint)(upper >> (64 - (4 * 8)));
@@ -87,6 +93,11 @@ static partial class GuidExtensions
     [CLSCompliant(false)]
     public static UInt128 ToUInt128(this Guid guid)
     {
+        if (!BitConverter.IsLittleEndian)
+        {
+            return Unsafe.As<Guid, UInt128>(ref guid);
+        }
+
         var upper =
             (ulong)guid.TimeLow() << (64 - (4 * 8)) |
             (ulong)guid.TimeMid() << (64 - (6 * 8)) |
