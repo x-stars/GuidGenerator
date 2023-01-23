@@ -11,27 +11,27 @@ public sealed class StateStorageExceptionEventArgs : EventArgs
     /// <summary>
     /// Initialize a new instance of the <see cref="StateStorageExceptionEventArgs"/> class.
     /// </summary>
-    /// <param name="exception">The exception thrown by the state storage IO exception.</param>
+    /// <param name="exception">The exception thrown by the state storage IO operation.</param>
     /// <param name="filePath">The full path of the state storage file.</param>
-    /// <param name="fileAccess">A value that indicates where the exception was thrown,
-    /// <see cref="FileAccess.Read"/> for a  loading operation and
+    /// <param name="operation">A value that indicates where the exception was thrown,
+    /// <see cref="FileAccess.Read"/> for a loading operation and
     /// <see cref="FileAccess.Write"/> for a saving operation.</param>
     /// <exception cref="ArgumentNullException"><paramref name="exception"/>
     /// or <paramref name="filePath"/> is <see langword="null"/>.</exception>
     internal StateStorageExceptionEventArgs(
-        Exception exception, string filePath, FileAccess fileAccess)
+        Exception exception, string filePath, FileAccess operation)
     {
         this.StorageException = exception ??
             throw new ArgumentNullException(nameof(exception));
         this.StorageFilePath = filePath ??
             throw new ArgumentNullException(nameof(filePath));
-        this.StorageOperation = fileAccess;
+        this.StorageOperation = operation;
     }
 
     /// <summary>
-    /// Gets the exception thrown by the state storage IO exception.
+    /// Gets the exception thrown by the state storage IO operation.
     /// </summary>
-    /// <returns>The exception thrown by the state storage IO exception.</returns>
+    /// <returns>The exception thrown by the state storage IO operation.</returns>
     public Exception StorageException { get; }
 
     /// <summary>
@@ -42,7 +42,7 @@ public sealed class StateStorageExceptionEventArgs : EventArgs
 
     /// <summary>
     /// Gets a value that indicates where the exception was thrown,
-    /// <see cref="FileAccess.Read"/> for a  loading operation and
+    /// <see cref="FileAccess.Read"/> for a loading operation and
     /// <see cref="FileAccess.Write"/> for a saving operation.
     /// </summary>
     /// <returns><see cref="FileAccess.Read"/> if the exception
@@ -55,7 +55,7 @@ public sealed class StateStorageExceptionEventArgs : EventArgs
     /// that indicates the state storage loading operation is successful.
     /// </summary>
     /// <param name="filePath">The full path of the state storage file,
-    /// or <see langword="null"/> to disable the state storage mechanism.</param>
+    /// or <see langword="null"/> to disable the state storage.</param>
     /// <returns><see langword="true"/> if the state storage loading operation
     /// is successful; otherwise, <see langword="false"/>.</returns>
     public bool SetStorageFilePath(string? filePath)

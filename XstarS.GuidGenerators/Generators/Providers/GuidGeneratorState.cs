@@ -26,7 +26,7 @@ public static partial class GuidGeneratorState
     /// that indicates the state storage loading operation is successful.
     /// </summary>
     /// <param name="filePath">The full path of the state storage file,
-    /// or <see langword="null"/> to disable the state storage mechanism.</param>
+    /// or <see langword="null"/> to disable the state storage.</param>
     /// <returns><see langword="true"/> if the state storage loading operation
     /// is successful; otherwise, <see langword="false"/>.</returns>
     public static bool SetStorageFilePath(string? filePath)
@@ -34,9 +34,7 @@ public static partial class GuidGeneratorState
         lock (GuidGeneratorState.SyncRoot)
         {
             GuidGeneratorState.CurrentStorageFile = filePath;
-            var result = GuidGeneratorState.LoadFromStorage();
-            GuidGeneratorState.LastLoadingResult = result;
-            return result;
+            return GuidGeneratorState.LoadFromStorage();
         }
     }
 
