@@ -1,34 +1,28 @@
 ﻿using System;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
-using System.Threading;
 
 namespace XNetEx.Guids.Generators;
 
 internal abstract class NodeIdProvider
 {
-    private readonly AutoRefreshCache<byte[]> NodeIdBytesCache;
+    private NodeIdProvider() { }
 
-    private NodeIdProvider()
-    {
-        const int sleepAfter = 10;
-        this.NodeIdBytesCache = new AutoRefreshCache<byte[]>(
-            this.GetNodeIdBytes, this.RefreshPeriod, sleepAfter);
-    }
-
-    public byte[] NodeIdBytes => this.NodeIdBytesCache.Value;
+    public abstract byte[] NodeIdBytes { get; }
 
     public virtual bool IsNonVolatile => true;
-
-    protected virtual int RefreshPeriod => 1 * 1000;
-
-    protected abstract byte[] GetNodeIdBytes();
 
     internal class RandomNumber : NodeIdProvider
     {
         private static volatile NodeIdProvider.RandomNumber? Singleton;
 
-        private RandomNumber() { }
+        private readonly byte[] RandomNodeIdBytes;
+
+        private RandomNumber()
+        {
+            this.RandomNodeIdBytes =
+                NodeIdProvider.RandomNumber.CreateNodeIdBytes();
+        }
 
         internal static NodeIdProvider.RandomNumber Instance
         {
@@ -46,16 +40,16 @@ internal abstract class NodeIdProvider
             }
         }
 
-        public override bool IsNonVolatile => false;
+        public override byte[] NodeIdBytes => this.RandomNodeIdBytes;
 
-        protected override int RefreshPeriod => Timeout.Infinite;
+        public override bool IsNonVolatile => false;
 
         internal static NodeIdProvider.RandomNumber Create()
         {
             return new NodeIdProvider.RandomNumber();
         }
 
-        protected override unsafe byte[] GetNodeIdBytes()
+        private static unsafe byte[] CreateNodeIdBytes()
         {
             const int size = 6;
             var newGuid = Guid.NewGuid();
@@ -76,15 +70,10 @@ internal abstract class NodeIdProvider
         {
             internal NonVolatile() { }
 
-            public override bool IsNonVolatile => true;
+            public override byte[] NodeIdBytes =>
+                GuidGeneratorState.RandomNodeIdBytes ?? this.RandomNodeIdBytes;
 
-            protected override byte[] GetNodeIdBytes()
-            {
-                var nodeId = GuidGeneratorState.RandomNodeIdBytes;
-                nodeId ??= base.GetNodeIdBytes();
-                nodeId[0] |= 0x01;
-                return nodeId;
-            }
+            public override bool IsNonVolatile => true;
         }
     }
 
@@ -92,7 +81,13 @@ internal abstract class NodeIdProvider
     {
         private static volatile NodeIdProvider.MacAddress? Singleton;
 
-        private MacAddress() { }
+        private readonly AutoRefreshCache<byte[]> NodeIdBytesCache;
+
+        private MacAddress()
+        {
+            this.NodeIdBytesCache = new AutoRefreshCache<byte[]>(
+                this.GetNodeIdBytes, refreshPeriod: 1 * 1000, sleepAfter: 10);
+        }
 
         internal static NodeIdProvider.MacAddress Instance
         {
@@ -110,7 +105,9 @@ internal abstract class NodeIdProvider
             }
         }
 
-        protected override byte[] GetNodeIdBytes()
+        public override byte[] NodeIdBytes => this.NodeIdBytesCache.Value;
+
+        private byte[] GetNodeIdBytes()
         {
             var validIface = this.GetValidNetworkInterface();
             return (validIface is null) ?

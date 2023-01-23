@@ -59,7 +59,7 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     public override GuidVersion Version => GuidVersion.Version1;
 
-    private long CurrentTimestamp => this.TimestampProvider.GetCurrentTimestamp();
+    private long CurrentTimestamp => this.TimestampProvider.CurrentTimestamp;
 
     private byte[] NodeIdBytes => this.NodeIdProvider.NodeIdBytes;
 

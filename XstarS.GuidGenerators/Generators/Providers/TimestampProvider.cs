@@ -60,7 +60,7 @@ internal abstract class TimestampProvider
         return matches >= 2;
     }
 
-    public abstract long GetCurrentTimestamp();
+    public abstract long CurrentTimestamp { get; }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected long GetGuidTimestamp(long ticks)
@@ -72,10 +72,8 @@ internal abstract class TimestampProvider
     {
         internal DirectTime() { }
 
-        public override long GetCurrentTimestamp()
-        {
-            return this.GetGuidTimestamp(DateTime.UtcNow.Ticks);
-        }
+        public override long CurrentTimestamp =>
+            this.GetGuidTimestamp(DateTime.UtcNow.Ticks);
     }
 
     private sealed class PerfCounter : TimestampProvider
@@ -104,10 +102,8 @@ internal abstract class TimestampProvider
             set => Volatile.Write(ref this.Volatile_StartTimestamp, value);
         }
 
-        public override long GetCurrentTimestamp()
-        {
-            return this.StartTimestamp + this.HiResTimer.ElapsedTicks;
-        }
+        public override long CurrentTimestamp =>
+            this.StartTimestamp + this.HiResTimer.ElapsedTicks;
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void UpdateSystemTime(object? unused)
@@ -115,7 +111,7 @@ internal abstract class TimestampProvider
             const long secTicks = 10 * 1000 * 1000;
             var sysTicks = DateTime.UtcNow.Ticks;
             var sysTs = this.GetGuidTimestamp(sysTicks);
-            var nowTs = this.GetCurrentTimestamp();
+            var nowTs = this.CurrentTimestamp;
             if (Math.Abs(nowTs - sysTs) >= secTicks)
             {
                 var nowTicks = DateTime.UtcNow.Ticks;
@@ -135,8 +131,10 @@ internal abstract class TimestampProvider
 
         internal IncTimestamp() { }
 
+        public override long CurrentTimestamp => this.GetOrIncTimestamp();
+
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public override long GetCurrentTimestamp()
+        private long GetOrIncTimestamp()
         {
             var lastTicks = this.LastTimeTicks;
             var nowTicks = DateTime.UtcNow.Ticks;

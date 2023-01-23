@@ -24,7 +24,8 @@ static partial class GuidGeneratorState
     private static volatile int ClockSequence = GuidGeneratorState.GetInitClockSequence();
 
     private static readonly AutoRefreshCache<Task<bool>> LastSavingAsyncResultCache =
-        new AutoRefreshCache<Task<bool>>(GuidGeneratorState.SaveToStorageAsync, 10 * 1000, 0);
+        new AutoRefreshCache<Task<bool>>(GuidGeneratorState.SaveToStorageAsync,
+            refreshPeriod: 10 * 1000, sleepAfter: 0);
 
     internal static byte[]? RandomNodeIdBytes => GuidGeneratorState.LastRandomNodeIdBytes;
 
@@ -114,10 +115,12 @@ static partial class GuidGeneratorState
 
                 if ((fieldFlags & 0x01) == 0x01)
                 {
+                    macNodeId[0] &= 0xFE;
                     GuidGeneratorState.LastMacNodeIdBytes = macNodeId;
                 }
                 if ((fieldFlags & 0x02) == 0x02)
                 {
+                    randomNodeId[0] |= 0x01;
                     GuidGeneratorState.LastRandomNodeIdBytes = randomNodeId;
                 }
                 Debug.Assert((fieldFlags & 0x04) == 0x04);
