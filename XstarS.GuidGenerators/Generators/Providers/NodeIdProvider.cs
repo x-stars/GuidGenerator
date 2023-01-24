@@ -77,31 +77,31 @@ internal abstract class NodeIdProvider
         }
     }
 
-    internal sealed class MacAddress : NodeIdProvider
+    internal sealed class PhysicalAddress : NodeIdProvider
     {
-        private static volatile NodeIdProvider.MacAddress? Singleton;
+        private static volatile NodeIdProvider.PhysicalAddress? Singleton;
 
         private readonly AutoRefreshCache<byte[]> NodeIdBytesCache;
 
-        private MacAddress()
+        private PhysicalAddress()
         {
             this.NodeIdBytesCache = new AutoRefreshCache<byte[]>(
                 this.GetNodeIdBytes, refreshPeriod: 1 * 1000, sleepAfter: 10);
         }
 
-        internal static NodeIdProvider.MacAddress Instance
+        internal static NodeIdProvider.PhysicalAddress Instance
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 [MethodImpl(MethodImplOptions.Synchronized)]
-                static NodeIdProvider.MacAddress Initialize()
+                static NodeIdProvider.PhysicalAddress Initialize()
                 {
-                    return NodeIdProvider.MacAddress.Singleton ??=
-                        new NodeIdProvider.MacAddress();
+                    return NodeIdProvider.PhysicalAddress.Singleton ??=
+                        new NodeIdProvider.PhysicalAddress();
                 }
 
-                return NodeIdProvider.MacAddress.Singleton ?? Initialize();
+                return NodeIdProvider.PhysicalAddress.Singleton ?? Initialize();
             }
         }
 

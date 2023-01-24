@@ -14,7 +14,7 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
     private readonly NodeIdProvider NodeIdProvider;
 
     protected TimeBasedGuidGenerator()
-        : this(NodeIdProvider.MacAddress.Instance)
+        : this(NodeIdProvider.PhysicalAddress.Instance)
     {
     }
 

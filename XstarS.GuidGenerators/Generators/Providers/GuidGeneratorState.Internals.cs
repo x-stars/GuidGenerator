@@ -15,7 +15,7 @@ static partial class GuidGeneratorState
 
     private static readonly object SyncRoot = GuidGeneratorState.SetSaveOnProcessExit();
 
-    private static volatile byte[]? LastMacNodeIdBytes = null;
+    private static volatile byte[]? LastPhysicalNodeIdBytes = null;
 
     private static volatile byte[]? LastRandomNodeIdBytes = null;
 
@@ -61,10 +61,10 @@ static partial class GuidGeneratorState
             var clockSeq = GuidGeneratorState.ClockSequence;
             if (nodeId is not null)
             {
-                var isRandomNodeId = ((nodeId[0] & 0x01) == 0x01);
+                var isRandomNodeId = (nodeId[0] & 0x01) == 0x01;
                 ref var lastNodeField = ref (isRandomNodeId ?
                     ref GuidGeneratorState.LastRandomNodeIdBytes :
-                    ref GuidGeneratorState.LastMacNodeIdBytes);
+                    ref GuidGeneratorState.LastPhysicalNodeIdBytes);
                 var lastNode = lastNodeField;
                 if ((nodeId != lastNode) && (lastNode is not null))
                 {
@@ -108,23 +108,23 @@ static partial class GuidGeneratorState
                     throw new InvalidDataException($"Unknown version number: {version}.");
                 }
                 var fieldFlags = reader.ReadInt32();
-                var macNodeId = reader.ReadBytes(6);
-                var randomNodeId = reader.ReadBytes(6);
-                var lastTs = reader.ReadInt64();
+                var phyNodeId = reader.ReadBytes(6);
+                var randNodeId = reader.ReadBytes(6);
+                var timestamp = reader.ReadInt64();
                 var clockSeq = reader.ReadInt32();
 
                 if ((fieldFlags & 0x01) == 0x01)
                 {
-                    macNodeId[0] &= 0xFE;
-                    GuidGeneratorState.LastMacNodeIdBytes = macNodeId;
+                    phyNodeId[0] &= 0xFE;
+                    GuidGeneratorState.LastPhysicalNodeIdBytes = phyNodeId;
                 }
                 if ((fieldFlags & 0x02) == 0x02)
                 {
-                    randomNodeId[0] |= 0x01;
-                    GuidGeneratorState.LastRandomNodeIdBytes = randomNodeId;
+                    randNodeId[0] |= 0x01;
+                    GuidGeneratorState.LastRandomNodeIdBytes = randNodeId;
                 }
                 Debug.Assert((fieldFlags & 0x04) == 0x04);
-                GuidGeneratorState.LastTimestamp = lastTs;
+                GuidGeneratorState.LastTimestamp = timestamp;
                 Debug.Assert((fieldFlags & 0x08) == 0x08);
                 GuidGeneratorState.ClockSequence = clockSeq;
                 return true;
@@ -151,16 +151,16 @@ static partial class GuidGeneratorState
                     FileMode.Create, FileAccess.Write, FileShare.None);
                 using var writer = new BinaryWriter(stream);
                 var fieldFlags = 0x04 | 0x08;
-                var macNodeId = GuidGeneratorState.LastMacNodeIdBytes;
-                if (macNodeId is not null) { fieldFlags |= 0x01; }
-                var randomNodeId = GuidGeneratorState.LastRandomNodeIdBytes;
-                if (randomNodeId is not null) { fieldFlags |= 0x02; }
+                var phyNodeId = GuidGeneratorState.LastPhysicalNodeIdBytes;
+                if (phyNodeId is not null) { fieldFlags |= 0x01; }
+                var randNodeId = GuidGeneratorState.LastRandomNodeIdBytes;
+                if (randNodeId is not null) { fieldFlags |= 0x02; }
                 var emptyNodeId = GuidGeneratorState.EmptyNodeIdBytes;
 
                 writer.Write(GuidGeneratorState.VersionNumber);
                 writer.Write(fieldFlags);
-                writer.Write(macNodeId ?? emptyNodeId, 0, 6);
-                writer.Write(randomNodeId ?? emptyNodeId, 0, 6);
+                writer.Write(phyNodeId ?? emptyNodeId, 0, 6);
+                writer.Write(randNodeId ?? emptyNodeId, 0, 6);
                 writer.Write(GuidGeneratorState.LastTimestamp);
                 writer.Write(GuidGeneratorState.ClockSequence);
                 return true;
