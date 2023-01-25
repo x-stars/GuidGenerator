@@ -31,11 +31,8 @@ public static partial class GuidGeneratorState
     /// is successful; otherwise, <see langword="false"/>.</returns>
     public static bool SetStorageFilePath(string? filePath)
     {
-        lock (GuidGeneratorState.SyncRoot)
-        {
-            GuidGeneratorState.CurrentStorageFile = filePath;
-            return GuidGeneratorState.LoadFromStorage();
-        }
+        GuidGeneratorState.CurrentStorageFile = filePath;
+        return GuidGeneratorState.LoadFromStorage();
     }
 
     /// <summary>

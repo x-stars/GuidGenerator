@@ -49,45 +49,63 @@ static partial class GuidGeneratorState
         return new object();
     }
 
+    internal static int RefreshState(byte[]? nodeId, long timestamp)
+    {
+        var clockSeq = default(int);
+        lock (GuidGeneratorState.SyncRoot)
+        {
+            _ = GuidGeneratorState.UpdateNodeId(nodeId);
+            clockSeq = GuidGeneratorState.UpdateTimestamp(timestamp);
+        }
+        _ = GuidGeneratorState.LastSavingAsyncResultCache.Value;
+        return clockSeq;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool UpdateNodeId(byte[]? nodeId)
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static bool NodeIdEquals(byte[] nodeId, byte[] lastNode)
+        {
+            return (nodeId == lastNode) ||
+                (nodeId[0] == lastNode[0]) && (nodeId[1] == lastNode[1]) &&
+                (nodeId[2] == lastNode[2]) && (nodeId[3] == lastNode[3]) &&
+                (nodeId[4] == lastNode[4]) && (nodeId[5] == lastNode[5]);
+        }
+
+        if (nodeId is null) { return false; }
+        var isMulticast = (nodeId[0] & 0x01) == 0x01;
+        ref var lastNodeField = ref (isMulticast ?
+            ref GuidGeneratorState.LastRandomNodeIdBytes :
+            ref GuidGeneratorState.LastPhysicalNodeIdBytes);
+        if (nodeId == lastNodeField) { return false; }
+
+        var nodeIdChanged = false;
+        var lastNode = lastNodeField;
+        if ((lastNode is not null) && !NodeIdEquals(nodeId, lastNode))
+        {
+            GuidGeneratorState.ClockSequence =
+                GuidGeneratorState.GetInitClockSequence();
+            nodeIdChanged = true;
+        }
+        lastNodeField = nodeId;
+        return nodeIdChanged;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static int UpdateTimestamp(long timestamp)
+    {
+        if (timestamp <= GuidGeneratorState.LastTimestamp)
+        {
+            GuidGeneratorState.ClockSequence++;
+        }
+        GuidGeneratorState.LastTimestamp = timestamp;
+        return GuidGeneratorState.ClockSequence;
+    }
+
     private static Task<bool> SaveToStorageAsync()
     {
         return Task.Run(GuidGeneratorState.SaveToStorage);
-    }
-
-    internal static int RefreshState(byte[]? nodeId, long timestamp)
-    {
-        lock (GuidGeneratorState.SyncRoot)
-        {
-            var clockSeq = GuidGeneratorState.ClockSequence;
-            if (nodeId is not null)
-            {
-                var isRandomNodeId = (nodeId[0] & 0x01) == 0x01;
-                ref var lastNodeField = ref (isRandomNodeId ?
-                    ref GuidGeneratorState.LastRandomNodeIdBytes :
-                    ref GuidGeneratorState.LastPhysicalNodeIdBytes);
-                var lastNode = lastNodeField;
-                if ((nodeId != lastNode) && (lastNode is not null))
-                {
-                    if ((nodeId[0] != lastNode[0]) || (nodeId[1] != lastNode[1]) ||
-                        (nodeId[2] != lastNode[2]) || (nodeId[3] != lastNode[3]) ||
-                        (nodeId[4] != lastNode[4]) || (nodeId[5] != lastNode[5]))
-                    {
-                        clockSeq = GuidGeneratorState.GetInitClockSequence();
-                    }
-                }
-                lastNodeField = nodeId;
-            }
-
-            var lastTs = GuidGeneratorState.LastTimestamp;
-            if (timestamp <= lastTs) { clockSeq++; }
-            GuidGeneratorState.LastTimestamp = timestamp;
-
-            _ = (clockSeq != GuidGeneratorState.ClockSequence) ?
-                GuidGeneratorState.SaveToStorageAsync() :
-                GuidGeneratorState.LastSavingAsyncResultCache.Value;
-            GuidGeneratorState.ClockSequence = clockSeq;
-            return clockSeq;
-        }
     }
 
     private static bool LoadFromStorage()
@@ -97,22 +115,22 @@ static partial class GuidGeneratorState
 
         try
         {
+            using var stream = new FileStream(storageFile,
+                FileMode.Open, FileAccess.Read, FileShare.Read);
+            using var reader = new BinaryReader(stream);
+            var version = reader.ReadInt32();
+            if (version != GuidGeneratorState.VersionNumber)
+            {
+                throw new InvalidDataException($"Unknown version number: {version}.");
+            }
+            var fieldFlags = reader.ReadInt32();
+            var phyNodeId = reader.ReadBytes(6);
+            var randNodeId = reader.ReadBytes(6);
+            var timestamp = reader.ReadInt64();
+            var clockSeq = reader.ReadInt32();
+
             lock (GuidGeneratorState.SyncRoot)
             {
-                using var stream = new FileStream(storageFile,
-                    FileMode.Open, FileAccess.Read, FileShare.Read);
-                using var reader = new BinaryReader(stream);
-                var version = reader.ReadInt32();
-                if (version != GuidGeneratorState.VersionNumber)
-                {
-                    throw new InvalidDataException($"Unknown version number: {version}.");
-                }
-                var fieldFlags = reader.ReadInt32();
-                var phyNodeId = reader.ReadBytes(6);
-                var randNodeId = reader.ReadBytes(6);
-                var timestamp = reader.ReadInt64();
-                var clockSeq = reader.ReadInt32();
-
                 if ((fieldFlags & 0x01) == 0x01)
                 {
                     phyNodeId[0] &= 0xFE;
@@ -145,26 +163,37 @@ static partial class GuidGeneratorState
 
         try
         {
+            var fieldFlags = 0x04 | 0x08;
+            var phyNodeId = GuidGeneratorState.EmptyNodeIdBytes;
+            var randNodeId = GuidGeneratorState.EmptyNodeIdBytes;
+            var timestamp = default(long);
+            var clockSeq = default(int);
             lock (GuidGeneratorState.SyncRoot)
             {
-                using var stream = new FileStream(storageFile,
-                    FileMode.Create, FileAccess.Write, FileShare.None);
-                using var writer = new BinaryWriter(stream);
-                var fieldFlags = 0x04 | 0x08;
-                var phyNodeId = GuidGeneratorState.LastPhysicalNodeIdBytes;
-                if (phyNodeId is not null) { fieldFlags |= 0x01; }
-                var randNodeId = GuidGeneratorState.LastRandomNodeIdBytes;
-                if (randNodeId is not null) { fieldFlags |= 0x02; }
-                var emptyNodeId = GuidGeneratorState.EmptyNodeIdBytes;
-
-                writer.Write(GuidGeneratorState.VersionNumber);
-                writer.Write(fieldFlags);
-                writer.Write(phyNodeId ?? emptyNodeId, 0, 6);
-                writer.Write(randNodeId ?? emptyNodeId, 0, 6);
-                writer.Write(GuidGeneratorState.LastTimestamp);
-                writer.Write(GuidGeneratorState.ClockSequence);
-                return true;
+                if (GuidGeneratorState.LastPhysicalNodeIdBytes is not null)
+                {
+                    fieldFlags |= 0x01;
+                    phyNodeId = GuidGeneratorState.LastPhysicalNodeIdBytes;
+                }
+                if (GuidGeneratorState.LastRandomNodeIdBytes is not null)
+                {
+                    fieldFlags |= 0x02;
+                    randNodeId = GuidGeneratorState.LastRandomNodeIdBytes;
+                }
+                timestamp = GuidGeneratorState.LastTimestamp;
+                clockSeq = GuidGeneratorState.ClockSequence;
             }
+
+            using var stream = new FileStream(storageFile,
+                FileMode.Create, FileAccess.Write, FileShare.None);
+            using var writer = new BinaryWriter(stream);
+            writer.Write(GuidGeneratorState.VersionNumber);
+            writer.Write(fieldFlags);
+            writer.Write(phyNodeId, 0, 6);
+            writer.Write(randNodeId, 0, 6);
+            writer.Write(timestamp);
+            writer.Write(clockSeq);
+            return true;
         }
         catch (Exception ex)
         {
