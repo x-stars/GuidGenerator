@@ -37,34 +37,39 @@ module Guid =
     type Generator = GuidGenerator
 
     /// <summary>
+    /// An abbreviation for the type <see cref="T:XNetEx.Guids.Generators.GuidGeneratorState"/>.
+    /// </summary>
+    type GeneratorState = GuidGeneratorState
+
+    /// <summary>
     /// Represents the <see cref="T:System.Guid"/> instance whose value is all zeros.
     /// </summary>
     [<CompiledName("Empty")>]
-    let empty: Guid = Guid.Empty
+    let empty = Guid.Empty
 
     /// <summary>
     /// Represents the namespace ID of a fully-qualified domain name.
     /// </summary>
     [<CompiledName("NamespaceDns")>]
-    let nsDns: Guid = Namespace.Dns
+    let nsDns = Namespace.Dns
 
     /// <summary>
     /// Represents the namespace ID of a URL.
     /// </summary>
     [<CompiledName("NamespaceUrl")>]
-    let nsUrl: Guid = Namespace.Url
+    let nsUrl = Namespace.Url
 
     /// <summary>
     /// Represents the namespace ID of an ISO OID.
     /// </summary>
     [<CompiledName("NamespaceOid")>]
-    let nsOid: Guid = Namespace.Oid
+    let nsOid = Namespace.Oid
 
     /// <summary>
     /// Represents the namespace ID of an X.500 DN.
     /// </summary>
     [<CompiledName("NamespaceX500")>]
-    let nsX500: Guid = Namespace.X500
+    let nsX500 = Namespace.X500
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 1.
@@ -212,6 +217,27 @@ module Guid =
     [<CompiledName("NewVersion5ByEncoding")>]
     let newV5Enc (nsId: Guid) (enc: Text.Encoding) (name: string) =
         Generator.Version5.NewGuid(nsId, name, enc)
+
+    /// <summary>
+    /// Loads GUID generator state from the specified storage file
+    /// and returns a value that indicates the loading operation is successful.
+    /// </summary>
+    /// <param name="filePath">The full path of the state storage file,
+    /// or <see langword="null"/> to disable the state storage.</param>
+    /// <returns><see langword="true"/> if the state storage loading operation
+    /// is successful; otherwise, <see langword="false"/>.</returns>
+    [<CompiledName("LoadGeneratorState")>]
+    let loadState (filePath: string) =
+        GeneratorState.SetStorageFilePath(filePath)
+
+    /// <summary>
+    /// Connects a listener function to the event that occurs
+    /// when a GUID generator state storage I/O operation throws an exception.
+    /// </summary>
+    /// <param name="callback">The function to call when the event is triggered.</param>
+    [<CompiledName("OnStateStorageException")>]
+    let onStateExn (callback: StateStorageExceptionEventArgs -> unit) =
+        GeneratorState.StorageException.Add(callback)
 
     /// <summary>
     /// Creates a new <see cref="T:System.Guid"/> instance
