@@ -16,12 +16,12 @@ internal static class Program
 
     private static void ConfigureStateStorage()
     {
-        GuidGeneratorState.StateStorageException += (sender, e) =>
+        GuidGeneratorState.StorageException += (sender, e) =>
         {
-            if ((e.StorageOperation != FileAccess.Read) ||
-                (e.StorageException is not FileNotFoundException))
+            if ((e.OperationType != FileAccess.Read) ||
+                (e.Exception is not FileNotFoundException))
             {
-                Console.Error.WriteLine(e.StorageException);
+                Console.Error.WriteLine(e.Exception);
             }
         };
         var storageDir = Environment.GetFolderPath(

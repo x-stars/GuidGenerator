@@ -150,7 +150,7 @@ static partial class GuidGeneratorState
         }
         catch (Exception ex)
         {
-            GuidGeneratorState.OnStateStorageException(
+            GuidGeneratorState.OnStorageException(
                 new StateStorageExceptionEventArgs(ex, storageFile, FileAccess.Read));
             return false;
         }
@@ -197,7 +197,7 @@ static partial class GuidGeneratorState
         }
         catch (Exception ex)
         {
-            GuidGeneratorState.OnStateStorageException(
+            GuidGeneratorState.OnStorageException(
                 new StateStorageExceptionEventArgs(ex, storageFile, FileAccess.Write));
             return false;
         }

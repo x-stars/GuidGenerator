@@ -17,9 +17,9 @@ public static partial class GuidGeneratorState
     public static string? StorageFilePath => GuidGeneratorState.CurrentStorageFile;
 
     /// <summary>
-    /// Occurs when a state storage IO operation throws an exception.
+    /// Occurs when a state storage I/O operation throws an exception.
     /// </summary>
-    public static event EventHandler<StateStorageExceptionEventArgs>? StateStorageException;
+    public static event EventHandler<StateStorageExceptionEventArgs>? StorageException;
 
     /// <summary>
     /// Sets the full path of the state storage file and returns a value
@@ -36,12 +36,12 @@ public static partial class GuidGeneratorState
     }
 
     /// <summary>
-    /// Raises the <see cref="GuidGeneratorState.StateStorageException"/> event.
+    /// Raises the <see cref="GuidGeneratorState.StorageException"/> event.
     /// </summary>
     /// <param name="e">A <see cref="StateStorageExceptionEventArgs"/>
     /// that contains the event data.</param>
-    private static void OnStateStorageException(StateStorageExceptionEventArgs e)
+    private static void OnStorageException(StateStorageExceptionEventArgs e)
     {
-        GuidGeneratorState.StateStorageException?.Invoke(null, e);
+        GuidGeneratorState.StorageException?.Invoke(null, e);
     }
 }
