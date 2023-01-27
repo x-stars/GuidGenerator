@@ -14,14 +14,14 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
     private readonly NodeIdProvider NodeIdProvider;
 
     protected TimeBasedGuidGenerator()
-        : this(NodeIdProvider.PhysicalAddress.Instance)
+        : this(NodeIdSource.PhysicalAddress)
     {
     }
 
-    protected TimeBasedGuidGenerator(NodeIdProvider nodeIdProvider)
+    protected TimeBasedGuidGenerator(NodeIdSource nodeIdSource)
     {
         this.TimestampProvider = TimestampProvider.Instance;
-        this.NodeIdProvider = nodeIdProvider;
+        this.NodeIdProvider = NodeIdProvider.GetInstance(nodeIdSource);
     }
 
     internal static TimeBasedGuidGenerator Instance
@@ -49,8 +49,7 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
             static TimeBasedGuidGenerator Initialize()
             {
                 return TimeBasedGuidGenerator.SingletonR ??=
-                    new TimeBasedGuidGenerator(
-                        NodeIdProvider.RandomNumber.Instance);
+                    new TimeBasedGuidGenerator(NodeIdSource.NonVolatileRandom);
             }
 
             return TimeBasedGuidGenerator.SingletonR ?? Initialize();
@@ -63,12 +62,11 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     private byte[] NodeIdBytes => this.NodeIdProvider.NodeIdBytes;
 
-    private bool IsNodeIdNonVolatile => this.NodeIdProvider.IsNonVolatile;
+    private NodeIdSource NodeIdSource => this.NodeIdProvider.SourceType;
 
     internal static TimeBasedGuidGenerator CreateInstanceR()
     {
-        var randomNodeId = NodeIdProvider.RandomNumber.Create();
-        return new TimeBasedGuidGenerator(randomNodeId);
+        return new TimeBasedGuidGenerator(NodeIdSource.VolatileRandom);
     }
 
     public override Guid NewGuid()
@@ -82,10 +80,10 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     private void FillTimeAndNodeFields(ref Guid guid)
     {
-        var nodeId = this.NodeIdBytes;
-        var nvNodeId = this.IsNodeIdNonVolatile ? nodeId : null;
         var timestamp = this.CurrentTimestamp;
-        var clockSeq = GuidGeneratorState.RefreshState(nvNodeId, timestamp);
+        var nodeId = this.NodeIdBytes;
+        var clockSeq = GuidGeneratorState.RefreshState(
+            timestamp, nodeId, this.NodeIdSource);
         guid.TimeLow() = (uint)(timestamp >> (0 * 8));
         guid.TimeMid() = (ushort)(timestamp >> (4 * 8));
         guid.TimeHi_Ver() = (ushort)(timestamp >> (6 * 8));

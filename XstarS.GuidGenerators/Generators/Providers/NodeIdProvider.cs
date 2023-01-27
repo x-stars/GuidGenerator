@@ -10,74 +10,45 @@ internal abstract class NodeIdProvider
 
     public abstract byte[] NodeIdBytes { get; }
 
-    public virtual bool IsNonVolatile => true;
+    public abstract NodeIdSource SourceType { get; }
 
-    internal class RandomNumber : NodeIdProvider
+    internal static NodeIdProvider GetInstance(NodeIdSource source) => source switch
     {
-        private static volatile NodeIdProvider.RandomNumber? Singleton;
+        NodeIdSource.None => NodeIdProvider.Nothing.Instance,
+        NodeIdSource.PhysicalAddress => NodeIdProvider.PhysicalAddress.Instance,
+        NodeIdSource.VolatileRandom => NodeIdProvider.RandomNumber.Create(),
+        NodeIdSource.NonVolatileRandom => NodeIdProvider.RandomNumber.Instance,
+        _ => throw new ArgumentOutOfRangeException(nameof(source)),
+    };
 
-        private readonly byte[] RandomNodeIdBytes;
+    private sealed class Nothing : NodeIdProvider
+    {
+        private static volatile NodeIdProvider.Nothing? Singleton;
 
-        private RandomNumber()
-        {
-            this.RandomNodeIdBytes =
-                NodeIdProvider.RandomNumber.CreateNodeIdBytes();
-        }
+        private Nothing() { }
 
-        internal static NodeIdProvider.RandomNumber Instance
+        internal static NodeIdProvider.Nothing Instance
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 [MethodImpl(MethodImplOptions.Synchronized)]
-                static NodeIdProvider.RandomNumber Initialize()
+                static NodeIdProvider.Nothing Initialize()
                 {
-                    return NodeIdProvider.RandomNumber.Singleton ??=
-                        new NodeIdProvider.RandomNumber.NonVolatile();
+                    return NodeIdProvider.Nothing.Singleton ??=
+                        new NodeIdProvider.Nothing();
                 }
 
-                return NodeIdProvider.RandomNumber.Singleton ?? Initialize();
+                return NodeIdProvider.Nothing.Singleton ?? Initialize();
             }
         }
 
-        public override byte[] NodeIdBytes => this.RandomNodeIdBytes;
+        public override byte[] NodeIdBytes => throw new NotSupportedException();
 
-        public override bool IsNonVolatile => false;
-
-        internal static NodeIdProvider.RandomNumber Create()
-        {
-            return new NodeIdProvider.RandomNumber();
-        }
-
-        private static unsafe byte[] CreateNodeIdBytes()
-        {
-            const int size = 6;
-            var newGuid = Guid.NewGuid();
-            var nodeId = new byte[size];
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-            newGuid.NodeId().CopyTo((Span<byte>)nodeId);
-#else
-            fixed (byte* pGuidNodeId = &newGuid.NodeId(0), pNodeId = &nodeId[0])
-            {
-                Buffer.MemoryCopy(pGuidNodeId, pNodeId, size, size);
-            }
-#endif
-            nodeId[0] |= 0x01;
-            return nodeId;
-        }
-
-        private sealed class NonVolatile : NodeIdProvider.RandomNumber
-        {
-            internal NonVolatile() { }
-
-            public override byte[] NodeIdBytes =>
-                GuidGeneratorState.RandomNodeIdBytes ?? this.RandomNodeIdBytes;
-
-            public override bool IsNonVolatile => true;
-        }
+        public override NodeIdSource SourceType => NodeIdSource.None;
     }
 
-    internal sealed class PhysicalAddress : NodeIdProvider
+    private sealed class PhysicalAddress : NodeIdProvider
     {
         private static volatile NodeIdProvider.PhysicalAddress? Singleton;
 
@@ -106,6 +77,8 @@ internal abstract class NodeIdProvider
         }
 
         public override byte[] NodeIdBytes => this.NodeIdBytesCache.Value;
+
+        public override NodeIdSource SourceType => NodeIdSource.PhysicalAddress;
 
         private byte[] GetNodeIdBytes()
         {
@@ -142,6 +115,71 @@ internal abstract class NodeIdProvider
             return (ifaceType != NetworkInterfaceType.Loopback) &&
                    (ifaceType != NetworkInterfaceType.Tunnel) &&
                    (macAddress.GetAddressBytes().Length == 6);
+        }
+    }
+
+    private class RandomNumber : NodeIdProvider
+    {
+        private static volatile NodeIdProvider.RandomNumber? Singleton;
+
+        private readonly byte[] RandomNodeIdBytes;
+
+        private RandomNumber()
+        {
+            this.RandomNodeIdBytes =
+                NodeIdProvider.RandomNumber.CreateNodeIdBytes();
+        }
+
+        internal static NodeIdProvider.RandomNumber Instance
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                [MethodImpl(MethodImplOptions.Synchronized)]
+                static NodeIdProvider.RandomNumber Initialize()
+                {
+                    return NodeIdProvider.RandomNumber.Singleton ??=
+                        new NodeIdProvider.RandomNumber.NonVolatile();
+                }
+
+                return NodeIdProvider.RandomNumber.Singleton ?? Initialize();
+            }
+        }
+
+        public override byte[] NodeIdBytes => this.RandomNodeIdBytes;
+
+        public override NodeIdSource SourceType => NodeIdSource.VolatileRandom;
+
+        internal static NodeIdProvider.RandomNumber Create()
+        {
+            return new NodeIdProvider.RandomNumber();
+        }
+
+        private static unsafe byte[] CreateNodeIdBytes()
+        {
+            const int size = 6;
+            var newGuid = Guid.NewGuid();
+            var nodeId = new byte[size];
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            newGuid.NodeId().CopyTo((Span<byte>)nodeId);
+#else
+            fixed (byte* pGuidNodeId = &newGuid.NodeId(0), pNodeId = &nodeId[0])
+            {
+                Buffer.MemoryCopy(pGuidNodeId, pNodeId, size, size);
+            }
+#endif
+            nodeId[0] |= 0x01;
+            return nodeId;
+        }
+
+        private sealed class NonVolatile : NodeIdProvider.RandomNumber
+        {
+            internal NonVolatile() { }
+
+            public override byte[] NodeIdBytes =>
+                GuidGeneratorState.RandomNodeIdBytes ?? this.RandomNodeIdBytes;
+
+            public override NodeIdSource SourceType => NodeIdSource.NonVolatileRandom;
         }
     }
 }
