@@ -141,7 +141,7 @@ internal abstract class NodeIdProvider
             var macAddress = iface.GetPhysicalAddress();
             return (ifaceType != NetworkInterfaceType.Loopback) &&
                    (ifaceType != NetworkInterfaceType.Tunnel) &&
-                   (macAddress.GetAddressBytes().Length > 0);
+                   (macAddress.GetAddressBytes().Length == 6);
         }
     }
 }
