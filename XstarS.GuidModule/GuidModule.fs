@@ -220,7 +220,7 @@ module Guid =
 
     /// <summary>
     /// Loads GUID generator state from the specified storage file
-    /// and returns a value that indicates the loading operation is successful.
+    /// and returns a value that indicates whether the loading operation is successful.
     /// </summary>
     /// <param name="filePath">The full path of the state storage file,
     /// or <see langword="null"/> to disable the state storage.</param>

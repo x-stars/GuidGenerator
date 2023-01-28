@@ -56,7 +56,7 @@ public sealed class StateStorageExceptionEventArgs : EventArgs
 
     /// <summary>
     /// Sets the full path of the state storage file and returns a value
-    /// that indicates the state storage loading operation is successful.
+    /// that indicates whether the state storage loading operation is successful.
     /// </summary>
     /// <param name="filePath">The full path of the state storage file,
     /// or <see langword="null"/> to disable the state storage.</param>
