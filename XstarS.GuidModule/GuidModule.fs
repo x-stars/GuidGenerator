@@ -37,11 +37,6 @@ module Guid =
     type Generator = GuidGenerator
 
     /// <summary>
-    /// An abbreviation for the type <see cref="T:XNetEx.Guids.Generators.GuidGeneratorState"/>.
-    /// </summary>
-    type GeneratorState = GuidGeneratorState
-
-    /// <summary>
     /// Represents the <see cref="T:System.Guid"/> instance whose value is all zeros.
     /// </summary>
     [<CompiledName("Empty")>]
@@ -219,16 +214,16 @@ module Guid =
         Generator.Version5.NewGuid(nsId, name, enc)
 
     /// <summary>
-    /// Loads GUID generator state from the specified storage file
+    /// Loads the GUID generator state from the specified storage file
     /// and returns a value that indicates whether the loading operation is successful.
     /// </summary>
-    /// <param name="filePath">The full path of the state storage file,
+    /// <param name="fileName">The path of the state storage file,
     /// or <see langword="null"/> to disable the state storage.</param>
     /// <returns><see langword="true"/> if the state storage loading operation
     /// is successful; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("LoadGeneratorState")>]
-    let loadState (filePath: string) =
-        GeneratorState.SetStorageFilePath(filePath)
+    let loadState (fileName: string) =
+        Generator.SetStateStorageFile(fileName)
 
     /// <summary>
     /// Connects a listener function to the event that occurs
@@ -237,7 +232,7 @@ module Guid =
     /// <param name="callback">The function to call when the event is triggered.</param>
     [<CompiledName("OnStateStorageException")>]
     let onStateExn (callback: StateStorageExceptionEventArgs -> unit) =
-        GeneratorState.StorageException.Add(callback)
+        Generator.StateStorageException.Add(callback)
 
     /// <summary>
     /// Creates a new <see cref="T:System.Guid"/> instance

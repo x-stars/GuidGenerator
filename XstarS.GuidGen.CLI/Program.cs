@@ -16,7 +16,7 @@ internal static class Program
 
     private static void ConfigureStateStorage()
     {
-        GuidGeneratorState.StorageException += (sender, e) =>
+        GuidGenerator.StateStorageException += (sender, e) =>
         {
             if ((e.OperationType != FileAccess.Read) ||
                 (e.Exception is not FileNotFoundException))
@@ -29,6 +29,6 @@ internal static class Program
             Environment.SpecialFolderOption.Create);
         var storageFile = "768a7b1b-ae51-5c0a-bc9d-a85a343f2c24.state.bin";
         var storagePath = Path.Combine(storageDir, storageFile);
-        _ = GuidGeneratorState.SetStorageFilePath(storagePath);
+        _ = GuidGenerator.SetStateStorageFile(storagePath);
     }
 }

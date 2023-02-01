@@ -177,7 +177,7 @@ internal abstract class NodeIdProvider
             internal NonVolatile() { }
 
             public override byte[] NodeIdBytes =>
-                GuidGeneratorState.RandomNodeIdBytes ?? this.RandomNodeIdBytes;
+                GuidGeneratorState.RandomNodeId ?? this.RandomNodeIdBytes;
 
             public override NodeIdSource SourceType => NodeIdSource.NonVolatileRandom;
         }
