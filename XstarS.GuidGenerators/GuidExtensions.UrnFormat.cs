@@ -1,6 +1,7 @@
 ﻿using System;
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 #endif
 
 namespace XNetEx.Guids;
@@ -28,8 +29,7 @@ static partial class GuidExtensions
         return GuidExtensions.ParseUrn((ReadOnlySpan<char>)input);
 #else
         var guidUrnString = input.Trim();
-        if (!guidUrnString.StartsWith("urn:uuid:",
-                StringComparison.OrdinalIgnoreCase))
+        if (!guidUrnString.StartsWith("urn:uuid:", StringComparison.OrdinalIgnoreCase))
         {
             throw new FormatException("Guid URN should start with \"urn:uuid:\".");
         }
@@ -51,8 +51,7 @@ static partial class GuidExtensions
     public static Guid ParseUrn(ReadOnlySpan<char> input)
     {
         var guidUrnString = input.Trim();
-        if (!guidUrnString.StartsWith("urn:uuid:",
-                StringComparison.OrdinalIgnoreCase))
+        if (!guidUrnString.StartsWith("urn:uuid:", StringComparison.OrdinalIgnoreCase))
         {
             throw new FormatException("Guid URN should start with \"urn:uuid:\".");
         }
@@ -82,8 +81,7 @@ static partial class GuidExtensions
         return GuidExtensions.TryParseUrn((ReadOnlySpan<char>)input, out guid);
 #else
         var guidUrnString = input.Trim();
-        if (!guidUrnString.StartsWith("urn:uuid:",
-                StringComparison.OrdinalIgnoreCase))
+        if (!guidUrnString.StartsWith("urn:uuid:", StringComparison.OrdinalIgnoreCase))
         {
             guid = default(Guid);
             return false;
@@ -107,8 +105,7 @@ static partial class GuidExtensions
     public static bool TryParseUrn(ReadOnlySpan<char> input, out Guid guid)
     {
         var guidUrnString = input.Trim();
-        if (!guidUrnString.StartsWith("urn:uuid:",
-                StringComparison.OrdinalIgnoreCase))
+        if (!guidUrnString.StartsWith("urn:uuid:", StringComparison.OrdinalIgnoreCase))
         {
             guid = default(Guid);
             return false;
@@ -129,10 +126,7 @@ static partial class GuidExtensions
     {
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         const int urnFormatLength = 9 + 36;
-        var guidUrnBuffer = (stackalloc char[urnFormatLength]);
-        var result = guid.TryFormatUrn(guidUrnBuffer, out var charsWritten);
-        Debug.Assert(result && (charsWritten == urnFormatLength));
-        return new string(guidUrnBuffer);
+        return string.Create(urnFormatLength, guid, GuidExtensions.FormatUrnCore);
 #else
         return "urn:uuid:" + guid.ToString("D");
 #endif
@@ -159,12 +153,20 @@ static partial class GuidExtensions
             charsWritten = 0;
             return false;
         }
+        GuidExtensions.FormatUrnCore(destination, guid);
+        charsWritten = urnFormatLength;
+        return true;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void FormatUrnCore(Span<char> destination, Guid guid)
+    {
+        const int urnFormatLength = 9 + 36;
+        Debug.Assert(destination.Length >= urnFormatLength);
         ((ReadOnlySpan<char>)"urn:uuid:").CopyTo(destination);
         var guidBuffer = destination[9..urnFormatLength];
         var result = guid.TryFormat(guidBuffer, out int guidCharsWritten, "D");
         Debug.Assert(result && (guidCharsWritten == 36));
-        charsWritten = urnFormatLength;
-        return true;
     }
 #endif
 }
