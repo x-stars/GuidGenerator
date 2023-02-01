@@ -157,15 +157,15 @@ internal abstract class NodeIdProvider
 
         private static unsafe byte[] CreateNodeIdBytes()
         {
-            const int size = 6;
+            const int nodeIdSize = 6;
             var newGuid = Guid.NewGuid();
-            var nodeId = new byte[size];
+            var nodeId = new byte[nodeIdSize];
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
             newGuid.NodeId().CopyTo((Span<byte>)nodeId);
 #else
             fixed (byte* pGuidNodeId = &newGuid.NodeId(0), pNodeId = &nodeId[0])
             {
-                Buffer.MemoryCopy(pGuidNodeId, pNodeId, size, size);
+                Buffer.MemoryCopy(pGuidNodeId, pNodeId, nodeIdSize, nodeIdSize);
             }
 #endif
             nodeId[0] |= 0x01;

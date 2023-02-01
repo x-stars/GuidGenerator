@@ -159,20 +159,20 @@ public static partial class GuidExtensions
     public static unsafe bool TryGetNodeId(
         this Guid guid, [NotNullWhen(true)] out byte[]? nodeId)
     {
-        const int size = 6;
+        const int nodeIdSize = 6;
         if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
             !guid.GetVersion().ContainsNodeId())
         {
             nodeId = null;
             return false;
         }
-        nodeId = new byte[size];
+        nodeId = new byte[nodeIdSize];
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         guid.NodeId().CopyTo((Span<byte>)nodeId);
 #else
         fixed (byte* pGuidNodeId = &guid.NodeId(0), pNodeId = &nodeId[0])
         {
-            Buffer.MemoryCopy(pGuidNodeId, pNodeId, size, size);
+            Buffer.MemoryCopy(pGuidNodeId, pNodeId, nodeIdSize, nodeIdSize);
         }
 #endif
         return true;
@@ -190,8 +190,8 @@ public static partial class GuidExtensions
     /// otherwise, <see langword="false"/>.</returns>
     public static bool TryWriteNodeId(this Guid guid, Span<byte> destination)
     {
-        const int size = 6;
-        if (destination.Length < size) { return false; }
+        const int nodeIdSize = 6;
+        if (destination.Length < nodeIdSize) { return false; }
         if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
             !guid.GetVersion().ContainsNodeId())
         {
