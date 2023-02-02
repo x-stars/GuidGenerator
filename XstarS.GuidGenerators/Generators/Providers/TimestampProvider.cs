@@ -40,6 +40,7 @@ internal abstract class TimestampProvider
     {
         var spinner = new SpinWait();
         _ = DateTime.UtcNow;
+        spinner.SpinOnce();
         _ = DateTime.UtcNow;
         spinner.SpinOnce();
         var time0 = DateTime.UtcNow;
@@ -50,7 +51,8 @@ internal abstract class TimestampProvider
         spinner.SpinOnce();
         var time3 = DateTime.UtcNow;
         if (!Stopwatch.IsHighResolution) { return false; }
-        var period = Stopwatch.Frequency / 10000000.0;
+        const double ticksPerSec = 1_000_000_000 / 100;
+        var period = ticksPerSec / Stopwatch.Frequency;
         var diff10 = (time1.Ticks - time0.Ticks) / period;
         var diff21 = (time2.Ticks - time1.Ticks) / period;
         var diff32 = (time3.Ticks - time2.Ticks) / period;
@@ -103,19 +105,19 @@ internal abstract class TimestampProvider
         }
 
         public override long CurrentTimestamp =>
-            this.StartTimestamp + this.HiResTimer.ElapsedTicks;
+            this.StartTimestamp + this.HiResTimer.Elapsed.Ticks;
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void UpdateSystemTime(object? unused)
         {
-            const long secTicks = 10 * 1000 * 1000;
+            const long ticksPerSec = 1_000_000_000 / 100;
             var sysTicks = DateTime.UtcNow.Ticks;
             var sysTs = this.GetGuidTimestamp(sysTicks);
             var nowTs = this.CurrentTimestamp;
-            if (Math.Abs(nowTs - sysTs) >= secTicks)
+            if (Math.Abs(nowTs - sysTs) >= ticksPerSec)
             {
                 var nowTicks = DateTime.UtcNow.Ticks;
-                var timerTicks = this.HiResTimer.ElapsedTicks;
+                var timerTicks = this.HiResTimer.Elapsed.Ticks;
                 var startTicks = nowTicks - timerTicks;
                 var startTs = this.GetGuidTimestamp(startTicks);
                 this.StartTimestamp = startTs;
