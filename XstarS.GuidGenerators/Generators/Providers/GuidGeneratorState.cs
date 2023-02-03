@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -151,10 +150,14 @@ internal static class GuidGeneratorState
 
             lock (GuidGeneratorState.SyncRoot)
             {
-                Debug.Assert((fieldFlags & 0x01) == 0x01);
-                GuidGeneratorState.LastTimestamp = timestamp;
-                Debug.Assert((fieldFlags & 0x02) == 0x02);
-                GuidGeneratorState.ClockSequence = clockSeq;
+                if ((fieldFlags & 0x01) == 0x01)
+                {
+                    GuidGeneratorState.LastTimestamp = timestamp;
+                }
+                if ((fieldFlags & 0x02) == 0x02)
+                {
+                    GuidGeneratorState.ClockSequence = clockSeq;
+                }
                 if ((fieldFlags & 0x04) == 0x04)
                 {
                     GuidGeneratorState.LastPhysicalNodeId = phyNodeId;
