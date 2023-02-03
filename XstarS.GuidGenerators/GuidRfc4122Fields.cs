@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Buffers.Binary;
 using System.Runtime.InteropServices;
@@ -46,6 +47,7 @@ internal static class GuidRfc4122Fields
         guid.SetNodeId((ReadOnlySpan<byte>)nodeId);
 #else
         const int nodeIdSize = 6;
+        Debug.Assert(nodeId.Length >= nodeIdSize);
         fixed (byte* pNodeId = &nodeId[0], pGuidNodeId = &guid.NodeId(0))
         {
             Buffer.MemoryCopy(pNodeId, pGuidNodeId, nodeIdSize, nodeIdSize);
@@ -58,6 +60,7 @@ internal static class GuidRfc4122Fields
     internal static void SetNodeId(this ref Guid guid, ReadOnlySpan<byte> nodeId)
     {
         const int nodeIdSize = 6;
+        Debug.Assert(nodeId.Length >= nodeIdSize);
         nodeId[..nodeIdSize].CopyTo(guid.NodeId());
     }
 #endif
@@ -66,6 +69,7 @@ internal static class GuidRfc4122Fields
     private static unsafe ref T FieldAt<T>(this ref Guid guid, int offset)
         where T : unmanaged
     {
+        Debug.Assert((offset >= 0) && (offset + sizeof(T) <= 16));
 #if NETCOREAPP3_0_OR_GREATER
         return ref Unsafe.As<Guid, T>(
             ref Unsafe.AddByteOffset(ref guid, (nint)offset));
