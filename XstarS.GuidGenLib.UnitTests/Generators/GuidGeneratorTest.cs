@@ -52,11 +52,11 @@ public class GuidGeneratorTest
     public void NewGuid_Version1_GetIncClockSeqWhenTimeBackward()
     {
         var guid0 = GuidGenerator.Version1.NewGuid();
-        guid0.TryGetTimestamp(out var timestamp0);
-        guid0.TryGetClockSequence(out var clockSeq0);
+        _ = guid0.TryGetTimestamp(out var timestamp0);
+        _ = guid0.TryGetClockSequence(out var clockSeq0);
         var guid1 = GuidGenerator.Version1.NewGuid();
-        guid1.TryGetTimestamp(out var timestamp1);
-        guid1.TryGetClockSequence(out var clockSeq1);
+        _ = guid1.TryGetTimestamp(out var timestamp1);
+        _ = guid1.TryGetClockSequence(out var clockSeq1);
         if (timestamp1.Ticks < timestamp0.Ticks)
         {
             var expected = (short)((clockSeq0 + 1) & ~0xC000);
@@ -69,6 +69,15 @@ public class GuidGeneratorTest
     {
         var guid = GuidGenerator.Version1.NewGuid();
         Assert.AreEqual(GuidVariant.Rfc4122, guid.GetVariant());
+    }
+
+    [TestMethod]
+    public void NewGuid_Version1R_GetNodeIdWithOddFirstByte()
+    {
+        var guid = GuidGenerator.Version1R.NewGuid();
+        _ = guid.TryGetNodeId(out var nodeId);
+        var nodeIdByte0 = nodeId![0];
+        Assert.AreEqual(0x01, nodeIdByte0 & 0x01);
     }
 
     [TestMethod]
@@ -111,11 +120,11 @@ public class GuidGeneratorTest
     {
         var domain = DceSecurityDomain.Person;
         var guid0 = GuidGenerator.Version2.NewGuid(domain);
-        guid0.TryGetTimestamp(out var timestamp0);
-        guid0.TryGetClockSequence(out var clockSeq0);
+        _ = guid0.TryGetTimestamp(out var timestamp0);
+        _ = guid0.TryGetClockSequence(out var clockSeq0);
         var guid1 = GuidGenerator.Version2.NewGuid(domain);
-        guid1.TryGetTimestamp(out var timestamp1);
-        guid1.TryGetClockSequence(out var clockSeq1);
+        _ = guid1.TryGetTimestamp(out var timestamp1);
+        _ = guid1.TryGetClockSequence(out var clockSeq1);
         if (timestamp1.Ticks < timestamp0.Ticks)
         {
             var expected = (byte)((clockSeq0 + 1) & ~0xC0);
@@ -219,6 +228,6 @@ public class GuidGeneratorTest
     public void OfVersion_InvalidVersionEnum_CatchArgumentOutOfRangeException()
     {
         Assert.ThrowsException<ArgumentOutOfRangeException>(
-            () => GuidGenerator.OfVersion((GuidVersion)0x0F));
+            () => GuidGenerator.OfVersion((GuidVersion)0xFF));
     }
 }
