@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="TestHelpers\*.fs" />
     <Compile Include="GuidModuleTest.fs" />
   </ItemGroup>
 

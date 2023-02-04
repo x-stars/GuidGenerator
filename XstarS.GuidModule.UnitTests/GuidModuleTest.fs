@@ -1,6 +1,7 @@
 namespace XNetEx.FSharp.Core
 
 open System
+open System.IO
 open Microsoft.VisualStudio.TestTools.UnitTesting
 open XNetEx.FSharp.UnitTesting.MSTest
 
@@ -19,6 +20,15 @@ type GuidModuleTest() =
         Guid.newV1 ()
         |> Guid.version
         |> Assert.equalTo Guid.Version.Version1
+
+    [<TestMethod>]
+    member _.NewVersion1R_WithoutInput_GetNodeIdWithOddFirstByte() =
+        Guid.newV1R ()
+        |> Guid.tryGetNodeId
+        |> tee (Assert.true' << ValueOption.isSome)
+        |> ValueOption.get
+        |> fun nodeId -> nodeId[0] &&& 0x01uy
+        |> Assert.equalTo 0x01uy
 
     [<TestMethod>]
     member _.NewVersion1RSequence_WithoutInput_GetGuidsWithSameNodeId() =
@@ -73,6 +83,94 @@ type GuidModuleTest() =
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version5)
         |> Assert.equalTo (Guid.parse "768a7b1b-ae51-5c0a-bc9d-a85a343f2c24")
+
+    [<TestMethod>]
+    member _.LoadGeneratorState_NonExistingFile_CatchFileNotFoundException() =
+        let mutable exception': Exception = null
+        Guid.onStateExn (fun e ->
+            if e.OperationType = FileAccess.Read then
+                exception' <- e.Exception)
+        let fileName = Path.GetTempFileName()
+        try
+            fileName
+            |> tee (File.Delete)
+            |> Guid.loadState
+            |> Assert.false'
+            exception'
+            |> Assert.ofType<FileNotFoundException>
+        finally
+            if File.Exists(fileName) then
+                File.Delete(fileName)
+
+    [<TestMethod>]
+    member _.LoadGeneratorState_EmptyFile_CatchEndOfStreamException() =
+        let mutable exception': Exception = null
+        Guid.onStateExn (fun e ->
+            if e.OperationType = FileAccess.Read then
+                exception' <- e.Exception)
+        let fileName = Path.GetTempFileName()
+        try
+            fileName
+            |> Guid.loadState
+            |> Assert.false'
+            exception'
+            |> Assert.ofType<EndOfStreamException>
+        finally
+            if File.Exists(fileName) then
+                File.Delete(fileName)
+
+    [<TestMethod>]
+    member _.LoadGeneratorState_UnknownVersioNumber_CatchInvalidDataException() =
+        let mutable exception': Exception = null
+        Guid.onStateExn (fun e ->
+            if e.OperationType = FileAccess.Read then
+                exception' <- e.Exception)
+        let fileName = Path.GetTempFileName()
+        try
+            if true then
+                use stream = new FileStream(fileName, FileMode.Create)
+                use writer = new BinaryWriter(stream)
+                writer.Write(1234)
+            fileName
+            |> Guid.loadState
+            |> Assert.false'
+            exception'
+            |> Assert.ofType<InvalidDataException>
+        finally
+            if File.Exists(fileName) then
+                File.Delete(fileName)
+
+    [<TestMethod>]
+    member _.LoadGeneratorState_FileWithRandomNodeId_GetNodeIdFromFile() =
+        let mutable exception': Exception = null
+        Guid.onStateExn (fun e ->
+            if e.OperationType = FileAccess.Read then
+                exception' <- e.Exception)
+        let fileName = Path.GetTempFileName()
+        try
+            let addByte1 = (op (+) 1) >> byte
+            if true then
+                use stream = new FileStream(fileName, FileMode.Create)
+                use writer = new BinaryWriter(stream)
+                writer.Write(4122)
+                writer.Write(0x08)
+                writer.Write(0L)
+                writer.Write(0)
+                writer.Write((Array.init 6 byte), 0, 6)
+                writer.Write((Array.init 6 addByte1), 0, 6)
+            fileName
+            |> Guid.loadState
+            |> Assert.true'
+            exception'
+            |> Assert.null'
+            Guid.newV1R ()
+            |> Guid.tryGetNodeId
+            |> tee (Assert.true' << ValueOption.isSome)
+            |> ValueOption.get
+            |> Assert.Seq.equalTo (Array.init 6 addByte1)
+        finally
+            if File.Exists(fileName) then
+                File.Delete(fileName)
 
     [<TestMethod>]
     member _.CreateByFields_DeconstructToFields_GetInputFields() =
