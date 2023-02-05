@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -56,17 +57,17 @@ public class GuidGeneratorStateTest
     [TestMethod]
     public void SetStateStorageFile_FileWithMaxTimestamp_GetIncrementClockSeq()
     {
-        var guid0 = GuidGenerator.Version1R.NewGuid();
-        _ = guid0.TryGetClockSequence(out var clockSeq0);
         using var tempFile = this.CreateTempFile(out var fileName);
         ref var exception = ref this.CatchStateLoadException();
-        this.WriteStateFieldsToFile(fileName, version: 4122, timestamp: long.MaxValue);
+        var inputClockSeq = 42;
+        this.WriteStateFieldsToFile(fileName, version: 4122,
+            timestamp: long.MaxValue, clockSeq: inputClockSeq);
         var loadResult = GuidGenerator.SetStateStorageFile(fileName);
         Assert.IsTrue(loadResult);
         Assert.IsNull(exception);
-        var guid1 = GuidGenerator.Version1R.NewGuid();
-        _ = guid1.TryGetClockSequence(out var clockSeq1);
-        Assert.AreEqual((short)(clockSeq0 + 1), clockSeq1);
+        var guid = GuidGenerator.Version1R.NewGuid();
+        _ = guid.TryGetClockSequence(out var clockSeq);
+        Assert.AreEqual((short)(inputClockSeq + 1), clockSeq);
     }
 
     [TestMethod]
@@ -118,27 +119,22 @@ public class GuidGeneratorStateTest
     [TestMethod]
     public void SetStateStorageFile_FileWithNonFieldFlagSet_NotGetAnyField()
     {
-        var guid0 = GuidGenerator.Version1.NewGuid();
-        _ = guid0.TryGetClockSequence(out var clockSeq0);
-        var guidR0 = GuidGenerator.Version1R.NewGuid();
-        _ = guidR0.TryGetNodeId(out var nodeId0);
         using var tempFile = this.CreateTempFile(out var fileName);
         ref var exception = ref this.CatchStateLoadException();
+        var inputClockSeq = 42;
         var inputNodeId0 = new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55 };
         var inputNodeId1 = new byte[] { 0xFF, 0xEE, 0xDD, 0xCC, 0xBB, 0xAA };
         this.WriteStateFieldsToFile(fileName, version: 4122,
-            fieldFlags: 0x00, timestamp: long.MaxValue, clockSeq: 42,
+            fieldFlags: 0x00, timestamp: long.MaxValue, clockSeq: inputClockSeq,
             phyNodeId: inputNodeId0, randNodeId: inputNodeId1);
         var loadResult = GuidGenerator.SetStateStorageFile(fileName);
         Assert.IsTrue(loadResult);
         Assert.IsNull(exception);
-        var guid1 = GuidGenerator.Version1.NewGuid();
-        _ = guid1.TryGetClockSequence(out var clockSeq1);
-        var guidR1 = GuidGenerator.Version1R.NewGuid();
-        _ = guidR1.TryGetNodeId(out var nodeId1);
-        Assert.AreEqual(clockSeq0, clockSeq1);
-        CollectionAssert.AreEqual(nodeId0, nodeId1);
-        CollectionAssert.AreNotEqual(inputNodeId1, nodeId1);
+        var guid = GuidGenerator.Version1R.NewGuid();
+        _ = guid.TryGetClockSequence(out var clockSeq);
+        _ = guid.TryGetNodeId(out var nodeId);
+        Assert.AreNotEqual(inputClockSeq, clockSeq);
+        CollectionAssert.AreNotEqual(inputNodeId1, nodeId);
     }
 
     private ref Exception? CatchStateLoadException()
@@ -162,7 +158,14 @@ public class GuidGeneratorStateTest
         {
             if (File.Exists(tempFile))
             {
-                File.Delete(tempFile);
+                try
+                {
+                    File.Delete(tempFile);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
             }
         });
     }

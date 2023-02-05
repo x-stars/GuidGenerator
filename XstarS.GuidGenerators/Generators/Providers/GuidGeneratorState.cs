@@ -101,6 +101,18 @@ internal static class GuidGeneratorState
         return GuidGeneratorState.ClockSequence;
     }
 
+    private static void ReinitializeState()
+    {
+        lock (GuidGeneratorState.SyncRoot)
+        {
+            GuidGeneratorState.LastTimestamp = 0L;
+            GuidGeneratorState.ClockSequence =
+                GuidGeneratorState.GetInitClockSequence();
+            GuidGeneratorState.LastPhysicalNodeId = null;
+            GuidGeneratorState.LastRandomNodeId = null;
+        }
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static int GetInitClockSequence()
     {
@@ -150,6 +162,7 @@ internal static class GuidGeneratorState
 
             lock (GuidGeneratorState.SyncRoot)
             {
+                GuidGeneratorState.ReinitializeState();
                 if ((fieldFlags & 0x01) == 0x01)
                 {
                     GuidGeneratorState.LastTimestamp = timestamp;

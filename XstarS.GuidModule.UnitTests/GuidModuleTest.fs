@@ -1,6 +1,7 @@
 namespace XNetEx.FSharp.Core
 
 open System
+open System.Diagnostics
 open System.IO
 open Microsoft.VisualStudio.TestTools.UnitTesting
 open XNetEx.FSharp.UnitTesting.MSTest
@@ -100,7 +101,10 @@ type GuidModuleTest() =
             |> Assert.ofType<FileNotFoundException>
         finally
             if File.Exists(fileName) then
-                File.Delete(fileName)
+                try
+                    File.Delete(fileName)
+                with
+                | ex -> Debug.WriteLine(ex)
 
     [<TestMethod>]
     member _.LoadGeneratorState_EmptyFile_CatchEndOfStreamException() =
@@ -117,7 +121,10 @@ type GuidModuleTest() =
             |> Assert.ofType<EndOfStreamException>
         finally
             if File.Exists(fileName) then
-                File.Delete(fileName)
+                try
+                    File.Delete(fileName)
+                with
+                | ex -> Debug.WriteLine(ex)
 
     [<TestMethod>]
     member _.LoadGeneratorState_UnknownVersioNumber_CatchInvalidDataException() =
@@ -138,7 +145,10 @@ type GuidModuleTest() =
             |> Assert.ofType<InvalidDataException>
         finally
             if File.Exists(fileName) then
-                File.Delete(fileName)
+                try
+                    File.Delete(fileName)
+                with
+                | ex -> Debug.WriteLine(ex)
 
     [<TestMethod>]
     member _.LoadGeneratorState_FileWithRandomNodeId_GetNodeIdFromFile() =
