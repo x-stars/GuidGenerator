@@ -15,6 +15,7 @@ static byte[] ParseBase64(string base64) => Convert.FromBase64String(base64.Repl
 var app = WebApplication.Create(args);
 
 app.MapGet("/guid/v1", HandleCount(() => GuidGenerator.Version1.NewGuid()));
+app.MapGet("/guid/v1r", HandleCount(() => GuidGenerator.Version1R.NewGuid()));
 
 app.MapGet("/guid/v2/person", () => GuidGenerator.Version2.NewGuid(DceSecurityDomain.Person));
 app.MapGet("/guid/v2/group", () => GuidGenerator.Version2.NewGuid(DceSecurityDomain.Group));
