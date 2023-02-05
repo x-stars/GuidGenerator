@@ -51,6 +51,30 @@ var guidGenV5 = GuidGenerator.OfVersion(GuidVersion.Version5);
 var guidV5 = guidGenV5.NewGuid(GuidNamespaces.Dns, "github.com");
 ```
 
+### GUID 生成器状态存储
+
+> [RFC 4122 Section 4.2.1](https://www.rfc-editor.org/rfc/rfc4122#section-4.2.1)
+
+可选支持，需要配置方可启用：
+
+``` CSharp
+using System;
+using System.IO;
+using XNetEx.Guids.Generators;
+
+// listen state storage exceptions.
+GuidGenerator.StateStorageException += (sender, e) =>
+{
+    if ((e.OperationType != FileAccess.Read) ||
+        (e.Exception is not FileNotFoundException))
+    {
+        Console.Error.WriteLine(e.Exception);
+    }
+};
+// set storage file path and load state.
+var loadResult = GuidGenerator.SetStateStorageFile("state.bin");
+```
+
 ## F# GUID 模块使用
 
 F# GUID 模块工程位于 [XstarS.GuidModule](XstarS.GuidModule)。
@@ -63,6 +87,9 @@ F# GUID 模块工程位于 [XstarS.GuidModule](XstarS.GuidModule)。
 
 ``` FSharp
 open XNetEx.FSharp.Core
+
+// load generator state from file.
+let loadResult = Guid.loadState "state.bin"
 
 // time-based GUID generation.
 let guidV1 = Guid.newV1 ()
@@ -123,16 +150,16 @@ Usage:  GuidGen[.exe] [-V1|-V4|-V1R] [-Cn]
         GuidGen[.exe] -?|-H|-Help
 Parameters:
     -V1     generate time-based GUID.
-    -V2     generate DCE security GUID.
+    -V2     generate DCE Security GUID.
     -V3     generate name-based GUID by MD5 hashing.
     -V4     generate pseudo-random GUID (default).
     -V5     generate name-based GUID by SHA1 hashing.
     -V1R    generate time-based GUID (random node ID).
     -Cn     generate n GUIDs of the current version.
-    Domain  specify a DCE security domain,
+    Domain  specify a DCE Security domain,
             which can be Person, Group or Org.
     SiteID  specify a user-defined local ID
-            for DCE security domain Org (required).
+            for DCE Security domain Org (required).
     :NS     specify a well-known GUID namespace,
             which can be :DNS, :URL, :OID or :X500.
     GuidNS  specify a user-defined GUID namespace.
