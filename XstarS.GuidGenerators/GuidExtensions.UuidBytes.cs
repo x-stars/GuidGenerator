@@ -29,10 +29,10 @@ static partial class GuidExtensions
         }
 
         var guid = default(Guid);
-        var upper = (ulong)(value >> 64);
-        guid.TimeLow() = (uint)(upper >> (64 - (4 * 8)));
-        guid.TimeMid() = (ushort)(upper >> (64 - (6 * 8)));
-        guid.TimeHi_Ver() = (ushort)(upper >> (64 - (8 * 8)));
+        var upper = (ulong)(value >> (8 * 8));
+        guid.TimeLow() = (uint)(upper >> (4 * 8));
+        guid.TimeMid() = (ushort)(upper >> (2 * 8));
+        guid.TimeHi_Ver() = (ushort)(upper >> (0 * 8));
         var guidLower = MemoryMarshal.CreateSpan(ref guid.ClkSeqHi_Var(), 8);
         BinaryPrimitives.WriteUInt64BigEndian(guidLower, (ulong)value);
         return guid;
@@ -99,9 +99,9 @@ static partial class GuidExtensions
         }
 
         var upper =
-            (ulong)guid.TimeLow() << (64 - (4 * 8)) |
-            (ulong)guid.TimeMid() << (64 - (6 * 8)) |
-            (ulong)guid.TimeHi_Ver() << (64 - (8 * 8));
+            ((ulong)guid.TimeLow() << (4 * 8)) |
+            ((ulong)guid.TimeMid() << (2 * 8)) |
+            ((ulong)guid.TimeHi_Ver() << (0 * 8));
         var lower = BinaryPrimitives.ReadUInt64BigEndian(
             MemoryMarshal.CreateReadOnlySpan(ref guid.ClkSeqHi_Var(), 8));
         return new UInt128(upper, lower);
