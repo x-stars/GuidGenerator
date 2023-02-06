@@ -29,4 +29,11 @@ app.MapGet("/guid/v4", HandleCount(() => GuidGenerator.Version4.NewGuid()));
 app.MapGet("/guid/v5/{ns}/{name}", (string ns, string name) => GuidGenerator.Version5.NewGuid(ParseGuidNs(ns), name));
 app.MapPost("/guid/v5/{ns}", (string ns, [FromBody] string name) => GuidGenerator.Version5.NewGuid(ParseGuidNs(ns), ParseBase64(name)));
 
+app.MapGet("/guid/v6", HandleCount(() => GuidGenerator.Version6.NewGuid()));
+app.MapGet("/guid/v6p", HandleCount(() => GuidGenerator.Version6P.NewGuid()));
+
+app.MapGet("/guid/v7", HandleCount(() => GuidGenerator.Version7.NewGuid()));
+
+app.MapGet("/guid/v8", HandleCount(() => GuidGenerator.Version8.NewGuid()));
+
 app.Run();
