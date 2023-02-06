@@ -9,12 +9,6 @@ namespace XNetEx.Guids;
 public static partial class GuidExtensions
 {
     /// <summary>
-    /// Represents the epoch timestamp of a time-based <see cref="Guid"/>.
-    /// </summary>
-    internal static readonly DateTime TimeBasedEpoch =
-        new DateTime(1582, 10, 15, 0, 0, 0, DateTimeKind.Utc);
-
-    /// <summary>
     /// Deconstructs the <see cref="Guid"/> into fields of integers and bytes.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
@@ -91,7 +85,7 @@ public static partial class GuidExtensions
         {
             tsField &= ~0xFFFFFFFFL;
         }
-        var tsTicks = GuidExtensions.TimeBasedEpoch.Ticks + tsField;
+        var tsTicks = TimestampEpochs.Gregorian.Ticks + tsField;
         timestamp = new DateTime(tsTicks, DateTimeKind.Utc);
         return true;
     }

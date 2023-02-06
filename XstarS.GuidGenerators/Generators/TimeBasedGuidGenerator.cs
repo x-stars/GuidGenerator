@@ -58,7 +58,12 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     public override GuidVersion Version => GuidVersion.Version1;
 
-    private long CurrentTimestamp => this.TimestampProvider.CurrentTimestamp;
+    protected virtual bool IsTimestampBigEndian => false;
+
+    private DateTime EpochDataTime => TimestampEpochs.Gregorian;
+
+    private long CurrentTimestamp =>
+        this.TimestampProvider.CurrentTimestamp - this.EpochDataTime.Ticks;
 
     private byte[] NodeIdBytes => this.NodeIdProvider.NodeIdBytes;
 
@@ -84,11 +89,78 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         var nodeId = this.NodeIdBytes;
         var clockSeq = GuidGeneratorState.RefreshState(
             timestamp, nodeId, this.NodeIdSource);
-        guid.TimeLow() = (uint)(timestamp >> (0 * 8));
-        guid.TimeMid() = (ushort)(timestamp >> (4 * 8));
-        guid.TimeHi_Ver() = (ushort)(timestamp >> (6 * 8));
+        if (this.IsTimestampBigEndian)
+        {
+            guid.TimeLow() = (uint)(timestamp >> (4 * 8 - 4));
+            guid.TimeMid() = (ushort)(timestamp >> (2 * 8 - 4));
+            guid.TimeHi_Ver() = (ushort)(timestamp >> (0 * 8));
+        }
+        else
+        {
+            guid.TimeLow() = (uint)(timestamp >> (0 * 8));
+            guid.TimeMid() = (ushort)(timestamp >> (4 * 8));
+            guid.TimeHi_Ver() = (ushort)(timestamp >> (6 * 8));
+        }
         guid.ClkSeqLow() = (byte)(clockSeq >> (0 * 8));
         guid.ClkSeqHi_Var() = (byte)(clockSeq >> (1 * 8));
         guid.SetNodeId(nodeId);
+    }
+
+    internal sealed class Sequential : TimeBasedGuidGenerator
+    {
+        private static new volatile TimeBasedGuidGenerator.Sequential? Singleton;
+
+        private static volatile TimeBasedGuidGenerator.Sequential? SingletonP;
+
+        private Sequential()
+            : base(NodeIdSource.NonVolatileRandom)
+        {
+        }
+
+        private Sequential(NodeIdSource nodeIdSource)
+            : base(nodeIdSource)
+        {
+        }
+
+        internal static new TimeBasedGuidGenerator.Sequential Instance
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                [MethodImpl(MethodImplOptions.Synchronized)]
+                static TimeBasedGuidGenerator.Sequential Initialize()
+                {
+                    return TimeBasedGuidGenerator.Sequential.Singleton ??=
+                        new TimeBasedGuidGenerator.Sequential();
+                }
+
+                return TimeBasedGuidGenerator.Sequential.Singleton ?? Initialize();
+            }
+        }
+
+        internal static TimeBasedGuidGenerator.Sequential InstanceP
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                [MethodImpl(MethodImplOptions.Synchronized)]
+                static TimeBasedGuidGenerator.Sequential Initialize()
+                {
+                    return TimeBasedGuidGenerator.Sequential.SingletonP ??=
+                        new TimeBasedGuidGenerator.Sequential(NodeIdSource.PhysicalAddress);
+                }
+
+                return TimeBasedGuidGenerator.Sequential.SingletonP ?? Initialize();
+            }
+        }
+
+        public override GuidVersion Version => GuidVersion.Version6;
+
+        protected override bool IsTimestampBigEndian => true;
+
+        internal static TimeBasedGuidGenerator.Sequential CreateInstance()
+        {
+            return new TimeBasedGuidGenerator.Sequential(NodeIdSource.VolatileRandom);
+        }
     }
 }

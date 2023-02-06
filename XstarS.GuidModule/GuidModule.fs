@@ -220,6 +220,49 @@ module Guid =
         Generator.Version5.NewGuid(nsId, name, enc)
 
     /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6.
+    /// </summary>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6.</returns>
+    [<CompiledName("NewVersion6")>]
+    let newV6 () = Generator.Version6.NewGuid()
+
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6
+    /// using a physical (IEEE 802 MAC) address node ID.
+    /// </summary>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6
+    /// using a physical (IEEE 802 MAC) address node ID.</returns>
+    [<CompiledName("NewVersion6P")>]
+    let newV6P () = Generator.Version6P.NewGuid()
+
+    /// <summary>
+    /// Creates a new unlimited sequence that generates <see cref="T:System.Guid"/>
+    /// instances of RFC 4122 UUID revision version 6 using a volatile random node ID.
+    /// </summary>
+    /// <returns>A new unlimited sequence that generates <see cref="T:System.Guid"/>
+    /// instances of RFC 4122 UUID revision version 6 using a volatile random node ID.</returns>
+    [<CompiledName("NewVersion6Sequence")>]
+    let newV6Seq () =
+        let guidGen = Generator.CreateVersion6()
+        seq { while true do yield guidGen.NewGuid() }
+
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 7.
+    /// </summary>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 7.</returns>
+    [<CompiledName("NewVersion7")>]
+    let newV7 () = Generator.Version7.NewGuid()
+
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// example implementation (UUIDREV Appendix A.5).
+    /// </summary>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// example implementation (UUIDREV Appendix A.5).</returns>
+    [<CompiledName("NewVersion8")>]
+    let newV8 () = Generator.Version8.NewGuid()
+
+    /// <summary>
     /// Loads the GUID generator state from the specified storage file
     /// and returns a value that indicates whether the loading operation is successful.
     /// </summary>

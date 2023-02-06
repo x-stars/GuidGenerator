@@ -36,7 +36,7 @@ public class GuidGeneratorTest
         Assert.IsTrue(hasTs);
         var ticksTs = timestamp.Ticks;
         var ticksNow = DateTime.UtcNow.Ticks;
-        var ticksDiff = ticksNow - ticksTs;
+        var ticksDiff = Math.Abs(ticksNow - ticksTs);
         var ticks1s = TimeSpan.FromSeconds(1).Ticks;
         Assert.IsTrue(ticksDiff < ticks1s);
     }
@@ -89,7 +89,7 @@ public class GuidGeneratorTest
         Assert.IsTrue(hasTs);
         var ticksTs = timestamp.Ticks;
         var ticksNow = DateTime.UtcNow.Ticks;
-        var ticksDiff = ticksNow - ticksTs;
+        var ticksDiff = Math.Abs(ticksNow - ticksTs);
         var ticks10m = TimeSpan.FromMinutes(10).Ticks;
         Assert.IsTrue(ticksDiff < ticks10m);
     }

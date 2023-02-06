@@ -64,18 +64,11 @@ internal abstract class TimestampProvider
 
     public abstract long CurrentTimestamp { get; }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    protected long GetGuidTimestamp(long ticks)
-    {
-        return ticks - GuidExtensions.TimeBasedEpoch.Ticks;
-    }
-
     private sealed class DirectTime : TimestampProvider
     {
         internal DirectTime() { }
 
-        public override long CurrentTimestamp =>
-            this.GetGuidTimestamp(DateTime.UtcNow.Ticks);
+        public override long CurrentTimestamp => DateTime.UtcNow.Ticks;
     }
 
     private sealed class PerfCounter : TimestampProvider
@@ -91,8 +84,7 @@ internal abstract class TimestampProvider
             const int updateMs = 1 * 1000;
             var nowTime = DateTime.UtcNow;
             var hiResTimer = Stopwatch.StartNew();
-            var timestamp = this.GetGuidTimestamp(nowTime.Ticks);
-            this.StartTimestamp = timestamp;
+            this.StartTimestamp = nowTime.Ticks;
             this.HiResTimer = hiResTimer;
             this.UpdateTimeTask = new Timer(this.UpdateSystemTime);
             this.UpdateTimeTask.Change(updateMs, updateMs);
@@ -111,15 +103,13 @@ internal abstract class TimestampProvider
         private void UpdateSystemTime(object? unused)
         {
             const long ticksPerSec = 1_000_000_000 / 100;
-            var sysTicks = DateTime.UtcNow.Ticks;
-            var sysTs = this.GetGuidTimestamp(sysTicks);
+            var sysTs = DateTime.UtcNow.Ticks;
             var nowTs = this.CurrentTimestamp;
             if (Math.Abs(nowTs - sysTs) >= ticksPerSec)
             {
                 var nowTicks = DateTime.UtcNow.Ticks;
                 var timerTicks = this.HiResTimer.Elapsed.Ticks;
-                var startTicks = nowTicks - timerTicks;
-                var startTs = this.GetGuidTimestamp(startTicks);
+                var startTs = nowTicks - timerTicks;
                 this.StartTimestamp = startTs;
             }
         }
@@ -143,8 +133,7 @@ internal abstract class TimestampProvider
             this.TicksOffset = (nowTicks == lastTicks) ?
                 (this.TicksOffset + 1) : 0;
             this.LastTimeTicks = nowTicks;
-            var incTicks = nowTicks + this.TicksOffset;
-            return this.GetGuidTimestamp(incTicks);
+            return nowTicks + this.TicksOffset;
         }
     }
 }
