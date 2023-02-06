@@ -15,22 +15,33 @@ internal class NewNoInputGuidCommand : ProgramCommand
     internal static readonly NewNoInputGuidCommand Version4 =
         new NewNoInputGuidCommand(GuidVersion.Version4);
 
+    internal static readonly NewNoInputGuidCommand Version6 =
+        new NewNoInputGuidCommand(GuidVersion.Version6);
+
+    internal static readonly NewNoInputGuidCommand Version7 =
+        new NewNoInputGuidCommand(GuidVersion.Version7);
+
+    internal static readonly NewNoInputGuidCommand Version8 =
+        new NewNoInputGuidCommand(GuidVersion.Version8);
+
     internal static readonly NewNoInputGuidCommand Version1R =
-        new NewNoInputGuidCommand(useRandomNodeId: true);
+        new NewNoInputGuidCommand(versionName: "1R");
+
+    internal static readonly NewNoInputGuidCommand Version6P =
+        new NewNoInputGuidCommand(versionName: "6P");
 
     private readonly GuidVersion Version;
 
-    private readonly bool UseRandomNodeId;
+    private readonly string? VersionName;
 
     private NewNoInputGuidCommand(GuidVersion version)
     {
         this.Version = version;
     }
 
-    private NewNoInputGuidCommand(bool useRandomNodeId)
-        : this(GuidVersion.Version1)
+    private NewNoInputGuidCommand(string versionName)
     {
-        this.UseRandomNodeId = useRandomNodeId;
+        this.VersionName = versionName;
     }
 
     public override bool TryExecute(string[] args)
@@ -41,10 +52,10 @@ internal class NewNoInputGuidCommand : ProgramCommand
         }
         var verArg = args[0].ToUpper();
         var version = this.Version;
-        var verNum = ((int)version).ToString();
-        var useRandId = this.UseRandomNodeId;
+        var verName = this.VersionName;
+        var verNum = (verName is null) ?
+            ((int)version).ToString() : verName;
         var expVerArg = $"-V{verNum}";
-        if (useRandId) { expVerArg += "R"; }
         if (verArg != expVerArg)
         {
             return false;
@@ -54,23 +65,31 @@ internal class NewNoInputGuidCommand : ProgramCommand
         if (args.Length == 2)
         {
             var countArg = args[1].ToUpper();
-            if (!countArg.StartsWith("-C"))
-            {
-                return false;
-            }
+            if (!countArg.StartsWith("-C")) { return false; }
             var cParsed = int.TryParse(countArg[2..], out count);
             if (!cParsed || (count < 0)) { return false; }
         }
 
-        var guidGen = useRandId ?
-            GuidGenerator.Version1R :
-            GuidGenerator.OfVersion(version);
+        var guidGen = (verName is null) ?
+            GuidGenerator.OfVersion(version) :
+            this.GetSpecialGuidGenerator();
+        if (guidGen is null) { return false; }
         foreach (var current in ..count)
         {
             var guid = guidGen.NewGuid();
             Console.WriteLine(guid.ToString());
         }
         return true;
+    }
+
+    private IGuidGenerator? GetSpecialGuidGenerator()
+    {
+        return this.VersionName switch
+        {
+            "1R" => GuidGenerator.Version1R,
+            "6P" => GuidGenerator.Version6P,
+            _ => default(IGuidGenerator),
+        };
     }
 
     private sealed class DefaultVersion : NewNoInputGuidCommand

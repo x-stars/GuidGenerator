@@ -31,7 +31,10 @@ internal sealed class NewDceSecurityGuidCommand : ProgramCommand
         if (!dParsed) { return false; }
         if (domain is DceSecurityDomain.Person or DceSecurityDomain.Group)
         {
-            if (siteIdArg is not null) { return false; }
+            if (siteIdArg is not null)
+            {
+                return false;
+            }
         }
         else
         {
