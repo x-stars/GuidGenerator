@@ -31,6 +31,10 @@ public enum GuidVersion : byte
     /// Represents RFC 4122 UUID version 5, the name-based version using the SHA-1 hashing.
     /// </summary>
     Version5 = 5,
+    /// <summary>
+    /// Represents the largest possible value of <see cref="GuidVersion"/>.
+    /// </summary>
+    MaxValue = 15,
 }
 
 /// <summary>

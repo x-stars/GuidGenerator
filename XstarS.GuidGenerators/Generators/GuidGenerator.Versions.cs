@@ -41,6 +41,12 @@ partial class GuidGenerator
     public static INameBasedGuidGenerator Version5 => NameBasedGuidGenerator.SHA1Hashing.Instance;
 
     /// <summary>
+    /// Gets the <see cref="IGuidGenerator"/> instance of <see cref="Uuid.MaxValue"/>.
+    /// </summary>
+    /// <returns>The <see cref="IGuidGenerator"/> instance of <see cref="Uuid.MaxValue"/>.</returns>
+    public static IGuidGenerator MaxValue => MaxValueGuidGenerator.Instance;
+
+    /// <summary>
     /// Gets the <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 1
     /// using a non-volatile random node ID.
     /// </summary>
@@ -71,6 +77,7 @@ partial class GuidGenerator
         GuidVersion.Version3 => NameBasedGuidGenerator.MD5Hashing.Instance,
         GuidVersion.Version4 => RandomizedGuidGenerator.Instance,
         GuidVersion.Version5 => NameBasedGuidGenerator.SHA1Hashing.Instance,
+        GuidVersion.MaxValue => MaxValueGuidGenerator.Instance,
         _ => throw new ArgumentOutOfRangeException(nameof(version)),
     };
 }

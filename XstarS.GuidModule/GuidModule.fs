@@ -43,6 +43,12 @@ module Guid =
     let empty = Guid.Empty
 
     /// <summary>
+    /// Represents the <see cref="T:System.Guid"/> instance whose value is all ones.
+    /// </summary>
+    [<CompiledName("MaxValue")>]
+    let maxValue = Uuid.MaxValue
+
+    /// <summary>
     /// Represents the namespace ID of a fully-qualified domain name.
     /// </summary>
     [<CompiledName("NamespaceDns")>]

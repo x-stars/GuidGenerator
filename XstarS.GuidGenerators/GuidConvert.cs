@@ -3,10 +3,18 @@
 namespace XNetEx.Guids;
 
 /// <summary>
-/// Provides RFC 4122 compliant conversion methods for <see cref="Guid"/>.
+/// Provides RFC 4122 compliant constants and conversion methods for <see cref="Guid"/>.
 /// </summary>
 public static class Uuid
 {
+    /// <summary>
+    /// A read-only instance of the <see cref="Guid"/> structure whose value is all ones.
+    /// </summary>
+    public static readonly Guid MaxValue = new Guid(
+        // ffffffff-ffff-ffff-ffff-ffffffffffff
+        0xffffffff, 0xffff, 0xffff,
+        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
+
 #if NET7_0_OR_GREATER
     /// <summary>
     /// Creates a new <see cref="Guid"/> instance
