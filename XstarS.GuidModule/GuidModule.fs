@@ -526,6 +526,16 @@ module Guid =
         (isRfc4122 guid) && (version guid).IsRandomized()
 
     /// <summary>
+    /// Gets a value that indicates whether a <see cref="T:System.Guid"/> contains a clock sequence.
+    /// </summary>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns><see langword="true"/> if a <see cref="T:System.Guid"/>
+    /// contains a clock sequence; otherwise, <see langword="false"/>.</returns>
+    [<CompiledName("ContainsClockSequence")>]
+    let hasClockSeq (guid: Guid) =
+        (isRfc4122 guid) && (version guid).ContainsClockSequence()
+
+    /// <summary>
     /// Gets a value that indicates whether a <see cref="T:System.Guid"/> contains local ID data.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
@@ -558,11 +568,11 @@ module Guid =
 
     /// <summary>
     /// Tries to get the clock sequence represented by the <see cref="T:System.Guid"/>.
-    /// Returns <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not time-based.
+    /// Returns <c>ValueNone</c> if the <see cref="T:System.Guid"/> does not contain a clock sequence.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>The clock sequence represented by the <see cref="T:System.Guid"/>,
-    /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not time-based.</returns>
+    /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> does not contain a clock sequence.</returns>
     [<CompiledName("TryGetClockSequence")>]
     let tryGetClockSeq (guid: Guid) : int16 voption =
         guid.TryGetClockSequence() |> TryResult.toVOption
@@ -580,11 +590,11 @@ module Guid =
 
     /// <summary>
     /// Tries to get the node ID represented by the <see cref="T:System.Guid"/>.
-    /// Returns <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not time-based.
+    /// Returns <c>ValueNone</c> if the <see cref="T:System.Guid"/> does not contain node ID data.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>The node ID represented by the <see cref="T:System.Guid"/>,
-    /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not time-based.</returns>
+    /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> does not contain node ID data.</returns>
     [<CompiledName("TryGetNodeId")>]
     let tryGetNodeId (guid: Guid) : byte[] voption =
         guid.TryGetNodeId() |> TryResult.toVOption

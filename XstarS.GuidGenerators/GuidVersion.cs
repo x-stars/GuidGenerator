@@ -64,7 +64,9 @@ public static class GuidVersionInfo
     /// otherwise, <see langword="false"/>.</returns>
     public static bool IsTimeBased(this GuidVersion version) =>
         version == GuidVersion.Version1 ||
-        version == GuidVersion.Version2;
+        version == GuidVersion.Version2 ||
+        version == GuidVersion.Version6 ||
+        version == GuidVersion.Version7;
 
     /// <summary>
     /// Gets a value that indicates whether a <see cref="Guid"/> of
@@ -87,7 +89,21 @@ public static class GuidVersionInfo
     /// <paramref name="version"/> is generated randomly;
     /// otherwise, <see langword="false"/>.</returns>
     public static bool IsRandomized(this GuidVersion version) =>
-        version == GuidVersion.Version4;
+        version == GuidVersion.Version4 ||
+        version == GuidVersion.Version7;
+
+    /// <summary>
+    /// Gets a value that indicates whether a <see cref="Guid"/> of
+    /// the <see cref="GuidVersion"/> contains a clock sequence.
+    /// </summary>
+    /// <param name="version">The <see cref="GuidVersion"/>.</param>
+    /// <returns><see langword="true"/> if a <see cref="Guid"/> of
+    /// <paramref name="version"/> contains a clock sequence;
+    /// otherwise, <see langword="false"/>.</returns>
+    public static bool ContainsClockSequence(this GuidVersion version) =>
+        version == GuidVersion.Version1 ||
+        version == GuidVersion.Version2 ||
+        version == GuidVersion.Version6;
 
     /// <summary>
     /// Gets a value that indicates whether a <see cref="Guid"/> of
@@ -99,7 +115,8 @@ public static class GuidVersionInfo
     /// otherwise, <see langword="false"/>.</returns>
     public static bool ContainsNodeId(this GuidVersion version) =>
         version == GuidVersion.Version1 ||
-        version == GuidVersion.Version2;
+        version == GuidVersion.Version2 ||
+        version == GuidVersion.Version6;
 
     /// <summary>
     /// Gets a value that indicates whether a <see cref="Guid"/> of

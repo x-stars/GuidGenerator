@@ -77,15 +77,34 @@ public static partial class GuidExtensions
             timestamp = default(DateTime);
             return false;
         }
-        var tsField = ((long)guid.TimeLow()) |
-            ((long)guid.TimeMid() << (4 * 8)) |
-            ((long)guid.TimeHi_Ver() << (6 * 8));
-        tsField &= ~(0xF0L << (7 * 8));
-        if (guid.GetVersion().ContainsLocalId())
+        var tsTicks = default(long);
+        var version = guid.GetVersion();
+        if (version != GuidVersion.Version7)
         {
-            tsField &= ~0xFFFFFFFFL;
+            var tsField = (version != GuidVersion.Version6) ?
+                (
+                    ((long)guid.TimeLow() << (0 * 8)) |
+                    ((long)guid.TimeMid() << (4 * 8)) |
+                    ((long)(guid.TimeHi_Ver() & ~0xF000) << (6 * 8))
+                ) :
+                (
+                    ((long)guid.TimeLow() << (4 * 8 - 4)) |
+                    ((long)guid.TimeMid() << (2 * 8 - 4)) |
+                    ((long)(guid.TimeHi_Ver() & ~0xF000) << (0 * 8))
+                );
+            if (guid.GetVersion().ContainsLocalId())
+            {
+                tsField &= ~0xFFFFFFFFL;
+            }
+            tsTicks = TimestampEpochs.Gregorian.Ticks + tsField;
         }
-        var tsTicks = TimestampEpochs.Gregorian.Ticks + tsField;
+        else
+        {
+            const long ticksPerMs = 1_000_000 / 100;
+            var tsField = ((long)guid.TimeLow() << (2 * 8)) |
+                          ((long)guid.TimeMid() << (0 * 8));
+            tsTicks = TimestampEpochs.UnixTime.Ticks + (tsField * ticksPerMs);
+        }
         timestamp = new DateTime(tsTicks, DateTimeKind.Utc);
         return true;
     }
@@ -97,18 +116,17 @@ public static partial class GuidExtensions
     /// <param name="clockSeq">When this method returns <see langword="true"/>,
     /// contains the clock sequence represented by the <see cref="Guid"/>.</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/>
-    /// is time-based; otherwise, <see langword="false"/>.</returns>
+    /// contains a clock sequence; otherwise, <see langword="false"/>.</returns>
     public static bool TryGetClockSequence(this Guid guid, out short clockSeq)
     {
         if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
-            !guid.GetVersion().IsTimeBased())
+            !guid.GetVersion().ContainsClockSequence())
         {
             clockSeq = default(int);
             return false;
         }
-        var csField = ((int)guid.ClkSeqLow()) |
-            ((int)guid.ClkSeqHi_Var() << (1 * 8));
-        csField &= ~(0xC0 << (1 * 8));
+        var csField = ((int)guid.ClkSeqLow() << (0 * 8)) |
+                      ((int)(guid.ClkSeqHi_Var() & ~0xC0) << (1 * 8));
         if (guid.GetVersion().ContainsLocalId())
         {
             csField >>= (1 * 8);
@@ -149,7 +167,7 @@ public static partial class GuidExtensions
     /// <param name="nodeId">When this method returns <see langword="true"/>,
     /// contains the node ID represented by the <see cref="Guid"/>.</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/>
-    /// is time-based; otherwise, <see langword="false"/>.</returns>
+    /// contains node ID data; otherwise, <see langword="false"/>.</returns>
     public static unsafe bool TryGetNodeId(
         this Guid guid, [NotNullWhen(true)] out byte[]? nodeId)
     {
@@ -180,7 +198,7 @@ public static partial class GuidExtensions
     /// <param name="destination">When this method returns <see langword="true"/>,
     /// contains the node ID represented by the <see cref="Guid"/>.</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/>
-    /// is time-based and the node ID is successfully written to the specified span;
+    /// contains node ID data and the node ID is successfully written to the specified span;
     /// otherwise, <see langword="false"/>.</returns>
     public static bool TryWriteNodeId(this Guid guid, Span<byte> destination)
     {
