@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents the source type of a GUID node ID.
 /// </summary>
-internal enum NodeIdSource
+public enum NodeIdSource
 {
     /// <summary>
     /// Represents that the node ID is not present.
@@ -26,7 +26,7 @@ internal enum NodeIdSource
 /// <summary>
 /// Provides metadata for <see cref="NodeIdSource"/>.
 /// </summary>
-internal static class NodeIdSourceInfo
+public static class NodeIdSourceInfo
 {
     /// <summary>
     /// Gets a value that indicates whether a node ID from

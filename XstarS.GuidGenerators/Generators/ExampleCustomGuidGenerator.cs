@@ -5,20 +5,15 @@ using System.Threading;
 
 namespace XNetEx.Guids.Generators;
 
-internal sealed class ExampleCustomGuidGenerator : GuidGenerator, IGuidGenerator
+internal sealed class ExampleCustomGuidGenerator : CustomGuidGenerator, IGuidGenerator
 {
     private static volatile ExampleCustomGuidGenerator? Singleton;
-
-    private readonly TimestampProvider TimestampProvider;
-
-    private readonly NodeIdProvider NodeIdProvider;
 
     private volatile int Sequence;
 
     private ExampleCustomGuidGenerator()
+        : base(TimestampEpochs.Epoch2020, NodeIdSource.NonVolatileRandom)
     {
-        this.TimestampProvider = TimestampProvider.Instance;
-        this.NodeIdProvider = NodeIdProvider.GetInstance(NodeIdSource.NonVolatileRandom);
         this.Sequence = -1;
     }
 
@@ -38,22 +33,13 @@ internal sealed class ExampleCustomGuidGenerator : GuidGenerator, IGuidGenerator
         }
     }
 
-    public override GuidVersion Version => GuidVersion.Version8;
-
-    private DateTime EpochDateTime => TimestampEpochs.Epoch2020;
-
-    private long CurrentTimestamp =>
-        this.TimestampProvider.CurrentTimestamp - this.EpochDateTime.Ticks;
-
-    private byte NodeIdByte => this.NodeIdProvider.NodeIdBytes[4];
-
     public override Guid NewGuid()
     {
         var guid = Guid.NewGuid();
         this.FillTimestampFields(ref guid);
         this.FillVersionField(ref guid);
         Debug.Assert(guid.GetVariant() == this.Variant);
-        guid.NodeId(4) = this.NodeIdByte;
+        guid.NodeId(4) = this.GetNodeIdByte(4);
         guid.NodeId(5) = (byte)Interlocked.Increment(ref this.Sequence);
         return guid;
     }
@@ -61,7 +47,7 @@ internal sealed class ExampleCustomGuidGenerator : GuidGenerator, IGuidGenerator
     private void FillTimestampFields(ref Guid guid)
     {
         const long ticksPerSec = 1_000_000_000 / 100;
-        var timestamp = this.CurrentTimestamp;
+        var timestamp = this.GetCurrentTimestamp();
         var tsSeconds = timestamp / ticksPerSec;
         guid.TimeLow() = (uint)tsSeconds;
         var tsNanoSec = timestamp % ticksPerSec * 100;
