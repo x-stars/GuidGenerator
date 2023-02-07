@@ -87,4 +87,48 @@ public class GuidGeneratorBenchmark
             var guid = guidGen.NewGuid();
         }
     }
+
+    [Benchmark]
+    public void GuidV6Generate()
+    {
+        var guidGen = GuidGenerator.OfVersion(Version6);
+        var count = this.GuidCount;
+        for (int index = 0; index < count; index++)
+        {
+            var guid = guidGen.NewGuid();
+        }
+    }
+
+    [Benchmark]
+    public void GuidV7Generate()
+    {
+        var guidGen = GuidGenerator.OfVersion(Version7);
+        var count = this.GuidCount;
+        for (int index = 0; index < count; index++)
+        {
+            var guid = guidGen.NewGuid();
+        }
+    }
+
+    [Benchmark]
+    public void GuidV8Generate()
+    {
+        var guidGen = GuidGenerator.OfVersion(Version8);
+        var count = this.GuidCount;
+        for (int index = 0; index < count; index++)
+        {
+            var guid = guidGen.NewGuid();
+        }
+    }
+
+    [Benchmark]
+    public void MaxValueGenerate()
+    {
+        var guidGen = GuidGenerator.OfVersion(MaxValue);
+        var count = this.GuidCount;
+        for (int index = 0; index < count; index++)
+        {
+            var guid = guidGen.NewGuid();
+        }
+    }
 }

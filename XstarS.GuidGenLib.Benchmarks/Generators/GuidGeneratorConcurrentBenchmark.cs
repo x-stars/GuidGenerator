@@ -112,4 +112,56 @@ public class GuidGeneratorConcurrentBenchmark
             }
         });
     }
+
+    [Benchmark]
+    public void GuidV6Generate()
+    {
+        this.ParallelInvoke(count =>
+        {
+            var guidGen = GuidGenerator.OfVersion(Version6);
+            for (int index = 0; index < count; index++)
+            {
+                var guid = guidGen.NewGuid();
+            }
+        });
+    }
+
+    [Benchmark]
+    public void GuidV7Generate()
+    {
+        this.ParallelInvoke(count =>
+        {
+            var guidGen = GuidGenerator.OfVersion(Version7);
+            for (int index = 0; index < count; index++)
+            {
+                var guid = guidGen.NewGuid();
+            }
+        });
+    }
+
+    [Benchmark]
+    public void GuidV8Generate()
+    {
+        this.ParallelInvoke(count =>
+        {
+            var guidGen = GuidGenerator.OfVersion(Version8);
+            for (int index = 0; index < count; index++)
+            {
+                var guid = guidGen.NewGuid();
+            }
+        });
+    }
+
+    [Benchmark]
+    public void MaxValueGenerate()
+    {
+        this.ParallelInvoke(count =>
+        {
+            var guidGen = GuidGenerator.OfVersion(MaxValue);
+            for (int index = 0; index < count; index++)
+            {
+                var guid = guidGen.NewGuid();
+            }
+        });
+    }
 }
