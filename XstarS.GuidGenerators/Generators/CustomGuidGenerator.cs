@@ -71,6 +71,43 @@ public abstract class CustomGuidGenerator : GuidGenerator
     }
 
     /// <summary>
+    /// Fills the elements of the specified byte array with node ID bytes.
+    /// </summary>
+    /// <param name="buffer">The byte array to be filled with node ID bytes.</param>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="buffer"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException">
+    /// The length of <paramref name="buffer"/> is less than 6.</exception>
+    protected void GetNodeIdBytes(byte[] buffer)
+    {
+        if (buffer is null)
+        {
+            throw new ArgumentNullException(nameof(buffer));
+        }
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        this.GetNodeIdBytes((Span<byte>)buffer);
+#else
+        var nodeId = this.NodeIdProvider.NodeIdBytes;
+        Buffer.BlockCopy(nodeId, 0, buffer, 0, 6);
+#endif
+    }
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    /// <summary>
+    /// Fills the elements of the specified byte span with node ID bytes.
+    /// </summary>
+    /// <param name="buffer">The byte span to be filled with node ID bytes.</param>
+    /// <exception cref="ArgumentException">
+    /// The length of <paramref name="buffer"/> is less than 6.</exception>
+    protected void GetNodeIdBytes(Span<byte> buffer)
+    {
+        var nodeId = this.NodeIdProvider.NodeIdBytes;
+        ((ReadOnlySpan<byte>)nodeId).CopyTo(buffer);
+    }
+#endif
+
+    /// <summary>
     /// Gets a random 32-bit signed integer.
     /// </summary>
     /// <returns>A random 32-bit signed integer.</returns>
