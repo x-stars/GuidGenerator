@@ -598,3 +598,106 @@ module Guid =
     [<CompiledName("TryGetNodeId")>]
     let tryGetNodeId (guid: Guid) : byte[] voption =
         guid.TryGetNodeId() |> TryResult.toVOption
+
+    /// <summary>
+    /// Replaces the version of the current <see cref="T:System.Guid"/>
+    /// with the specified <see cref="T:XNetEx.FSharp.Core.Guid.Variant"/>.
+    /// </summary>
+    /// <param name="variant">The variant to use as replacement.</param>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance that is
+    /// equivalent to this <see cref="T:System.Guid"/> except that
+    /// the version replaced with <paramref name="variant"/>.</returns>
+    [<CompiledName("ReplaceVariant")>]
+    let replaceVariant (variant: Variant) (guid: Guid) =
+        guid.ReplaceVariant(variant)
+
+    /// <summary>
+    /// Replaces the version of the current <see cref="T:System.Guid"/>
+    /// with the specified <see cref="T:XNetEx.FSharp.Core.Guid.Version"/>.
+    /// </summary>
+    /// <param name="version">The version to use as replacement.</param>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance that is
+    /// equivalent to the <see cref="T:System.Guid"/> except that
+    /// the version replaced with <paramref name="version"/>.</returns>
+    [<CompiledName("ReplaceVersion")>]
+    let replaceVersion (version: Version) (guid: Guid) =
+        guid.ReplaceVersion(version)
+
+    /// <summary>
+    /// Replaces the timestamp of the current <see cref="T:System.Guid"/> with the specified
+    /// <see cref="T:System.DateTime"/> if the <see cref="T:System.Guid"/> is time-based.
+    /// </summary>
+    /// <param name="timestamp">The timestamp to use as replacement.</param>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance that is
+    /// equivalent to the <see cref="T:System.Guid"/> except that
+    /// the timestamp replaced with <paramref name="timestamp"/>, or the original value
+    /// if the <see cref="T:System.Guid"/> is not time-based.</returns>
+    [<CompiledName("ReplaceTimestamp")>]
+    let replaceTime (timestamp: DateTime) (guid: Guid) =
+        guid.ReplaceTimestamp(timestamp)
+
+    /// <summary>
+    /// Replaces the timestamp of the current <see cref="T:System.Guid"/> with the specified
+    /// <see cref="T:System.DateTimeOffset"/> if the <see cref="T:System.Guid"/> is time-based.
+    /// </summary>
+    /// <param name="timestamp">The timestamp to use as replacement.</param>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance that is
+    /// equivalent to the <see cref="T:System.Guid"/> except that
+    /// the timestamp replaced with <paramref name="timestamp"/>, or the original value
+    /// if the <see cref="T:System.Guid"/> is not time-based.</returns>
+    [<CompiledName("ReplaceOffsetTimestamp")>]
+    let replaceOffsetTime (timestamp: DateTimeOffset) (guid: Guid) =
+        guid.ReplaceTimestamp(timestamp)
+
+    /// <summary>
+    /// Replaces the clock sequence of the current <see cref="T:System.Guid"/> with the specified
+    /// 16-bit signed integer if the <see cref="T:System.Guid"/> contains a clock sequence.
+    /// </summary>
+    /// <param name="clockSeq">The clock sequence to use as replacement.</param>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance that is
+    /// equivalent to the <see cref="T:System.Guid"/> except that
+    /// the clock sequence replaced with <paramref name="clockSeq"/>, or the original value
+    /// if the <see cref="T:System.Guid"/> does not contain a clock sequence.</returns>
+    [<CompiledName("ReplaceClockSequence")>]
+    let replaceClockSeq (clockSeq: int16) (guid: Guid) =
+        guid.ReplaceClockSequence(clockSeq)
+
+    /// <summary>
+    /// Replaces the DCE Security domain and local ID of the current <see cref="T:System.Guid"/>
+    /// with the specified <see cref="T:XNetEx.FSharp.Core.Guid.Domain"/> and 32-bit signed integer
+    /// if the <see cref="T:System.Guid"/> is a DCE Security UUID.
+    /// </summary>
+    /// <param name="domain">The DCE Security domain to use as replacement.</param>
+    /// <param name="localId">The local ID to use as replacement.</param>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance that is
+    /// equivalent to the <see cref="T:System.Guid"/> except that
+    /// the DCE Security domain replaced with <paramref name="domain"/>
+    /// and the local ID replaced with and <paramref name="localId"/>, or the original value
+    /// if the <see cref="T:System.Guid"/> is not a DCE Security UUID.</returns>
+    [<CompiledName("ReplaceDomainAndLocalId")>]
+    let replaceLocalId (domain: Domain) (localId: int) (guid: Guid) =
+        guid.ReplaceDomainAndLocalId(domain, localId)
+
+    /// <summary>
+    /// Replaces the node ID of the current <see cref="T:System.Guid"/> with the specified
+    /// byte array if the <see cref="T:System.Guid"/> contains node ID data.
+    /// </summary>
+    /// <param name="nodeId">The node ID to use as replacement.</param>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance that is
+    /// equivalent to the <see cref="T:System.Guid"/> except that
+    /// the node ID replaced with <paramref name="nodeId"/>, or the original value
+    /// if the <see cref="T:System.Guid"/> does not contain node ID data.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="nodeId"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.ArgumentException">
+    /// <paramref name="nodeId"/> is not 6 bytes long.</exception>
+    [<CompiledName("ReplaceNodeId")>]
+    let replaceNodeId (nodeId: byte[]) (guid: Guid) =
+        guid.ReplaceNodeId(nodeId)
