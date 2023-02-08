@@ -484,72 +484,72 @@ module Guid =
     let version (guid: Guid) : Version = guid.GetVersion()
 
     /// <summary>
-    /// Gets a value that indicates whether a <see cref="T:System.Guid"/> is of the RFC 4122 variant.
+    /// Gets a value that indicates whether the <see cref="T:System.Guid"/> is of the RFC 4122 variant.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
-    /// <returns><see langword="true"/> if a <see cref="T:System.Guid"/>
+    /// <returns><see langword="true"/> if the <see cref="T:System.Guid"/>
     /// is of the RFC 4122 variant; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("IsRfc4122Uuid")>]
     let internal isRfc4122 (guid: Guid) =
         variant guid = Variant.Rfc4122
 
     /// <summary>
-    /// Gets a value that indicates whether a <see cref="T:System.Guid"/>
+    /// Gets a value that indicates whether the <see cref="T:System.Guid"/>
     /// is generated based on the current time.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
-    /// <returns><see langword="true"/> if a <see cref="T:System.Guid"/>
+    /// <returns><see langword="true"/> if the <see cref="T:System.Guid"/>
     /// is generated based on the current time; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("IsTimeBased")>]
     let isTimeBased (guid: Guid) =
         (isRfc4122 guid) && (version guid).IsTimeBased()
 
     /// <summary>
-    /// Gets a value that indicates whether a <see cref="T:System.Guid"/>
+    /// Gets a value that indicates whether the <see cref="T:System.Guid"/>
     /// is generated based on the input name.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
-    /// <returns><see langword="true"/> if a <see cref="T:System.Guid"/>
+    /// <returns><see langword="true"/> if the <see cref="T:System.Guid"/>
     /// is generated based on the input name; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("IsNameBased")>]
     let isNameBased (guid: Guid) =
         (isRfc4122 guid) && (version guid).IsNameBased()
 
     /// <summary>
-    /// Gets a value that indicates whether a <see cref="T:System.Guid"/> is generated randomly.
+    /// Gets a value that indicates whether the <see cref="T:System.Guid"/> is generated randomly.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
-    /// <returns><see langword="true"/> if a <see cref="T:System.Guid"/>
+    /// <returns><see langword="true"/> if the <see cref="T:System.Guid"/>
     /// is generated randomly; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("IsRandomized")>]
     let isRandomized (guid: Guid) =
         (isRfc4122 guid) && (version guid).IsRandomized()
 
     /// <summary>
-    /// Gets a value that indicates whether a <see cref="T:System.Guid"/> contains a clock sequence.
+    /// Gets a value that indicates whether the <see cref="T:System.Guid"/> contains a clock sequence.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
-    /// <returns><see langword="true"/> if a <see cref="T:System.Guid"/>
+    /// <returns><see langword="true"/> if the <see cref="T:System.Guid"/>
     /// contains a clock sequence; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("ContainsClockSequence")>]
     let hasClockSeq (guid: Guid) =
         (isRfc4122 guid) && (version guid).ContainsClockSequence()
 
     /// <summary>
-    /// Gets a value that indicates whether a <see cref="T:System.Guid"/> contains local ID data.
+    /// Gets a value that indicates whether the <see cref="T:System.Guid"/> contains local ID data.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
-    /// <returns><see langword="true"/> if a <see cref="T:System.Guid"/>
+    /// <returns><see langword="true"/> if the <see cref="T:System.Guid"/>
     /// contains local ID data; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("ContainsLocalId")>]
     let hasLocalId (guid: Guid) =
         (isRfc4122 guid) && (version guid).ContainsLocalId()
 
     /// <summary>
-    /// Gets a value that indicates whether a <see cref="T:System.Guid"/> contains node ID data.
+    /// Gets a value that indicates whether the <see cref="T:System.Guid"/> contains node ID data.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
-    /// <returns><see langword="true"/> if a <see cref="T:System.Guid"/>
+    /// <returns><see langword="true"/> if the <see cref="T:System.Guid"/>
     /// contains node ID data; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("ContainsNodeId")>]
     let hasNodeId (guid: Guid) =
@@ -649,8 +649,8 @@ module Guid =
     /// equivalent to the <see cref="T:System.Guid"/> except that
     /// the timestamp replaced with <paramref name="timestamp"/>, or the original value
     /// if the <see cref="T:System.Guid"/> is not time-based.</returns>
-    [<CompiledName("ReplaceOffsetTimestamp")>]
-    let replaceOffsetTime (timestamp: DateTimeOffset) (guid: Guid) =
+    [<CompiledName("ReplaceTimestampByOffset")>]
+    let replaceTimeOffset (timestamp: DateTimeOffset) (guid: Guid) =
         guid.ReplaceTimestamp(timestamp)
 
     /// <summary>

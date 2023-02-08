@@ -60,10 +60,10 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     protected virtual bool IsTimestampLittleEndian => true;
 
-    private DateTime EpochDataTime => TimestampEpochs.Gregorian;
+    private DateTime EpochDateTime => TimestampEpochs.Gregorian;
 
     private long CurrentTimestamp =>
-        this.TimestampProvider.CurrentTimestamp - this.EpochDataTime.Ticks;
+        this.TimestampProvider.CurrentTimestamp - this.EpochDateTime.Ticks;
 
     private byte[] NodeIdBytes => this.NodeIdProvider.NodeIdBytes;
 

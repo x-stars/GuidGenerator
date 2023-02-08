@@ -61,8 +61,8 @@ static partial class GuidExtensions
         var utcTimestamp = timestamp.ToUniversalTime();
         if (version != GuidVersion.Version7)
         {
-            var ecpochTicks = TimestampEpochs.Gregorian.Ticks;
-            var tsField = utcTimestamp.Ticks - ecpochTicks;
+            var epochTicks = TimestampEpochs.Gregorian.Ticks;
+            var tsField = utcTimestamp.Ticks - epochTicks;
             if (version != GuidVersion.Version6)
             {
                 result.TimeLow() = (uint)(tsField >> (0 * 8));
@@ -83,8 +83,8 @@ static partial class GuidExtensions
         else
         {
             const long ticksPerMs = 1_000_000 / 100;
-            var ecpochTicks = TimestampEpochs.UnixTime.Ticks;
-            var tsField = (utcTimestamp.Ticks - ecpochTicks) / ticksPerMs;
+            var epochTicks = TimestampEpochs.UnixTime.Ticks;
+            var tsField = (utcTimestamp.Ticks - epochTicks) / ticksPerMs;
             result.TimeLow() = (uint)(tsField >> (2 * 8));
             result.TimeMid() = (ushort)(tsField >> (0 * 8));
         }

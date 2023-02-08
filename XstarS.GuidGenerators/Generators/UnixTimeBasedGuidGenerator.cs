@@ -33,10 +33,10 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     public override GuidVersion Version => GuidVersion.Version7;
 
-    private DateTime EpochDataTime => TimestampEpochs.UnixTime;
+    private DateTime EpochDateTime => TimestampEpochs.UnixTime;
 
     private long CurrentTimestamp =>
-        this.TimestampProvider.CurrentTimestamp - this.EpochDataTime.Ticks;
+        this.TimestampProvider.CurrentTimestamp - this.EpochDateTime.Ticks;
 
     public override Guid NewGuid()
     {

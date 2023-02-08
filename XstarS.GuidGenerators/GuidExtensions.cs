@@ -97,8 +97,8 @@ public static partial class GuidExtensions
             {
                 tsField &= ~0xFFFFFFFFL;
             }
-            var ecpochTicks = TimestampEpochs.Gregorian.Ticks;
-            tsTicks = ecpochTicks + tsField;
+            var epochTicks = TimestampEpochs.Gregorian.Ticks;
+            tsTicks = epochTicks + tsField;
         }
         else
         {

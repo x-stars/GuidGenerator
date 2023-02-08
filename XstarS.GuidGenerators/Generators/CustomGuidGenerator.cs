@@ -7,7 +7,7 @@ namespace XNetEx.Guids.Generators;
 /// </summary>
 public abstract class CustomGuidGenerator : GuidGenerator
 {
-    private readonly DateTime EpochDataTime;
+    private readonly DateTime EpochDateTime;
 
     private readonly TimestampProvider TimestampProvider;
 
@@ -25,16 +25,16 @@ public abstract class CustomGuidGenerator : GuidGenerator
     /// Initialize a new instance of the <see cref="CustomGuidGenerator"/> class
     /// with the specified epoch <see cref="DateTime"/> and <see cref="NodeIdSource"/>.
     /// </summary>
-    /// <param name="epochDataTime">The epoch <see cref="DateTime"/>
+    /// <param name="epochDateTime">The epoch <see cref="DateTime"/>
     /// for <see cref="CustomGuidGenerator.GetCurrentTimestamp()"/>.</param>
     /// <param name="nodeIdSource">The <see cref="NodeIdSource"/>
     /// for <see cref="CustomGuidGenerator.GetNodeIdByte(int)"/>.</param>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="nodeIdSource"/> is not a valid <see cref="NodeIdSource"/> value.</exception>
     protected CustomGuidGenerator(
-        DateTime epochDataTime = default, NodeIdSource nodeIdSource = default)
+        DateTime epochDateTime = default, NodeIdSource nodeIdSource = default)
     {
-        this.EpochDataTime = epochDataTime;
+        this.EpochDateTime = epochDateTime;
         this.TimestampProvider = TimestampProvider.Instance;
         this.NodeIdProvider = NodeIdProvider.GetInstance(nodeIdSource);
     }
@@ -48,7 +48,7 @@ public abstract class CustomGuidGenerator : GuidGenerator
     /// <returns>The current timestamp in number of ticks (100 ns).</returns>
     protected long GetCurrentTimestamp()
     {
-        return this.TimestampProvider.CurrentTimestamp - this.EpochDataTime.Ticks;
+        return this.TimestampProvider.CurrentTimestamp - this.EpochDateTime.Ticks;
     }
 
     /// <summary>
@@ -78,6 +78,8 @@ public abstract class CustomGuidGenerator : GuidGenerator
     /// <paramref name="buffer"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">
     /// The length of <paramref name="buffer"/> is less than 6.</exception>
+    /// <exception cref="NotSupportedException">
+    /// The input <see cref="NodeIdSource"/> is <see cref="NodeIdSource.None"/>.</exception>
     protected void GetNodeIdBytes(byte[] buffer)
     {
         if (buffer is null)
@@ -100,6 +102,8 @@ public abstract class CustomGuidGenerator : GuidGenerator
     /// <param name="buffer">The byte span to be filled with node ID bytes.</param>
     /// <exception cref="ArgumentException">
     /// The length of <paramref name="buffer"/> is less than 6.</exception>
+    /// <exception cref="NotSupportedException">
+    /// The input <see cref="NodeIdSource"/> is <see cref="NodeIdSource.None"/>.</exception>
     protected void GetNodeIdBytes(Span<byte> buffer)
     {
         var nodeId = this.NodeIdProvider.NodeIdBytes;
