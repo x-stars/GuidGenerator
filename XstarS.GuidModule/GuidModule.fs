@@ -105,8 +105,8 @@ module Guid =
     /// </summary>
     /// <param name="domain">The DCE Security domain.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 2.</returns>
-    /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="domain"/>
-    /// is not a valid <see cref="T:XNetEx.Guids.DceSecurityDomain"/> value.</exception>
+    /// <exception cref="T:System.PlatformNotSupportedException">
+    /// The current operating system does not support getting the local user or group ID.</exception>
     [<CompiledName("NewVersion2")>]
     let newV2 (domain: Domain) =
         Generator.Version2.NewGuid(domain)
@@ -579,11 +579,11 @@ module Guid =
 
     /// <summary>
     /// Tries to get the DCE Security domain and local ID represented by the <see cref="T:System.Guid"/>.
-    /// Returns <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not a DCE security UUID.
+    /// Returns <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not a DCE Security UUID.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>The DCE Security domain and local ID represented by the <see cref="T:System.Guid"/>,
-    /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not a DCE security UUID.</returns>
+    /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not a DCE Security UUID.</returns>
     [<CompiledName("TryGetDomainAndLocalId")>]
     let tryGetLocalId (guid: Guid) : struct (Domain * int) voption =
         guid.TryGetDomainAndLocalId() |> TryResult.toVOption2

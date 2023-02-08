@@ -140,15 +140,15 @@ public static partial class GuidExtensions
     }
 
     /// <summary>
-    /// Tries to get the DCE security domain and local ID represented by the <see cref="Guid"/>.
+    /// Tries to get the DCE Security domain and local ID represented by the <see cref="Guid"/>.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
     /// <param name="domain">When this method returns <see langword="true"/>,
-    /// contains the DCE security domain represented by the <see cref="Guid"/>.</param>
+    /// contains the DCE Security domain represented by the <see cref="Guid"/>.</param>
     /// <param name="localId">When this method returns <see langword="true"/>,
     /// contains the local ID represented by the <see cref="Guid"/>.</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/>
-    /// is a DCE security UUID; otherwise, <see langword="false"/>.</returns>
+    /// is a DCE Security UUID; otherwise, <see langword="false"/>.</returns>
     public static bool TryGetDomainAndLocalId(
         this Guid guid, out DceSecurityDomain domain, out int localId)
     {

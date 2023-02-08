@@ -76,9 +76,12 @@ public abstract partial class GuidGenerator : IGuidGeneratorInfo, IGuidGenerator
     /// Generates a new <see cref="Guid"/> instance based on the specified DCE Security domain and local ID.
     /// </summary>
     /// <param name="domain">The DCE Security domain used to generate the <see cref="Guid"/>.</param>
-    /// <param name="localId">The site-defined local ID used to generate the <see cref="Guid"/>.</param>
+    /// <param name="localId">The site-defined local ID used to generate the <see cref="Guid"/>,
+    /// or <see langword="null"/> to get the local user or group ID from the system.</param>
     /// <returns>A new <see cref="Guid"/> instance generated based on
     /// <paramref name="domain"/> and <paramref name="localId"/>.</returns>
+    /// <exception cref="PlatformNotSupportedException">
+    /// The current operating system does not support getting the local user or group ID.</exception>
     /// <exception cref="NotSupportedException">
     /// This instance does not support generating a DCE Security <see cref="Guid"/>.</exception>
     public virtual Guid NewGuid(DceSecurityDomain domain, int? localId = null)
