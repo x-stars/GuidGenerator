@@ -42,8 +42,9 @@ internal static class GuidGeneratorState
 
     public static bool SetStorageFile(string? fileName)
     {
+        var result = GuidGeneratorState.LoadFromStorage(fileName);
         GuidGeneratorState.StorageFileName = fileName;
-        return GuidGeneratorState.LoadFromStorage();
+        return result;
     }
 
     internal static int RefreshState(
@@ -138,9 +139,8 @@ internal static class GuidGeneratorState
         Volatile.Read(ref GuidGeneratorState.StorageException)?.Invoke(null, e);
     }
 
-    private static bool LoadFromStorage()
+    private static bool LoadFromStorage(string? storageFile)
     {
-        var storageFile = GuidGeneratorState.StorageFile;
         if (storageFile is null) { return false; }
 
         try
