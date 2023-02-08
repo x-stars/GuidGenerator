@@ -33,6 +33,7 @@ static partial class GuidExtensions
         {
             throw new FormatException("Guid URN should start with \"urn:uuid:\".");
         }
+
         var guidString = guidUrnString[9..];
         return Guid.ParseExact(guidString, "D");
 #endif
@@ -55,6 +56,7 @@ static partial class GuidExtensions
         {
             throw new FormatException("Guid URN should start with \"urn:uuid:\".");
         }
+
         var guidString = guidUrnString[9..];
         return Guid.ParseExact(guidString, "D");
     }
@@ -86,6 +88,7 @@ static partial class GuidExtensions
             guid = default(Guid);
             return false;
         }
+
         var guidString = guidUrnString[9..];
         return Guid.TryParseExact(guidString, "D", out guid);
 #endif
@@ -110,6 +113,7 @@ static partial class GuidExtensions
             guid = default(Guid);
             return false;
         }
+
         var guidString = guidUrnString[9..];
         return Guid.TryParseExact(guidString, "D", out guid);
     }
@@ -153,6 +157,7 @@ static partial class GuidExtensions
             charsWritten = 0;
             return false;
         }
+
         GuidExtensions.FormatUrnCore(destination, guid);
         charsWritten = urnFormatLength;
         return true;

@@ -77,6 +77,7 @@ public static partial class GuidExtensions
             timestamp = default(DateTime);
             return false;
         }
+
         var tsTicks = default(long);
         var version = guid.GetVersion();
         if (version != GuidVersion.Version7)
@@ -96,14 +97,16 @@ public static partial class GuidExtensions
             {
                 tsField &= ~0xFFFFFFFFL;
             }
-            tsTicks = TimestampEpochs.Gregorian.Ticks + tsField;
+            var ecpochTicks = TimestampEpochs.Gregorian.Ticks;
+            tsTicks = ecpochTicks + tsField;
         }
         else
         {
             const long ticksPerMs = 1_000_000 / 100;
             var tsField = ((long)guid.TimeLow() << (2 * 8)) |
                           ((long)guid.TimeMid() << (0 * 8));
-            tsTicks = TimestampEpochs.UnixTime.Ticks + (tsField * ticksPerMs);
+            var epochTicks = TimestampEpochs.UnixTime.Ticks;
+            tsTicks = epochTicks + (tsField * ticksPerMs);
         }
         timestamp = new DateTime(tsTicks, DateTimeKind.Utc);
         return true;
@@ -125,6 +128,7 @@ public static partial class GuidExtensions
             clockSeq = default(int);
             return false;
         }
+
         var csField = ((int)guid.ClkSeqLow() << (0 * 8)) |
                       ((int)(guid.ClkSeqHi_Var() & ~0xC0) << (1 * 8));
         if (guid.GetVersion().ContainsLocalId())
@@ -136,11 +140,11 @@ public static partial class GuidExtensions
     }
 
     /// <summary>
-    /// Tries to get the DCE Security domain and local ID represented by the <see cref="Guid"/>.
+    /// Tries to get the DCE security domain and local ID represented by the <see cref="Guid"/>.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
     /// <param name="domain">When this method returns <see langword="true"/>,
-    /// contains the DCE Security domain represented by the <see cref="Guid"/>.</param>
+    /// contains the DCE security domain represented by the <see cref="Guid"/>.</param>
     /// <param name="localId">When this method returns <see langword="true"/>,
     /// contains the local ID represented by the <see cref="Guid"/>.</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/>
@@ -155,6 +159,7 @@ public static partial class GuidExtensions
             localId = default(int);
             return false;
         }
+
         domain = (DceSecurityDomain)guid.ClkSeqLow();
         localId = (int)guid.TimeLow();
         return true;
@@ -178,6 +183,7 @@ public static partial class GuidExtensions
             nodeId = null;
             return false;
         }
+
         nodeId = new byte[nodeIdSize];
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         guid.NodeId().CopyTo((Span<byte>)nodeId);
@@ -209,6 +215,7 @@ public static partial class GuidExtensions
         {
             return false;
         }
+
         guid.NodeId().CopyTo(destination);
         return true;
     }

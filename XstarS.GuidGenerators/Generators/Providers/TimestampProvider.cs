@@ -82,9 +82,9 @@ internal abstract class TimestampProvider
         internal PerfCounter()
         {
             const int updateMs = 1 * 1000;
-            var nowTime = DateTime.UtcNow;
+            var startTime = DateTime.UtcNow;
             var hiResTimer = Stopwatch.StartNew();
-            this.StartTimestamp = nowTime.Ticks;
+            this.StartTimestamp = startTime.Ticks;
             this.HiResTimer = hiResTimer;
             this.UpdateTimeTask = new Timer(this.UpdateSystemTime);
             this.UpdateTimeTask.Change(updateMs, updateMs);

@@ -53,9 +53,9 @@ internal class NewNoInputGuidCommand : ProgramCommand
         var verArg = args[0].ToUpper();
         var version = this.Version;
         var verName = this.VersionName;
-        var verNum = (verName is null) ?
+        var expVerName = (verName is null) ?
             ((int)version).ToString() : verName;
-        var expVerArg = $"-V{verNum}";
+        var expVerArg = $"-V{expVerName}";
         if (verArg != expVerArg)
         {
             return false;
