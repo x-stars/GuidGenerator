@@ -58,7 +58,7 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     public override GuidVersion Version => GuidVersion.Version1;
 
-    protected virtual bool IsTimestampBigEndian => false;
+    protected virtual bool IsTimestampLittleEndian => true;
 
     private DateTime EpochDataTime => TimestampEpochs.Gregorian;
 
@@ -89,17 +89,17 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         var nodeId = this.NodeIdBytes;
         var clockSeq = GuidGeneratorState.RefreshState(
             timestamp, nodeId, this.NodeIdSource);
-        if (this.IsTimestampBigEndian)
-        {
-            guid.TimeLow() = (uint)(timestamp >> (4 * 8 - 4));
-            guid.TimeMid() = (ushort)(timestamp >> (2 * 8 - 4));
-            guid.TimeHi_Ver() = (ushort)(timestamp >> (0 * 8));
-        }
-        else
+        if (this.IsTimestampLittleEndian)
         {
             guid.TimeLow() = (uint)(timestamp >> (0 * 8));
             guid.TimeMid() = (ushort)(timestamp >> (4 * 8));
             guid.TimeHi_Ver() = (ushort)(timestamp >> (6 * 8));
+        }
+        else
+        {
+            guid.TimeLow() = (uint)(timestamp >> (4 * 8 - 4));
+            guid.TimeMid() = (ushort)(timestamp >> (2 * 8 - 4));
+            guid.TimeHi_Ver() = (ushort)(timestamp >> (0 * 8));
         }
         guid.ClkSeqLow() = (byte)(clockSeq >> (0 * 8));
         guid.ClkSeqHi_Var() = (byte)(clockSeq >> (1 * 8));
@@ -156,7 +156,7 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
         public override GuidVersion Version => GuidVersion.Version6;
 
-        protected override bool IsTimestampBigEndian => true;
+        protected override bool IsTimestampLittleEndian => false;
 
         internal static TimeBasedGuidGenerator.Sequential CreateInstance()
         {

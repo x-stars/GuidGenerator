@@ -93,7 +93,7 @@ public static partial class GuidExtensions
                     ((long)guid.TimeMid() << (2 * 8 - 4)) |
                     ((long)(guid.TimeHi_Ver() & ~0xF000) << (0 * 8))
                 );
-            if (guid.GetVersion().ContainsLocalId())
+            if (version.ContainsLocalId())
             {
                 tsField &= ~0xFFFFFFFFL;
             }

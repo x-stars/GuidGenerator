@@ -25,10 +25,10 @@ internal class NewNoInputGuidCommand : ProgramCommand
         new NewNoInputGuidCommand(GuidVersion.Version8);
 
     internal static readonly NewNoInputGuidCommand Version1R =
-        new NewNoInputGuidCommand(versionName: "1R");
+        new NewNoInputGuidCommand(versionName: "Version1R");
 
     internal static readonly NewNoInputGuidCommand Version6P =
-        new NewNoInputGuidCommand(versionName: "6P");
+        new NewNoInputGuidCommand(versionName: "Version6P");
 
     private readonly GuidVersion Version;
 
@@ -54,7 +54,8 @@ internal class NewNoInputGuidCommand : ProgramCommand
         var version = this.Version;
         var verName = this.VersionName;
         var expVerName = (verName is null) ?
-            ((int)version).ToString() : verName;
+            ((int)version).ToString() :
+            verName[("Version".Length)..];
         var expVerArg = $"-V{expVerName}";
         if (verArg != expVerArg)
         {
@@ -70,10 +71,7 @@ internal class NewNoInputGuidCommand : ProgramCommand
             if (!cParsed || (count < 0)) { return false; }
         }
 
-        var guidGen = (verName is null) ?
-            GuidGenerator.OfVersion(version) :
-            this.GetSpecialGuidGenerator();
-        if (guidGen is null) { return false; }
+        var guidGen = this.GetGuidGenerator();
         foreach (var current in ..count)
         {
             var guid = guidGen.NewGuid();
@@ -82,13 +80,13 @@ internal class NewNoInputGuidCommand : ProgramCommand
         return true;
     }
 
-    private IGuidGenerator? GetSpecialGuidGenerator()
+    private IGuidGenerator GetGuidGenerator()
     {
         return this.VersionName switch
         {
-            "1R" => GuidGenerator.Version1R,
-            "6P" => GuidGenerator.Version6P,
-            _ => default(IGuidGenerator),
+            "Version1R" => GuidGenerator.Version1R,
+            "Version6P" => GuidGenerator.Version6P,
+            _ => GuidGenerator.OfVersion(this.Version),
         };
     }
 
