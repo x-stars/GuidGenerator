@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+#if NETCOREAPP3_0_OR_GREATER
+using System.Numerics;
+#endif
 
 namespace XNetEx.Guids;
 
@@ -55,9 +58,15 @@ public static partial class GuidExtensions
     /// <returns>The variant of the <see cref="Guid"/>.</returns>
     public static GuidVariant GetVariant(this Guid guid)
     {
+#if NETCOREAPP3_0_OR_GREATER
+        var shiftVar = (uint)guid.ClkSeqHi_Var() & 0xE0;
+        var lzcntVar = ~(shiftVar << (3 * 8));
+        var variant = BitOperations.LeadingZeroCount(lzcntVar);
+#else
         var variant = -1;
         var shiftVar = (int)guid.ClkSeqHi_Var() & 0xE0;
         while ((sbyte)(shiftVar << ++variant) < 0) { }
+#endif
         return (GuidVariant)variant;
     }
 
