@@ -41,6 +41,22 @@ internal static class GuidRfc4122Fields
 #endif
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static unsafe byte[] NodeIdToArray(this ref Guid guid)
+    {
+        const int nodeIdSize = 6;
+        var nodeId = new byte[nodeIdSize];
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        guid.NodeId().CopyTo((Span<byte>)nodeId);
+#else
+        fixed (byte* pGuidNodeId = &guid.NodeId(0), pNodeId = &nodeId[0])
+        {
+            Buffer.MemoryCopy(pGuidNodeId, pNodeId, nodeIdSize, nodeIdSize);
+        }
+#endif
+        return nodeId;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static unsafe void SetNodeId(this ref Guid guid, byte[] nodeId)
     {
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
