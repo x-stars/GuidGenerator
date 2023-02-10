@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-#if NETCOREAPP3_0_OR_GREATER
-using System.Numerics;
-#endif
+using XNetEx.Guids.Components;
 
 namespace XNetEx.Guids;
 
@@ -46,9 +44,7 @@ public static partial class GuidExtensions
     /// <returns>The version of the <see cref="Guid"/>.</returns>
     public static GuidVersion GetVersion(this Guid guid)
     {
-        var shiftVer = (int)guid.TimeHi_Ver() & 0xF000;
-        var version = shiftVer >> (3 * 4);
-        return (GuidVersion)version;
+        return GuidComponents.Common.GetVersion(ref guid);
     }
 
     /// <summary>
@@ -58,16 +54,7 @@ public static partial class GuidExtensions
     /// <returns>The variant of the <see cref="Guid"/>.</returns>
     public static GuidVariant GetVariant(this Guid guid)
     {
-#if NETCOREAPP3_0_OR_GREATER
-        var shiftVar = (uint)guid.ClkSeqHi_Var() & 0xE0;
-        var lzcntVar = ~(shiftVar << (3 * 8));
-        var variant = BitOperations.LeadingZeroCount(lzcntVar);
-#else
-        var variant = -1;
-        var shiftVar = (int)guid.ClkSeqHi_Var() & 0xE0;
-        while ((sbyte)(shiftVar << ++variant) < 0) { }
-#endif
-        return (GuidVariant)variant;
+        return GuidComponents.Common.GetVariant(ref guid);
     }
 
     /// <summary>
@@ -87,36 +74,8 @@ public static partial class GuidExtensions
             return false;
         }
 
-        var tsTicks = default(long);
-        var version = guid.GetVersion();
-        if (version != GuidVersion.Version7)
-        {
-            var tsField = (version != GuidVersion.Version6) ?
-                (
-                    ((long)guid.TimeLow() << (0 * 8)) |
-                    ((long)guid.TimeMid() << (4 * 8)) |
-                    ((long)(guid.TimeHi_Ver() & ~0xF000) << (6 * 8))
-                ) :
-                (
-                    ((long)guid.TimeLow() << (4 * 8 - 4)) |
-                    ((long)guid.TimeMid() << (2 * 8 - 4)) |
-                    ((long)(guid.TimeHi_Ver() & ~0xF000) << (0 * 8))
-                );
-            if (version.ContainsLocalId())
-            {
-                tsField &= ~0xFFFFFFFFL;
-            }
-            var epochTicks = TimestampEpochs.Gregorian.Ticks;
-            tsTicks = epochTicks + tsField;
-        }
-        else
-        {
-            const long ticksPerMs = 1_000_000 / 100;
-            var tsField = ((long)guid.TimeLow() << (2 * 8)) |
-                          ((long)guid.TimeMid() << (0 * 8));
-            var epochTicks = TimestampEpochs.UnixTime.Ticks;
-            tsTicks = epochTicks + (tsField * ticksPerMs);
-        }
+        var components = GuidComponents.OfVersion(guid.GetVersion());
+        var tsTicks = components.GetTimestamp(ref guid);
         timestamp = new DateTime(tsTicks, DateTimeKind.Utc);
         return true;
     }
@@ -138,13 +97,8 @@ public static partial class GuidExtensions
             return false;
         }
 
-        var csField = ((int)guid.ClkSeqLow() << (0 * 8)) |
-                      ((int)(guid.ClkSeqHi_Var() & ~0xC0) << (1 * 8));
-        if (guid.GetVersion().ContainsLocalId())
-        {
-            csField >>= (1 * 8);
-        }
-        clockSeq = (short)csField;
+        var components = GuidComponents.OfVersion(guid.GetVersion());
+        clockSeq = components.GetClockSequence(ref guid);
         return true;
     }
 
@@ -169,8 +123,9 @@ public static partial class GuidExtensions
             return false;
         }
 
-        domain = (DceSecurityDomain)guid.ClkSeqLow();
-        localId = (int)guid.TimeLow();
+        var components = GuidComponents.OfVersion(guid.GetVersion());
+        domain = components.GetDomain(ref guid);
+        localId = components.GetLocalId(ref guid);
         return true;
     }
 
@@ -185,7 +140,6 @@ public static partial class GuidExtensions
     public static unsafe bool TryGetNodeId(
         this Guid guid, [NotNullWhen(true)] out byte[]? nodeId)
     {
-        const int nodeIdSize = 6;
         if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
             !guid.GetVersion().ContainsNodeId())
         {
@@ -193,15 +147,8 @@ public static partial class GuidExtensions
             return false;
         }
 
-        nodeId = new byte[nodeIdSize];
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        guid.NodeId().CopyTo((Span<byte>)nodeId);
-#else
-        fixed (byte* pGuidNodeId = &guid.NodeId(0), pNodeId = &nodeId[0])
-        {
-            Buffer.MemoryCopy(pGuidNodeId, pNodeId, nodeIdSize, nodeIdSize);
-        }
-#endif
+        var components = GuidComponents.OfVersion(guid.GetVersion());
+        nodeId = components.GetNodeId(ref guid);
         return true;
     }
 
@@ -217,15 +164,15 @@ public static partial class GuidExtensions
     /// otherwise, <see langword="false"/>.</returns>
     public static bool TryWriteNodeId(this Guid guid, Span<byte> destination)
     {
-        const int nodeIdSize = 6;
-        if (destination.Length < nodeIdSize) { return false; }
+        if (destination.Length < 6) { return false; }
         if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
             !guid.GetVersion().ContainsNodeId())
         {
             return false;
         }
 
-        guid.NodeId().CopyTo(destination);
+        var components = GuidComponents.OfVersion(guid.GetVersion());
+        components.WriteNodeId(ref guid, destination);
         return true;
     }
 #endif

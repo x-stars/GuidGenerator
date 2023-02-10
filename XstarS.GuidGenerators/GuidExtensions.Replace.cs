@@ -1,4 +1,5 @@
 ﻿using System;
+using XNetEx.Guids.Components;
 
 namespace XNetEx.Guids;
 
@@ -15,9 +16,7 @@ static partial class GuidExtensions
     public static Guid ReplaceVersion(this Guid guid, GuidVersion version)
     {
         var result = guid;
-        var shiftVer = (int)version << (3 * 4);
-        ref var timeHi_Ver = ref result.TimeHi_Ver();
-        timeHi_Ver = (ushort)(timeHi_Ver & ~0xF000 | shiftVer);
+        GuidComponents.Common.SetVersion(ref result, version);
         return result;
     }
 
@@ -32,10 +31,7 @@ static partial class GuidExtensions
     public static Guid ReplaceVariant(this Guid guid, GuidVariant variant)
     {
         var result = guid;
-        var shiftVar = -1 << (8 - (int)variant);
-        var varMask = (shiftVar >> 1) & 0xE0;
-        ref var clkSeqHi_Var = ref result.ClkSeqHi_Var();
-        clkSeqHi_Var = (byte)(clkSeqHi_Var & ~varMask | shiftVar);
+        GuidComponents.Common.SetVariant(ref result, variant);
         return result;
     }
 
@@ -57,40 +53,8 @@ static partial class GuidExtensions
         }
 
         var result = guid;
-        var version = guid.GetVersion();
-        var utcTimestamp = timestamp.ToUniversalTime();
-        if (version != GuidVersion.Version7)
-        {
-            var epochTicks = TimestampEpochs.Gregorian.Ticks;
-            var tsField = utcTimestamp.Ticks - epochTicks;
-            if (version != GuidVersion.Version6)
-            {
-                result.TimeLow() = (uint)(tsField >> (0 * 8));
-                result.TimeMid() = (ushort)(tsField >> (4 * 8));
-                result.TimeHi_Ver() = (ushort)(tsField >> (6 * 8));
-            }
-            else
-            {
-                result.TimeLow() = (uint)(tsField >> (4 * 8 - 4));
-                result.TimeMid() = (ushort)(tsField >> (2 * 8 - 4));
-                result.TimeHi_Ver() = (ushort)(tsField >> (0 * 8));
-            }
-            if (version.ContainsLocalId())
-            {
-                result.TimeLow() = guid.TimeLow();
-            }
-        }
-        else
-        {
-            const long ticksPerMs = 1_000_000 / 100;
-            var epochTicks = TimestampEpochs.UnixTime.Ticks;
-            var tsField = (utcTimestamp.Ticks - epochTicks) / ticksPerMs;
-            result.TimeLow() = (uint)(tsField >> (2 * 8));
-            result.TimeMid() = (ushort)(tsField >> (0 * 8));
-        }
-        var shiftVer = (int)version << (3 * 4);
-        ref var timeHi_Ver = ref result.TimeHi_Ver();
-        timeHi_Ver = (ushort)(timeHi_Ver & ~0xF000 | shiftVer);
+        var components = GuidComponents.OfVersion(guid.GetVersion());
+        components.SetTimestamp(ref result, timestamp.ToUniversalTime().Ticks);
         return result;
     }
 
@@ -126,19 +90,8 @@ static partial class GuidExtensions
         }
 
         var result = guid;
-        var version = guid.GetVersion();
-        if (version.ContainsLocalId())
-        {
-            clockSeq <<= (1 * 8);
-        }
-        result.ClkSeqLow() = (byte)(clockSeq >> (0 * 8));
-        result.ClkSeqHi_Var() = (byte)(clockSeq >> (1 * 8));
-        if (version.ContainsLocalId())
-        {
-            result.ClkSeqLow() = guid.ClkSeqLow();
-        }
-        ref var clkSeqHi_Var = ref result.ClkSeqHi_Var();
-        clkSeqHi_Var = (byte)(clkSeqHi_Var & ~0xC0 | 0x80);
+        var components = GuidComponents.OfVersion(guid.GetVersion());
+        components.SetClockSequence(ref result, clockSeq);
         return result;
     }
 
@@ -164,8 +117,9 @@ static partial class GuidExtensions
         }
 
         var result = guid;
-        result.ClkSeqLow() = (byte)domain;
-        result.TimeLow() = (uint)localId;
+        var components = GuidComponents.OfVersion(guid.GetVersion());
+        components.SetDomain(ref result, domain);
+        components.SetLocalId(ref result, localId);
         return result;
     }
 
@@ -206,7 +160,8 @@ static partial class GuidExtensions
         }
 
         var result = guid;
-        result.SetNodeId(nodeId);
+        var components = GuidComponents.OfVersion(guid.GetVersion());
+        components.SetNodeId(ref result, nodeId);
         return result;
 #endif
     }
@@ -239,7 +194,8 @@ static partial class GuidExtensions
         }
 
         var result = guid;
-        result.SetNodeId(nodeId);
+        var components = GuidComponents.OfVersion(guid.GetVersion());
+        components.SetNodeId(ref result, nodeId);
         return result;
     }
 #endif

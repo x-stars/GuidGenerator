@@ -45,10 +45,9 @@ internal sealed class DceSecurityGuidGenerator : TimeBasedGuidGenerator, IDceSec
     {
         var guid = base.NewGuid();
         var iLocalId = this.GetLocalId(domain, localId);
-        guid.TimeLow() = (uint)iLocalId;
-        guid.ClkSeqHi_Var() = guid.ClkSeqLow();
-        this.FillVariantField(ref guid);
-        guid.ClkSeqLow() = (byte)domain;
+        var components = this.GuidComponents;
+        components.SetDomain(ref guid, domain);
+        components.SetLocalId(ref guid, iLocalId);
         return guid;
     }
 

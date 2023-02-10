@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using XNetEx.Guids.Components;
 
 namespace XNetEx.Guids.Generators;
 
@@ -8,6 +9,8 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
     private static volatile TimeBasedGuidGenerator? Singleton;
 
     private static volatile TimeBasedGuidGenerator? SingletonR;
+
+    protected readonly GuidComponents GuidComponents;
 
     private readonly TimestampProvider TimestampProvider;
 
@@ -20,6 +23,7 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     protected TimeBasedGuidGenerator(NodeIdSource nodeIdSource)
     {
+        this.GuidComponents = GuidComponents.OfVersion(this.Version);
         this.TimestampProvider = TimestampProvider.Instance;
         this.NodeIdProvider = NodeIdProvider.GetInstance(nodeIdSource);
     }
@@ -58,12 +62,7 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     public override GuidVersion Version => GuidVersion.Version1;
 
-    protected virtual bool IsTimestampLittleEndian => true;
-
-    private DateTime EpochDateTime => TimestampEpochs.Gregorian;
-
-    private long CurrentTimestamp =>
-        this.TimestampProvider.CurrentTimestamp - this.EpochDateTime.Ticks;
+    private long CurrentTimestamp => this.TimestampProvider.CurrentTimestamp;
 
     private byte[] NodeIdBytes => this.NodeIdProvider.NodeIdBytes;
 
@@ -89,21 +88,10 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         var nodeId = this.NodeIdBytes;
         var clockSeq = GuidGeneratorState.RefreshState(
             timestamp, nodeId, this.NodeIdSource);
-        if (this.IsTimestampLittleEndian)
-        {
-            guid.TimeLow() = (uint)(timestamp >> (0 * 8));
-            guid.TimeMid() = (ushort)(timestamp >> (4 * 8));
-            guid.TimeHi_Ver() = (ushort)(timestamp >> (6 * 8));
-        }
-        else
-        {
-            guid.TimeLow() = (uint)(timestamp >> (4 * 8 - 4));
-            guid.TimeMid() = (ushort)(timestamp >> (2 * 8 - 4));
-            guid.TimeHi_Ver() = (ushort)(timestamp >> (0 * 8));
-        }
-        guid.ClkSeqLow() = (byte)(clockSeq >> (0 * 8));
-        guid.ClkSeqHi_Var() = (byte)(clockSeq >> (1 * 8));
-        guid.SetNodeId(nodeId);
+        var components = this.GuidComponents;
+        components.SetTimestamp(ref guid, timestamp);
+        components.SetClockSequence(ref guid, clockSeq);
+        components.SetNodeId(ref guid, nodeId);
     }
 
     internal sealed class Sequential : TimeBasedGuidGenerator
@@ -155,8 +143,6 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         }
 
         public override GuidVersion Version => GuidVersion.Version6;
-
-        protected override bool IsTimestampLittleEndian => false;
 
         internal static TimeBasedGuidGenerator.Sequential CreateInstance()
         {

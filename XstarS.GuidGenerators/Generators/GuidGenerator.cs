@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using XNetEx.Guids.Components;
 
 namespace XNetEx.Guids.Generators;
 
@@ -96,9 +97,7 @@ public abstract partial class GuidGenerator : IGuidGeneratorInfo, IGuidGenerator
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected void FillVersionField(ref Guid guid)
     {
-        var shiftVer = (int)this.Version << (3 * 4);
-        ref var timeHi_Ver = ref guid.TimeHi_Ver();
-        timeHi_Ver = (ushort)(timeHi_Ver & ~0xF000 | shiftVer);
+        GuidComponents.Common.SetVersion(ref guid, this.Version);
     }
 
     /// <summary>
@@ -108,9 +107,6 @@ public abstract partial class GuidGenerator : IGuidGeneratorInfo, IGuidGenerator
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected void FillVariantField(ref Guid guid)
     {
-        var shiftVar = -1 << (8 - (int)this.Variant);
-        var varMask = (shiftVar >> 1) & 0xE0;
-        ref var clkSeqHi_Var = ref guid.ClkSeqHi_Var();
-        clkSeqHi_Var = (byte)(clkSeqHi_Var & ~varMask | shiftVar);
+        GuidComponents.Common.SetVariant(ref guid, this.Variant);
     }
 }

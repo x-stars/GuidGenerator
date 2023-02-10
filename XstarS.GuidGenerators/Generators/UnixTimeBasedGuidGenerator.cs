@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using XNetEx.Guids.Components;
 
 namespace XNetEx.Guids.Generators;
 
@@ -8,10 +9,13 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 {
     private static volatile UnixTimeBasedGuidGenerator? Singleton;
 
+    private readonly GuidComponents GuidComponents;
+
     private readonly TimestampProvider TimestampProvider;
 
     private UnixTimeBasedGuidGenerator()
     {
+        this.GuidComponents = GuidComponents.OfVersion(this.Version);
         this.TimestampProvider = TimestampProvider.Instance;
     }
 
@@ -33,26 +37,16 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     public override GuidVersion Version => GuidVersion.Version7;
 
-    private DateTime EpochDateTime => TimestampEpochs.UnixTime;
-
-    private long CurrentTimestamp =>
-        this.TimestampProvider.CurrentTimestamp - this.EpochDateTime.Ticks;
+    private long CurrentTimestamp => this.TimestampProvider.CurrentTimestamp;
 
     public override Guid NewGuid()
     {
         var guid = Guid.NewGuid();
-        this.FillTimestampFields(ref guid);
+        var timestamp = this.CurrentTimestamp;
+        var components = this.GuidComponents;
+        components.SetTimestamp(ref guid, timestamp);
         this.FillVersionField(ref guid);
         Debug.Assert(guid.GetVariant() == this.Variant);
         return guid;
-    }
-
-    private void FillTimestampFields(ref Guid guid)
-    {
-        const long ticksPerMs = 1_000_000 / 100;
-        var timestamp = this.CurrentTimestamp;
-        var tsMilliSec = timestamp / ticksPerMs;
-        guid.TimeLow() = (uint)(tsMilliSec >> (2 * 8));
-        guid.TimeMid() = (ushort)(tsMilliSec >> (0 * 8));
     }
 }
