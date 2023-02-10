@@ -21,22 +21,22 @@ internal abstract class DceSecurityGuidComponents
 
     public sealed override DceSecurityDomain GetDomain(ref Guid guid)
     {
-        return (DceSecurityDomain)guid.ClkSeqLow();
+        return GuidComponents.FixedFormat.GetDomain(ref guid);
     }
 
     public sealed override void SetDomain(ref Guid guid, DceSecurityDomain domain)
     {
-        guid.ClkSeqLow() = (byte)domain;
+        GuidComponents.FixedFormat.SetDomain(ref guid, domain);
     }
 
     public sealed override int GetLocalId(ref Guid guid)
     {
-        return (int)guid.TimeLow();
+        return GuidComponents.FixedFormat.GetLocalId(ref guid);
     }
 
     public sealed override void SetLocalId(ref Guid guid, int localId)
     {
-        guid.TimeLow() = (uint)localId;
+        GuidComponents.FixedFormat.SetLocalId(ref guid, localId);
     }
 
     internal sealed new class Version2 : DceSecurityGuidComponents

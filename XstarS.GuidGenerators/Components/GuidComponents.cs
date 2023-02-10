@@ -6,7 +6,7 @@ using System.Numerics;
 
 namespace XNetEx.Guids.Components;
 
-internal partial class GuidComponents : ICommonGuidComponents
+internal partial class GuidComponents : IGuidCommonComponents
 {
     protected GuidComponents() { }
 

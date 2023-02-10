@@ -25,35 +25,25 @@ internal abstract class TimeNodeBasedGuidComponents
         clkSeqHi_Var = (byte)(clkSeqHi_Var & 0xC0 | clkSeqHi);
     }
 
-    public sealed override unsafe byte[] GetNodeId(ref Guid guid)
+    public sealed override byte[] GetNodeId(ref Guid guid)
     {
-        const int nodeIdSize = 6;
-        var nodeId = new byte[nodeIdSize];
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        guid.NodeId().CopyTo((Span<byte>)nodeId);
-#else
-        fixed (byte* pGuidNodeId = &guid.NodeId(0), pNodeId = &nodeId[0])
-        {
-            Buffer.MemoryCopy(pGuidNodeId, pNodeId, nodeIdSize, nodeIdSize);
-        }
-#endif
-        return nodeId;
+        return GuidComponents.FixedFormat.GetNodeId(ref guid);
     }
 
     public sealed override void SetNodeId(ref Guid guid, byte[] nodeId)
     {
-        guid.SetNodeId(nodeId);
+        GuidComponents.FixedFormat.SetNodeId(ref guid, nodeId);
     }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     public sealed override void WriteNodeId(ref Guid guid, Span<byte> destination)
     {
-        guid.NodeId().CopyTo(destination);
+        GuidComponents.FixedFormat.WriteNodeId(ref guid, destination);
     }
 
     public sealed override void SetNodeId(ref Guid guid, ReadOnlySpan<byte> nodeId)
     {
-        guid.SetNodeId(nodeId);
+        GuidComponents.FixedFormat.SetNodeId(ref guid, nodeId);
     }
 #endif
 

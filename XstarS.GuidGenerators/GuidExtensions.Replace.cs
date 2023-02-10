@@ -16,7 +16,8 @@ static partial class GuidExtensions
     public static Guid ReplaceVersion(this Guid guid, GuidVersion version)
     {
         var result = guid;
-        GuidComponents.Common.SetVersion(ref result, version);
+        var components = GuidComponents.Common;
+        components.SetVersion(ref result, version);
         return result;
     }
 
@@ -31,7 +32,8 @@ static partial class GuidExtensions
     public static Guid ReplaceVariant(this Guid guid, GuidVariant variant)
     {
         var result = guid;
-        GuidComponents.Common.SetVariant(ref result, variant);
+        var components = GuidComponents.Common;
+        components.SetVariant(ref result, variant);
         return result;
     }
 
@@ -53,8 +55,10 @@ static partial class GuidExtensions
         }
 
         var result = guid;
-        var components = GuidComponents.OfVersion(guid.GetVersion());
-        components.SetTimestamp(ref result, timestamp.ToUniversalTime().Ticks);
+        var version = guid.GetVersion();
+        var components = GuidComponents.OfVersion(version);
+        var tsTicks = timestamp.ToUniversalTime().Ticks;
+        components.SetTimestamp(ref result, tsTicks);
         return result;
     }
 
@@ -90,7 +94,8 @@ static partial class GuidExtensions
         }
 
         var result = guid;
-        var components = GuidComponents.OfVersion(guid.GetVersion());
+        var version = guid.GetVersion();
+        var components = GuidComponents.OfVersion(version);
         components.SetClockSequence(ref result, clockSeq);
         return result;
     }
@@ -117,7 +122,7 @@ static partial class GuidExtensions
         }
 
         var result = guid;
-        var components = GuidComponents.OfVersion(guid.GetVersion());
+        var components = GuidComponents.FixedFormat;
         components.SetDomain(ref result, domain);
         components.SetLocalId(ref result, localId);
         return result;
@@ -160,7 +165,7 @@ static partial class GuidExtensions
         }
 
         var result = guid;
-        var components = GuidComponents.OfVersion(guid.GetVersion());
+        var components = GuidComponents.FixedFormat;
         components.SetNodeId(ref result, nodeId);
         return result;
 #endif
@@ -194,7 +199,7 @@ static partial class GuidExtensions
         }
 
         var result = guid;
-        var components = GuidComponents.OfVersion(guid.GetVersion());
+        var components = GuidComponents.FixedFormat;
         components.SetNodeId(ref result, nodeId);
         return result;
     }

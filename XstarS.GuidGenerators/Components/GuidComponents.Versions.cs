@@ -8,25 +8,27 @@ partial class GuidComponents
 
     public static GuidComponents Common => GuidComponents.Instance;
 
-    public static ICommonGuidComponents Empty => GuidComponents.Instance;
+    public static GuidFixedFormatComponents FixedFormat => GuidFixedFormatComponents.Instance;
+
+    public static IGuidCommonComponents Empty => GuidComponents.Instance;
 
     public static ITimeNodeBasedGuidComponents Version1 => TimeNodeBasedGuidComponents.Version1.Instance;
 
     public static IDceSecurityGuidComponents Version2 => DceSecurityGuidComponents.Version2.Instance;
 
-    public static ICommonGuidComponents Version3 => GuidComponents.Instance;
+    public static IGuidCommonComponents Version3 => GuidComponents.Instance;
 
-    public static ICommonGuidComponents Version4 => GuidComponents.Instance;
+    public static IGuidCommonComponents Version4 => GuidComponents.Instance;
 
-    public static ICommonGuidComponents Version5 => GuidComponents.Instance;
+    public static IGuidCommonComponents Version5 => GuidComponents.Instance;
 
     public static ITimeNodeBasedGuidComponents Version6 => TimeNodeBasedGuidComponents.Version6.Instance;
 
     public static ITimeBasedGuidComponents Version7 => TimeBasedGuidComponents.Version7.Instance;
 
-    public static ICommonGuidComponents Version8 => GuidComponents.Instance;
+    public static IGuidCommonComponents Version8 => GuidComponents.Instance;
 
-    public static ICommonGuidComponents MaxValue => GuidComponents.Instance;
+    public static IGuidCommonComponents MaxValue => GuidComponents.Instance;
 
     public static GuidComponents OfVersion(GuidVersion version) => version switch
     {

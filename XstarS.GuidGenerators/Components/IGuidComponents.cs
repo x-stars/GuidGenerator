@@ -1,12 +1,12 @@
 ﻿namespace XNetEx.Guids.Components;
 
-internal interface ICommonGuidComponents
+internal interface IGuidCommonComponents
     : IGuidVariantComponent, IGuidVersionComponent
 {
 }
 
 internal interface ITimeBasedGuidComponents
-    : ICommonGuidComponents, IGuidTimestampComponent
+    : IGuidCommonComponents, IGuidTimestampComponent
 {
 }
 
