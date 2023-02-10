@@ -43,7 +43,9 @@ internal abstract class NodeIdProvider
             }
         }
 
-        public override byte[] NodeIdBytes => throw new NotSupportedException();
+        public override byte[] NodeIdBytes =>
+            throw new NotSupportedException(
+                "Cannot get the node ID value for NodeIdSource.None.");
 
         public override NodeIdSource SourceType => NodeIdSource.None;
     }

@@ -8,6 +8,10 @@ namespace XNetEx.Guids.Components;
 
 internal partial class GuidComponents : IGuidCommonComponents
 {
+    private const string NotSupportedMessage =
+        "This instance does not support getting " +
+        "or setting the specified Guid component.";
+
     protected GuidComponents() { }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -52,32 +56,32 @@ internal partial class GuidComponents : IGuidCommonComponents
 
     public virtual long GetTimestamp(ref Guid guid)
     {
-        throw new NotSupportedException();
+        throw new NotSupportedException(GuidComponents.NotSupportedMessage);
     }
 
     public virtual void SetTimestamp(ref Guid guid, long timestamp)
     {
-        throw new NotSupportedException();
+        throw new NotSupportedException(GuidComponents.NotSupportedMessage);
     }
 
     public virtual short GetClockSequence(ref Guid guid)
     {
-        throw new NotSupportedException();
+        throw new NotSupportedException(GuidComponents.NotSupportedMessage);
     }
 
     public virtual void SetClockSequence(ref Guid guid, short clockSeq)
     {
-        throw new NotSupportedException();
+        throw new NotSupportedException(GuidComponents.NotSupportedMessage);
     }
 
     public virtual byte[] GetNodeId(ref Guid guid)
     {
-        throw new NotSupportedException();
+        throw new NotSupportedException(GuidComponents.NotSupportedMessage);
     }
 
     public virtual void SetNodeId(ref Guid guid, byte[] nodeId)
     {
-        throw new NotSupportedException();
+        throw new NotSupportedException(GuidComponents.NotSupportedMessage);
     }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -95,21 +99,21 @@ internal partial class GuidComponents : IGuidCommonComponents
 
     public virtual DceSecurityDomain GetDomain(ref Guid guid)
     {
-        throw new NotSupportedException();
+        throw new NotSupportedException(GuidComponents.NotSupportedMessage);
     }
 
     public virtual void SetDomain(ref Guid guid, DceSecurityDomain domain)
     {
-        throw new NotSupportedException();
+        throw new NotSupportedException(GuidComponents.NotSupportedMessage);
     }
 
     public virtual int GetLocalId(ref Guid guid)
     {
-        throw new NotSupportedException();
+        throw new NotSupportedException(GuidComponents.NotSupportedMessage);
     }
 
     public virtual void SetLocalId(ref Guid guid, int localId)
     {
-        throw new NotSupportedException();
+        throw new NotSupportedException(GuidComponents.NotSupportedMessage);
     }
 }

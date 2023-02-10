@@ -54,7 +54,8 @@ public abstract partial class GuidGenerator : IGuidGeneratorInfo, IGuidGenerator
     /// This instance does not support generating a name-based <see cref="Guid"/>.</exception>
     public virtual Guid NewGuid(Guid nsId, byte[] name)
     {
-        throw new NotSupportedException();
+        throw new NotSupportedException(
+            "This instance does not support generating a name-based Guid.");
     }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -87,7 +88,8 @@ public abstract partial class GuidGenerator : IGuidGeneratorInfo, IGuidGenerator
     /// This instance does not support generating a DCE Security <see cref="Guid"/>.</exception>
     public virtual Guid NewGuid(DceSecurityDomain domain, int? localId = null)
     {
-        throw new NotSupportedException();
+        throw new NotSupportedException(
+            "This instance does not support generating a DCE Security Guid.");
     }
 
     /// <summary>

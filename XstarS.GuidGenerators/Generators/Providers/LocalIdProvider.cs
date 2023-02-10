@@ -183,12 +183,16 @@ internal abstract class LocalIdProvider
 
         protected override int GetLocalUserId()
         {
-            throw new PlatformNotSupportedException();
+            throw new PlatformNotSupportedException(
+                "The current operating system does not support " +
+                "getting the local user ID.");
         }
 
         protected override int GetLocalGroupId()
         {
-            throw new PlatformNotSupportedException();
+            throw new PlatformNotSupportedException(
+                "The current operating system does not support " +
+                "getting the local group ID.");
         }
     }
 }
