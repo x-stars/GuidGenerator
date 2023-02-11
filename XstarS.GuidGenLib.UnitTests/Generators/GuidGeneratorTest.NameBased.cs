@@ -117,13 +117,13 @@ partial class GuidGeneratorTest
         foreach (var version in new[]
         {
             GuidVersion.Empty,
-            GuidVersion.MaxValue,
             GuidVersion.Version1,
             GuidVersion.Version2,
             GuidVersion.Version4,
             GuidVersion.Version6,
             GuidVersion.Version7,
             GuidVersion.Version8,
+            GuidVersion.MaxValue,
         })
         {
             Assert.ThrowsException<NotSupportedException>(

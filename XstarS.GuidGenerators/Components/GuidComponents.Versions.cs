@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace XNetEx.Guids.Components;
+﻿namespace XNetEx.Guids.Components;
 
 partial class GuidComponents
 {
