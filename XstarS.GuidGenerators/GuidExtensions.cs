@@ -67,7 +67,7 @@ public static partial class GuidExtensions
     /// contains the timestamp represented by the <see cref="Guid"/>.</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/>
     /// is time-based; otherwise, <see langword="false"/>.</returns>
-    public static bool TryGetTimestamp(this Guid guid, out DateTime timestamp)
+    public static unsafe bool TryGetTimestamp(this Guid guid, out DateTime timestamp)
     {
         if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
             !guid.GetVersion().IsTimeBased())
@@ -76,10 +76,12 @@ public static partial class GuidExtensions
             return false;
         }
 
+        const ulong utcFlag = 1UL << 62;
         var version = guid.GetVersion();
         var components = GuidComponents.OfVersion(version);
         var tsTicks = components.GetTimestamp(ref guid);
-        timestamp = new DateTime(tsTicks, DateTimeKind.Utc);
+        var tsData = (ulong)tsTicks | utcFlag;
+        timestamp = *(DateTime*)&tsData;
         return true;
     }
 
