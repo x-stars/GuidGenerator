@@ -14,6 +14,13 @@ type GuidModuleTest() =
                            (0uy, 0uy, 0uy, 0uy, 0uy, 0uy))
 
     [<TestMethod>]
+    member _.GuidMaxValue_ToFields_GetAllFieldsMaxValue() =
+        Guid.maxValue
+        |> Guid.toFields
+        |> Assert.equalTo (0xFFFFFFFF, 0xFFFFs, 0xFFFFs, (0xFFuy, 0xFFuy),
+                           (0xFFuy, 0xFFuy, 0xFFuy, 0xFFuy, 0xFFuy, 0xFFuy))
+
+    [<TestMethod>]
     member _.CreateByFields_DeconstructToFields_GetInputFields() =
         Guid.ofFields 0x00112233 0x4455s 0x6677s (0x88uy, 0x99uy)
                       (0xAAuy, 0xBBuy, 0xCCuy, 0xDDuy, 0xEEuy, 0xFFuy)

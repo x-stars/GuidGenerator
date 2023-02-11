@@ -7,11 +7,23 @@ open XNetEx.FSharp.UnitTesting.MSTest
 type GuidVersionInfoTest() =
 
     [<TestMethod>]
+    member _.GuidVersionInfo_EmptyGuid_GetExpectedFlags() =
+        Guid.empty
+        |- (Assert.false' << Guid.isTimeBased)
+        |- (Assert.false' << Guid.isNameBased)
+        |- (Assert.false' << Guid.isRandomized)
+        |- (Assert.false' << Guid.hasClockSeq)
+        |- (Assert.false' << Guid.hasNodeId)
+        |- (Assert.false' << Guid.hasLocalId)
+        |> ignore
+
+    [<TestMethod>]
     member _.GuidVersionInfo_Version1Guid_GetExpectedFlags() =
         Guid.newV1 ()
         |- (Assert.true'  << Guid.isTimeBased)
         |- (Assert.false' << Guid.isNameBased)
         |- (Assert.false' << Guid.isRandomized)
+        |- (Assert.true'  << Guid.hasClockSeq)
         |- (Assert.true'  << Guid.hasNodeId)
         |- (Assert.false' << Guid.hasLocalId)
         |> ignore
@@ -22,6 +34,7 @@ type GuidVersionInfoTest() =
         |- (Assert.true'  << Guid.isTimeBased)
         |- (Assert.false' << Guid.isNameBased)
         |- (Assert.false' << Guid.isRandomized)
+        |- (Assert.true'  << Guid.hasClockSeq)
         |- (Assert.true'  << Guid.hasNodeId)
         |- (Assert.true'  << Guid.hasLocalId)
         |> ignore
@@ -32,6 +45,7 @@ type GuidVersionInfoTest() =
         |- (Assert.false' << Guid.isTimeBased)
         |- (Assert.true'  << Guid.isNameBased)
         |- (Assert.false' << Guid.isRandomized)
+        |- (Assert.false' << Guid.hasClockSeq)
         |- (Assert.false' << Guid.hasNodeId)
         |- (Assert.false' << Guid.hasLocalId)
         |> ignore
@@ -42,6 +56,7 @@ type GuidVersionInfoTest() =
         |- (Assert.false' << Guid.isTimeBased)
         |- (Assert.false' << Guid.isNameBased)
         |- (Assert.true'  << Guid.isRandomized)
+        |- (Assert.false' << Guid.hasClockSeq)
         |- (Assert.false' << Guid.hasNodeId)
         |- (Assert.false' << Guid.hasLocalId)
         |> ignore
@@ -52,6 +67,51 @@ type GuidVersionInfoTest() =
         |- (Assert.false' << Guid.isTimeBased)
         |- (Assert.true'  << Guid.isNameBased)
         |- (Assert.false' << Guid.isRandomized)
+        |- (Assert.false' << Guid.hasClockSeq)
+        |- (Assert.false' << Guid.hasNodeId)
+        |- (Assert.false' << Guid.hasLocalId)
+        |> ignore
+
+    [<TestMethod>]
+    member _.GuidVersionInfo_Version6Guid_GetExpectedFlags() =
+        Guid.newV6 ()
+        |- (Assert.true'  << Guid.isTimeBased)
+        |- (Assert.false' << Guid.isNameBased)
+        |- (Assert.false' << Guid.isRandomized)
+        |- (Assert.true'  << Guid.hasClockSeq)
+        |- (Assert.true'  << Guid.hasNodeId)
+        |- (Assert.false' << Guid.hasLocalId)
+        |> ignore
+
+    [<TestMethod>]
+    member _.GuidVersionInfo_Version7Guid_GetExpectedFlags() =
+        Guid.newV7 ()
+        |- (Assert.true'  << Guid.isTimeBased)
+        |- (Assert.false' << Guid.isNameBased)
+        |- (Assert.true'  << Guid.isRandomized)
+        |- (Assert.false' << Guid.hasClockSeq)
+        |- (Assert.false' << Guid.hasNodeId)
+        |- (Assert.false' << Guid.hasLocalId)
+        |> ignore
+
+    [<TestMethod>]
+    member _.GuidVersionInfo_Version8Guid_GetExpectedFlags() =
+        Guid.newV8 ()
+        |- (Assert.false' << Guid.isTimeBased)
+        |- (Assert.false' << Guid.isNameBased)
+        |- (Assert.false' << Guid.isRandomized)
+        |- (Assert.false' << Guid.hasClockSeq)
+        |- (Assert.false' << Guid.hasNodeId)
+        |- (Assert.false' << Guid.hasLocalId)
+        |> ignore
+
+    [<TestMethod>]
+    member _.GuidVersionInfo_GuidMaxValue_GetExpectedFlags() =
+        Guid.maxValue
+        |- (Assert.false' << Guid.isTimeBased)
+        |- (Assert.false' << Guid.isNameBased)
+        |- (Assert.false' << Guid.isRandomized)
+        |- (Assert.false' << Guid.hasClockSeq)
         |- (Assert.false' << Guid.hasNodeId)
         |- (Assert.false' << Guid.hasLocalId)
         |> ignore

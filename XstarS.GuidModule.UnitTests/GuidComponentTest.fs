@@ -37,15 +37,74 @@ type GuidComponentsTest() =
 
     [<TestMethod>]
     member _.TryGetDomainAndLocalId_Version2Guid_GetExpectedDomainAndLocalId() =
-        Guid.newV2Org 0x00112233
+        Guid.parse "6ba7b810-9dad-21d1-b402-00c04fd430c8"
         |> Guid.tryGetLocalId
         |> tee (Assert.true' << ValueOption.isSome)
         |> ValueOption.get
-        |> Assert.equalTo (Guid.Domain.Org, 0x00112233)
+        |> Assert.equalTo (Guid.Domain.Org, 0x6ba7b810)
 
     [<TestMethod>]
-    member _.TryGetNodeId_Version1Guid_GetExpectedNodeId() =
-        Guid.parse "6ba7b810-9dad-11d1-80b4-00c04fd430c8"
+    member _.TryGetNodeId_Version6Guid_GetExpectedNodeId() =
+        Guid.parse "1d19dad6-ba7b-6810-80b4-00c04fd430c8"
+        |> Guid.tryGetNodeId
+        |> tee (Assert.true' << ValueOption.isSome)
+        |> ValueOption.get
+        |> Assert.Seq.equalTo [| 0x00uy; 0xc0uy; 0x4fuy; 0xd4uy; 0x30uy; 0xc8uy |]
+
+    [<TestMethod>]
+    member _.ReplaceVariant_EmptyGuid_GetInputVariant() =
+        Guid.empty
+        |> Guid.replaceVariant Guid.Variant.Rfc4122
+        |> Guid.variant
+        |> Assert.equalTo Guid.Variant.Rfc4122
+
+    [<TestMethod>]
+    member _.ReplaceVersion_GuidMaxValue_GetInputVersion() =
+        Guid.maxValue
+        |> Guid.replaceVersion Guid.Version.Version7
+        |> Guid.version
+        |> Assert.equalTo Guid.Version.Version7
+
+    [<TestMethod>]
+    member _.ReplaceTimestamp_Version1Guid_GetInputDateTime() =
+        Guid.parse "00000000-0000-1000-80b4-00c04fd430c8"
+        |> Guid.replaceTime (DateTime(0x08BEFFD14FDBF810L, DateTimeKind.Utc))
+        |> Guid.tryGetTime
+        |> tee (Assert.true' << ValueOption.isSome)
+        |> ValueOption.get
+        |> Assert.equalTo (DateTime(0x08BEFFD14FDBF810L, DateTimeKind.Utc))
+
+    [<TestMethod>]
+    member _.ReplaceTimestampOffset_Version6Guid_GetInputDateTimeUtc() =
+        Guid.parse "00000000-0000-6000-80b4-00c04fd430c8"
+        |> Guid.replaceTimeOffset (DateTimeOffset(0x08BF00145DFF3810L, TimeSpan.FromHours(8)))
+        |> Guid.tryGetTime
+        |> tee (Assert.true' << ValueOption.isSome)
+        |> ValueOption.get
+        |> Assert.equalTo (DateTime(0x08BEFFD14FDBF810L, DateTimeKind.Utc))
+
+    [<TestMethod>]
+    member _.ReplaceClockSequence_Version1Guid_GetInputClockSequence() =
+        Guid.parse "6ba7b810-9dad-11d1-8000-00c04fd430c8"
+        |> Guid.replaceClockSeq 0x00b4s
+        |> Guid.tryGetClockSeq
+        |> tee (Assert.true' << ValueOption.isSome)
+        |> ValueOption.get
+        |> Assert.equalTo 0x00b4s
+
+    [<TestMethod>]
+    member _.ReplaceDomainAndLocalId_Version2Guid_GetInputDomainAndLocalId() =
+        Guid.parse "00000000-9dad-21d1-b400-00c04fd430c8"
+        |> Guid.replaceLocalId Guid.Domain.Org 0x6ba7b810
+        |> Guid.tryGetLocalId
+        |> tee (Assert.true' << ValueOption.isSome)
+        |> ValueOption.get
+        |> Assert.equalTo (Guid.Domain.Org, 0x6ba7b810)
+
+    [<TestMethod>]
+    member _.ReplaceNodeId_Version6Guid_GetInputNodeId() =
+        Guid.parse "1d19dad6-ba7b-6810-80b4-000000000000"
+        |> Guid.replaceNodeId [| 0x00uy; 0xc0uy; 0x4fuy; 0xd4uy; 0x30uy; 0xc8uy |]
         |> Guid.tryGetNodeId
         |> tee (Assert.true' << ValueOption.isSome)
         |> ValueOption.get
