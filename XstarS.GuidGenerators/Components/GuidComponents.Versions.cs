@@ -41,7 +41,6 @@ partial class GuidComponents
         GuidVersion.Version6 => TimeNodeBasedGuidComponents.Version6.Instance,
         GuidVersion.Version7 => TimeBasedGuidComponents.Version7.Instance,
         GuidVersion.Version8 => GuidComponents.Instance,
-        GuidVersion.MaxValue => GuidComponents.Instance,
-        _ => throw new ArgumentOutOfRangeException(nameof(version)),
+        GuidVersion.MaxValue or _ => GuidComponents.Instance,
     };
 }
