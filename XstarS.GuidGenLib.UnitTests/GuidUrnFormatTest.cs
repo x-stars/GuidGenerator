@@ -118,7 +118,7 @@ public class GuidUrnFormatTest
     }
 
     [TestMethod]
-    public void TryFormatUrn_EmptyGuidWithSmallerSizeSpan_GetFalseResult()
+    public void TryFormatUrn_EmptyGuidWithSizeTooSmallSpan_GetFalseResult()
     {
         const int guidFormatLength = 36;
         var guid = Guid.Empty;

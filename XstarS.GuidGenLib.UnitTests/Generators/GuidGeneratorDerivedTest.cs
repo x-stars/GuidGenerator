@@ -8,7 +8,9 @@ public class GuidGeneratorDerivedTest
 {
     private sealed class TestGuidGenerator : GuidGenerator
     {
-        public TestGuidGenerator(GuidVersion version, GuidVariant variant)
+        public TestGuidGenerator(
+            GuidVersion version = default,
+            GuidVariant variant = default)
         {
             this.Version = version;
             this.Variant = variant;
@@ -30,10 +32,10 @@ public class GuidGeneratorDerivedTest
     [TestMethod]
     public void FillVersionField_AllPossibleVersion_GetInputVersion()
     {
-        foreach (var verNum in ..(int)GuidVersion.Version5)
+        var versions = Enum.GetValues(typeof(GuidVersion));
+        foreach (var version in (GuidVersion[])versions)
         {
-            var version = (GuidVersion)verNum;
-            var guidGen = new TestGuidGenerator(version, default);
+            var guidGen = new TestGuidGenerator(version: version);
             var guid = guidGen.NewGuid();
             var guidVersion = guid.GetVersion();
             Assert.AreEqual(version, guidVersion);
@@ -43,10 +45,10 @@ public class GuidGeneratorDerivedTest
     [TestMethod]
     public void FillVariantField_AllPossibleVariant_GetInputVariant()
     {
-        foreach (var varNum in ..(int)GuidVariant.Reserved)
+        var variants = Enum.GetValues(typeof(GuidVariant));
+        foreach (var variant in (GuidVariant[])variants)
         {
-            var variant = (GuidVariant)varNum;
-            var guidGen = new TestGuidGenerator(default, variant);
+            var guidGen = new TestGuidGenerator(variant: variant);
             var guid = guidGen.NewGuid();
             var guidVariant = guid.GetVariant();
             Assert.AreEqual(variant, guidVariant);

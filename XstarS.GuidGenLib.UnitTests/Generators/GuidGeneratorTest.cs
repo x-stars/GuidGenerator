@@ -14,20 +14,6 @@ public partial class GuidGeneratorTest
     }
 
     [TestMethod]
-    public void NewGuid_EmptyVersion_GetGuidWithEmptyVersion()
-    {
-        var guid = GuidGenerator.Empty.NewGuid();
-        Assert.AreEqual(GuidVersion.Empty, guid.GetVersion());
-    }
-
-    [TestMethod]
-    public void NewGuid_EmptyVersion_GetGuidWithNcsVariant()
-    {
-        var guid = GuidGenerator.Empty.NewGuid();
-        Assert.AreEqual(GuidVariant.Ncs, guid.GetVariant());
-    }
-
-    [TestMethod]
     public void NewGuid_Version4_GetGuidWithVersion4()
     {
         var guid = GuidGenerator.Version4.NewGuid();
@@ -39,6 +25,68 @@ public partial class GuidGeneratorTest
     {
         var guid = GuidGenerator.Version4.NewGuid();
         Assert.AreEqual(GuidVariant.Rfc4122, guid.GetVariant());
+    }
+
+    [TestMethod]
+    public void NewGuid_Version4_GetDifferentGuidValues()
+    {
+        var guid0 = GuidGenerator.Version4.NewGuid();
+        var guid1 = GuidGenerator.Version4.NewGuid();
+        Assert.AreNotEqual(guid0, guid1);
+    }
+
+    [TestMethod]
+    public void NewGuid_Version8_GetGuidWithVersion8()
+    {
+        var guid = GuidGenerator.Version8.NewGuid();
+        Assert.AreEqual(GuidVersion.Version8, guid.GetVersion());
+    }
+
+    [TestMethod]
+    public void NewGuid_Version8_GetGuidWithRfc4122Variant()
+    {
+        var guid = GuidGenerator.Version8.NewGuid();
+        Assert.AreEqual(GuidVariant.Rfc4122, guid.GetVariant());
+    }
+
+    [TestMethod]
+    public void NewGuid_Version8_GetDifferentGuidValues()
+    {
+        var guid0 = GuidGenerator.Version8.NewGuid();
+        var guid1 = GuidGenerator.Version8.NewGuid();
+        Assert.AreNotEqual(guid0, guid1);
+    }
+
+    [TestMethod]
+    public void NewGuid_VersionMaxValue_GetGuidMaxValue()
+    {
+        var guid = GuidGenerator.MaxValue.NewGuid();
+        Assert.AreEqual(Uuid.MaxValue, guid);
+    }
+
+    [TestMethod]
+    public void OfVersion_AllVersionEnums_GetSameInstanceOfVersion()
+    {
+        Assert.AreSame(GuidGenerator.Empty,
+                       GuidGenerator.OfVersion(GuidVersion.Empty));
+        Assert.AreSame(GuidGenerator.Version1,
+                       GuidGenerator.OfVersion(GuidVersion.Version1));
+        Assert.AreSame(GuidGenerator.Version2,
+                       GuidGenerator.OfVersion(GuidVersion.Version2));
+        Assert.AreSame(GuidGenerator.Version3,
+                       GuidGenerator.OfVersion(GuidVersion.Version3));
+        Assert.AreSame(GuidGenerator.Version4,
+                       GuidGenerator.OfVersion(GuidVersion.Version4));
+        Assert.AreSame(GuidGenerator.Version5,
+                       GuidGenerator.OfVersion(GuidVersion.Version5));
+        Assert.AreSame(GuidGenerator.Version6,
+                       GuidGenerator.OfVersion(GuidVersion.Version6));
+        Assert.AreSame(GuidGenerator.Version7,
+                       GuidGenerator.OfVersion(GuidVersion.Version7));
+        Assert.AreSame(GuidGenerator.Version8,
+                       GuidGenerator.OfVersion(GuidVersion.Version8));
+        Assert.AreSame(GuidGenerator.MaxValue,
+                       GuidGenerator.OfVersion(GuidVersion.MaxValue));
     }
 
     [TestMethod]

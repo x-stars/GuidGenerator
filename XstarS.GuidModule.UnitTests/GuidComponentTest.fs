@@ -20,7 +20,7 @@ type GuidComponentsTest() =
         |> Assert.equalTo Guid.Version.Version4
 
     [<TestMethod>]
-    member _.TryGetTimestamp_Version1Guid_GetExpectedDateTime() =
+    member _.TryGetTimestamp_Version1Guid_GetExpectedTimestamp() =
         Guid.parse "6ba7b810-9dad-11d1-80b4-00c04fd430c8"
         |> Guid.tryGetTime
         |> tee (Assert.true' << ValueOption.isSome)

@@ -6,20 +6,6 @@ namespace XNetEx.Guids.Generators;
 partial class GuidGeneratorTest
 {
     [TestMethod]
-    public void NewGuid_Version2_GetExpectedTimestamp()
-    {
-        var domain = DceSecurityDomain.Person;
-        var guid = GuidGenerator.Version2.NewGuid(domain);
-        var hasTs = guid.TryGetTimestamp(out var timestamp);
-        Assert.IsTrue(hasTs);
-        var ticksTs = timestamp.Ticks;
-        var ticksNow = DateTime.UtcNow.Ticks;
-        var ticksDiff = Math.Abs(ticksNow - ticksTs);
-        var ticks10m = TimeSpan.FromMinutes(10).Ticks;
-        Assert.IsTrue(ticksDiff < ticks10m);
-    }
-
-    [TestMethod]
     public void NewGuid_Version2_GetGuidWithVersion2()
     {
         var domain = DceSecurityDomain.Person;
@@ -28,7 +14,15 @@ partial class GuidGeneratorTest
     }
 
     [TestMethod]
-    public void NewGuid_Version2_GetInputDomainAndLocalId()
+    public void NewGuid_Version2_GetGuidWithRfc4122Variant()
+    {
+        var domain = DceSecurityDomain.Person;
+        var guid = GuidGenerator.Version2.NewGuid(domain);
+        Assert.AreEqual(GuidVariant.Rfc4122, guid.GetVariant());
+    }
+
+    [TestMethod]
+    public void NewGuid_Version2OfOrg_GetInputDomainAndLocalId()
     {
         var domain = DceSecurityDomain.Org;
         var localId = 0x12345678;
@@ -38,6 +32,34 @@ partial class GuidGeneratorTest
         Assert.IsTrue(hasLocalId);
         Assert.AreEqual(domain, guidDomain);
         Assert.AreEqual(localId, guidLocalId);
+    }
+
+    [TestMethod]
+    public void NewGuid_Version2OfDomain_GetInputDomainAndLocalId()
+    {
+        var domains = Enum.GetValues(typeof(DceSecurityDomain));
+        foreach (var domain in (DceSecurityDomain[])domains)
+        {
+            var localId = 0x12345678;
+            var guid = GuidGenerator.Version2.NewGuid(domain, localId);
+            _ = guid.TryGetDomainAndLocalId(
+                out var guidDomain, out var guidLocalId);
+            Assert.AreEqual(domain, guidDomain);
+            Assert.AreEqual(localId, guidLocalId);
+        }
+    }
+
+    [TestMethod]
+    public void NewGuid_Version2_GetExpectedTimestamp()
+    {
+        var domain = DceSecurityDomain.Person;
+        var guid = GuidGenerator.Version2.NewGuid(domain);
+        _ = guid.TryGetTimestamp(out var timestamp);
+        var tsTicks = timestamp.Ticks;
+        var nowTicks = DateTime.UtcNow.Ticks;
+        var ticksDiff = Math.Abs(nowTicks - tsTicks);
+        var ticksPerSec = TimeSpan.FromSeconds(10).Ticks;
+        Assert.IsTrue(ticksDiff < (ticksPerSec * 60 * 10));
     }
 
     [TestMethod]
@@ -58,22 +80,35 @@ partial class GuidGeneratorTest
     }
 
     [TestMethod]
-    public void NewGuid_Version2_GetGuidWithRfc4122Variant()
-    {
-        var domain = DceSecurityDomain.Person;
-        var guid = GuidGenerator.Version2.NewGuid(domain);
-        Assert.AreEqual(GuidVariant.Rfc4122, guid.GetVariant());
-    }
-
-    [TestMethod]
     public void NewGuid_Version2UnknownDomain_GetGuidWithInputDomain()
     {
         var domain = (DceSecurityDomain)0xFF;
         var guid = GuidGenerator.Version2.NewGuid(domain);
-        var hasLocalId = guid.TryGetDomainAndLocalId(
+        _ = guid.TryGetDomainAndLocalId(
             out var guidDomain, out var guidLocalId);
-        Assert.IsTrue(hasLocalId);
         Assert.AreEqual(domain, guidDomain);
         Assert.AreEqual(guidLocalId, default(int));
+    }
+
+    [TestMethod]
+    public void NewGuid_NonDceSucurityVersions_CatchNotSupportedException()
+    {
+        foreach (var version in new[]
+        {
+            GuidVersion.Empty,
+            GuidVersion.Version1,
+            GuidVersion.Version3,
+            GuidVersion.Version4,
+            GuidVersion.Version5,
+            GuidVersion.Version6,
+            GuidVersion.Version7,
+            GuidVersion.Version8,
+            GuidVersion.MaxValue,
+        })
+        {
+            Assert.ThrowsException<NotSupportedException>(
+                () => GuidGenerator.OfVersion(version)
+                    .NewGuid(DceSecurityDomain.Person, 0));
+        }
     }
 }

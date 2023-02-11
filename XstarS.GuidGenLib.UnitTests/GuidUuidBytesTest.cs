@@ -7,6 +7,16 @@ namespace XNetEx.Guids;
 public class GuidUuidBytesTest
 {
     [TestMethod]
+    public void GuidMaxValue_ToUuidByteArray_GetAllBytesMaxValue()
+    {
+        var guid = Uuid.MaxValue;
+        foreach (var item in guid.ToUuidByteArray())
+        {
+            Assert.AreEqual(byte.MaxValue, item);
+        }
+    }
+
+    [TestMethod]
     public void FromUuidByteArray_ToByteArray_GetReversedByteOrderFields()
     {
         var uuidBytes = new byte[]

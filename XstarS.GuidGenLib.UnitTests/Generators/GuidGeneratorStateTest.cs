@@ -1,14 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.CompilerServices;
+﻿using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace XNetEx.Guids.Generators;
 
 [TestClass]
 [DoNotParallelize]
-public class GuidGeneratorStateTest
+public partial class GuidGeneratorStateTest
 {
     [TestMethod]
     public void SetStateStorageFile_NonExistingFile_CatchFileNotFoundException()
@@ -96,6 +93,7 @@ public class GuidGeneratorStateTest
         var loadResult = GuidGenerator.SetStateStorageFile(fileName);
         Assert.IsTrue(loadResult);
         Assert.IsNull(exception);
+        Assert.AreEqual(fileName, GuidGenerator.StateStorageFile);
         var guid1 = GuidGenerator.Version1.NewGuid();
         _ = guid1.TryGetClockSequence(out var clockSeq1);
         Assert.AreNotEqual(clockSeq0, clockSeq1);
@@ -111,6 +109,7 @@ public class GuidGeneratorStateTest
         var loadResult = GuidGenerator.SetStateStorageFile(fileName);
         Assert.IsTrue(loadResult);
         Assert.IsNull(exception);
+        Assert.AreEqual(fileName, GuidGenerator.StateStorageFile);
         var guid = GuidGenerator.Version1R.NewGuid();
         _ = guid.TryGetNodeId(out var nodeId);
         CollectionAssert.AreEqual(inputNodeId, nodeId);
@@ -130,64 +129,11 @@ public class GuidGeneratorStateTest
         var loadResult = GuidGenerator.SetStateStorageFile(fileName);
         Assert.IsTrue(loadResult);
         Assert.IsNull(exception);
+        Assert.AreEqual(fileName, GuidGenerator.StateStorageFile);
         var guid = GuidGenerator.Version1R.NewGuid();
         _ = guid.TryGetClockSequence(out var clockSeq);
         _ = guid.TryGetNodeId(out var nodeId);
         Assert.AreNotEqual(inputClockSeq, clockSeq);
         CollectionAssert.AreNotEqual(inputNodeId1, nodeId);
-    }
-
-    private ref Exception? CatchStateLoadException()
-    {
-        var catchBox = new StrongBox<Exception?>();
-        GuidGenerator.StateStorageException += (sender, e) =>
-        {
-            if (e.OperationType == FileAccess.Read)
-            {
-                catchBox.Value = e.Exception;
-            }
-        };
-        return ref catchBox.Value;
-    }
-
-    private IDisposable CreateTempFile(out string fileName)
-    {
-        var tempFile = Path.GetTempFileName();
-        fileName = tempFile;
-        return new DisposeAction(_ =>
-        {
-            if (File.Exists(tempFile))
-            {
-                try
-                {
-                    File.Delete(tempFile);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex);
-                }
-            }
-        });
-    }
-
-    private void WriteStateFieldsToFile(string fileName,
-        int version, int? fieldFlags = null, long? timestamp = null,
-        int? clockSeq = null, byte[]? phyNodeId = null, byte[]? randNodeId = null)
-    {
-        using var stream = new FileStream(fileName, FileMode.Create);
-        using var writer = new BinaryWriter(stream);
-        fieldFlags ??=
-            ((timestamp is null) ? 0x00 : 0x01) |
-            ((clockSeq is null) ? 0x00 : 0x02) |
-            ((phyNodeId is null) ? 0x00 : 0x04) |
-            ((randNodeId is null) ? 0x00 : 0x08);
-        phyNodeId ??= new byte[6];
-        randNodeId ??= new byte[6];
-        writer.Write(version);
-        writer.Write((int)fieldFlags);
-        writer.Write(timestamp ?? 0);
-        writer.Write(clockSeq ?? 0);
-        writer.Write(phyNodeId, 0, 6);
-        writer.Write(randNodeId, 0, 6);
     }
 }
