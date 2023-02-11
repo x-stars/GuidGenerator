@@ -32,6 +32,10 @@
   <ItemGroup>
     <Compile Include="TestHelpers\*.fs" />
     <Compile Include="GuidModuleTest.fs" />
+    <Compile Include="GuidComponentTest.fs" />
+    <Compile Include="GuidGeneratorTest.fs" />
+    <Compile Include="GuidGeneratorStateTest.fs" />
+    <Compile Include="GuidVersionInfoTest.fs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace XNetEx.Guids;
 
 [TestClass]
-public class GuidConverterTest
+public class GuidUuidBytesTest
 {
     [TestMethod]
     public void FromUuidByteArray_ToByteArray_GetReversedByteOrderFields()
@@ -30,22 +30,8 @@ public class GuidConverterTest
     {
         var uuidBytes = (stackalloc byte[]
         {
-            0x00,
-            0x11,
-            0x22,
-            0x33,
-            0x44,
-            0x55,
-            0x66,
-            0x77,
-            0x88,
-            0x99,
-            0xAA,
-            0xBB,
-            0xCC,
-            0xDD,
-            0xEE,
-            0xFF,
+            0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+            0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
         });
         var guid = Uuid.FromBytes(uuidBytes);
         var guidBytes = (stackalloc byte[16]);
@@ -53,22 +39,8 @@ public class GuidConverterTest
         Assert.IsTrue(result);
         var expected = (stackalloc byte[]
         {
-            0x33,
-            0x22,
-            0x11,
-            0x00,
-            0x55,
-            0x44,
-            0x77,
-            0x66,
-            0x88,
-            0x99,
-            0xAA,
-            0xBB,
-            0xCC,
-            0xDD,
-            0xEE,
-            0xFF,
+            0x33, 0x22, 0x11, 0x00, 0x55, 0x44, 0x77, 0x66,
+            0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
         });
         Assert.IsTrue(expected.SequenceEqual(guidBytes));
     }
@@ -98,22 +70,8 @@ public class GuidConverterTest
     {
         var guidBytes = (stackalloc byte[]
         {
-            0x00,
-            0x11,
-            0x22,
-            0x33,
-            0x44,
-            0x55,
-            0x66,
-            0x77,
-            0x88,
-            0x99,
-            0xAA,
-            0xBB,
-            0xCC,
-            0xDD,
-            0xEE,
-            0xFF,
+            0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+            0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
         });
         var guid = new Guid(guidBytes);
         var uuidBytes = (stackalloc byte[16]);
@@ -121,22 +79,8 @@ public class GuidConverterTest
         Assert.IsTrue(result);
         var expected = (stackalloc byte[]
         {
-            0x33,
-            0x22,
-            0x11,
-            0x00,
-            0x55,
-            0x44,
-            0x77,
-            0x66,
-            0x88,
-            0x99,
-            0xAA,
-            0xBB,
-            0xCC,
-            0xDD,
-            0xEE,
-            0xFF,
+            0x33, 0x22, 0x11, 0x00, 0x55, 0x44, 0x77, 0x66,
+            0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
         });
         Assert.IsTrue(expected.SequenceEqual(uuidBytes));
     }

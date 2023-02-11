@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace XNetEx.Guids;
 
 [TestClass]
-public class GuidExtensionsTest
+public partial class GuidExtensionsTest
 {
     [TestMethod]
     public void Deconstruct_GuidByFields_GetInputFields()
