@@ -34,7 +34,7 @@ public abstract class CustomGuidGenerator : GuidGenerator
     protected CustomGuidGenerator(
         DateTime epochDateTime = default, NodeIdSource nodeIdSource = default)
     {
-        this.EpochDateTime = epochDateTime;
+        this.EpochDateTime = epochDateTime.ToUniversalTime();
         this.TimestampProvider = TimestampProvider.Instance;
         this.NodeIdProvider = NodeIdProvider.GetInstance(nodeIdSource);
     }
