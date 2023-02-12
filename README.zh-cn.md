@@ -1,41 +1,41 @@
-﻿# .NET GUID Generator
+﻿# .NET GUID 生成器
 
 [English](README.md) | [简体中文](README.zh-cn.md)
 
-Provides RFC 4122 UUID and RFC4122bis UUIDREV (draft) compliant GUID generators for .NET platform.
+为 .NET 平台提供符合 RFC 4122 UUID 标准以及 RFC4122bis UUIDREV 草稿的 GUID 生成器。
 
-## RFC 4122 UUID Standard
+## RFC 4122 UUID 标准
 
-RFC 4122 defines the following five versions of UUID:
+RFC 4122 定义了以下 5 种 UUID 版本：
 
-* Version 1: The time-based version, contains a 60-bit timestamp and a 12-bit MAC address
-* Version 2: DCE Security version, contains a 28-bit timestamp, a 12-bit MAC address and a 32-bit local ID
-* Version 3: The name-based version, using MD5 hashing to compute the hash of the namespace and name
-* Version 4: The randomly or pseudo-andomly generated version, equivalent to `Guid.NewGuid()` in .NET
-* Version 5: The name-based version, using SHA-1 hashing to compute the hash of the namespace and name
+* Version 1: 基于时间戳，包含 60 位时间戳和 12 位 MAC 地址
+* Version 2: DCE Security 用途，包含 28 位时间戳、12 位 MAC 地址以及 32 位本地 ID
+* Version 3: 基于命名空间和名称，由 MD5 散列算法计算命名空间和名称得到
+* Version 4: 基于随机数（伪随机或真随机），与 .NET 的 `Guid.NewGuid()` 等价
+* Version 5: 基于命名空间和名称，由 SHA1 散列算法计算命名空间和名称得到
 
-There is also a special Nil UUID whose bytes are all `0x00`s, which is equivalent to `Guid.Empty` in .NET.
+除此之外，还有一个特殊的 Nil UUID，其所有字节均为 `0x00`，与 .NET 的 `Guid.Empty` 等价。
 
-> * [RFC 4122 UUID Standard](https://www.rfc-editor.org/rfc/rfc4122)
-> * [DCE Security UUID Standard](https://pubs.opengroup.org/onlinepubs/9696989899/chap5.htm)
+> * [RFC 4122 UUID 标准](https://www.rfc-editor.org/rfc/rfc4122)
+> * [DCE Security UUID 标准](https://pubs.opengroup.org/onlinepubs/9696989899/chap5.htm)
 
-## RFC4122bis UUIDREV Draft
+## RFC4122bis UUIDREV 草稿
 
-RFC4122bis UUIDREV defines the following three versions of UUID:
+RFC4122bis UUIDREV 定义了以下 3 种 UUID 版本：
 
-* Version 6: The reordered time-based version, field-compatible with Version 1 except that the timestamp is reordered to big-endian order
-* Version 7: The Unix Epoch time-based version, contains a 48-bit timestamp and a 74-bit random number, field-compatible with ULID
-* Version 8: Reserved for custom UUID formats, fields except the variant and version are user-defined
+* Version 6: 基于时间戳，与 Version 1 基本等价，但将时间戳调整为大端序
+* Version 7: 基于 Unix 时间戳，包含 48 位时间戳和 74 位随机数，与 ULID 基本等价
+* Version 8: 预留给自定义 UUID 格式，除变体和版本外的字段均由用户定义
 
-There is also a special Max UUID whose bytes are all `0xff`s, which has no equivalent implementation in .NET (provided in this project).
+除此之外，还有一个特殊的 Max UUID，其所有字节均为 `0xff`，在 .NET 中暂无等价实现（本项目提供）。
 
-> * [RFC4122bis UUIDREV Draft](https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis)
+> * [RFC4122bis UUIDREV 草稿](https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis)
 
-## GUID Generator Library Usage
+## GUID 生成库使用
 
-The GUID Generator Library project is located at [XstarS.GuidGenerators](XstarS.GuidGenerators).
+GUID 生成库的工程位于 [XstarS.GuidGenerators](XstarS.GuidGenerators)。
 
-### Get Generator Instance by Static Properties
+### 静态属性获取实例后调用
 
 ``` CSharp
 using XNetEx.Guids;
@@ -54,7 +54,7 @@ var guidV7 = GuidGenerator.Version7.NewGuid();
 // 018640c6-0dc9-7189-a644-31acdba4cabc
 ```
 
-### Get Generator Instance by the Factory Method
+### 工厂方法获取实例后调用
 
 ``` CSharp
 using XNetEx.Guids;
@@ -76,11 +76,11 @@ var guidV7 = guidGenV7.NewGuid();
 // 018640c6-0dc9-7189-a644-31acdba4cabc
 ```
 
-### GUID Generator State Storage
+### GUID 生成器状态存储
 
 > [RFC 4122 Section 4.2.1](https://www.rfc-editor.org/rfc/rfc4122#section-4.2.1)
 
-Optional support and requires configuration to enable:
+可选支持，需要配置方可启用：
 
 ``` CSharp
 using System;
@@ -100,7 +100,7 @@ GuidGenerator.StateStorageException += (sender, e) =>
 var loadResult = GuidGenerator.SetStateStorageFile("state.bin");
 ```
 
-### Component-Based GUID Building
+### 基于组件的 GUID 构建
 
 ``` CSharp
 using System;
@@ -122,16 +122,15 @@ var guidV7 = Guid.NewGuid()
     // 017f22e2-79b0-774a-8e21-a60c1ca56e82
 ```
 
-## F# GUID Module Usage
+## F# GUID 模块使用
 
-The F# GUID Module project is located at [XstarS.GuidModule](XstarS.GuidModule).
+F# GUID 模块工程位于 [XstarS.GuidModule](XstarS.GuidModule)。
 
-Core module: `XNetEx.FSharp.Core.Guid`.
+核心模块：`XNetEx.FSharp.Core.Guid`。
 
-Provides RFC 4122 UUID and RFC4122bis UUIDREV (draft) compliant GUID operations for F#.
-The orders of input parameters are adjusted to match F# pipeline patterns.
+提供一套符合 RFC 4122 标准以及 RFC4122bis UUIDREV 草稿的 GUID 相关操作，并根据 F# 管道模式对输入参数顺序进行了适当调整。
 
-### RFC 4122 GUID Generation
+### RFC 4122 GUID 生成
 
 ``` FSharp
 open System
@@ -169,7 +168,7 @@ let guid7 = Guid.newV4 ()
             // 018640db-de47-7ab9-bf00-6119a1033265
 ```
 
-### Common GUID Operations
+### 常见 GUID 相关操作
 
 ``` FSharp
 open XNetEx.FSharp.Core
@@ -201,13 +200,13 @@ let guid5Bytes = Guid.toBytesUuid guid5
 assert (guid3 = guid5)
 ```
 
-## GUID Generator Command Line Tool Usage
+## GUID 生成命令行工具使用
 
-The GUID Generator Command Line Tool project is located at [XstarS.GuidGen.CLI](XstarS.GuidGen.CLI).
+GUID 生成命令行工具的工程位于 [XstarS.GuidGen.CLI](XstarS.GuidGen.CLI)。
 
-> The following commands are executed after renaming the command line tool to  `GuidGen.exe`.
+> 以下将命令行工具重命名为 `GuidGen.exe` 后执行命令。
 
-### Command Line Tool Help Message
+### 命令行帮助信息
 
 ``` Batch
 > GuidGen -?
@@ -243,7 +242,7 @@ Parameters:
             show the current help message.
 ```
 
-### Command Line Tool Usage Examples
+### 命令行工具使用例
 
 ``` Batch
 > GuidGen
@@ -262,7 +261,7 @@ e129f27c-5103-5c5c-844b-cdf0a15e160d
 018640c6-0dc9-7189-a644-31acdba4cabc
 ```
 
-## Performance Benchmark
+## 性能基准测试
 
 ``` PlainText
 BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22621
