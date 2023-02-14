@@ -82,7 +82,7 @@ public partial class GuidComponentReplaceTest
         {
             var original = Guid.Parse(guidText);
             var guid = original.ReplaceDomainAndLocalId(domain, localId);
-            Assert.AreEqual(Guid.Parse(guidText), guid);
+            Assert.AreEqual(original, guid);
         }
     }
 }

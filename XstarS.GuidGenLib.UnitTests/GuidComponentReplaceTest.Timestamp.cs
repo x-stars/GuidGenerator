@@ -86,7 +86,7 @@ partial class GuidComponentReplaceTest
         {
             var original = Guid.Parse(guidText);
             var guid = original.ReplaceTimestamp(timestamp);
-            Assert.AreEqual(Guid.Parse(guidText), guid);
+            Assert.AreEqual(original, guid);
         }
     }
 
@@ -152,7 +152,7 @@ partial class GuidComponentReplaceTest
         {
             var original = Guid.Parse(guidText);
             var guid = original.ReplaceClockSequence(clockSeq);
-            Assert.AreEqual(Guid.Parse(guidText), guid);
+            Assert.AreEqual(original, guid);
         }
     }
 }
