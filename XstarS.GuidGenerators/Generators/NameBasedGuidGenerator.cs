@@ -49,7 +49,7 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
     {
         const int guidSize = 16;
         var inputLength = guidSize + name.Length;
-        var input = (name.Length <= 4096) ?
+        var input = (name.Length <= 1024) ?
             (stackalloc byte[inputLength]) : (new byte[inputLength]);
         var writeResult = nsId.TryWriteUuidBytes(input);
         Debug.Assert(writeResult);

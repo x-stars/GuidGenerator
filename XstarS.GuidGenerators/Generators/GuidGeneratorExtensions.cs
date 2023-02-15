@@ -69,7 +69,7 @@ public static class GuidGeneratorExtensions
         encoding ??= Encoding.UTF8;
 
         var nameLength = encoding.GetByteCount(name);
-        var nameBytes = (nameLength <= 4096) ?
+        var nameBytes = (nameLength <= 1024) ?
             (stackalloc byte[nameLength]) : (new byte[nameLength]);
         var bytesWritten = encoding.GetBytes(name, nameBytes);
         Debug.Assert(bytesWritten == nameLength);
@@ -131,7 +131,7 @@ public static class GuidGeneratorExtensions
         encoding ??= Encoding.UTF8;
 
         var nameLength = encoding.GetByteCount(name);
-        var nameBytes = (nameLength <= 4096) ?
+        var nameBytes = (nameLength <= 1024) ?
             (stackalloc byte[nameLength]) : (new byte[nameLength]);
         var bytesWritten = encoding.GetBytes(name, nameBytes);
         Debug.Assert(bytesWritten == nameLength);
