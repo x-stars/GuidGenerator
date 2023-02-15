@@ -98,7 +98,7 @@ internal static class GuidRfc4122Fields
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static Guid ToBigEndian(this Guid guid)
+    internal static unsafe Guid ToBigEndian(this Guid guid)
     {
         var uuid = guid;
         if (BitConverter.IsLittleEndian)
@@ -111,15 +111,12 @@ internal static class GuidRfc4122Fields
             ref var timeHi_Ver = ref uuid.TimeHi_Ver();
             timeHi_Ver = BinaryPrimitives.ReverseEndianness(timeHi_Ver);
 #else
-            ref var timeLow = ref uuid.TimeLow();
-            var timeLow02 = timeLow & 0x00FF00FF;
-            var timeLow13 = timeLow & 0xFF00FF00;
-            timeLow = ((timeLow02 >> 8) | (timeLow02 << 24)) +
-                      ((timeLow13 << 8) | (timeLow13 >> 24));
-            ref var timeMid = ref uuid.TimeMid();
-            timeMid = (ushort)((timeMid >> 8) + (timeMid << 8));
-            ref var timeHi_Ver = ref uuid.TimeHi_Ver();
-            timeHi_Ver = (ushort)((timeHi_Ver >> 8) + (timeHi_Ver << 8));
+            var pGuid = (byte*)&guid;
+            var pUuid = (byte*)&uuid;
+            pUuid[0] = pGuid[3]; pUuid[1] = pGuid[2];
+            pUuid[2] = pGuid[1]; pUuid[3] = pGuid[0];
+            pUuid[4] = pGuid[5]; pUuid[5] = pGuid[4];
+            pUuid[6] = pGuid[7]; pUuid[7] = pGuid[6];
 #endif
         }
         return uuid;

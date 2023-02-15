@@ -48,7 +48,7 @@ static partial class GuidExtensions
     /// or the original value if the <see cref="Guid"/> is not time-based.</returns>
     public static Guid ReplaceTimestamp(this Guid guid, DateTime timestamp)
     {
-        if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
+        if (!guid.IsRfc4122Uuid() ||
             !guid.GetVersion().IsTimeBased())
         {
             return guid;
@@ -87,7 +87,7 @@ static partial class GuidExtensions
     /// or the original value if the <see cref="Guid"/> does not contain a clock sequence.</returns>
     public static Guid ReplaceClockSequence(this Guid guid, short clockSeq)
     {
-        if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
+        if (!guid.IsRfc4122Uuid() ||
             !guid.GetVersion().ContainsClockSequence())
         {
             return guid;
@@ -115,7 +115,7 @@ static partial class GuidExtensions
     public static Guid ReplaceDomainAndLocalId(
         this Guid guid, DceSecurityDomain domain, int localId)
     {
-        if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
+        if (!guid.IsRfc4122Uuid() ||
             !guid.GetVersion().ContainsLocalId())
         {
             return guid;
@@ -158,7 +158,7 @@ static partial class GuidExtensions
                 nameof(nodeId));
         }
 
-        if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
+        if (!guid.IsRfc4122Uuid() ||
             !guid.GetVersion().ContainsNodeId())
         {
             return guid;
@@ -192,7 +192,7 @@ static partial class GuidExtensions
                 nameof(nodeId));
         }
 
-        if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
+        if (!guid.IsRfc4122Uuid() ||
             !guid.GetVersion().ContainsNodeId())
         {
             return guid;

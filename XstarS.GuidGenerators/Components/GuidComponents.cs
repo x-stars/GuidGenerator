@@ -15,11 +15,18 @@ internal partial class GuidComponents : IGuidCommonComponents
     protected GuidComponents() { }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool IsRfc4122Uuid(ref Guid guid)
+    {
+        var clkSeqHi_Var = guid.ClkSeqHi_Var();
+        return (clkSeqHi_Var & 0xC0) == 0x80;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public GuidVariant GetVariant(ref Guid guid)
     {
 #if NETCOREAPP3_0_OR_GREATER
-        var shiftVar = (uint)guid.ClkSeqHi_Var() & 0xE0;
-        var lzcntVar = ~(shiftVar << (3 * 8));
+        var shiftVar = (int)guid.ClkSeqHi_Var() & 0xE0;
+        var lzcntVar = ~((uint)shiftVar << (3 * 8));
         var variant = BitOperations.LeadingZeroCount(lzcntVar);
 #else
         var variant = -1;

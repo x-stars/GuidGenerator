@@ -24,17 +24,18 @@ public static partial class GuidExtensions
     /// <param name="i">The next byte of the GUID.</param>
     /// <param name="j">The next byte of the GUID.</param>
     /// <param name="k">The next byte of the GUID.</param>
-    public static void Deconstruct(this Guid guid,
+    public static unsafe void Deconstruct(this Guid guid,
         out int a, out short b, out short c, out byte d, out byte e,
         out byte f, out byte g, out byte h, out byte i, out byte j, out byte k)
     {
-        a = (int)guid.TimeLow();
-        b = (short)guid.TimeMid();
-        c = (short)guid.TimeHi_Ver();
-        d = guid.ClkSeqHi_Var(); e = guid.ClkSeqLow();
-        f = guid.NodeId(0); g = guid.NodeId(1);
-        h = guid.NodeId(2); i = guid.NodeId(3);
-        j = guid.NodeId(4); k = guid.NodeId(5);
+        var pGuid = (byte*)&guid;
+        a = *(int*)(pGuid + 0);
+        b = *(short*)(pGuid + 4);
+        c = *(short*)(pGuid + 6);
+        d = pGuid[8]; e = pGuid[9];
+        f = pGuid[10]; g = pGuid[11];
+        h = pGuid[12]; i = pGuid[13];
+        j = pGuid[14]; k = pGuid[15];
     }
 
     /// <summary>
@@ -60,6 +61,19 @@ public static partial class GuidExtensions
     }
 
     /// <summary>
+    /// Gets a value that indicates whether
+    /// the <see cref="Guid"/> is of the RFC 4122 variant.
+    /// </summary>
+    /// <param name="guid">The <see cref="Guid"/>.</param>
+    /// <returns><see langword="true"/> if the <see cref="Guid"/> is
+    /// of the RFC 4122 variant; otherwise, <see langword="false"/>.</returns>
+    internal static bool IsRfc4122Uuid(this Guid guid)
+    {
+        var components = GuidComponents.Common;
+        return components.IsRfc4122Uuid(ref guid);
+    }
+
+    /// <summary>
     /// Tries to get the timestamp represented by the <see cref="Guid"/>.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
@@ -69,7 +83,7 @@ public static partial class GuidExtensions
     /// is time-based; otherwise, <see langword="false"/>.</returns>
     public static unsafe bool TryGetTimestamp(this Guid guid, out DateTime timestamp)
     {
-        if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
+        if (!guid.IsRfc4122Uuid() ||
             !guid.GetVersion().IsTimeBased())
         {
             timestamp = default(DateTime);
@@ -95,7 +109,7 @@ public static partial class GuidExtensions
     /// contains a clock sequence; otherwise, <see langword="false"/>.</returns>
     public static bool TryGetClockSequence(this Guid guid, out short clockSeq)
     {
-        if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
+        if (!guid.IsRfc4122Uuid() ||
             !guid.GetVersion().ContainsClockSequence())
         {
             clockSeq = default(int);
@@ -121,7 +135,7 @@ public static partial class GuidExtensions
     public static bool TryGetDomainAndLocalId(
         this Guid guid, out DceSecurityDomain domain, out int localId)
     {
-        if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
+        if (!guid.IsRfc4122Uuid() ||
             !guid.GetVersion().ContainsLocalId())
         {
             domain = default(DceSecurityDomain);
@@ -146,7 +160,7 @@ public static partial class GuidExtensions
     public static unsafe bool TryGetNodeId(
         this Guid guid, [NotNullWhen(true)] out byte[]? nodeId)
     {
-        if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
+        if (!guid.IsRfc4122Uuid() ||
             !guid.GetVersion().ContainsNodeId())
         {
             nodeId = null;
@@ -171,7 +185,7 @@ public static partial class GuidExtensions
     public static bool TryWriteNodeId(this Guid guid, Span<byte> destination)
     {
         if (destination.Length < 6) { return false; }
-        if ((guid.GetVariant() != GuidVariant.Rfc4122) ||
+        if (!guid.IsRfc4122Uuid() ||
             !guid.GetVersion().ContainsNodeId())
         {
             return false;

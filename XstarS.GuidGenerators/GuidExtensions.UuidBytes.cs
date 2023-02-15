@@ -52,16 +52,26 @@ static partial class GuidExtensions
     /// <paramref name="bytes"/> is not 16 bytes long.</exception>
     public static unsafe Guid FromUuidByteArray(byte[] bytes)
     {
-        var uuid = new Guid(bytes);
+        if (bytes is null)
+        {
+            throw new ArgumentNullException(nameof(bytes));
+        }
+
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        uuid = MemoryMarshal.Read<Guid>((ReadOnlySpan<byte>)bytes);
+        return GuidExtensions.FromUuidBytes((ReadOnlySpan<byte>)bytes);
 #else
+        if (bytes.Length != 16)
+        {
+            var throwsException = new Guid(bytes);
+        }
+
+        var uuid = default(Guid);
         fixed (byte* pBytes = &bytes[0])
         {
             uuid = *(Guid*)pBytes;
         }
-#endif
         return uuid.ToBigEndian();
+#endif
     }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -76,8 +86,12 @@ static partial class GuidExtensions
     /// <paramref name="bytes"/> is not 16 bytes long.</exception>
     public static Guid FromUuidBytes(ReadOnlySpan<byte> bytes)
     {
-        var uuid = new Guid(bytes);
-        uuid = MemoryMarshal.Read<Guid>(bytes);
+        if (bytes.Length != 16)
+        {
+            var throwsException = new Guid(bytes);
+        }
+
+        var uuid = MemoryMarshal.Read<Guid>(bytes);
         return uuid.ToBigEndian();
     }
 #endif
@@ -142,10 +156,8 @@ static partial class GuidExtensions
     /// written to the specified span; otherwise, <see langword="false"/>.</returns>
     public static bool TryWriteUuidBytes(this Guid guid, Span<byte> destination)
     {
-        if (destination.Length < 16) { return false; }
         var uuid = guid.ToBigEndian();
-        MemoryMarshal.Write(destination, ref uuid);
-        return true;
+        return MemoryMarshal.TryWrite(destination, ref uuid);
     }
 #endif
 }
