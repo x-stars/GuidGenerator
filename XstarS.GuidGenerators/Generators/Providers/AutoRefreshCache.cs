@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace XNetEx.Guids.Generators;
 
-internal sealed class AutoRefreshCache<T>
+internal sealed class AutoRefreshCache<T> : IDisposable
 {
     private readonly Func<T> RefreshFunc;
 
@@ -31,6 +31,12 @@ internal sealed class AutoRefreshCache<T>
     }
 
     public T Value => this.GetOrRefreshValue();
+
+    public void Dispose()
+    {
+        this.RefreshTask.Dispose();
+        this.CachedValueBox = null;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private T GetOrRefreshValue()
