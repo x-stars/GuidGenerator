@@ -22,6 +22,18 @@ public partial class GuidComponentTest
     }
 
     [TestMethod]
+    public void Deconstruct_GuidByFieldsAndArray_GetInputFieldsAndArray()
+    {
+        var lowerBytes =
+            new byte[] { 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
+        var guid = new Guid(0x00112233, 0x4455, 0x6677, lowerBytes);
+        var (a, b, c, guidLowerBytes) = guid;
+        Assert.AreEqual(0x00112233, a);
+        Assert.AreEqual(0x4455, b); Assert.AreEqual(0x6677, c);
+        CollectionAssert.AreEqual(lowerBytes, guidLowerBytes);
+    }
+
+    [TestMethod]
     public void GetVersion_KnownVersionGuids_GetExpectedGuidVersion()
     {
         foreach (var (version, guidText) in new Dictionary<GuidVersion, string>()
@@ -62,13 +74,6 @@ public partial class GuidComponentTest
     }
 
     [TestMethod]
-    public void GetVariant_EmptyGuid_GetGuidNcsVariant()
-    {
-        var guid = Guid.Empty;
-        Assert.AreEqual(GuidVariant.Ncs, guid.GetVariant());
-    }
-
-    [TestMethod]
     public void GetVariant_Version5Guid_GetGuidRfc4122Variant()
     {
         var guid = Guid.Parse("768a7b1b-ae51-5c0a-bc9d-a85a343f2c24");
@@ -83,10 +88,10 @@ public partial class GuidComponentTest
     }
 
     [TestMethod]
-    public void GetVariant_GuidMaxValue_GetGuidReservedVariant()
+    public void GetVariant_SpecialGuids_GetExpectedGuidVariant()
     {
-        var guid = Uuid.MaxValue;
-        Assert.AreEqual(GuidVariant.Reserved, guid.GetVariant());
+        Assert.AreEqual(GuidVariant.Ncs, Guid.Empty.GetVariant());
+        Assert.AreEqual(GuidVariant.Reserved, Uuid.MaxValue.GetVariant());
     }
 
     [TestMethod]
