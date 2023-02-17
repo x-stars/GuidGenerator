@@ -29,13 +29,30 @@ public static partial class GuidExtensions
         out byte f, out byte g, out byte h, out byte i, out byte j, out byte k)
     {
         var pGuid = (byte*)&guid;
-        a = *(int*)(pGuid + 0);
-        b = *(short*)(pGuid + 4);
-        c = *(short*)(pGuid + 6);
+        a = *(int*)&pGuid[0];
+        b = *(short*)&pGuid[4];
+        c = *(short*)&pGuid[6];
         d = pGuid[8]; e = pGuid[9];
         f = pGuid[10]; g = pGuid[11];
         h = pGuid[12]; i = pGuid[13];
         j = pGuid[14]; k = pGuid[15];
+    }
+
+    /// <summary>
+    /// Deconstructs the <see cref="Guid"/> into fields of integers and a byte array.
+    /// </summary>
+    /// <param name="guid">The <see cref="Guid"/>.</param>
+    /// <param name="a">The first 4 bytes of the GUID.</param>
+    /// <param name="b">The next 2 bytes of the GUID.</param>
+    /// <param name="c">The next 2 bytes of the GUID.</param>
+    /// <param name="d">The remaining 8 bytes of the GUID.</param>
+    public static void Deconstruct(this Guid guid,
+        out int a, out short b, out short c, out byte[] d)
+    {
+        var l = d = new byte[8];
+        guid.Deconstruct(out a, out b, out c,
+            out l[0], out l[1], out l[2], out l[3],
+            out l[4], out l[5], out l[6], out l[7]);
     }
 
     /// <summary>
