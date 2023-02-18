@@ -1,8 +1,10 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
@@ -14,12 +16,24 @@ static byte[] ParseBase64(string base64) => Convert.FromBase64String(base64.Repl
 
 var app = WebApplication.Create(args);
 
+GuidGenerator.StateStorageException += (sender, e) =>
+{
+    var logLevel = ((e.OperationType != FileAccess.Read) && (e.Exception is not FileNotFoundException)) ?
+                    LogLevel.Warning : LogLevel.Information;
+    app.Logger.Log(logLevel, e.Exception, "{exception}: {message}", e.Exception.GetType(), e.Exception.Message);
+};
+var storageDir = Environment.GetFolderPath(
+    Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create);
+var storagePath = Path.Combine(storageDir, "768a7b1b-ae51-5c0a-bc9d-a85a343f2c24.state.bin");
+_ = GuidGenerator.SetStateStorageFile(storagePath);
+
 app.MapGet("/guid/v1", HandleCount(() => GuidGenerator.Version1.NewGuid()));
 app.MapGet("/guid/v1r", HandleCount(() => GuidGenerator.Version1R.NewGuid()));
 
 app.MapGet("/guid/v2/person", () => GuidGenerator.Version2.NewGuid(DceSecurityDomain.Person));
 app.MapGet("/guid/v2/group", () => GuidGenerator.Version2.NewGuid(DceSecurityDomain.Group));
-app.MapGet("/guid/v2/org/{siteId}", (int siteId) => GuidGenerator.Version2.NewGuid(DceSecurityDomain.Org, siteId));
+app.MapGet("/guid/v2/org/{siteId}", (uint siteId) => GuidGenerator.Version2.NewGuid(DceSecurityDomain.Org, (int)siteId));
+app.MapGet("/guid/v2/{domain}/{localId}", (byte domain, uint localId) => GuidGenerator.Version2.NewGuid((DceSecurityDomain)domain, (int)localId));
 
 app.MapGet("/guid/v3/{ns}/{name}", (string ns, string name) => GuidGenerator.Version3.NewGuid(ParseGuidNs(ns), name));
 app.MapPost("/guid/v3/{ns}", (string ns, [FromBody] string name) => GuidGenerator.Version3.NewGuid(ParseGuidNs(ns), ParseBase64(name)));
