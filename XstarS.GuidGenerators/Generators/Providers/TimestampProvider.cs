@@ -50,6 +50,7 @@ internal abstract class TimestampProvider
         var time2 = DateTime.UtcNow;
         spinner.SpinOnce();
         var time3 = DateTime.UtcNow;
+
         if (!Stopwatch.IsHighResolution) { return false; }
         const double ticksPerSec = 1_000_000_000 / 100;
         var period = ticksPerSec / Stopwatch.Frequency;

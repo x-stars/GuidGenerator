@@ -54,6 +54,15 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
         var writeResult = nsId.TryWriteUuidBytes(input);
         Debug.Assert(writeResult);
         name.CopyTo(input[guidSize..]);
+        return this.ComputeHashToGuid(input);
+    }
+#endif
+
+    protected abstract HashAlgorithm CreateHashing();
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    private Guid ComputeHashToGuid(Span<byte> input)
+    {
         var hashings = this.Hashings;
         if (!hashings.TryTake(out var hashing))
         {
@@ -70,11 +79,17 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
         }
         return this.HashToGuid(hash);
     }
-#endif
 
-    protected abstract HashAlgorithm CreateHashing();
-
-#if !(NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private Guid HashToGuid(ReadOnlySpan<byte> hash)
+    {
+        var uuid = MemoryMarshal.Read<Guid>(hash);
+        var guid = uuid.ToBigEndian();
+        this.FillVersionField(ref guid);
+        this.FillVariantField(ref guid);
+        return guid;
+    }
+#else
     private unsafe byte[] CreateInput(Guid nsId, byte[] name)
     {
         const int guidSize = 16;
@@ -101,19 +116,8 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
         }
         return hash;
     }
-#endif
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-    private Guid HashToGuid(ReadOnlySpan<byte> hash)
-    {
-        var uuid = MemoryMarshal.Read<Guid>(hash);
-        var guid = uuid.ToBigEndian();
-        this.FillVersionField(ref guid);
-        this.FillVariantField(ref guid);
-        return guid;
-    }
-#else
     private unsafe Guid HashToGuid(byte[] hash)
     {
         var uuid = default(Guid);

@@ -100,22 +100,7 @@ internal abstract class LocalIdProvider
 
         protected override unsafe int GetLocalGroupId()
         {
-            var groupIdRefs = WindowsIdentity.GetCurrent().Groups;
-            if (groupIdRefs is null) { return 0; }
-            var anyGroupSid = default(SecurityIdentifier);
-            var commonGroupSid = default(SecurityIdentifier);
-            foreach (var groupIdRef in groupIdRefs)
-            {
-                if (groupIdRef is SecurityIdentifier groupSid)
-                {
-                    anyGroupSid ??= groupSid;
-                    if (!this.IsWellKnownSid(groupSid))
-                    {
-                        commonGroupSid ??= groupSid;
-                    }
-                }
-            }
-            var finalGroupSid = commonGroupSid ?? anyGroupSid;
+            var finalGroupSid = this.GetFirstGroupSid();
             if (finalGroupSid is null) { return 0; }
             var sidBytes = new byte[finalGroupSid.BinaryLength];
             finalGroupSid.GetBinaryForm(sidBytes, 0);
@@ -130,6 +115,26 @@ internal abstract class LocalIdProvider
                 return *(int*)pLastSubAuth;
             }
 #endif
+        }
+
+        private SecurityIdentifier? GetFirstGroupSid()
+        {
+            var groupIdRefs = WindowsIdentity.GetCurrent().Groups;
+            if (groupIdRefs is null) { return null; }
+            var anyGroupSid = default(SecurityIdentifier);
+            var commonGroupSid = default(SecurityIdentifier);
+            foreach (var groupIdRef in groupIdRefs)
+            {
+                if (groupIdRef is SecurityIdentifier groupSid)
+                {
+                    anyGroupSid ??= groupSid;
+                    if (!this.IsWellKnownSid(groupSid))
+                    {
+                        commonGroupSid ??= groupSid;
+                    }
+                }
+            }
+            return commonGroupSid ?? anyGroupSid;
         }
 
         private bool IsWellKnownSid(SecurityIdentifier sid)
