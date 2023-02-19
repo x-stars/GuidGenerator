@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>XstarS.GuidGen</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <IsTrimmable>true</IsTrimmable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>XstarS</Authors>
+    <Company>XstarS</Company>
+    <Version>2.0.0-preview-01</Version>
+    <Product>XstarS GUID Generator</Product>
+    <AssemblyTitle>$(Product) Native Library</AssemblyTitle>
+    <Copyright>Copyright © $(Company) 2022</Copyright>
+    <FileVersion>$(Version.Split('-')[0]).0</FileVersion>
+    <VersionMajor>$(Version.Split('.')[0])</VersionMajor>
+    <VersionMinor>$(Version.Split('.')[1])</VersionMinor>
+    <AssemblyVersion>$(VersionMajor).$(VersionMinor).0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PublishAot>true</PublishAot>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>Link</TrimMode>
+    <StripSymbols>true</StripSymbols>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
+    <IlcGenerateStackTraceData>true</IlcGenerateStackTraceData>
+    <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\SharedItems\Common\**\*.cs" />
+    <Compile Include="..\SharedItems\SkipLocalsInit\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="XstarS.GuidGen.NativeLib.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\XstarS.GuidGenerators\XstarS.GuidGenerators.csproj" />
+  </ItemGroup>
+
+</Project>
