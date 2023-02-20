@@ -4,7 +4,6 @@ using XNetEx.Guids.Generators;
 
 namespace XNetEx.Guids;
 
-[MemoryDiagnoser]
 public class GuidComponentReplaceBenchmark
 {
     [CLSCompliant(false)]

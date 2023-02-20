@@ -5,7 +5,6 @@ using BenchmarkDotNet.Configs;
 namespace XNetEx.Guids;
 
 [CLSCompliant(false)]
-[MemoryDiagnoser]
 [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
 public class GuidUuidBytesBenchmark
 {
