@@ -161,22 +161,22 @@ internal abstract class LocalIdProvider
         private static class SafeNativeMethods
         {
             [DllImport("libc", EntryPoint = "getuid")]
-            internal static extern int GetUserId();
+            internal static extern uint GetUserId();
 
             [DllImport("libc", EntryPoint = "getgid")]
-            internal static extern int GetGroupId();
+            internal static extern uint GetGroupId();
         }
 
         internal UnixLike() { }
 
         protected override int GetLocalUserId()
         {
-            return SafeNativeMethods.GetUserId();
+            return (int)SafeNativeMethods.GetUserId();
         }
 
         protected override int GetLocalGroupId()
         {
-            return SafeNativeMethods.GetGroupId();
+            return (int)SafeNativeMethods.GetGroupId();
         }
     }
 
