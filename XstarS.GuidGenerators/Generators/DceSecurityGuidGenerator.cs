@@ -44,10 +44,10 @@ internal sealed class DceSecurityGuidGenerator : TimeBasedGuidGenerator, IDceSec
     public override Guid NewGuid(DceSecurityDomain domain, int? localId = null)
     {
         var guid = base.NewGuid();
-        var iLocalId = this.GetLocalId(domain, localId);
+        var localIdValue = this.GetLocalId(domain, localId);
         var components = this.GuidComponents;
         components.SetDomain(ref guid, domain);
-        components.SetLocalId(ref guid, iLocalId);
+        components.SetLocalId(ref guid, localIdValue);
         return guid;
     }
 
