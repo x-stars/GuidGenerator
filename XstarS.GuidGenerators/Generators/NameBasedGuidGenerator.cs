@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Diagnostics;
@@ -9,14 +8,19 @@ using System.Runtime.InteropServices;
 
 namespace XNetEx.Guids.Generators;
 
-internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGenerator
+internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGenerator
 {
     private readonly BlockingCollection<HashAlgorithm> Hashings;
 
-    private NameBasedGuidGenerator()
+    private readonly Guid? HashspaceId;
+
+    private NameBasedGuidGenerator() : this(hashspaceId: null) { }
+
+    private NameBasedGuidGenerator(Guid? hashspaceId)
     {
         var concurrency = Environment.ProcessorCount * 2;
         this.Hashings = new BlockingCollection<HashAlgorithm>(concurrency);
+        this.HashspaceId = hashspaceId;
     }
 
     public sealed override Guid NewGuid()
@@ -48,12 +52,19 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
     public sealed override Guid NewGuid(Guid nsId, ReadOnlySpan<byte> name)
     {
         const int guidSize = 16;
-        var inputLength = guidSize + name.Length;
+        var hashId = this.HashspaceId;
+        var hashIdSize = (hashId is null) ? 0 : guidSize;
+        var inputLength = hashIdSize + guidSize + name.Length;
         var input = (name.Length <= 1024) ?
             (stackalloc byte[inputLength]) : (new byte[inputLength]);
-        var writeResult = nsId.TryWriteUuidBytes(input);
-        Debug.Assert(writeResult);
-        name.CopyTo(input[guidSize..]);
+        if (hashId is Guid hashIdValue)
+        {
+            var hashIdResult = hashIdValue.TryWriteUuidBytes(input);
+            Debug.Assert(hashIdResult);
+        }
+        var nsIdResult = nsId.TryWriteUuidBytes(input[hashIdSize..]);
+        Debug.Assert(nsIdResult);
+        name.CopyTo(input[(hashIdSize + guidSize)..]);
         return this.ComputeHashToGuid(input);
     }
 #endif
@@ -72,7 +83,11 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
         var hash = (stackalloc byte[hashSize]);
         var hashResult = hashing.TryComputeHash(
             input, hash, out var bytesWritten);
-        Debug.Assert(hashResult && (bytesWritten == hashSize));
+        if (!hashResult || (bytesWritten != hashSize))
+        {
+            throw new InvalidOperationException(
+                "The algorithm's implementation is incorrect.");
+        }
         if (!hashings.TryAdd(hashing))
         {
             hashing.Dispose();
@@ -80,9 +95,14 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
         return this.HashToGuid(hash);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private Guid HashToGuid(ReadOnlySpan<byte> hash)
     {
+        if (hash.Length < 16)
+        {
+            throw new InvalidOperationException(
+                "The algorithm's hash size is less than 128 bits.");
+        }
+
         var uuid = MemoryMarshal.Read<Guid>(hash);
         var guid = uuid.ToBigEndian();
         this.FillVersionField(ref guid);
@@ -93,10 +113,17 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
     private unsafe byte[] CreateInput(Guid nsId, byte[] name)
     {
         const int guidSize = 16;
-        var input = new byte[guidSize + name.Length];
+        var hashId = this.HashspaceId;
+        var hashIdSize = (hashId is null) ? 0 : guidSize;
+        var inputLength = hashIdSize + guidSize + name.Length;
+        var input = new byte[inputLength];
         fixed (byte* pInput = &input[0])
         {
-            *(Guid*)pInput = nsId.ToBigEndian();
+            if (hashId is Guid hashIdValue)
+            {
+                *(Guid*)pInput = hashIdValue.ToBigEndian();
+            }
+            *(Guid*)&pInput[hashIdSize] = nsId.ToBigEndian();
         }
         Buffer.BlockCopy(name, 0, input, guidSize, name.Length);
         return input;
@@ -117,9 +144,14 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
         return hash;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private unsafe Guid HashToGuid(byte[] hash)
     {
+        if (hash.Length < 16)
+        {
+            throw new InvalidOperationException(
+                "The algorithm's hash size is less than 128 bits.");
+        }
+
         var uuid = default(Guid);
         fixed (byte* pHash = &hash[0])
         {
@@ -131,58 +163,4 @@ internal abstract class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGe
         return guid;
     }
 #endif
-
-    internal sealed class MD5Hashing : NameBasedGuidGenerator
-    {
-        private static volatile NameBasedGuidGenerator.MD5Hashing? Singleton;
-
-        private MD5Hashing() { }
-
-        internal static NameBasedGuidGenerator.MD5Hashing Instance
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                [MethodImpl(MethodImplOptions.Synchronized)]
-                static NameBasedGuidGenerator.MD5Hashing Initialize()
-                {
-                    return NameBasedGuidGenerator.MD5Hashing.Singleton ??=
-                        new NameBasedGuidGenerator.MD5Hashing();
-                }
-
-                return NameBasedGuidGenerator.MD5Hashing.Singleton ?? Initialize();
-            }
-        }
-
-        public override GuidVersion Version => GuidVersion.Version3;
-
-        protected override HashAlgorithm CreateHashing() => MD5.Create();
-    }
-
-    internal sealed class SHA1Hashing : NameBasedGuidGenerator
-    {
-        private static volatile NameBasedGuidGenerator.SHA1Hashing? Singleton;
-
-        private SHA1Hashing() { }
-
-        internal static NameBasedGuidGenerator.SHA1Hashing Instance
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                [MethodImpl(MethodImplOptions.Synchronized)]
-                static NameBasedGuidGenerator.SHA1Hashing Initialize()
-                {
-                    return NameBasedGuidGenerator.SHA1Hashing.Singleton ??=
-                        new NameBasedGuidGenerator.SHA1Hashing();
-                }
-
-                return NameBasedGuidGenerator.SHA1Hashing.Singleton ?? Initialize();
-            }
-        }
-
-        public override GuidVersion Version => GuidVersion.Version5;
-
-        protected override HashAlgorithm CreateHashing() => SHA1.Create();
-    }
 }

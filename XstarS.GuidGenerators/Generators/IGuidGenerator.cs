@@ -46,6 +46,9 @@ public interface INameBasedGuidGenerator : IGuidGeneratorInfo
     /// <paramref name="nsId"/> and <paramref name="name"/>.</returns>
     /// <exception cref="ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">
+    /// The provided hashing algorithm's implementation is incorrect
+    /// or the hash size is less than 128 bits.</exception>
     Guid NewGuid(Guid nsId, byte[] name);
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -56,6 +59,9 @@ public interface INameBasedGuidGenerator : IGuidGeneratorInfo
     /// <param name="name">The name byte span used to generate the <see cref="Guid"/>.</param>
     /// <returns>A new <see cref="Guid"/> instance generated based on
     /// <paramref name="nsId"/> and <paramref name="name"/>.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// The provided hashing algorithm's implementation is incorrect
+    /// or the hash size is less than 128 bits.</exception>
 #if NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     Guid NewGuid(Guid nsId, ReadOnlySpan<byte> name)
     {
