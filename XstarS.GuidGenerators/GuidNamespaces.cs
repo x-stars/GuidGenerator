@@ -8,7 +8,7 @@ namespace XNetEx.Guids;
 public static class GuidNamespaces
 {
     /// <summary>
-    /// Represents the namespace ID of a fully-qualified domain name.
+    /// Represents the namespace ID for a fully-qualified domain name.
     /// </summary>
     public static readonly Guid Dns = new Guid(
         // 6ba7b810-9dad-11d1-80b4-00c04fd430c8
@@ -16,7 +16,7 @@ public static class GuidNamespaces
         0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8);
 
     /// <summary>
-    /// Represents the namespace ID of a URL.
+    /// Represents the namespace ID for a URL.
     /// </summary>
     public static readonly Guid Url = new Guid(
         // 6ba7b811-9dad-11d1-80b4-00c04fd430c8
@@ -24,7 +24,7 @@ public static class GuidNamespaces
         0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8);
 
     /// <summary>
-    /// Represents the namespace ID of an ISO OID.
+    /// Represents the namespace ID for an ISO OID.
     /// </summary>
     public static readonly Guid Oid = new Guid(
         // 6ba7b812-9dad-11d1-80b4-00c04fd430c8
@@ -32,7 +32,7 @@ public static class GuidNamespaces
         0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8);
 
     /// <summary>
-    /// Represents the namespace ID of an X.500 DN.
+    /// Represents the namespace ID for an X.500 DN.
     /// </summary>
     public static readonly Guid X500 = new Guid(
         // 6ba7b814-9dad-11d1-80b4-00c04fd430c8

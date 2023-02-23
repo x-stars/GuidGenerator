@@ -49,25 +49,25 @@ module Guid =
     let maxValue = Uuid.MaxValue
 
     /// <summary>
-    /// Represents the namespace ID of a fully-qualified domain name.
+    /// Represents the namespace ID for a fully-qualified domain name.
     /// </summary>
     [<CompiledName("NamespaceDns")>]
     let nsDns = Namespace.Dns
 
     /// <summary>
-    /// Represents the namespace ID of a URL.
+    /// Represents the namespace ID for a URL.
     /// </summary>
     [<CompiledName("NamespaceUrl")>]
     let nsUrl = Namespace.Url
 
     /// <summary>
-    /// Represents the namespace ID of an ISO OID.
+    /// Represents the namespace ID for an ISO OID.
     /// </summary>
     [<CompiledName("NamespaceOid")>]
     let nsOid = Namespace.Oid
 
     /// <summary>
-    /// Represents the namespace ID of an X.500 DN.
+    /// Represents the namespace ID for an X.500 DN.
     /// </summary>
     [<CompiledName("NamespaceX500")>]
     let nsX500 = Namespace.X500
