@@ -55,11 +55,11 @@ partial class GuidGenerator
 
     /// <summary>
     /// Gets the <see cref="IGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// example implementation (UUIDREV Appendix A.5).
+    /// example implementation (UUIDREV Appendix C.7).
     /// </summary>
     /// <returns>The <see cref="IGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// example implementation (UUIDREV Appendix A.5).</returns>
-    public static IGuidGenerator Version8 => ExampleCustomGuidGenerator.Instance;
+    /// example implementation (UUIDREV Appendix C.7).</returns>
+    public static IGuidGenerator Version8 => CustomGuidGenerator.Example.Instance;
 
     /// <summary>
     /// Gets the <see cref="IGuidGenerator"/> instance of <see cref="Uuid.MaxValue"/>.
@@ -172,7 +172,7 @@ partial class GuidGenerator
         GuidVersion.Version5 => NameBasedGuidGenerator.SHA1Hashing.Instance,
         GuidVersion.Version6 => TimeBasedGuidGenerator.Sequential.Instance,
         GuidVersion.Version7 => UnixTimeBasedGuidGenerator.Instance,
-        GuidVersion.Version8 => ExampleCustomGuidGenerator.Instance,
+        GuidVersion.Version8 => CustomGuidGenerator.Example.Instance,
         GuidVersion.MaxValue => MaxValueGuidGenerator.Instance,
         _ => throw new ArgumentOutOfRangeException(nameof(version)),
     };

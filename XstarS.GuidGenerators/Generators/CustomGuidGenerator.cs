@@ -5,7 +5,7 @@ namespace XNetEx.Guids.Generators;
 /// <summary>
 /// Provides the <see langword="abstract"/> base class for a custom <see cref="GuidGenerator"/>.
 /// </summary>
-public abstract class CustomGuidGenerator : GuidGenerator
+public abstract partial class CustomGuidGenerator : GuidGenerator
 {
     private readonly DateTime EpochDateTime;
 

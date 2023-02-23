@@ -9,15 +9,14 @@ partial class CustomGuidGeneratorTest
     public void NewGuid_Version8Example_GetExpectedTimestamp()
     {
         var ticksPerSec = TimeSpan.FromSeconds(1).Ticks;
+        var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         var guid = GuidGenerator.Version8.NewGuid();
-        var (tsSec, tsSubsec, _, _, _, _, _, _, _, _, _) = guid;
-        var epoch = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        var tsSubsecNs = ((long)tsSubsec * 1_000_000_000) >> 16;
-        var tsTicks = (tsSubsecNs / 100) + (tsSec * ticksPerSec);
+        var (tsNsHi, tsNsLow, _, _, _, _, _, _, _, _, _) = guid;
+        var tsNanoSec = ((long)(uint)tsNsHi << (2 * 8)) | (ushort)tsNsLow;
         var nowTicks = DateTime.UtcNow.Ticks - epoch.Ticks;
-        var ticksDiff = Math.Abs(nowTicks - tsTicks);
-        Console.WriteLine(TimeSpan.FromTicks(ticksDiff));
-        Assert.IsTrue(ticksDiff < (ticksPerSec * 2));
+        var nowNanoSec = (nowTicks * 100) & ~(-1L << (6 * 8));
+        var ticksDiff = Math.Abs((tsNanoSec - nowNanoSec) / 100);
+        Assert.IsTrue(ticksDiff < ticksPerSec);
     }
 
     [TestMethod]
@@ -26,14 +25,15 @@ partial class CustomGuidGeneratorTest
         static byte[] GetGuidRandomBytes(Guid guid)
         {
             var (_, _, random01, random2, random3,
-                random4, random5, random6, random7, _, _
-                ) = guid;
+                random4, random5, random6, random7,
+                random8, random9) = guid;
             var random0 = (byte)((uint)random01 >> (0 * 8));
             var random1 = (byte)((uint)random01 >> (1 * 8));
             return new[]
             {
                 random0, random1, random2, random3,
                 random4, random5, random6, random7,
+                random8, random9,
             };
         }
 
@@ -44,7 +44,7 @@ partial class CustomGuidGeneratorTest
         CollectionAssert.AreNotEqual(randomBytes0, randomBytes1);
     }
 
-    [TestMethod]
+    [TestMethod, Ignore]
     public void NewGuid_Version8Example_GetSameNodeIdByte()
     {
         var guid0 = GuidGenerator.Version8.NewGuid();
@@ -54,7 +54,7 @@ partial class CustomGuidGeneratorTest
         Assert.AreEqual(nodeId0, nodeId1);
     }
 
-    [TestMethod]
+    [TestMethod, Ignore]
     public void NewGuid_Version8Example_GetIncrementSequence()
     {
         var guid0 = GuidGenerator.Version8.NewGuid();
