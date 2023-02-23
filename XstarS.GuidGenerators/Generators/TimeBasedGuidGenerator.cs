@@ -84,14 +84,19 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     private void FillTimeAndNodeFields(ref Guid guid)
     {
-        var timestamp = this.CurrentTimestamp;
-        var nodeId = this.NodeIdBytes;
-        var clockSeq = GuidGeneratorState.RefreshState(
-            timestamp, nodeId, this.NodeIdSource);
-        var components = this.GuidComponents;
-        components.SetTimestamp(ref guid, timestamp);
-        components.SetClockSequence(ref guid, clockSeq);
-        components.SetNodeId(ref guid, nodeId);
+        while (true)
+        {
+            var timestamp = this.CurrentTimestamp;
+            var nodeId = this.NodeIdBytes;
+            var refreshed = GuidGeneratorState.RefreshState(
+                timestamp, nodeId, this.NodeIdSource, out var clockSeq);
+            if (!refreshed) { continue; }
+            var components = this.GuidComponents;
+            components.SetTimestamp(ref guid, timestamp);
+            components.SetClockSequence(ref guid, clockSeq);
+            components.SetNodeId(ref guid, nodeId);
+            break;
+        }
     }
 
     internal sealed class Sequential : TimeBasedGuidGenerator

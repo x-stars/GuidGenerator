@@ -47,17 +47,18 @@ internal static class GuidGeneratorState
         return result;
     }
 
-    internal static short RefreshState(
-        long timestamp, byte[] nodeId, NodeIdSource nodeIdSource)
+    internal static bool RefreshState(
+        long timestamp, byte[] nodeId, NodeIdSource nodeIdSource, out short clockSeq)
     {
-        var clockSeq = default(short);
+        var refreshed = false;
         lock (GuidGeneratorState.SyncRoot)
         {
             _ = GuidGeneratorState.UpdateNodeId(nodeId, nodeIdSource);
-            clockSeq = GuidGeneratorState.UpdateTimestamp(timestamp);
+            refreshed = GuidGeneratorState.UpdateTimestamp(timestamp);
+            clockSeq = (short)GuidGeneratorState.ClockSequence;
         }
         _ = GuidGeneratorState.LastSavingAsyncResultCache.Value;
-        return clockSeq;
+        return refreshed;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -92,14 +93,19 @@ internal static class GuidGeneratorState
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static short UpdateTimestamp(long timestamp)
+    private static bool UpdateTimestamp(long timestamp)
     {
+        if (timestamp == GuidGeneratorState.LastTimestamp)
+        {
+            return false;
+        }
+
         if (timestamp <= GuidGeneratorState.LastTimestamp)
         {
             GuidGeneratorState.ClockSequence++;
         }
         GuidGeneratorState.LastTimestamp = timestamp;
-        return (short)GuidGeneratorState.ClockSequence;
+        return true;
     }
 
     private static void ReinitializeState()
