@@ -54,7 +54,8 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
         const int guidSize = 16;
         var hashId = this.HashspaceId;
         var hashIdSize = (hashId is null) ? 0 : guidSize;
-        var inputLength = hashIdSize + guidSize + name.Length;
+        var nameOffset = hashIdSize + guidSize;
+        var inputLength = nameOffset + name.Length;
         var input = (name.Length <= 1024) ?
             (stackalloc byte[inputLength]) : (new byte[inputLength]);
         if (hashId is Guid hashIdValue)
@@ -64,7 +65,7 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
         }
         var nsIdResult = nsId.TryWriteUuidBytes(input[hashIdSize..]);
         Debug.Assert(nsIdResult);
-        name.CopyTo(input[(hashIdSize + guidSize)..]);
+        name.CopyTo(input[nameOffset..]);
         return this.ComputeHashToGuid(input);
     }
 #endif
@@ -115,7 +116,8 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
         const int guidSize = 16;
         var hashId = this.HashspaceId;
         var hashIdSize = (hashId is null) ? 0 : guidSize;
-        var inputLength = hashIdSize + guidSize + name.Length;
+        var nameOffset = hashIdSize + guidSize;
+        var inputLength = nameOffset + name.Length;
         var input = new byte[inputLength];
         fixed (byte* pInput = &input[0])
         {
@@ -125,7 +127,7 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
             }
             *(Guid*)&pInput[hashIdSize] = nsId.ToBigEndian();
         }
-        Buffer.BlockCopy(name, 0, input, guidSize, name.Length);
+        Buffer.BlockCopy(name, 0, input, nameOffset, name.Length);
         return input;
     }
 

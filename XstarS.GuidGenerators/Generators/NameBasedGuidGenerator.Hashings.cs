@@ -124,7 +124,7 @@ partial class NameBasedGuidGenerator
             }
         }
 
-        public override GuidVersion Version => GuidVersion.Version8;
+        public sealed override GuidVersion Version => GuidVersion.Version8;
 
         internal static NameBasedGuidGenerator.CustomHashing CreateInstance(
             Guid hashspaceId, HashAlgorithm hashing)
@@ -154,7 +154,7 @@ partial class NameBasedGuidGenerator
             return new NameBasedGuidGenerator.CustomHashing.Disposable(hashspaceId, hashingFactory);
         }
 
-        protected override HashAlgorithm CreateHashing()
+        protected sealed override HashAlgorithm CreateHashing()
         {
             return this.HashingFactory.Invoke() ??
                 throw new InvalidOperationException(

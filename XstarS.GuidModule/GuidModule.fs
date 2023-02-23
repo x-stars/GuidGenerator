@@ -32,6 +32,11 @@ module Guid =
     type Namespace = GuidNamespaces
 
     /// <summary>
+    /// An abbreviation for the type <see cref="T:XNetEx.Guids.GuidHashspaces"/>.
+    /// </summary>
+    type Hashspace = GuidHashspaces
+
+    /// <summary>
     /// An abbreviation for the type <see cref="T:XNetEx.Guids.Generators.GuidGenerator"/>.
     /// </summary>
     type Generator = GuidGenerator
