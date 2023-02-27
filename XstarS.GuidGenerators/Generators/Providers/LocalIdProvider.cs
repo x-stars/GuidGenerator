@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Threading;
+using XNetEx.Threading;
 
 namespace XNetEx.Guids.Generators;
 

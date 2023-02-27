@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
+using XNetEx.Threading;
 
 namespace XNetEx.Guids.Generators;
 

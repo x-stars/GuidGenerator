@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
-namespace XNetEx.Guids.Generators;
+namespace XNetEx.Threading;
 
 internal sealed class AutoRefreshCache<T> : IDisposable
 {
@@ -21,7 +20,6 @@ internal sealed class AutoRefreshCache<T> : IDisposable
 
     public AutoRefreshCache(Func<T> refreshFunc, int refreshPeriod, int sleepAfter)
     {
-        Debug.Assert(sleepAfter >= 0);
         this.RefreshFunc = refreshFunc;
         this.RefreshPeriod = refreshPeriod;
         this.SleepAfter = sleepAfter;

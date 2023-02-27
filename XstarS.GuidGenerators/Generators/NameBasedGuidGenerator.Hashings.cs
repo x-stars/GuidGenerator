@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using XNetEx.Runtime.CompilerServices;
 
 namespace XNetEx.Guids.Generators;
 
@@ -140,7 +141,7 @@ partial class NameBasedGuidGenerator
                     nameof(hashing));
             }
 
-            return new NameBasedGuidGenerator.CustomHashing.Disposable(hashspaceId, () => hashing);
+            return new NameBasedGuidGenerator.CustomHashing.Disposable(hashspaceId, hashing.Identity);
         }
 
         internal static NameBasedGuidGenerator.CustomHashing CreateInstance(
