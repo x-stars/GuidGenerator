@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using XNetEx.Guids.Components;
 
 namespace XNetEx.Guids.Generators;
@@ -84,19 +85,21 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     private void FillTimeAndNodeFields(ref Guid guid)
     {
-        while (true)
+        var spinner = new SpinWait();
+    RefreshState:
+        var timestamp = this.CurrentTimestamp;
+        var nodeId = this.NodeIdBytes;
+        var refreshed = GuidGeneratorState.RefreshState(
+            timestamp, nodeId, this.NodeIdSource, out var clockSeq);
+        if (!refreshed)
         {
-            var timestamp = this.CurrentTimestamp;
-            var nodeId = this.NodeIdBytes;
-            var refreshed = GuidGeneratorState.RefreshState(
-                timestamp, nodeId, this.NodeIdSource, out var clockSeq);
-            if (!refreshed) { continue; }
-            var components = this.GuidComponents;
-            components.SetTimestamp(ref guid, timestamp);
-            components.SetClockSequence(ref guid, clockSeq);
-            components.SetNodeId(ref guid, nodeId);
-            break;
+            spinner.SpinOnce();
+            goto RefreshState;
         }
+        var components = this.GuidComponents;
+        components.SetTimestamp(ref guid, timestamp);
+        components.SetClockSequence(ref guid, clockSeq);
+        components.SetNodeId(ref guid, nodeId);
     }
 
     internal sealed class Sequential : TimeBasedGuidGenerator
