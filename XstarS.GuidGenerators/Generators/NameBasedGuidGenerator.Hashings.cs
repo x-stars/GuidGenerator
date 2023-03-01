@@ -63,11 +63,11 @@ partial class NameBasedGuidGenerator
 
     internal class CustomHashing : NameBasedGuidGenerator
     {
-        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha256;
+        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonNSha256;
 
-        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha384;
+        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonNSha384;
 
-        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha512;
+        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonNSha512;
 
         private readonly Func<HashAlgorithm> HashingFactory;
 
@@ -77,7 +77,7 @@ partial class NameBasedGuidGenerator
             this.HashingFactory = hashingFactory;
         }
 
-        internal static NameBasedGuidGenerator.CustomHashing InstanceSha256
+        internal static NameBasedGuidGenerator.CustomHashing InstanceNSha256
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
@@ -85,15 +85,15 @@ partial class NameBasedGuidGenerator
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    return NameBasedGuidGenerator.CustomHashing.SingletonSha256 ??=
+                    return NameBasedGuidGenerator.CustomHashing.SingletonNSha256 ??=
                         new NameBasedGuidGenerator.CustomHashing(GuidHashspaces.Sha256, SHA256.Create);
                 }
 
-                return NameBasedGuidGenerator.CustomHashing.SingletonSha256 ?? Initialize();
+                return NameBasedGuidGenerator.CustomHashing.SingletonNSha256 ?? Initialize();
             }
         }
 
-        internal static NameBasedGuidGenerator.CustomHashing InstanceSha384
+        internal static NameBasedGuidGenerator.CustomHashing InstanceNSha384
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
@@ -101,15 +101,15 @@ partial class NameBasedGuidGenerator
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    return NameBasedGuidGenerator.CustomHashing.SingletonSha384 ??=
+                    return NameBasedGuidGenerator.CustomHashing.SingletonNSha384 ??=
                         new NameBasedGuidGenerator.CustomHashing(GuidHashspaces.Sha384, SHA384.Create);
                 }
 
-                return NameBasedGuidGenerator.CustomHashing.SingletonSha384 ?? Initialize();
+                return NameBasedGuidGenerator.CustomHashing.SingletonNSha384 ?? Initialize();
             }
         }
 
-        internal static NameBasedGuidGenerator.CustomHashing InstanceSha512
+        internal static NameBasedGuidGenerator.CustomHashing InstanceNSha512
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
@@ -117,11 +117,11 @@ partial class NameBasedGuidGenerator
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    return NameBasedGuidGenerator.CustomHashing.SingletonSha512 ??=
+                    return NameBasedGuidGenerator.CustomHashing.SingletonNSha512 ??=
                         new NameBasedGuidGenerator.CustomHashing(GuidHashspaces.Sha512, SHA512.Create);
                 }
 
-                return NameBasedGuidGenerator.CustomHashing.SingletonSha512 ?? Initialize();
+                return NameBasedGuidGenerator.CustomHashing.SingletonNSha512 ?? Initialize();
             }
         }
 

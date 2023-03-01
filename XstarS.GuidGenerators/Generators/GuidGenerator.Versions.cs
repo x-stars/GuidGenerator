@@ -89,7 +89,7 @@ partial class GuidGenerator
     /// </summary>
     /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
     /// using the SHA-256 hashspace ID and hashing algorithm.</returns>
-    public static INameBasedGuidGenerator Version8Sha256 => NameBasedGuidGenerator.CustomHashing.InstanceSha256;
+    public static INameBasedGuidGenerator Version8NSha256 => NameBasedGuidGenerator.CustomHashing.InstanceNSha256;
 
     /// <summary>
     /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
@@ -97,7 +97,7 @@ partial class GuidGenerator
     /// </summary>
     /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
     /// using the SHA-384 hashspace ID and hashing algorithm.</returns>
-    public static INameBasedGuidGenerator Version8Sha384 => NameBasedGuidGenerator.CustomHashing.InstanceSha384;
+    public static INameBasedGuidGenerator Version8NSha384 => NameBasedGuidGenerator.CustomHashing.InstanceNSha384;
 
     /// <summary>
     /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
@@ -105,7 +105,7 @@ partial class GuidGenerator
     /// </summary>
     /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
     /// using the SHA-512 hashspace ID and hashing algorithm.</returns>
-    public static INameBasedGuidGenerator Version8Sha512 => NameBasedGuidGenerator.CustomHashing.InstanceSha512;
+    public static INameBasedGuidGenerator Version8NSha512 => NameBasedGuidGenerator.CustomHashing.InstanceNSha512;
 
     /// <summary>
     /// Creates a new <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 1
@@ -128,13 +128,13 @@ partial class GuidGenerator
     /// using the specified hashspace ID and hashing algorithm.
     /// </summary>
     /// <param name="hashspaceId">The hashspace ID used to identify the hashing algorithm.</param>
-    /// <param name="hashing">The hashing algorithm used to transform input names.</param>
+    /// <param name="hashing">The hashing algorithm used to transform input values.</param>
     /// <returns>A new <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the specified hashspace ID and hashing algorithm.</returns>
+    /// using <paramref name="hashspaceId"/> and <paramref name="hashing"/>.</returns>
     /// <exception cref="ArgumentNullException">
     /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">
-    /// The <see cref="HashAlgorithm.HashSize"/> of <paramref name="hashing"/> is less than 128.</exception>
+    /// <see cref="HashAlgorithm.HashSize"/> of <paramref name="hashing"/> is less than 128.</exception>
     public static INameBasedGuidGenerator CreateVersion8N(Guid hashspaceId, HashAlgorithm hashing)
     {
         return NameBasedGuidGenerator.CustomHashing.CreateInstance(hashspaceId, hashing);
@@ -142,12 +142,13 @@ partial class GuidGenerator
 
     /// <summary>
     /// Creates a new <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the specified hashspace ID and hashing algorithm.
+    /// using the specified hashspace ID and hashing algorithm creation delegate.
     /// </summary>
     /// <param name="hashspaceId">The hashspace ID used to identify the hashing algorithm.</param>
     /// <param name="hashingFactory">The delegate used to create the hashing algorithm.</param>
     /// <returns>A new <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the specified hashspace ID and hashing algorithm.</returns>
+    /// using <paramref name="hashspaceId"/> and the hashing algorithm
+    /// created by <paramref name="hashingFactory"/>.</returns>
     /// <exception cref="ArgumentNullException">
     /// <paramref name="hashingFactory"/> is <see langword="null"/>.</exception>
     public static INameBasedGuidGenerator CreateVersion8N(Guid hashspaceId, Func<HashAlgorithm> hashingFactory)
