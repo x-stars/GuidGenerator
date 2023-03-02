@@ -5,7 +5,7 @@
 #pragma warning disable
 #nullable enable
 
-#if !(PAIR_DECONSTRUCT || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
+#if !(KEY_VALUE_PAIR_DECONSTRUCT || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 [EditorBrowsable(EditorBrowsableState.Never)]
 [Obsolete("This type supports the key/value pair deconstruction syntax " +
           "for early frameworks and should not be used directly in user code.")]
-internal static class __PairDeconstruction
+internal static class __KeyValuePairItems
 {
     /// <summary>
     /// Deconstructs the current <see cref="DictionaryEntry"/>.
