@@ -52,8 +52,8 @@ internal abstract class TimestampProvider
         var time3 = DateTime.UtcNow;
 
         if (!Stopwatch.IsHighResolution) { return false; }
-        const double ticksPerSec = 1_000_000_000 / 100;
-        var period = ticksPerSec / Stopwatch.Frequency;
+        var period = (double)TimeSpan.TicksPerSecond /
+            Math.Min(Stopwatch.Frequency, TimeSpan.TicksPerSecond);
         var diff10 = (time1.Ticks - time0.Ticks) / period;
         var diff21 = (time2.Ticks - time1.Ticks) / period;
         var diff32 = (time3.Ticks - time2.Ticks) / period;
@@ -103,10 +103,9 @@ internal abstract class TimestampProvider
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void UpdateSystemTime(object? unused)
         {
-            const long ticksPerSec = 1_000_000_000 / 100;
             var sysTs = DateTime.UtcNow.Ticks;
             var nowTs = this.CurrentTimestamp;
-            if (Math.Abs(nowTs - sysTs) >= ticksPerSec)
+            if (Math.Abs(nowTs - sysTs) >= TimeSpan.TicksPerSecond)
             {
                 var nowTicks = DateTime.UtcNow.Ticks;
                 var timerTicks = this.HiResTimer.Elapsed.Ticks;

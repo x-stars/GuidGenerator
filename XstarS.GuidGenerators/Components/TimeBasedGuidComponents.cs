@@ -36,17 +36,15 @@ internal abstract class TimeBasedGuidComponents : GuidComponents, ITimeBasedGuid
 
         protected override long GetTimestampCore(ref Guid guid)
         {
-            const long ticksPerMs = 1_000_000 / 100;
             var tsField = (long)(
                 ((ulong)guid.TimeLow() << (2 * 8)) |
                 ((ulong)guid.TimeMid() << (0 * 8)));
-            return tsField * ticksPerMs;
+            return tsField * TimeSpan.TicksPerMillisecond;
         }
 
         protected override void SetTimestampCore(ref Guid guid, long timestamp)
         {
-            const long ticksPerMs = 1_000_000 / 100;
-            var tsMilliSec = timestamp / ticksPerMs;
+            var tsMilliSec = timestamp / TimeSpan.TicksPerMillisecond;
             guid.TimeLow() = (uint)(tsMilliSec >> (2 * 8));
             guid.TimeMid() = (ushort)(tsMilliSec >> (0 * 8));
         }
