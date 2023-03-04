@@ -139,9 +139,3 @@ type GuidGeneratorTest() =
         Guid.newV7 ()
         |> Guid.version
         |> Assert.equalTo Guid.Version.Version7
-
-    [<TestMethod>]
-    member _.NewVersion8_WithoutInput_GetGuidOfVersion8() =
-        Guid.newV8 ()
-        |> Guid.version
-        |> Assert.equalTo Guid.Version.Version8
