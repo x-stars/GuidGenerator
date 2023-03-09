@@ -26,10 +26,12 @@ namespace System
         /// <param name="value">The index value. It has to be greater or equal than zero.</param>
         /// <param name="fromEnd">A boolean indicating if the index is from the start
         /// (<see langword="false"/>) or from the end (<see langword="true"/>) of a collection.</param>
+#if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         public Index(int value, bool fromEnd = false)
         {
-            if (value < 0) { throw Index.ValueOutOfRange(); }
+            if (value < 0) { Index.ThrowValueOutOfRange(); }
             this._value = fromEnd ? ~value : value;
         }
 
@@ -52,18 +54,28 @@ namespace System
         /// </summary>
         /// <param name="value">The index position from the start of a collection.</param>
         /// <returns>The Index value.</returns>
+#if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Index FromStart(int value) =>
-            (value < 0) ? throw Index.ValueOutOfRange() : new Index(value);
+#endif
+        public static Index FromStart(int value)
+        {
+            if (value < 0) { Index.ThrowValueOutOfRange(); }
+            return new Index(value);
+        }
 
         /// <summary>
         /// Creates an <see cref="Index"/> from the end of a collection at a specified index position.
         /// </summary>
         /// <param name="value">The index value from the end of a collection.</param>
         /// <returns>The Index value.</returns>
+#if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Index FromEnd(int value) =>
-            (value < 0) ? throw Index.ValueOutOfRange() : new Index(~value);
+#endif
+        public static Index FromEnd(int value)
+        {
+            if (value < 0) { Index.ThrowValueOutOfRange(); }
+            return new Index(~value);
+        }
 
         /// <summary>
         /// Gets the index value.
@@ -74,8 +86,8 @@ namespace System
         /// <summary>
         /// Gets a value that indicates whether the index is from the start or the end.
         /// </summary>
-        /// <returns><see langword="true"/> if the Index is from
-        /// the end; otherwise, <see langword="false"/>.</returns>
+        /// <returns><see langword="true"/> if the Index is from the end;
+        /// otherwise, <see langword="false"/>.</returns>
         public bool IsFromEnd => this._value < 0;
 
         /// <summary>
@@ -84,7 +96,9 @@ namespace System
         /// <param name="length">The length of the collection that
         /// the Index will be used with. Must be a positive value.</param>
         /// <returns>The offset.</returns>
+#if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         public int GetOffset(int length)
         {
             int offset = this._value;
@@ -129,10 +143,14 @@ namespace System
         public override string ToString() =>
             this.IsFromEnd ? this.ToStringFromEnd() : ((uint)this.Value).ToString();
 
-        private string ToStringFromEnd() => "^" + this.Value.ToString();
+#if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        private string ToStringFromEnd() => "^" + ((uint)this.Value).ToString();
 
-        private static ArgumentOutOfRangeException ValueOutOfRange() =>
-            new ArgumentOutOfRangeException("value", "Non-negative number required.");
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void ThrowValueOutOfRange() =>
+            throw new ArgumentOutOfRangeException("value", "Non-negative number required.");
     }
 
     /// <summary>
@@ -223,17 +241,23 @@ namespace System
         /// <returns>The start offset and length of the range.</returns>
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="length"/> is outside the bounds of the current range.</exception>
+#if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         public (int Offset, int Length) GetOffsetAndLength(int length)
         {
             int start = this.Start.GetOffset(length);
             int end = this.End.GetOffset(length);
             if ((uint)end > (uint)length || (uint)start > (uint)end)
             {
-                throw new ArgumentOutOfRangeException(nameof(length));
+                Range.ThrowLengthOutOfRange();
             }
             return (start, end - start);
         }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void ThrowLengthOutOfRange() =>
+            throw new ArgumentOutOfRangeException("length");
 #endif
     }
 }
