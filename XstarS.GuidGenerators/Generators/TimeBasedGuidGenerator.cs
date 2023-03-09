@@ -17,6 +17,8 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     private readonly NodeIdProvider NodeIdProvider;
 
+    private readonly GuidGeneratorState GeneratorState;
+
     protected TimeBasedGuidGenerator()
         : this(NodeIdSource.PhysicalAddress)
     {
@@ -27,6 +29,7 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         this.GuidComponents = GuidComponents.OfVersion(this.Version);
         this.TimestampProvider = TimestampProvider.Instance;
         this.NodeIdProvider = NodeIdProvider.GetInstance(nodeIdSource);
+        this.GeneratorState = GuidGeneratorState.GetInstance(nodeIdSource);
     }
 
     internal static TimeBasedGuidGenerator Instance
@@ -86,11 +89,12 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
     private void FillTimeAndNodeFields(ref Guid guid)
     {
         var spinner = new SpinWait();
+        var state = this.GeneratorState;
     RefreshState:
         var timestamp = this.CurrentTimestamp;
         var nodeId = this.NodeIdBytes;
-        var refreshed = GuidGeneratorState.RefreshState(
-            timestamp, nodeId, this.NodeIdSource, out var clockSeq);
+        var refreshed = state.Refresh(
+            timestamp, nodeId, out var clockSeq);
         if (!refreshed)
         {
             spinner.SpinOnce();
