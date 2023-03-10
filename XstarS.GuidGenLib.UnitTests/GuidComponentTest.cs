@@ -38,7 +38,7 @@ public partial class GuidComponentTest
     {
         foreach (var (version, guidText) in new Dictionary<GuidVersion, string>()
         {
-            [GuidVersion.Empty]    = "00000000-0000-0000-0000-000000000000",
+            [GuidVersion.Empty] = "00000000-0000-0000-0000-000000000000",
             [GuidVersion.Version1] = "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
             [GuidVersion.Version2] = "6ba7b810-9dad-21d1-b402-00c04fd430c8",
             [GuidVersion.Version3] = "a9ec4420-7252-3c11-ab70-512e10273537",

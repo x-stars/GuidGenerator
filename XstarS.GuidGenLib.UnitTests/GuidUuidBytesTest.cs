@@ -38,7 +38,7 @@ public class GuidUuidBytesTest
     [TestMethod]
     public void FromUuidBytes_TryWriteBytes_GetReversedByteOrderFields()
     {
-        var uuidBytes = (stackalloc byte[]
+        var uuidBytes = (ReadOnlySpan<byte>)(new byte[]
         {
             0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
             0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
@@ -47,7 +47,7 @@ public class GuidUuidBytesTest
         var guidBytes = (stackalloc byte[16]);
         var result = guid.TryWriteBytes(guidBytes);
         Assert.IsTrue(result);
-        var expected = (stackalloc byte[]
+        var expected = (ReadOnlySpan<byte>)(new byte[]
         {
             0x33, 0x22, 0x11, 0x00, 0x55, 0x44, 0x77, 0x66,
             0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
@@ -78,7 +78,7 @@ public class GuidUuidBytesTest
     [TestMethod]
     public void TryWriteUuidBytes_NewByByteSpan_GetReversedByteOrderFields()
     {
-        var guidBytes = (stackalloc byte[]
+        var guidBytes = (ReadOnlySpan<byte>)(new byte[]
         {
             0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
             0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
@@ -87,7 +87,7 @@ public class GuidUuidBytesTest
         var uuidBytes = (stackalloc byte[16]);
         var result = guid.TryWriteUuidBytes(uuidBytes);
         Assert.IsTrue(result);
-        var expected = (stackalloc byte[]
+        var expected = (ReadOnlySpan<byte>)(new byte[]
         {
             0x33, 0x22, 0x11, 0x00, 0x55, 0x44, 0x77, 0x66,
             0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,

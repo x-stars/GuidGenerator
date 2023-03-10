@@ -124,24 +124,27 @@ partial class GuidGeneratorState
             var phyNodeId = GuidGeneratorState.EmptyNodeId;
             var randNodeId = GuidGeneratorState.EmptyNodeId;
             lock (GuidGeneratorState.PhysicalNodeState)
-            lock (GuidGeneratorState.RandomNodeState)
             {
-                fieldFlags |= (0x01 | 0x02) << (2 * 8);
-                var phyState = GuidGeneratorState.PhysicalNodeState;
-                var randState = GuidGeneratorState.RandomNodeState;
-                timestamp = Math.Max(phyState.LastTimestamp, randState.LastTimestamp);
-                clockSeq = (int)(
-                    ((uint)(ushort)phyState.ClockSequence << (0 * 8)) |
-                    ((uint)(ushort)randState.ClockSequence << (2 * 8)));
-                if (phyState.LastNodeIdBytes is not null)
+                lock (GuidGeneratorState.RandomNodeState)
                 {
-                    fieldFlags |= 0x04;
-                    phyNodeId = phyState.LastNodeIdBytes;
-                }
-                if (randState.LastNodeIdBytes is not null)
-                {
-                    fieldFlags |= 0x08;
-                    randNodeId = randState.LastNodeIdBytes;
+                    fieldFlags |= (0x01 | 0x02) << (2 * 8);
+                    var phyState = GuidGeneratorState.PhysicalNodeState;
+                    var randState = GuidGeneratorState.RandomNodeState;
+                    timestamp = Math.Max(
+                        phyState.LastTimestamp, randState.LastTimestamp);
+                    clockSeq = (int)(
+                        ((uint)(ushort)phyState.ClockSequence << (0 * 8)) |
+                        ((uint)(ushort)randState.ClockSequence << (2 * 8)));
+                    if (phyState.LastNodeIdBytes is not null)
+                    {
+                        fieldFlags |= 0x04;
+                        phyNodeId = phyState.LastNodeIdBytes;
+                    }
+                    if (randState.LastNodeIdBytes is not null)
+                    {
+                        fieldFlags |= 0x08;
+                        randNodeId = randState.LastNodeIdBytes;
+                    }
                 }
             }
 
