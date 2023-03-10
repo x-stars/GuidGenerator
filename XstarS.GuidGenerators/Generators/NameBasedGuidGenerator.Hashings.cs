@@ -172,21 +172,25 @@ partial class NameBasedGuidGenerator
                 this.IsDisposed = false;
             }
 
-            public void Dispose()
+            protected override void Dispose(bool disposing)
             {
                 if (this.IsDisposed) { return; }
                 lock (this.Hashings)
                 {
                     if (this.IsDisposed) { return; }
-                    var hashings = this.Hashings;
-                    hashings.CompleteAdding();
-                    while (hashings.TryTake(out var hashing))
+                    if (disposing)
                     {
-                        hashing.Dispose();
+                        var hashings = this.Hashings;
+                        hashings.CompleteAdding();
+                        while (hashings.TryTake(out var hashing))
+                        {
+                            hashing.Dispose();
+                        }
+                        hashings.Dispose();
                     }
-                    hashings.Dispose();
                     this.IsDisposed = true;
                 }
+                base.Dispose(disposing);
             }
         }
     }

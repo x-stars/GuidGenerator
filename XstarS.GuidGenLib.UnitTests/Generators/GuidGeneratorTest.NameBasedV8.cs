@@ -84,7 +84,7 @@ partial class GuidGeneratorTest
     {
         var hashId = GuidHashspaces.Sha256;
         using var hashing = SHA256.Create();
-        var guidGen = GuidGenerator.CreateVersion8N(hashId, hashing);
+        using var guidGen = GuidGenerator.CreateVersion8N(hashId, hashing);
         var nsId = GuidNamespaces.Dns;
         var name = Array.Empty<byte>();
         var guid = guidGen.NewGuid(nsId, name);
@@ -97,7 +97,7 @@ partial class GuidGeneratorTest
     {
         var hashId = GuidHashspaces.Sha256;
         using var hashing = SHA256.Create();
-        var guidGen = GuidGenerator.CreateVersion8N(hashId, hashing);
+        using var guidGen = GuidGenerator.CreateVersion8N(hashId, hashing);
         var nsId = GuidNamespaces.Dns;
         var name = "www.example.com";
         var guid = guidGen.NewGuid(nsId, name);
@@ -110,7 +110,7 @@ partial class GuidGeneratorTest
     {
         var hashId = GuidHashspaces.Sha256;
         using var hashing = SHA256.Create();
-        var guidGen = GuidGenerator.CreateVersion8N(hashId, hashing);
+        using var guidGen = GuidGenerator.CreateVersion8N(hashId, hashing);
         var nsId = GuidNamespaces.Dns;
         var name = "www.example.com";
         var encoding = Encoding.Unicode;
@@ -125,7 +125,7 @@ partial class GuidGeneratorTest
         if (Environment.ProcessorCount <= 1) { return; }
         var hashId = GuidHashspaces.Sha256;
         using var hashing = SHA256.Create();
-        var guidGen = GuidGenerator.CreateVersion8N(hashId, hashing);
+        using var guidGen = GuidGenerator.CreateVersion8N(hashId, hashing);
         Assert.ThrowsException<AggregateException>(() =>
         {
             Parallel.For(0, 1000, index =>
@@ -143,8 +143,7 @@ partial class GuidGeneratorTest
     public void NewGuid_Version8NCustomByDelegate_ConcurrentGetExpectedGuid()
     {
         var hashId = GuidHashspaces.Sha256;
-        var guidGen = GuidGenerator.CreateVersion8N(hashId, SHA256.Create);
-        using var disposable = guidGen as IDisposable;
+        using var guidGen = GuidGenerator.CreateVersion8N(hashId, SHA256.Create);
         Parallel.For(0, 1000, index =>
         {
             var nsId = GuidNamespaces.Dns;
