@@ -182,7 +182,7 @@ public static partial class GuidExtensions
     /// contains the node ID represented by the <see cref="Guid"/>.</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/>
     /// contains node ID data; otherwise, <see langword="false"/>.</returns>
-    public static unsafe bool TryGetNodeId(
+    public static bool TryGetNodeId(
         this Guid guid, [NotNullWhen(true)] out byte[]? nodeId)
     {
         if (!guid.IsRfc4122Uuid() ||

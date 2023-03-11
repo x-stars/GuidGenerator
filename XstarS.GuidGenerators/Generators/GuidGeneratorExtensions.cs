@@ -22,8 +22,12 @@ public static class GuidGeneratorExtensions
     /// <paramref name="nsId"/> and <paramref name="name"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="guidGen"/>
     /// or <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">
+    /// The provided hashing algorithm's hash size is less than 128 bits.</exception>
     /// <exception cref="NotSupportedException">
     /// This instance does not support generating a name-based <see cref="Guid"/>.</exception>
+    /// <exception cref="ObjectDisposedException">
+    /// <paramref name="guidGen"/> has already been disposed.</exception>
     public static Guid NewGuid(this GuidGenerator guidGen,
         Guid nsId, string name, Encoding? encoding = null)
     {
@@ -57,8 +61,12 @@ public static class GuidGeneratorExtensions
     /// <paramref name="nsId"/> and <paramref name="name"/>.</returns>
     /// <exception cref="ArgumentNullException">
     /// <paramref name="guidGen"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">The provided hashing algorithm's
+    /// implementation is incorrect or the hash size is less than 128 bits.</exception>
     /// <exception cref="NotSupportedException">
     /// This instance does not support generating a name-based <see cref="Guid"/>.</exception>
+    /// <exception cref="ObjectDisposedException">
+    /// <paramref name="guidGen"/> has already been disposed.</exception>
     public static Guid NewGuid(this GuidGenerator guidGen,
         Guid nsId, ReadOnlySpan<char> name, Encoding? encoding = null)
     {
@@ -88,6 +96,10 @@ public static class GuidGeneratorExtensions
     /// <paramref name="nsId"/> and <paramref name="name"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="guidGen"/>
     /// or <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">
+    /// The provided hashing algorithm's hash size is less than 128 bits.</exception>
+    /// <exception cref="ObjectDisposedException">
+    /// <paramref name="guidGen"/> has already been disposed.</exception>
     public static Guid NewGuid(this INameBasedGuidGenerator guidGen,
         Guid nsId, string name, Encoding? encoding = null)
     {
@@ -121,6 +133,10 @@ public static class GuidGeneratorExtensions
     /// <paramref name="nsId"/> and <paramref name="name"/>.</returns>
     /// <exception cref="ArgumentNullException">
     /// <paramref name="guidGen"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">The provided hashing algorithm's
+    /// implementation is incorrect or the hash size is less than 128 bits.</exception>
+    /// <exception cref="ObjectDisposedException">
+    /// <paramref name="guidGen"/> has already been disposed.</exception>
     public static Guid NewGuid(this INameBasedGuidGenerator guidGen,
         Guid nsId, ReadOnlySpan<char> name, Encoding? encoding = null)
     {

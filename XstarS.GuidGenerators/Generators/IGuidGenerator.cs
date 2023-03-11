@@ -29,6 +29,8 @@ public interface IGuidGenerator : IGuidGeneratorInfo
     /// Generates a new <see cref="Guid"/> instance.
     /// </summary>
     /// <returns>A new <see cref="Guid"/> instance.</returns>
+    /// <exception cref="ObjectDisposedException">
+    /// This instance has already been disposed.</exception>
     Guid NewGuid();
 }
 
@@ -48,6 +50,8 @@ public interface INameBasedGuidGenerator : IGuidGeneratorInfo
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">
     /// The provided hashing algorithm's hash size is less than 128 bits.</exception>
+    /// <exception cref="ObjectDisposedException">
+    /// This instance has already been disposed.</exception>
     Guid NewGuid(Guid nsId, byte[] name);
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -60,6 +64,8 @@ public interface INameBasedGuidGenerator : IGuidGeneratorInfo
     /// <paramref name="nsId"/> and <paramref name="name"/>.</returns>
     /// <exception cref="InvalidOperationException">The provided hashing algorithm's
     /// implementation is incorrect or the hash size is less than 128 bits.</exception>
+    /// <exception cref="ObjectDisposedException">
+    /// This instance has already been disposed.</exception>
 #if NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     Guid NewGuid(Guid nsId, ReadOnlySpan<byte> name)
     {
@@ -86,5 +92,7 @@ public interface IDceSecurityGuidGenerator : IGuidGeneratorInfo
     /// <paramref name="domain"/> and <paramref name="localId"/>.</returns>
     /// <exception cref="PlatformNotSupportedException">
     /// The current operating system does not support getting the local user or group ID.</exception>
+    /// <exception cref="ObjectDisposedException">
+    /// This instance has already been disposed.</exception>
     Guid NewGuid(DceSecurityDomain domain, int? localId = null);
 }

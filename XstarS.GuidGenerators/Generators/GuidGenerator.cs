@@ -48,6 +48,8 @@ public abstract partial class GuidGenerator : IDisposable, IGuidGeneratorInfo, I
     /// Generates a new <see cref="Guid"/> instance.
     /// </summary>
     /// <returns>A new <see cref="Guid"/> instance.</returns>
+    /// <exception cref="ObjectDisposedException">
+    /// This instance has already been disposed.</exception>
     public abstract Guid NewGuid();
 
     /// <summary>
@@ -59,8 +61,12 @@ public abstract partial class GuidGenerator : IDisposable, IGuidGeneratorInfo, I
     /// <paramref name="nsId"/> and <paramref name="name"/>.</returns>
     /// <exception cref="ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">
+    /// The provided hashing algorithm's hash size is less than 128 bits.</exception>
     /// <exception cref="NotSupportedException">
     /// This instance does not support generating a name-based <see cref="Guid"/>.</exception>
+    /// <exception cref="ObjectDisposedException">
+    /// This instance has already been disposed.</exception>
     public virtual Guid NewGuid(Guid nsId, byte[] name)
     {
         throw new NotSupportedException(
@@ -75,8 +81,12 @@ public abstract partial class GuidGenerator : IDisposable, IGuidGeneratorInfo, I
     /// <param name="name">The name byte span used to generate the <see cref="Guid"/>.</param>
     /// <returns>A new <see cref="Guid"/> instance generated based on
     /// <paramref name="nsId"/> and <paramref name="name"/>.</returns>
+    /// <exception cref="InvalidOperationException">The provided hashing algorithm's
+    /// implementation is incorrect or the hash size is less than 128 bits.</exception>
     /// <exception cref="NotSupportedException">
     /// This instance does not support generating a name-based <see cref="Guid"/>.</exception>
+    /// <exception cref="ObjectDisposedException">
+    /// This instance has already been disposed.</exception>
     public virtual Guid NewGuid(Guid nsId, ReadOnlySpan<byte> name)
     {
         return this.NewGuid(nsId, name.ToArray());
@@ -95,6 +105,8 @@ public abstract partial class GuidGenerator : IDisposable, IGuidGeneratorInfo, I
     /// The current operating system does not support getting the local user or group ID.</exception>
     /// <exception cref="NotSupportedException">
     /// This instance does not support generating a DCE Security <see cref="Guid"/>.</exception>
+    /// <exception cref="ObjectDisposedException">
+    /// This instance has already been disposed.</exception>
     public virtual Guid NewGuid(DceSecurityDomain domain, int? localId = null)
     {
         throw new NotSupportedException(
