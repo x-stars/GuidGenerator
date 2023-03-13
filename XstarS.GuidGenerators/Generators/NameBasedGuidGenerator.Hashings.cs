@@ -127,6 +127,8 @@ partial class NameBasedGuidGenerator
 
         public sealed override GuidVersion Version => GuidVersion.Version8;
 
+        public sealed override bool RequiresInput => true;
+
         internal static NameBasedGuidGenerator.CustomHashing CreateInstance(
             Guid hashspaceId, HashAlgorithm hashing)
         {
