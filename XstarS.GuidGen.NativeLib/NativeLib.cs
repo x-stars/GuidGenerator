@@ -89,6 +89,27 @@ internal static unsafe class NativeLib
         return GuidCreate(GuidGenerator.Version8, guid);
     }
 
+    [UnmanagedCallersOnly(EntryPoint = nameof(GuidCreateV8NSha256))]
+    internal static HResult GuidCreateV8NSha256(
+        [Out] Guid* guid, [In] Guid* nsId, [In] byte* name, nuint nameLen)
+    {
+        return GuidCreateNameBased(GuidGenerator.Version8NSha256, guid, nsId, name, nameLen);
+    }
+
+    [UnmanagedCallersOnly(EntryPoint = nameof(GuidCreateV8NSha384))]
+    internal static HResult GuidCreateV8NSha384(
+        [Out] Guid* guid, [In] Guid* nsId, [In] byte* name, nuint nameLen)
+    {
+        return GuidCreateNameBased(GuidGenerator.Version8NSha384, guid, nsId, name, nameLen);
+    }
+
+    [UnmanagedCallersOnly(EntryPoint = nameof(GuidCreateV8NSha512))]
+    internal static HResult GuidCreateV8NSha512(
+        [Out] Guid* guid, [In] Guid* nsId, [In] byte* name, nuint nameLen)
+    {
+        return GuidCreateNameBased(GuidGenerator.Version8NSha512, guid, nsId, name, nameLen);
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static HResult GuidCreate(IGuidGenerator guidGen, Guid* guid)
     {
