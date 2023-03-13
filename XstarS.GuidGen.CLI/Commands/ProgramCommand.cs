@@ -26,6 +26,9 @@ internal abstract class ProgramCommand
             yield return NewNoInputGuidCommand.Version8;
             yield return NewNoInputGuidCommand.Version1R;
             yield return NewNoInputGuidCommand.Version6P;
+            yield return NewNameBasedGuidCommand.Version8NSha256;
+            yield return NewNameBasedGuidCommand.Version8NSha384;
+            yield return NewNameBasedGuidCommand.Version8NSha512;
             yield return ShowHelpCommand.Instance;
             yield return InvalidSyntaxCommand.Instance;
         }

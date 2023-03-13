@@ -33,7 +33,8 @@ internal sealed class ShowHelpCommand : ProgramCommand
             yield return $"Usage:  {cmdName} [-V1|-V4|-V1R] [-Cn]";
             yield return $"        {cmdName} -V2 Domain [SiteID]";
             yield return $"        {cmdName} -V3|-V5 :NS|GuidNS [Name]";
-            yield return $"        {cmdName} [-V6|-V7|-V8|-V6P] [-Cn]";
+            yield return $"        {cmdName} -V6|-V7|-V8|-V6P [-Cn]";
+            yield return $"        {cmdName} -V8N Hash :NS|GuidNS [Name]";
             yield return $"        {cmdName} -?|-H|-Help";
             yield return "Parameters:";
             yield return "    -V1     generate time-based GUID.";
@@ -46,6 +47,7 @@ internal sealed class ShowHelpCommand : ProgramCommand
             yield return "    -V8     generate custom GUID (example impl).";
             yield return "    -V1R    generate time-based GUID (random node ID).";
             yield return "    -V6P    generate reordered time-based GUID";
+            yield return "    -V8N    generate custom GUID (name-based).";
             yield return "            (IEEE 802 MAC address node ID).";
             yield return "    -Cn     generate n GUIDs of the current version.";
             yield return "    Domain  specify a DCE Security domain,";
@@ -57,6 +59,8 @@ internal sealed class ShowHelpCommand : ProgramCommand
             yield return "    GuidNS  specify a user-defined GUID namespace.";
             yield return "    Name    specify the name to generate GUID,";
             yield return "            or empty to read from standard input.";
+            yield return "    Hash    specify a well-known hashing algorithm,";
+            yield return "            which can be SHA256, SHA384 or SHA512.";
             yield return "    -?|-H|-Help";
             yield return "            show the current help message.";
         }

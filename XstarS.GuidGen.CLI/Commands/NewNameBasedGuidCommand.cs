@@ -12,29 +12,51 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
     internal static readonly NewNameBasedGuidCommand Version5 =
         new NewNameBasedGuidCommand(GuidVersion.Version5);
 
+    internal static readonly NewNameBasedGuidCommand Version8NSha256 =
+        new NewNameBasedGuidCommand(hashingName: "SHA256");
+
+    internal static readonly NewNameBasedGuidCommand Version8NSha384 =
+        new NewNameBasedGuidCommand(hashingName: "SHA384");
+
+    internal static readonly NewNameBasedGuidCommand Version8NSha512 =
+        new NewNameBasedGuidCommand(hashingName: "SHA512");
+
     private readonly GuidVersion Version;
+
+    private readonly string? HashingName;
 
     private NewNameBasedGuidCommand(GuidVersion version)
     {
         this.Version = version;
     }
 
+    private NewNameBasedGuidCommand(string hashingName)
+    {
+        this.HashingName = hashingName;
+    }
+
     public override bool TryExecute(string[] args)
     {
-        if (args.Length is not (2 or 3))
+        var hashName = this.HashingName;
+        var hashArgCount = (hashName is null) ? 0 : 1;
+        if ((args.Length - hashArgCount) is not (2 or 3))
         {
             return false;
         }
         var verArg = args[0].ToUpper();
         var version = this.Version;
-        var verNum = ((int)version).ToString();
-        if (verArg != $"-V{verNum}")
+        var expVerName = (hashName is null) ?
+            ((int)version).ToString() : "8N";
+        var expVerArg = $"-V{expVerName}";
+        if (verArg != expVerArg)
         {
             return false;
         }
 
-        var readInput = args.Length == 2;
-        var nsIdArg = args[1].ToUpper();
+        var hashArg = (hashName is null) ? null : args[1].ToUpper();
+        if (hashArg != hashName) { return false; }
+        var readInput = (args.Length - hashArgCount) == 2;
+        var nsIdArg = args[hashArgCount + 1].ToUpper();
         var nsId = Guid.Empty;
         if (nsIdArg.StartsWith(":"))
         {
@@ -49,7 +71,7 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
             return false;
         }
 
-        var guidGen = GuidGenerator.OfVersion(version);
+        var guidGen = this.GetGuidGenerator();
         if (readInput)
         {
             var name = default(string);
@@ -61,11 +83,22 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
         }
         else
         {
-            var name = args[2];
+            var name = args[hashArgCount + 2];
             var guid = guidGen.NewGuid(nsId, name);
             Console.WriteLine(guid);
         }
         return true;
+    }
+
+    private INameBasedGuidGenerator GetGuidGenerator()
+    {
+        return this.HashingName switch
+        {
+            "SHA256" => GuidGenerator.Version8NSha256,
+            "SHA384" => GuidGenerator.Version8NSha384,
+            "SHA512" => GuidGenerator.Version8NSha512,
+            _ => (INameBasedGuidGenerator)GuidGenerator.OfVersion(this.Version),
+        };
     }
 
     private bool TryParseNamespace(string nsName, out Guid nsId)
