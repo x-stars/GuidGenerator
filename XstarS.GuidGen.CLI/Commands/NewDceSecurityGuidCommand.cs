@@ -17,7 +17,7 @@ internal sealed class NewDceSecurityGuidCommand : ProgramCommand
         {
             return false;
         }
-        var verArg = args[0].ToUpper();
+        var verArg = args[0].ToUpperInvariant();
         if (verArg != "-V2")
         {
             return false;

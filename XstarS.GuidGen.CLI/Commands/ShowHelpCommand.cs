@@ -20,7 +20,7 @@ internal sealed class ShowHelpCommand : ProgramCommand
             return false;
         }
         var helpNames = ShowHelpCommand.HelpNames;
-        var helpArg = args[0].ToUpper();
+        var helpArg = args[0].ToUpperInvariant();
         if (!helpNames.Contains(helpArg))
         {
             return false;

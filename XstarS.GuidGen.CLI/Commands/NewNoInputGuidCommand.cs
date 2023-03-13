@@ -50,14 +50,13 @@ internal class NewNoInputGuidCommand : ProgramCommand
         {
             return false;
         }
-        var verArg = args[0].ToUpper();
+        var verArg = args[0].ToUpperInvariant();
         var version = this.Version;
         var verName = this.VersionName;
         var expVerName = (verName is null) ?
             ((int)version).ToString() :
-            verName[("Version".Length)..];
-        var expVerArg = $"-V{expVerName}";
-        if (verArg != expVerArg)
+            verName["Version".Length..];
+        if (verArg != $"-V{expVerName}")
         {
             return false;
         }
@@ -65,8 +64,8 @@ internal class NewNoInputGuidCommand : ProgramCommand
         var count = 1;
         if (args.Length == 2)
         {
-            var countArg = args[1].ToUpper();
-            if (!countArg.StartsWith("-C")) { return false; }
+            var countArg = args[1].ToUpperInvariant();
+            if (!countArg.StartsWith(" -C")) { return false; }
             var cParsed = int.TryParse(countArg[2..], out count);
             if (!cParsed || (count < 0)) { return false; }
         }

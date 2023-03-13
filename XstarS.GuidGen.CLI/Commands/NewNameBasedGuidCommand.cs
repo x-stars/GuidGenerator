@@ -43,20 +43,20 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
         {
             return false;
         }
-        var verArg = args[0].ToUpper();
+        var verArg = args[0].ToUpperInvariant();
         var version = this.Version;
         var expVerName = (hashName is null) ?
             ((int)version).ToString() : "8N";
-        var expVerArg = $"-V{expVerName}";
-        if (verArg != expVerArg)
+        if (verArg != $"-V{expVerName}")
         {
             return false;
         }
 
-        var hashArg = (hashName is null) ? null : args[1].ToUpper();
+        var hashArg = (hashName is null) ?
+            null : args[1].ToUpperInvariant();
         if (hashArg != hashName) { return false; }
         var readInput = (args.Length - hashArgCount) == 2;
-        var nsIdArg = args[hashArgCount + 1].ToUpper();
+        var nsIdArg = args[hashArgCount + 1].ToUpperInvariant();
         var nsId = Guid.Empty;
         if (nsIdArg.StartsWith(":"))
         {
