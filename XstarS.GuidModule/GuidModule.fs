@@ -117,26 +117,26 @@ module Guid =
     /// <summary>
     /// Represents the hashspace ID for the SHA3-224 hash algorithm.
     /// </summary>
-    [<CompiledName("HashspaceSha3S224")>]
-    let hsSha3S224 = Hashspace.Sha3S224
+    [<CompiledName("HashspaceSha3D224")>]
+    let hsSha3D224 = Hashspace.Sha3D224
 
     /// <summary>
     /// Represents the hashspace ID for the SHA3-256 hash algorithm.
     /// </summary>
-    [<CompiledName("HashspaceSha3S256")>]
-    let hsSha3S256 = Hashspace.Sha3S256
+    [<CompiledName("HashspaceSha3D256")>]
+    let hsSha3D256 = Hashspace.Sha3D256
 
     /// <summary>
     /// Represents the hashspace ID for the SHA3-384 hash algorithm.
     /// </summary>
-    [<CompiledName("HashspaceSha3S384")>]
-    let hsSha3S384 = Hashspace.Sha3S384
+    [<CompiledName("HashspaceSha3D384")>]
+    let hsSha3D384 = Hashspace.Sha3D384
 
     /// <summary>
     /// Represents the hashspace ID for the SHA3-512 hash algorithm.
     /// </summary>
-    [<CompiledName("HashspaceSha3S512")>]
-    let hsSha3S512 = Hashspace.Sha3S512
+    [<CompiledName("HashspaceSha3D512")>]
+    let hsSha3D512 = Hashspace.Sha3D512
 
     /// <summary>
     /// Represents the hashspace ID for the SHAKE128 hash algorithm.

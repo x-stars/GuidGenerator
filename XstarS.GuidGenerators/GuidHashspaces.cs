@@ -58,7 +58,7 @@ public static class GuidHashspaces
     /// <summary>
     /// Represents the hashspace ID for the SHA3-224 hash algorithm.
     /// </summary>
-    public static readonly Guid Sha3S224 = new Guid(
+    public static readonly Guid Sha3D224 = new Guid(
         // 9768761f-ac5a-419e-a180-7ca239e8025a
         0x9768761f, 0xac5a, 0x419e,
         0xa1, 0x80, 0x7c, 0xa2, 0x39, 0xe8, 0x02, 0x5a);
@@ -66,7 +66,7 @@ public static class GuidHashspaces
     /// <summary>
     /// Represents the hashspace ID for the SHA3-256 hash algorithm.
     /// </summary>
-    public static readonly Guid Sha3S256 = new Guid(
+    public static readonly Guid Sha3D256 = new Guid(
         // 2034d66b-4047-4553-8f80-70e593176877
         0x2034d66b, 0x4047, 0x4553,
         0x8f, 0x80, 0x70, 0xe5, 0x93, 0x17, 0x68, 0x77);
@@ -74,7 +74,7 @@ public static class GuidHashspaces
     /// <summary>
     /// Represents the hashspace ID for the SHA3-384 hash algorithm.
     /// </summary>
-    public static readonly Guid Sha3S384 = new Guid(
+    public static readonly Guid Sha3D384 = new Guid(
         // 872fb339-2636-4bdd-bda6-b6dc2a82b1b3
         0x872fb339, 0x2636, 0x4bdd,
         0xbd, 0xa6, 0xb6, 0xdc, 0x2a, 0x82, 0xb1, 0xb3);
@@ -82,7 +82,7 @@ public static class GuidHashspaces
     /// <summary>
     /// Represents the hashspace ID for the SHA3-512 hash algorithm.
     /// </summary>
-    public static readonly Guid Sha3S512 = new Guid(
+    public static readonly Guid Sha3D512 = new Guid(
         // a4920a5d-a8a6-426c-8d14-a6cafbe64c7b
         0xa4920a5d, 0xa8a6, 0x426c,
         0x8d, 0x14, 0xa6, 0xca, 0xfb, 0xe6, 0x4c, 0x7b);
