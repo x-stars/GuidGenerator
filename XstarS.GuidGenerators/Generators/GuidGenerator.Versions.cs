@@ -89,7 +89,7 @@ partial class GuidGenerator
     /// </summary>
     /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
     /// using the SHA-256 hashspace ID and hash algorithm.</returns>
-    public static INameBasedGuidGenerator Version8NSha256 => NameBasedGuidGenerator.CustomHashing.InstanceNSha256;
+    public static INameBasedGuidGenerator Version8NSha256 => NameBasedGuidGenerator.CustomHashing.InstanceSha256;
 
     /// <summary>
     /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
@@ -97,7 +97,7 @@ partial class GuidGenerator
     /// </summary>
     /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
     /// using the SHA-384 hashspace ID and hash algorithm.</returns>
-    public static INameBasedGuidGenerator Version8NSha384 => NameBasedGuidGenerator.CustomHashing.InstanceNSha384;
+    public static INameBasedGuidGenerator Version8NSha384 => NameBasedGuidGenerator.CustomHashing.InstanceSha384;
 
     /// <summary>
     /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
@@ -105,7 +105,7 @@ partial class GuidGenerator
     /// </summary>
     /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
     /// using the SHA-512 hashspace ID and hash algorithm.</returns>
-    public static INameBasedGuidGenerator Version8NSha512 => NameBasedGuidGenerator.CustomHashing.InstanceNSha512;
+    public static INameBasedGuidGenerator Version8NSha512 => NameBasedGuidGenerator.CustomHashing.InstanceSha512;
 
     /// <summary>
     /// Creates a new <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 1
