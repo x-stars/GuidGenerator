@@ -59,7 +59,7 @@ internal sealed class ShowHelpCommand : ProgramCommand
             yield return "    GuidNS  specify a user-defined GUID namespace.";
             yield return "    Name    specify the name to generate GUID,";
             yield return "            or empty to read from standard input.";
-            yield return "    Hash    specify a well-known hashing algorithm,";
+            yield return "    Hash    specify a well-known hash algorithm,";
             yield return "            which can be SHA256, SHA384 or SHA512.";
             yield return "    -?|-H|-Help";
             yield return "            show the current help message.";

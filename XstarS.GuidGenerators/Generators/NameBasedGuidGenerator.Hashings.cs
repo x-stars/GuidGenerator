@@ -160,8 +160,7 @@ partial class NameBasedGuidGenerator
         protected sealed override HashAlgorithm CreateHashing()
         {
             return this.HashingFactory.Invoke() ??
-                throw new InvalidOperationException(
-                    "The hashing algorithm factory returns null.");
+                throw new InvalidOperationException("The hashing factory returns null.");
         }
 
         private sealed class Disposable : NameBasedGuidGenerator.CustomHashing, IDisposable

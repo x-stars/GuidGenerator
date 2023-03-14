@@ -62,7 +62,7 @@ public abstract partial class GuidGenerator : IDisposable, IGuidGeneratorInfo, I
     /// <exception cref="ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">
-    /// The provided hashing algorithm's hash size is less than 128 bits.</exception>
+    /// The provided hash algorithm's hash size is less than 128 bits.</exception>
     /// <exception cref="NotSupportedException">
     /// This instance does not support generating a name-based <see cref="Guid"/>.</exception>
     /// <exception cref="ObjectDisposedException">
@@ -81,7 +81,7 @@ public abstract partial class GuidGenerator : IDisposable, IGuidGeneratorInfo, I
     /// <param name="name">The name byte span used to generate the <see cref="Guid"/>.</param>
     /// <returns>A new <see cref="Guid"/> instance generated based on
     /// <paramref name="nsId"/> and <paramref name="name"/>.</returns>
-    /// <exception cref="InvalidOperationException">The provided hashing algorithm's
+    /// <exception cref="InvalidOperationException">The provided hash algorithm's
     /// implementation is incorrect or the hash size is less than 128 bits.</exception>
     /// <exception cref="NotSupportedException">
     /// This instance does not support generating a name-based <see cref="Guid"/>.</exception>
