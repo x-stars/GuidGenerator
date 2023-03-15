@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using XNetEx.Threading;
@@ -24,11 +25,11 @@ partial class GuidGeneratorState
 
     public static event EventHandler<StateStorageExceptionEventArgs>? StorageException;
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public static bool SetStorageFile(string? fileName)
     {
-        var result = GuidGeneratorState.LoadFromStorage(fileName);
         GuidGeneratorState.StorageFileName = fileName;
-        return result;
+        return GuidGeneratorState.LoadFromStorage();
     }
 
     private static string? SetSaveOnProcessExit()
@@ -36,9 +37,10 @@ partial class GuidGeneratorState
         static void SaveToStorage(object? sender, EventArgs e) =>
             GuidGeneratorState.SaveToStorage();
         AppDomain.CurrentDomain.ProcessExit += SaveToStorage;
-        return default(string);
+        return null;
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     private static Task<bool> SaveToStorageAsync()
     {
         return Task.Run(GuidGeneratorState.SaveToStorage);
@@ -49,8 +51,10 @@ partial class GuidGeneratorState
         Volatile.Read(ref GuidGeneratorState.StorageException)?.Invoke(null, e);
     }
 
-    private static bool LoadFromStorage(string? storageFile)
+    [MethodImpl(MethodImplOptions.Synchronized)]
+    private static bool LoadFromStorage()
     {
+        var storageFile = GuidGeneratorState.StorageFile;
         if (storageFile is null) { return false; }
 
         try
@@ -111,6 +115,7 @@ partial class GuidGeneratorState
         }
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     private static bool SaveToStorage()
     {
         var storageFile = GuidGeneratorState.StorageFile;

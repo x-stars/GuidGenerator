@@ -20,11 +20,6 @@ internal sealed partial class GuidGeneratorState
 
     private volatile byte[]? LastNodeIdBytes;
 
-    private GuidGeneratorState()
-        : this(NodeIdSource.VolatileRandom)
-    {
-    }
-
     private GuidGeneratorState(NodeIdSource nodeIdSource)
     {
         this.NodeIdSource = nodeIdSource;
@@ -42,10 +37,15 @@ internal sealed partial class GuidGeneratorState
         return nodeIdSource switch
         {
             NodeIdSource.PhysicalAddress => GuidGeneratorState.PhysicalNodeState,
-            NodeIdSource.VolatileRandom => new GuidGeneratorState(),
+            NodeIdSource.VolatileRandom => GuidGeneratorState.CreateVolatileState(),
             NodeIdSource.NonVolatileRandom => GuidGeneratorState.RandomNodeState,
             _ => throw new ArgumentOutOfRangeException(nameof(nodeIdSource)),
         };
+    }
+
+    private static GuidGeneratorState CreateVolatileState()
+    {
+        return new GuidGeneratorState(NodeIdSource.VolatileRandom);
     }
 
     internal bool Refresh(long timestamp, byte[] nodeId, out short clockSeq)
