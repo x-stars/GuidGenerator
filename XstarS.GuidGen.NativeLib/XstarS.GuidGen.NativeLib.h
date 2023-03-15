@@ -56,7 +56,7 @@ HRESULT GuidCreateV4(_Out_ GUID *Guid);
 
 __declspec(dllimport)
 HRESULT GuidCreateV5(_Out_ GUID *Guid,
-    _In_ const GUID *NsId, _In_ const UCHAR* Name, SIZE_T NameLen);
+    _In_ const GUID *NsId, _In_ const UCHAR *Name, SIZE_T NameLen);
 
 __declspec(dllimport)
 HRESULT GuidCreateV6(_Out_ GUID *Guid);
@@ -69,14 +69,14 @@ HRESULT GuidCreateV7(_Out_ GUID *Guid);
 __declspec(dllimport)
 HRESULT GuidCreateV8(_Out_ GUID *Guid);
 __declspec(dllimport)
-HRESULT GuidCreateV8N256(_Out_ GUID* Guid,
-    _In_ const GUID* NsId, _In_ const UCHAR* Name, SIZE_T NameLen);
+HRESULT GuidCreateV8NSha256(_Out_ GUID *Guid,
+    _In_ const GUID *NsId, _In_ const UCHAR *Name, SIZE_T NameLen);
 __declspec(dllimport)
-HRESULT GuidCreateV8N384(_Out_ GUID* Guid,
-    _In_ const GUID* NsId, _In_ const UCHAR* Name, SIZE_T NameLen);
+HRESULT GuidCreateV8NSha384(_Out_ GUID *Guid,
+    _In_ const GUID *NsId, _In_ const UCHAR *Name, SIZE_T NameLen);
 __declspec(dllimport)
-HRESULT GuidCreateV8N512(_Out_ GUID* Guid,
-    _In_ const GUID* NsId, _In_ const UCHAR* Name, SIZE_T NameLen);
+HRESULT GuidCreateV8NSha512(_Out_ GUID *Guid,
+    _In_ const GUID *NsId, _In_ const UCHAR *Name, SIZE_T NameLen);
 
 #ifdef __cplusplus
 }
