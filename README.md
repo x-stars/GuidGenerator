@@ -61,18 +61,15 @@ using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
 // generate time-based GUID generation.
-var guidGenV1 = GuidGenerator.OfVersion(GuidVersion.Version1);
-var guidV1 = guidGenV1.NewGuid();
+var guidV1 = GuidGenerator.OfVersion(1).NewGuid();
 // 3944a871-aa14-11ed-8791-a9a9a46de54f
 
 // generate name-based GUID.
-var guidGenV5 = GuidGenerator.OfVersion(GuidVersion.Version5);
-var guidV5 = guidGenV5.NewGuid(GuidNamespaces.Dns, "github.com");
+var guidV5 = GuidGenerator.OfVersion(5).NewGuid(GuidNamespaces.Dns, "github.com");
 // 6fca3dd2-d61d-58de-9363-1574b382ea68s
 
 // generate Unix time-based GUID.
-var guidGenV7 = GuidGenerator.OfVersion(GuidVersion.Version7);
-var guidV7 = guidGenV7.NewGuid();
+var guidV7 = GuidGenerator.OfVersion(7).NewGuid();
 // 018640c6-0dc9-7189-a644-31acdba4cabc
 ```
 
