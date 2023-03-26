@@ -51,7 +51,8 @@ partial class GuidGeneratorStateTest
 
     private void WriteStateFieldsToFile(string fileName,
         int version, int? fieldFlags = null, long? timestamp = null,
-        int? clockSeq = null, byte[]? phyNodeId = null, byte[]? randNodeId = null)
+        int? clockSeq = null, short? phyClkSeq = null, short? randClkSeq = null,
+        byte[]? phyNodeId = null, byte[]? randNodeId = null)
     {
         using var stream = new FileStream(fileName, FileMode.Create);
         using var writer = new BinaryWriter(stream);
@@ -59,7 +60,15 @@ partial class GuidGeneratorStateTest
             ((timestamp is null) ? 0x00 : 0x01) |
             ((clockSeq is null) ? 0x00 : 0x02) |
             ((phyNodeId is null) ? 0x00 : 0x04) |
-            ((randNodeId is null) ? 0x00 : 0x08);
+            ((randNodeId is null) ? 0x00 : 0x08) |
+            (((phyClkSeq is null) ? 0x00 : 0x01) << (2 * 8)) |
+            (((randClkSeq is null) ? 0x00 : 0x02) << (2 * 8));
+        if ((phyClkSeq is not null) || (randClkSeq is not null))
+        {
+            clockSeq = (int)(
+                ((ushort)(phyClkSeq ?? 0) << (0 * 8)) |
+                ((ushort)(randClkSeq ?? 0) << (2 * 8)));
+        }
         phyNodeId ??= new byte[6];
         randNodeId ??= new byte[6];
         writer.Write(version);

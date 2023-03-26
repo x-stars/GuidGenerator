@@ -82,6 +82,51 @@ public partial class GuidGeneratorStateTest
     }
 
     [TestMethod]
+    public void SetStateStorageFile_FileWithPhysicalClockSeqField_GetClockSeqFromFile()
+    {
+        using var tempFile = this.CreateTempFile(out var fileName);
+        ref var exception = ref this.CatchStateLoadException();
+        this.WriteStateFieldsToFile(fileName, version: 4122, phyClkSeq: 42);
+        var loadResult = GuidGenerator.SetStateStorageFile(fileName);
+        Assert.IsTrue(loadResult);
+        Assert.IsNull(exception);
+        var guid = GuidGenerator.Version1.NewGuid();
+        _ = guid.TryGetClockSequence(out var clockSeq);
+        Assert.AreEqual(42, clockSeq);
+    }
+
+    [TestMethod]
+    public void SetStateStorageFile_FileWithRandomClockSeqField_GetClockSeqFromFile()
+    {
+        using var tempFile = this.CreateTempFile(out var fileName);
+        ref var exception = ref this.CatchStateLoadException();
+        this.WriteStateFieldsToFile(fileName, version: 4122, randClkSeq: 42);
+        var loadResult = GuidGenerator.SetStateStorageFile(fileName);
+        Assert.IsTrue(loadResult);
+        Assert.IsNull(exception);
+        var guid = GuidGenerator.Version6.NewGuid();
+        _ = guid.TryGetClockSequence(out var clockSeq);
+        Assert.AreEqual(42, clockSeq);
+    }
+
+    [TestMethod]
+    public void SetStateStorageFile_FileWithBothClockSeqFields_GetClockSeqFromFile()
+    {
+        using var tempFile = this.CreateTempFile(out var fileName);
+        ref var exception = ref this.CatchStateLoadException();
+        this.WriteStateFieldsToFile(fileName, version: 4122, phyClkSeq: 42, randClkSeq: 44);
+        var loadResult = GuidGenerator.SetStateStorageFile(fileName);
+        Assert.IsTrue(loadResult);
+        Assert.IsNull(exception);
+        var guid0 = GuidGenerator.Version1.NewGuid();
+        _ = guid0.TryGetClockSequence(out var clockSeq0);
+        Assert.AreEqual(42, clockSeq0);
+        var guid1 = GuidGenerator.Version6.NewGuid();
+        _ = guid1.TryGetClockSequence(out var clockSeq1);
+        Assert.AreEqual(44, clockSeq1);
+    }
+
+    [TestMethod]
     public void SetStateStorageFile_FileWithPhysicalNodeId_GetDifferentClockSeq()
     {
         var guid0 = GuidGenerator.Version1.NewGuid();
