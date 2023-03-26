@@ -65,6 +65,21 @@ public partial class GuidGeneratorTest
     }
 
     [TestMethod]
+    public void OfVersion_AllVersionBytes_GetSameInstanceOfVersion()
+    {
+        Assert.AreSame(GuidGenerator.Empty, GuidGenerator.OfVersion((byte)0));
+        Assert.AreSame(GuidGenerator.Version1, GuidGenerator.OfVersion(1));
+        Assert.AreSame(GuidGenerator.Version2, GuidGenerator.OfVersion(2));
+        Assert.AreSame(GuidGenerator.Version3, GuidGenerator.OfVersion(3));
+        Assert.AreSame(GuidGenerator.Version4, GuidGenerator.OfVersion(4));
+        Assert.AreSame(GuidGenerator.Version5, GuidGenerator.OfVersion(5));
+        Assert.AreSame(GuidGenerator.Version6, GuidGenerator.OfVersion(6));
+        Assert.AreSame(GuidGenerator.Version7, GuidGenerator.OfVersion(7));
+        Assert.AreSame(GuidGenerator.Version8, GuidGenerator.OfVersion(8));
+        Assert.AreSame(GuidGenerator.MaxValue, GuidGenerator.OfVersion(15));
+    }
+
+    [TestMethod]
     public void OfVersion_AllVersionEnums_GetSameInstanceOfVersion()
     {
         Assert.AreSame(GuidGenerator.Empty,
@@ -87,6 +102,13 @@ public partial class GuidGeneratorTest
                        GuidGenerator.OfVersion(GuidVersion.Version8));
         Assert.AreSame(GuidGenerator.MaxValue,
                        GuidGenerator.OfVersion(GuidVersion.MaxValue));
+    }
+
+    [TestMethod]
+    public void OfVersion_InvalidVersionByte_CatchArgumentOutOfRangeException()
+    {
+        Assert.ThrowsException<ArgumentOutOfRangeException>(
+            () => GuidGenerator.OfVersion(0xFF));
     }
 
     [TestMethod]
