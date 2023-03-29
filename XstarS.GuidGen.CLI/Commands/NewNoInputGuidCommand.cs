@@ -65,7 +65,7 @@ internal class NewNoInputGuidCommand : ProgramCommand
         if (args.Length == 2)
         {
             var countArg = args[1].ToUpperInvariant();
-            if (!countArg.StartsWith(" -C")) { return false; }
+            if (!countArg.StartsWith("-C")) { return false; }
             var cParsed = int.TryParse(countArg[2..], out count);
             if (!cParsed || (count < 0)) { return false; }
         }
