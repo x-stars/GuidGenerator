@@ -232,7 +232,6 @@ namespace System
         /// <returns>A range from the start to the end.</returns>
         public static Range All => new Range(Index.Start, Index.End);
 
-#if VALUE_TUPLE || NET47_OR_GREATER || NETCOREAPP || NETSTANDARD2_0_OR_GREATER
         /// <summary>
         /// Calculates the start offset and length of the range object using a collection length.
         /// </summary>
@@ -244,6 +243,7 @@ namespace System
 #if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
+#if VALUE_TUPLE || NET47_OR_GREATER || NETCOREAPP || NETSTANDARD2_0_OR_GREATER
         public (int Offset, int Length) GetOffsetAndLength(int length)
         {
             int start = this.Start.GetOffset(length);
@@ -254,10 +254,42 @@ namespace System
             }
             return (start, end - start);
         }
+#else
+        public OffsetAndLength GetOffsetAndLength(int length)
+        {
+            int start = this.Start.GetOffset(length);
+            int end = this.End.GetOffset(length);
+            if ((uint)end > (uint)length || (uint)start > (uint)end)
+            {
+                Range.ThrowLengthOutOfRange();
+            }
+            return new OffsetAndLength(start, end - start);
+        }
+#endif
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static void ThrowLengthOutOfRange() =>
             throw new ArgumentOutOfRangeException("length");
+
+#if !(VALUE_TUPLE || NET47_OR_GREATER || NETCOREAPP || NETSTANDARD2_0_OR_GREATER)
+        public readonly struct OffsetAndLength
+        {
+            public int Offset { get; }
+
+            public int Length { get; }
+
+            public OffsetAndLength(int offset, int length)
+            {
+                this.Offset = offset;
+                this.Length = length;
+            }
+
+            public void Deconstruct(out int offset, out int length)
+            {
+                offset = this.Offset;
+                length = this.Length;
+            }
+        }
 #endif
     }
 }
