@@ -83,13 +83,16 @@ internal static class GuidRfc4122Fields
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static unsafe ref T FieldAt<T>(this ref Guid guid, int offset)
+#if !NETCOREAPP3_0_OR_GREATER
         where T : unmanaged
+#endif
     {
-        Debug.Assert((offset >= 0) && (offset + sizeof(T) <= 16));
 #if NETCOREAPP3_0_OR_GREATER
+        Debug.Assert((offset >= 0) && (offset + Unsafe.SizeOf<T>() <= 16));
         return ref Unsafe.As<Guid, T>(
             ref Unsafe.AddByteOffset(ref guid, (nint)offset));
 #else
+        Debug.Assert((offset >= 0) && (offset + sizeof(T) <= 16));
         fixed (Guid* pGuid = &guid)
         {
             return ref *(T*)((byte*)pGuid + offset);
