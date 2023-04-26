@@ -4,8 +4,6 @@ using BenchmarkDotNet.Attributes;
 
 namespace XNetEx.Guids.Generators;
 
-using static GuidVersion;
-
 [MemoryDiagnoser]
 public class GuidGeneratorConcurrentBenchmark
 {
@@ -40,7 +38,8 @@ public class GuidGeneratorConcurrentBenchmark
     {
         this.ParallelInvoke(count =>
         {
-            var guidGen = GuidGenerator.OfVersion(Empty);
+            var empty = GuidVersion.Empty;
+            var guidGen = GuidGenerator.OfVersion(empty);
             for (int index = 0; index < count; index++)
             {
                 var guid = guidGen.NewGuid();
@@ -53,7 +52,7 @@ public class GuidGeneratorConcurrentBenchmark
     {
         this.ParallelInvoke(count =>
         {
-            var guidGen = GuidGenerator.OfVersion(Version1);
+            var guidGen = GuidGenerator.OfVersion(1);
             for (int index = 0; index < count; index++)
             {
                 var guid = guidGen.NewGuid();
@@ -66,7 +65,7 @@ public class GuidGeneratorConcurrentBenchmark
     {
         this.ParallelInvoke(count =>
         {
-            var guidGen = GuidGenerator.OfVersion(Version2);
+            var guidGen = GuidGenerator.OfVersion(2);
             for (int index = 0; index < count; index++)
             {
                 var guid = guidGen.NewGuid();
@@ -79,7 +78,7 @@ public class GuidGeneratorConcurrentBenchmark
     {
         this.ParallelInvoke(count =>
         {
-            var guidGen = GuidGenerator.OfVersion(Version3);
+            var guidGen = GuidGenerator.OfVersion(3);
             for (int index = 0; index < count; index++)
             {
                 var guid = guidGen.NewGuid();
@@ -92,7 +91,7 @@ public class GuidGeneratorConcurrentBenchmark
     {
         this.ParallelInvoke(count =>
         {
-            var guidGen = GuidGenerator.OfVersion(Version4);
+            var guidGen = GuidGenerator.OfVersion(4);
             for (int index = 0; index < count; index++)
             {
                 var guid = guidGen.NewGuid();
@@ -105,7 +104,7 @@ public class GuidGeneratorConcurrentBenchmark
     {
         this.ParallelInvoke(count =>
         {
-            var guidGen = GuidGenerator.OfVersion(Version5);
+            var guidGen = GuidGenerator.OfVersion(5);
             for (int index = 0; index < count; index++)
             {
                 var guid = guidGen.NewGuid();
@@ -118,7 +117,7 @@ public class GuidGeneratorConcurrentBenchmark
     {
         this.ParallelInvoke(count =>
         {
-            var guidGen = GuidGenerator.OfVersion(Version6);
+            var guidGen = GuidGenerator.OfVersion(6);
             for (int index = 0; index < count; index++)
             {
                 var guid = guidGen.NewGuid();
@@ -131,7 +130,7 @@ public class GuidGeneratorConcurrentBenchmark
     {
         this.ParallelInvoke(count =>
         {
-            var guidGen = GuidGenerator.OfVersion(Version7);
+            var guidGen = GuidGenerator.OfVersion(7);
             for (int index = 0; index < count; index++)
             {
                 var guid = guidGen.NewGuid();
@@ -144,7 +143,7 @@ public class GuidGeneratorConcurrentBenchmark
     {
         this.ParallelInvoke(count =>
         {
-            var guidGen = GuidGenerator.OfVersion(Version8);
+            var guidGen = GuidGenerator.OfVersion(8);
             for (int index = 0; index < count; index++)
             {
                 var guid = guidGen.NewGuid();
@@ -157,7 +156,8 @@ public class GuidGeneratorConcurrentBenchmark
     {
         this.ParallelInvoke(count =>
         {
-            var guidGen = GuidGenerator.OfVersion(MaxValue);
+            var maxValue = GuidVersion.MaxValue;
+            var guidGen = GuidGenerator.OfVersion(maxValue);
             for (int index = 0; index < count; index++)
             {
                 var guid = guidGen.NewGuid();

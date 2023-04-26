@@ -91,7 +91,7 @@ partial class GuidGeneratorTest
     }
 
     [TestMethod]
-    public void NewGuid_NonDceSucurityVersions_CatchNotSupportedException()
+    public void NewGuid_NonDceSecurityVersions_CatchNotSupportedException()
     {
         foreach (var version in new[]
         {

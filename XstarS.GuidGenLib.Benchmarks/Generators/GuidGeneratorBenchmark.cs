@@ -3,8 +3,6 @@ using BenchmarkDotNet.Attributes;
 
 namespace XNetEx.Guids.Generators;
 
-using static GuidVersion;
-
 [MemoryDiagnoser]
 public class GuidGeneratorBenchmark
 {
@@ -25,7 +23,8 @@ public class GuidGeneratorBenchmark
     [Benchmark]
     public void EmptyGenerate()
     {
-        var guidGen = GuidGenerator.OfVersion(Empty);
+        var empty = GuidVersion.Empty;
+        var guidGen = GuidGenerator.OfVersion(empty);
         var count = this.GuidCount;
         for (int index = 0; index < count; index++)
         {
@@ -36,7 +35,7 @@ public class GuidGeneratorBenchmark
     [Benchmark]
     public void GuidV1Generate()
     {
-        var guidGen = GuidGenerator.OfVersion(Version1);
+        var guidGen = GuidGenerator.OfVersion(1);
         var count = this.GuidCount;
         for (int index = 0; index < count; index++)
         {
@@ -47,7 +46,7 @@ public class GuidGeneratorBenchmark
     [Benchmark]
     public void GuidV2Generate()
     {
-        var guidGen = GuidGenerator.OfVersion(Version2);
+        var guidGen = GuidGenerator.OfVersion(2);
         var count = this.GuidCount;
         for (int index = 0; index < count; index++)
         {
@@ -58,7 +57,7 @@ public class GuidGeneratorBenchmark
     [Benchmark]
     public void GuidV3Generate()
     {
-        var guidGen = GuidGenerator.OfVersion(Version3);
+        var guidGen = GuidGenerator.OfVersion(3);
         var count = this.GuidCount;
         for (int index = 0; index < count; index++)
         {
@@ -69,7 +68,7 @@ public class GuidGeneratorBenchmark
     [Benchmark]
     public void GuidV4Generate()
     {
-        var guidGen = GuidGenerator.OfVersion(Version4);
+        var guidGen = GuidGenerator.OfVersion(4);
         var count = this.GuidCount;
         for (int index = 0; index < count; index++)
         {
@@ -80,7 +79,7 @@ public class GuidGeneratorBenchmark
     [Benchmark]
     public void GuidV5Generate()
     {
-        var guidGen = GuidGenerator.OfVersion(Version5);
+        var guidGen = GuidGenerator.OfVersion(5);
         var count = this.GuidCount;
         for (int index = 0; index < count; index++)
         {
@@ -91,7 +90,7 @@ public class GuidGeneratorBenchmark
     [Benchmark]
     public void GuidV6Generate()
     {
-        var guidGen = GuidGenerator.OfVersion(Version6);
+        var guidGen = GuidGenerator.OfVersion(6);
         var count = this.GuidCount;
         for (int index = 0; index < count; index++)
         {
@@ -102,7 +101,7 @@ public class GuidGeneratorBenchmark
     [Benchmark]
     public void GuidV7Generate()
     {
-        var guidGen = GuidGenerator.OfVersion(Version7);
+        var guidGen = GuidGenerator.OfVersion(7);
         var count = this.GuidCount;
         for (int index = 0; index < count; index++)
         {
@@ -113,7 +112,7 @@ public class GuidGeneratorBenchmark
     [Benchmark]
     public void GuidV8Generate()
     {
-        var guidGen = GuidGenerator.OfVersion(Version8);
+        var guidGen = GuidGenerator.OfVersion(8);
         var count = this.GuidCount;
         for (int index = 0; index < count; index++)
         {
@@ -124,7 +123,8 @@ public class GuidGeneratorBenchmark
     [Benchmark]
     public void MaxValueGenerate()
     {
-        var guidGen = GuidGenerator.OfVersion(MaxValue);
+        var maxValue = GuidVersion.MaxValue;
+        var guidGen = GuidGenerator.OfVersion(maxValue);
         var count = this.GuidCount;
         for (int index = 0; index < count; index++)
         {

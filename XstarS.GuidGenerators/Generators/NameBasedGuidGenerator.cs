@@ -73,7 +73,7 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
     protected abstract HashAlgorithm CreateHashing();
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-    private Guid ComputeHashToGuid(Span<byte> input)
+    private Guid ComputeHashToGuid(ReadOnlySpan<byte> input)
     {
         var hashings = this.Hashings;
         if (!hashings.TryTake(out var hashing))
