@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
 
 namespace XNetEx.Guids.Generators;
 
@@ -84,30 +83,6 @@ partial class GuidGenerator
     public static IGuidGenerator Version6P => TimeBasedGuidGenerator.Sequential.InstanceP;
 
     /// <summary>
-    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-256 hashspace ID and hash algorithm.
-    /// </summary>
-    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-256 hashspace ID and hash algorithm.</returns>
-    public static INameBasedGuidGenerator Version8NSha256 => NameBasedGuidGenerator.CustomHashing.InstanceSha256;
-
-    /// <summary>
-    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-384 hashspace ID and hash algorithm.
-    /// </summary>
-    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-384 hashspace ID and hash algorithm.</returns>
-    public static INameBasedGuidGenerator Version8NSha384 => NameBasedGuidGenerator.CustomHashing.InstanceSha384;
-
-    /// <summary>
-    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-512 hashspace ID and hash algorithm.
-    /// </summary>
-    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-512 hashspace ID and hash algorithm.</returns>
-    public static INameBasedGuidGenerator Version8NSha512 => NameBasedGuidGenerator.CustomHashing.InstanceSha512;
-
-    /// <summary>
     /// Creates a new <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 1
     /// using a volatile random node ID.
     /// </summary>
@@ -122,39 +97,6 @@ partial class GuidGenerator
     /// <returns>A new <see cref="IGuidGenerator"/> instance of RFC 4122 UUID revision version 6
     /// using a volatile random node ID.</returns>
     public static IGuidGenerator CreateVersion6() => TimeBasedGuidGenerator.Sequential.CreateInstance();
-
-    /// <summary>
-    /// Creates a new <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the specified hashspace ID and hash algorithm.
-    /// </summary>
-    /// <param name="hashspaceId">The hashspace ID used to identify the hash algorithm.</param>
-    /// <param name="hashing">The hash algorithm used to transform input values.</param>
-    /// <returns>A new <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using <paramref name="hashspaceId"/> and <paramref name="hashing"/>.</returns>
-    /// <exception cref="ArgumentNullException">
-    /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">
-    /// <see cref="HashAlgorithm.HashSize"/> of <paramref name="hashing"/> is less than 128.</exception>
-    public static INameBasedGuidGenerator CreateVersion8N(Guid hashspaceId, HashAlgorithm hashing)
-    {
-        return NameBasedGuidGenerator.CustomHashing.CreateInstance(hashspaceId, hashing);
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the specified hashspace ID and hash algorithm creation delegate.
-    /// </summary>
-    /// <param name="hashspaceId">The hashspace ID used to identify the hash algorithm.</param>
-    /// <param name="hashingFactory">The delegate used to create the hash algorithm.</param>
-    /// <returns>A new <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using <paramref name="hashspaceId"/> and the hash algorithm
-    /// created by <paramref name="hashingFactory"/>.</returns>
-    /// <exception cref="ArgumentNullException">
-    /// <paramref name="hashingFactory"/> is <see langword="null"/>.</exception>
-    public static INameBasedGuidGenerator CreateVersion8N(Guid hashspaceId, Func<HashAlgorithm> hashingFactory)
-    {
-        return NameBasedGuidGenerator.CustomHashing.CreateInstance(hashspaceId, hashingFactory);
-    }
 
     /// <summary>
     /// Gets the <see cref="GuidGenerator"/> instance of the specified <see cref="GuidVersion"/>.
