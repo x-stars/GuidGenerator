@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace XNetEx.Guids.Generators;
@@ -6,64 +7,6 @@ namespace XNetEx.Guids.Generators;
 [TestClass]
 public partial class GuidGeneratorTest
 {
-    [TestMethod]
-    public void NewGuid_EmptyVersion_GetEmptyGuid()
-    {
-        var guid = GuidGenerator.Empty.NewGuid();
-        Assert.AreEqual(Guid.Empty, guid);
-    }
-
-    [TestMethod]
-    public void NewGuid_Version4_GetGuidWithVersion4()
-    {
-        var guid = GuidGenerator.Version4.NewGuid();
-        Assert.AreEqual(GuidVersion.Version4, guid.GetVersion());
-    }
-
-    [TestMethod]
-    public void NewGuid_Version4_GetGuidWithRfc4122Variant()
-    {
-        var guid = GuidGenerator.Version4.NewGuid();
-        Assert.AreEqual(GuidVariant.Rfc4122, guid.GetVariant());
-    }
-
-    [TestMethod]
-    public void NewGuid_Version4_GetDifferentGuidValues()
-    {
-        var guid0 = GuidGenerator.Version4.NewGuid();
-        var guid1 = GuidGenerator.Version4.NewGuid();
-        Assert.AreNotEqual(guid0, guid1);
-    }
-
-    [TestMethod]
-    public void NewGuid_Version8_GetGuidWithVersion8()
-    {
-        var guid = GuidGenerator.Version8.NewGuid();
-        Assert.AreEqual(GuidVersion.Version8, guid.GetVersion());
-    }
-
-    [TestMethod]
-    public void NewGuid_Version8_GetGuidWithRfc4122Variant()
-    {
-        var guid = GuidGenerator.Version8.NewGuid();
-        Assert.AreEqual(GuidVariant.Rfc4122, guid.GetVariant());
-    }
-
-    [TestMethod]
-    public void NewGuid_Version8_GetDifferentGuidValues()
-    {
-        var guid0 = GuidGenerator.Version8.NewGuid();
-        var guid1 = GuidGenerator.Version8.NewGuid();
-        Assert.AreNotEqual(guid0, guid1);
-    }
-
-    [TestMethod]
-    public void NewGuid_VersionMaxValue_GetGuidMaxValue()
-    {
-        var guid = GuidGenerator.MaxValue.NewGuid();
-        Assert.AreEqual(Uuid.MaxValue, guid);
-    }
-
     [TestMethod]
     public void OfVersion_AllVersionBytes_GetSameInstanceOfVersion()
     {
@@ -116,5 +59,60 @@ public partial class GuidGeneratorTest
     {
         Assert.ThrowsException<ArgumentOutOfRangeException>(
             () => GuidGenerator.OfVersion((GuidVersion)0xFF));
+    }
+
+    [TestMethod]
+    public void OfHashAlgorithm_AllSupportedNameStrings_GetSameInstanceOfVersion()
+    {
+        Assert.AreSame(GuidGenerator.Version3,
+                       GuidGenerator.OfHashAlgorithm(nameof(MD5)));
+        Assert.AreSame(GuidGenerator.Version5,
+                       GuidGenerator.OfHashAlgorithm(nameof(SHA1)));
+        Assert.AreSame(GuidGenerator.Version8NSha256,
+                       GuidGenerator.OfHashAlgorithm(nameof(SHA256)));
+        Assert.AreSame(GuidGenerator.Version8NSha384,
+                       GuidGenerator.OfHashAlgorithm(nameof(SHA384)));
+        Assert.AreSame(GuidGenerator.Version8NSha512,
+                       GuidGenerator.OfHashAlgorithm(nameof(SHA512)));
+    }
+
+    [TestMethod]
+    public void OfHashAlgorithm_AllSupportedNameObjects_GetSameInstanceOfVersion()
+    {
+        Assert.AreSame(GuidGenerator.Version3,
+                       GuidGenerator.OfHashAlgorithm(HashAlgorithmName.MD5));
+        Assert.AreSame(GuidGenerator.Version5,
+                       GuidGenerator.OfHashAlgorithm(HashAlgorithmName.SHA1));
+        Assert.AreSame(GuidGenerator.Version8NSha256,
+                       GuidGenerator.OfHashAlgorithm(HashAlgorithmName.SHA256));
+        Assert.AreSame(GuidGenerator.Version8NSha384,
+                       GuidGenerator.OfHashAlgorithm(HashAlgorithmName.SHA384));
+        Assert.AreSame(GuidGenerator.Version8NSha512,
+                       GuidGenerator.OfHashAlgorithm(HashAlgorithmName.SHA512));
+    }
+
+    [TestMethod]
+    public void OfHashAlgorithm_NullNameString_CatchArgumentNullException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(
+            () => GuidGenerator.OfHashAlgorithm(null!));
+    }
+
+    [TestMethod]
+    public void OfHashAlgorithm_InvalidNameStrings_CatchArgumentOutOfRangeException()
+    {
+        Assert.ThrowsException<ArgumentOutOfRangeException>(
+            () => GuidGenerator.OfHashAlgorithm(string.Empty));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(
+            () => GuidGenerator.OfHashAlgorithm("SHA-512/256"));
+    }
+
+    [TestMethod]
+    public void OfHashAlgorithm_InvalidNameObjects_CatchArgumentOutOfRangeException()
+    {
+        Assert.ThrowsException<ArgumentOutOfRangeException>(
+            () => GuidGenerator.OfHashAlgorithm(default(HashAlgorithmName)));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(
+            () => GuidGenerator.OfHashAlgorithm(new HashAlgorithmName("SHA-512/256")));
     }
 }
