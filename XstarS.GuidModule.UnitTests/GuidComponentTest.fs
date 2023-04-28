@@ -5,7 +5,7 @@ open Microsoft.VisualStudio.TestTools.UnitTesting
 open XNetEx.FSharp.UnitTesting.MSTest
 
 [<TestClass>]
-type GuidComponentsTest() =
+type GuidComponentTest() =
 
     [<TestMethod>]
     member _.GetVariant_Version1Guid_GetRfc4122Variant() =
