@@ -80,31 +80,23 @@ internal abstract class LocalIdProvider
 
         internal Windows() { }
 
-        protected override unsafe int GetLocalUserId()
+        protected override int GetLocalUserId()
         {
             var userSid = WindowsIdentity.GetCurrent().User;
-            if (userSid is null) { return 0; }
-            var sidBytes = new byte[userSid.BinaryLength];
-            userSid.GetBinaryForm(sidBytes, 0);
-#if NETCOREAPP3_0_OR_GREATER
-            return Unsafe.ReadUnaligned<int>(ref sidBytes[^4]);
-#elif NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-            return MemoryMarshal.Read<int>(
-                ((ReadOnlySpan<byte>)sidBytes)[^4..]);
-#else
-            fixed (byte* pLastSubAuth = &sidBytes[^4])
-            {
-                return *(int*)pLastSubAuth;
-            }
-#endif
+            return this.GetLocalIdFromSid(userSid);
         }
 
-        protected override unsafe int GetLocalGroupId()
+        protected override int GetLocalGroupId()
         {
-            var finalGroupSid = this.GetFirstGroupSid();
-            if (finalGroupSid is null) { return 0; }
-            var sidBytes = new byte[finalGroupSid.BinaryLength];
-            finalGroupSid.GetBinaryForm(sidBytes, 0);
+            var groupSid = this.GetFirstGroupSid();
+            return this.GetLocalIdFromSid(groupSid);
+        }
+
+        private unsafe int GetLocalIdFromSid(SecurityIdentifier? sid)
+        {
+            if (sid is null) { return 0; }
+            var sidBytes = new byte[sid.BinaryLength];
+            sid.GetBinaryForm(sidBytes, 0);
 #if NETCOREAPP3_0_OR_GREATER
             return Unsafe.ReadUnaligned<int>(ref sidBytes[^4]);
 #elif NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -123,7 +115,7 @@ internal abstract class LocalIdProvider
             var groupIdRefs = WindowsIdentity.GetCurrent().Groups;
             if (groupIdRefs is null) { return null; }
             var anyGroupSid = default(SecurityIdentifier);
-            var commonGroupSid = default(SecurityIdentifier);
+            var normalGroupSid = default(SecurityIdentifier);
             foreach (var groupIdRef in groupIdRefs)
             {
                 if (groupIdRef is SecurityIdentifier groupSid)
@@ -131,11 +123,11 @@ internal abstract class LocalIdProvider
                     anyGroupSid ??= groupSid;
                     if (!this.IsWellKnownSid(groupSid))
                     {
-                        commonGroupSid ??= groupSid;
+                        normalGroupSid ??= groupSid;
                     }
                 }
             }
-            return commonGroupSid ?? anyGroupSid;
+            return normalGroupSid ?? anyGroupSid;
         }
 
         private bool IsWellKnownSid(SecurityIdentifier sid)
