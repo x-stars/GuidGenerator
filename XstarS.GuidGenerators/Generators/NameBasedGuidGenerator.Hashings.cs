@@ -181,13 +181,7 @@ partial class NameBasedGuidGenerator
                     if (this.IsDisposed) { return; }
                     if (disposing)
                     {
-                        var hashings = this.Hashings;
-                        hashings.CompleteAdding();
-                        while (hashings.TryTake(out var hashing))
-                        {
-                            hashing.Dispose();
-                        }
-                        hashings.Dispose();
+                        this.DisposeHashings();
                     }
                     this.IsDisposed = true;
                 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Security.Cryptography;
+using System.Threading;
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -12,14 +13,17 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 {
     private readonly BlockingCollection<HashAlgorithm> Hashings;
 
+    private volatile HashAlgorithm? FastHashing;
+
     private readonly Guid? HashspaceId;
 
-    private NameBasedGuidGenerator() : this(hashspaceId: null) { }
+    protected NameBasedGuidGenerator() : this(hashspaceId: null) { }
 
-    private NameBasedGuidGenerator(Guid? hashspaceId)
+    protected NameBasedGuidGenerator(Guid? hashspaceId)
     {
         var concurrency = Environment.ProcessorCount * 2;
         this.Hashings = new BlockingCollection<HashAlgorithm>(concurrency);
+        this.FastHashing = null;
         this.HashspaceId = hashspaceId;
     }
 
@@ -72,13 +76,28 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 
     protected abstract HashAlgorithm CreateHashing();
 
+    protected void DisposeHashings()
+    {
+        var hashings = this.Hashings;
+        hashings.CompleteAdding();
+        while (hashings.TryTake(out var hashing))
+        {
+            hashing.Dispose();
+        }
+        hashings.Dispose();
+        this.FastHashing?.Dispose();
+    }
+
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     private Guid ComputeHashToGuid(ReadOnlySpan<byte> input)
     {
-        var hashings = this.Hashings;
-        if (!hashings.TryTake(out var hashing))
+        var hashing = Interlocked.Exchange(ref this.FastHashing, null);
+        if (hashing is null)
         {
-            hashing = this.CreateHashing();
+            if (!this.Hashings.TryTake(out hashing))
+            {
+                hashing = this.CreateHashing();
+            }
         }
         var hashSize = hashing.HashSize / 8;
         var hash = (stackalloc byte[hashSize]);
@@ -89,9 +108,12 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
             throw new InvalidOperationException(
                 "The algorithm's implementation is incorrect.");
         }
-        if (!hashings.TryAdd(hashing))
+        if (Interlocked.CompareExchange(ref this.FastHashing, hashing, null) != null)
         {
-            hashing.Dispose();
+            if (!this.Hashings.TryAdd(hashing))
+            {
+                hashing.Dispose();
+            }
         }
         return this.HashToGuid(hash);
     }
@@ -133,15 +155,21 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 
     private byte[] ComputeHash(byte[] input)
     {
-        var hashings = this.Hashings;
-        if (!hashings.TryTake(out var hashing))
+        var hashing = Interlocked.Exchange(ref this.FastHashing, null);
+        if (hashing is null)
         {
-            hashing = this.CreateHashing();
+            if (!this.Hashings.TryTake(out hashing))
+            {
+                hashing = this.CreateHashing();
+            }
         }
         var hash = hashing.ComputeHash(input);
-        if (!hashings.TryAdd(hashing))
+        if (Interlocked.CompareExchange(ref this.FastHashing, hashing, null) != null)
         {
-            hashing.Dispose();
+            if (!this.Hashings.TryAdd(hashing))
+            {
+                hashing.Dispose();
+            }
         }
         return hash;
     }
