@@ -122,5 +122,31 @@ public partial class GuidGeneratorTest
         Assert.ThrowsException<ArgumentOutOfRangeException>(
             () => GuidGenerator.OfHashAlgorithm(new HashAlgorithmName("SHA-512/256")));
     }
+
+    [TestMethod]
+    public void CreatePooled_BySpecifiedVersion_GetSameVersionAndVariant()
+    {
+        var factory = GuidGenerator.CreateVersion1R;
+        var guidGen = factory.Invoke();
+        using var guidGenPool = GuidGenerator.CreatePooled(factory);
+        Assert.AreEqual(guidGen.Version, guidGenPool.Version);
+        Assert.AreEqual(guidGen.Variant, guidGenPool.Variant);
+    }
+
+    [TestMethod]
+    public void CreatePooled_NullGeneratorFactory_CatchArgumentNullException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(
+            () => GuidGenerator.CreatePooled(null!));
+    }
+
+    [TestMethod]
+    public void CreatePooled_InvalidPoolCapacity_CatchArgumentOutOfRangeException()
+    {
+        Assert.ThrowsException<ArgumentOutOfRangeException>(
+            () => GuidGenerator.CreatePooled(GuidGenerator.CreateVersion1R, 0));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(
+            () => GuidGenerator.CreatePooled(GuidGenerator.CreateVersion1R, int.MinValue));
+    }
 #endif
 }
