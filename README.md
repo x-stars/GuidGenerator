@@ -212,7 +212,8 @@ Generate RFC 4122 revision compliant GUIDs.
 Usage:  GuidGen[.exe] [-V1|-V4|-V1R] [-Cn]
         GuidGen[.exe] -V2 Domain [SiteID]
         GuidGen[.exe] -V3|-V5 :NS|GuidNS [Name]
-        GuidGen[.exe] [-V6|-V7|-V8|-V6P] [-Cn]
+        GuidGen[.exe] -V6|-V7|-V8|-V6P [-Cn]
+        GuidGen[.exe] -V8N Hash :NS|GuidNS [Name]
         GuidGen[.exe] -?|-H|-Help
 Parameters:
     -V1     generate time-based GUID.
@@ -226,6 +227,7 @@ Parameters:
     -V1R    generate time-based GUID (random node ID).
     -V6P    generate reordered time-based GUID
             (IEEE 802 MAC address node ID).
+    -V8N    generate custom GUID (name-based).
     -Cn     generate n GUIDs of the current version.
     Domain  specify a DCE Security domain,
             which can be Person, Group or Org.
@@ -236,6 +238,8 @@ Parameters:
     GuidNS  specify a user-defined GUID namespace.
     Name    specify the name to generate GUID,
             or empty to read from standard input.
+    Hash    specify a well-known hash algorithm,
+            which can be SHA256, SHA384 or SHA512.
     -?|-H|-Help
             show the current help message.
 ```
