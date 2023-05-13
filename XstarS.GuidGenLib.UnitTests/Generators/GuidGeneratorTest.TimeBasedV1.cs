@@ -1,5 +1,10 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#if !FEATURE_DISABLE_UUIDREV
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
+#endif
 
 namespace XNetEx.Guids.Generators;
 
@@ -105,4 +110,25 @@ partial class GuidGeneratorTest
         _ = guid1.TryGetNodeId(out var nodeId1);
         CollectionAssert.AreNotEqual(nodeId0, nodeId1);
     }
+
+#if !FEATURE_DISABLE_UUIDREV
+    [TestMethod]
+    public void NewGuid_CreatePooledV1R_GetAllNonEmptyGuids()
+    {
+        using var guidGen = GuidGenerator.CreatePooled(GuidGenerator.CreateVersion1R);
+        var countBox = new StrongBox<int>(0);
+        Parallel.For(0, 1000, part =>
+        {
+            for (int index = 0; index < 1000; index++)
+            {
+                var guid = guidGen.NewGuid();
+                if (guid != Guid.Empty)
+                {
+                    Interlocked.Increment(ref countBox.Value);
+                }
+            }
+        });
+        Assert.AreEqual(1000 * 1000, countBox.Value);
+    }
+#endif
 }
