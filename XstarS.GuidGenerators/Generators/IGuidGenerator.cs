@@ -99,3 +99,23 @@ public interface IDceSecurityGuidGenerator : IGuidGeneratorInfo
     /// This instance has already been disposed.</exception>
     Guid NewGuid(DceSecurityDomain domain, int? localId = null);
 }
+
+#if !FEATURE_DISABLE_UUIDREV
+/// <summary>
+/// Provides a method to generate a <see cref="Guid"/> with blocking.
+/// </summary>
+public interface IBlockingGuidGenerator : IGuidGenerator
+{
+    /// <summary>
+    /// Tries to generate a new <see cref="Guid"/> instance without blocking.
+    /// </summary>
+    /// <param name="result">When this method returns <see langword="true"/>,
+    /// contains the generated <see cref="Guid"/> instance.</param>
+    /// <returns><see langword="true"/> if this instance can
+    /// generate a new <see cref="Guid"/> instance without blocking;
+    /// otherwise, <see langword="false"/>.</returns>
+    /// <exception cref="ObjectDisposedException">
+    /// This instance has already been disposed.</exception>
+    bool TryNewGuid(out Guid result);
+}
+#endif

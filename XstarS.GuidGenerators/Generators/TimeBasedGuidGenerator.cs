@@ -6,6 +6,9 @@ using XNetEx.Guids.Components;
 namespace XNetEx.Guids.Generators;
 
 internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
+#if !FEATURE_DISABLE_UUIDREV
+    , IBlockingGuidGenerator
+#endif
 {
     private static volatile TimeBasedGuidGenerator? Singleton;
 
@@ -79,31 +82,42 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     public override Guid NewGuid()
     {
-        var guid = default(Guid);
-        this.FillTimeAndNodeFields(ref guid);
-        this.FillVersionField(ref guid);
-        this.FillVariantField(ref guid);
-        return guid;
+        var spinner = new SpinWait();
+        while (true)
+        {
+            if (this.TryNewGuid(out var guid))
+            {
+                return guid;
+            }
+            spinner.SpinOnce();
+        }
     }
 
-    private void FillTimeAndNodeFields(ref Guid guid)
+    public bool TryNewGuid(out Guid result)
     {
-        var spinner = new SpinWait();
+        result = default(Guid);
+        if (this.TryFillTimeAndNodeFields(ref result))
+        {
+            this.FillVersionField(ref result);
+            this.FillVariantField(ref result);
+            return true;
+        }
+        return false;
+    }
+
+    private bool TryFillTimeAndNodeFields(ref Guid guid)
+    {
         var state = this.GeneratorState;
-    RefreshState:
         var timestamp = this.CurrentTimestamp;
         var nodeId = this.NodeIdBytes;
         var refreshed = state.Refresh(
             timestamp, nodeId, out var clockSeq);
-        if (!refreshed)
-        {
-            spinner.SpinOnce();
-            goto RefreshState;
-        }
+        if (!refreshed) { return false; }
         var components = this.GuidComponents;
         components.SetTimestamp(ref guid, timestamp);
         components.SetClockSequence(ref guid, clockSeq);
         components.SetNodeId(ref guid, nodeId);
+        return true;
     }
 
 #if !FEATURE_DISABLE_UUIDREV
