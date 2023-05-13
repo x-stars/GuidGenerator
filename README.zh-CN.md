@@ -2,7 +2,7 @@
 
 [English](README.md) | [简体中文](README.zh-cn.md)
 
-为 .NET 平台提供符合 RFC 4122 UUID 标准以及 RFC4122bis UUIDREV 草稿的 GUID 生成器。
+为 .NET 平台提供符合 RFC 4122 UUID 标准的 GUID 生成器。
 
 ## RFC 4122 UUID 标准
 
@@ -18,18 +18,6 @@ RFC 4122 定义了以下 5 种 UUID 版本：
 
 > * [RFC 4122 UUID 标准](https://www.rfc-editor.org/rfc/rfc4122)
 > * [DCE Security UUID 标准](https://pubs.opengroup.org/onlinepubs/9696989899/chap5.htm)
-
-## RFC4122bis UUIDREV 草稿
-
-RFC4122bis UUIDREV 定义了以下 3 种 UUID 版本：
-
-* Version 6: 基于时间戳，与 Version 1 基本等价，但将时间戳调整为大端序
-* Version 7: 基于 Unix 时间戳，包含 48 位时间戳和 74 位随机数，与 ULID 基本等价
-* Version 8: 预留给自定义 UUID 格式，除变体和版本外的字段均由用户定义
-
-除此之外，还有一个特殊的 Max UUID，其所有字节均为 `0xff`，在 .NET 中暂无等价实现（本项目提供）。
-
-> * [RFC4122bis UUIDREV 草稿](https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis)
 
 ## GUID 生成库使用
 
@@ -48,10 +36,6 @@ var guidV1 = GuidGenerator.Version1.NewGuid();
 // name-based GUID generation.
 var guidV5 = GuidGenerator.Version5.NewGuid(GuidNamespaces.Dns, "github.com");
 // 6fca3dd2-d61d-58de-9363-1574b382ea68s
-
-// Unix time-based GUID generation.
-var guidV7 = GuidGenerator.Version7.NewGuid();
-// 018640c6-0dc9-7189-a644-31acdba4cabc
 ```
 
 ### 工厂方法获取实例后调用
@@ -67,10 +51,6 @@ var guidV1 = GuidGenerator.OfVersion(1).NewGuid();
 // generate name-based GUID.
 var guidV5 = GuidGenerator.OfVersion(5).NewGuid(GuidNamespaces.Dns, "github.com");
 // 6fca3dd2-d61d-58de-9363-1574b382ea68s
-
-// generate Unix time-based GUID.
-var guidV7 = GuidGenerator.OfVersion(7).NewGuid();
-// 018640c6-0dc9-7189-a644-31acdba4cabc
 ```
 
 ### GUID 生成器状态存储
@@ -104,19 +84,13 @@ using System;
 using XNetEx.Guids;
 
 // build time-based GUID.
-var guidV6 = Guid.Empty
+var guidV1 = Guid.Empty
     .ReplaceVariant(GuidVariant.Rfc4122)
-    .ReplaceVersion(GuidVersion.Version6)
+    .ReplaceVersion(GuidVersion.Version1)
     .ReplaceTimestamp(new DateTime(0x08BEFFD14FDBF810, DateTimeKind.Utc))
     .ReplaceClockSequence((short)0x00b4)
     .ReplaceNodeId(new byte[] { 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8 });
-    // 1d19dad6-ba7b-6810-80b4-00c04fd430c8
-
-// build Unix time-based GUID.
-var guidV7 = Guid.NewGuid()
-    .ReplaceVersion(GuidVersion.Version7)
-    .ReplaceTimestamp(new DateTime(0x08D9F638A666EB00, DateTimeKind.Utc));
-    // 017f22e2-79b0-774a-8e21-a60c1ca56e82
+    // 6ba7b810-9dad-11d1-80b4-00c04fd430c8
 ```
 
 ## F# GUID 模块使用
@@ -140,8 +114,6 @@ let loadResult = Guid.loadState "state.bin"
 let guidV1 = Guid.newV1 () // 3944a871-aa14-11ed-8791-a9a9a46de54f
 // generate randomized GUID.
 let guidV4 = Guid.newV4 () // 0658f02d-45a4-4c25-b9d0-8ddbda3c3e08
-// generate Unix time-based GUID.
-let guidV7 = Guid.newV7 () // 018640c6-0dc9-7189-a644-31acdba4cabc
 
 // generate name-based GUID.
 let guidV3 = Guid.newV3S Guid.nsDns "github.com"
@@ -152,17 +124,11 @@ let guidV5 = "github.com" |> Guid.newV5S Guid.nsDns
 // build time-based GUID.
 let guid6 = Guid.empty
             |> Guid.replaceVariant Guid.Variant.Rfc4122
-            |> Guid.replaceVersion Guid.Version.Version6
+            |> Guid.replaceVersion Guid.Version.Version1
             |> Guid.replaceTime DateTime.UtcNow
             |> Guid.replaceClockSeq 0x0123s
             |> Guid.replaceNodeId (Array.init 6 (((+) 1) >> byte))
-            // 1edaa178-dec2-6054-8123-010203040506
-
-// build Unix time-based GUID.
-let guid7 = Guid.newV4 ()
-            |> Guid.replaceVersion Guid.Version.Version7
-            |> Guid.replaceTime DateTime.UtcNow
-            // 018640db-de47-7ab9-bf00-6119a1033265
+            // 8dec2054-aa17-11ed-8123-010203040506
 ```
 
 ### 常见 GUID 相关操作
@@ -207,12 +173,10 @@ GUID 生成命令行工具的工程位于 [XstarS.GuidGen.CLI](XstarS.GuidGen.CL
 
 ``` Batch
 > GuidGen -?
-Generate RFC 4122 revision compliant GUIDs.
+Generate RFC 4122 compliant GUIDs.
 Usage:  GuidGen[.exe] [-V1|-V4|-V1R] [-Cn]
         GuidGen[.exe] -V2 Domain [SiteID]
         GuidGen[.exe] -V3|-V5 :NS|GuidNS [Name]
-        GuidGen[.exe] -V6|-V7|-V8|-V6P [-Cn]
-        GuidGen[.exe] -V8N Hash :NS|GuidNS [Name]
         GuidGen[.exe] -?|-H|-Help
 Parameters:
     -V1     generate time-based GUID.
@@ -220,13 +184,7 @@ Parameters:
     -V3     generate name-based GUID by MD5 hashing.
     -V4     generate pseudo-random GUID (default).
     -V5     generate name-based GUID by SHA1 hashing.
-    -V6     generate reordered time-based GUID.
-    -V7     generate Unix Epoch time-based GUID.
-    -V8     generate custom GUID (example impl).
     -V1R    generate time-based GUID (random node ID).
-    -V6P    generate reordered time-based GUID
-            (IEEE 802 MAC address node ID).
-    -V8N    generate custom GUID (name-based).
     -Cn     generate n GUIDs of the current version.
     Domain  specify a DCE Security domain,
             which can be Person, Group or Org.
@@ -237,8 +195,6 @@ Parameters:
     GuidNS  specify a user-defined GUID namespace.
     Name    specify the name to generate GUID,
             or empty to read from standard input.
-    Hash    specify a well-known hash algorithm,
-            which can be SHA256, SHA384 or SHA512.
     -?|-H|-Help
             show the current help message.
 ```
@@ -258,8 +214,6 @@ d0bb2cf9-ba9a-4d10-bc58-cfc7b9bd304a
 6fca3dd2-d61d-58de-9363-1574b382ea68
 > GuidGen -V5 00000000-0000-0000-0000-000000000000 ""
 e129f27c-5103-5c5c-844b-cdf0a15e160d
-> GuidGen -V7
-018640c6-0dc9-7189-a644-31acdba4cabc
 ```
 
 ## 性能基准测试

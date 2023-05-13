@@ -2,7 +2,7 @@
 
 [English](README.md) | [简体中文](README.zh-cn.md)
 
-Provides RFC 4122 UUID and RFC4122bis UUIDREV (draft) compliant GUID generators for .NET platform.
+Provides RFC 4122 UUID compliant GUID generators for .NET platform.
 
 ## RFC 4122 UUID Standard
 
@@ -18,18 +18,6 @@ There is also a special Nil UUID whose bytes are all `0x00`s, which is equivalen
 
 > * [RFC 4122 UUID Standard](https://www.rfc-editor.org/rfc/rfc4122)
 > * [DCE Security UUID Standard](https://pubs.opengroup.org/onlinepubs/9696989899/chap5.htm)
-
-## RFC4122bis UUIDREV Draft
-
-RFC4122bis UUIDREV defines the following three versions of UUID:
-
-* Version 6: The reordered time-based version, field-compatible with Version 1 except that the timestamp is reordered to big-endian order
-* Version 7: The Unix Epoch time-based version, contains a 48-bit timestamp and a 74-bit random number, field-compatible with ULID
-* Version 8: Reserved for custom UUID formats, fields except the variant and version are user-defined
-
-There is also a special Max UUID whose bytes are all `0xff`s, which has no equivalent implementation in .NET (provided in this project).
-
-> * [RFC4122bis UUIDREV Draft](https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis)
 
 ## GUID Generator Library Usage
 
@@ -48,10 +36,6 @@ var guidV1 = GuidGenerator.Version1.NewGuid();
 // name-based GUID generation.
 var guidV5 = GuidGenerator.Version5.NewGuid(GuidNamespaces.Dns, "github.com");
 // 6fca3dd2-d61d-58de-9363-1574b382ea68s
-
-// Unix time-based GUID generation.
-var guidV7 = GuidGenerator.Version7.NewGuid();
-// 018640c6-0dc9-7189-a644-31acdba4cabc
 ```
 
 ### Get Generator Instance by the Factory Method
@@ -67,10 +51,6 @@ var guidV1 = GuidGenerator.OfVersion(1).NewGuid();
 // generate name-based GUID.
 var guidV5 = GuidGenerator.OfVersion(5).NewGuid(GuidNamespaces.Dns, "github.com");
 // 6fca3dd2-d61d-58de-9363-1574b382ea68s
-
-// generate Unix time-based GUID.
-var guidV7 = GuidGenerator.OfVersion(7).NewGuid();
-// 018640c6-0dc9-7189-a644-31acdba4cabc
 ```
 
 ### GUID Generator State Storage
@@ -104,19 +84,13 @@ using System;
 using XNetEx.Guids;
 
 // build time-based GUID.
-var guidV6 = Guid.Empty
+var guidV1 = Guid.Empty
     .ReplaceVariant(GuidVariant.Rfc4122)
-    .ReplaceVersion(GuidVersion.Version6)
+    .ReplaceVersion(GuidVersion.Version1)
     .ReplaceTimestamp(new DateTime(0x08BEFFD14FDBF810, DateTimeKind.Utc))
     .ReplaceClockSequence((short)0x00b4)
     .ReplaceNodeId(new byte[] { 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8 });
-    // 1d19dad6-ba7b-6810-80b4-00c04fd430c8
-
-// build Unix time-based GUID.
-var guidV7 = Guid.NewGuid()
-    .ReplaceVersion(GuidVersion.Version7)
-    .ReplaceTimestamp(new DateTime(0x08D9F638A666EB00, DateTimeKind.Utc));
-    // 017f22e2-79b0-774a-8e21-a60c1ca56e82
+    // 6ba7b810-9dad-11d1-80b4-00c04fd430c8
 ```
 
 ## F# GUID Module Usage
@@ -141,8 +115,6 @@ let loadResult = Guid.loadState "state.bin"
 let guidV1 = Guid.newV1 () // 3944a871-aa14-11ed-8791-a9a9a46de54f
 // generate randomized GUID.
 let guidV4 = Guid.newV4 () // 0658f02d-45a4-4c25-b9d0-8ddbda3c3e08
-// generate Unix time-based GUID.
-let guidV7 = Guid.newV7 () // 018640c6-0dc9-7189-a644-31acdba4cabc
 
 // generate name-based GUID.
 let guidV3 = Guid.newV3S Guid.nsDns "github.com"
@@ -153,17 +125,11 @@ let guidV5 = "github.com" |> Guid.newV5S Guid.nsDns
 // build time-based GUID.
 let guid6 = Guid.empty
             |> Guid.replaceVariant Guid.Variant.Rfc4122
-            |> Guid.replaceVersion Guid.Version.Version6
+            |> Guid.replaceVersion Guid.Version.Version1
             |> Guid.replaceTime DateTime.UtcNow
             |> Guid.replaceClockSeq 0x0123s
             |> Guid.replaceNodeId (Array.init 6 (((+) 1) >> byte))
-            // 1edaa178-dec2-6054-8123-010203040506
-
-// build Unix time-based GUID.
-let guid7 = Guid.newV4 ()
-            |> Guid.replaceVersion Guid.Version.Version7
-            |> Guid.replaceTime DateTime.UtcNow
-            // 018640db-de47-7ab9-bf00-6119a1033265
+            // 8dec2054-aa17-11ed-8123-010203040506
 ```
 
 ### Common GUID Operations
@@ -208,12 +174,10 @@ The GUID Generator Command Line Tool project is located at [XstarS.GuidGen.CLI](
 
 ``` Batch
 > GuidGen -?
-Generate RFC 4122 revision compliant GUIDs.
+Generate RFC 4122 compliant GUIDs.
 Usage:  GuidGen[.exe] [-V1|-V4|-V1R] [-Cn]
         GuidGen[.exe] -V2 Domain [SiteID]
         GuidGen[.exe] -V3|-V5 :NS|GuidNS [Name]
-        GuidGen[.exe] -V6|-V7|-V8|-V6P [-Cn]
-        GuidGen[.exe] -V8N Hash :NS|GuidNS [Name]
         GuidGen[.exe] -?|-H|-Help
 Parameters:
     -V1     generate time-based GUID.
@@ -221,13 +185,7 @@ Parameters:
     -V3     generate name-based GUID by MD5 hashing.
     -V4     generate pseudo-random GUID (default).
     -V5     generate name-based GUID by SHA1 hashing.
-    -V6     generate reordered time-based GUID.
-    -V7     generate Unix Epoch time-based GUID.
-    -V8     generate custom GUID (example impl).
     -V1R    generate time-based GUID (random node ID).
-    -V6P    generate reordered time-based GUID
-            (IEEE 802 MAC address node ID).
-    -V8N    generate custom GUID (name-based).
     -Cn     generate n GUIDs of the current version.
     Domain  specify a DCE Security domain,
             which can be Person, Group or Org.
@@ -238,8 +196,6 @@ Parameters:
     GuidNS  specify a user-defined GUID namespace.
     Name    specify the name to generate GUID,
             or empty to read from standard input.
-    Hash    specify a well-known hash algorithm,
-            which can be SHA256, SHA384 or SHA512.
     -?|-H|-Help
             show the current help message.
 ```
@@ -259,8 +215,6 @@ d0bb2cf9-ba9a-4d10-bc58-cfc7b9bd304a
 6fca3dd2-d61d-58de-9363-1574b382ea68
 > GuidGen -V5 00000000-0000-0000-0000-000000000000 ""
 e129f27c-5103-5c5c-844b-cdf0a15e160d
-> GuidGen -V7
-018640c6-0dc9-7189-a644-31acdba4cabc
 ```
 
 ## Performance Benchmark
@@ -282,10 +236,6 @@ AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
 |   `GuidV3Generate` |         1 |     185.732 ns |     1.7682 ns |  3.84 |         - |
 |   `GuidV4Generate` |         1 |      46.314 ns |     0.1334 ns |  0.96 |         - |
 |   `GuidV5Generate` |         1 |     179.645 ns |     1.2292 ns |  3.71 |         - |
-|   `GuidV6Generate` |         1 |      99.296 ns |     0.0955 ns |  2.05 |         - |
-|   `GuidV7Generate` |         1 |      81.283 ns |     0.2118 ns |  1.68 |         - |
-|   `GuidV8Generate` |         1 |      82.106 ns |     1.1089 ns |  1.70 |         - |
-| `MaxValueGenerate` |         1 |       3.325 ns |     0.0189 ns |  0.07 |         - |
 |                    |           |                |               |       |           |
 |      `GuidNewGuid` |      1000 |  45,460.041 ns |   179.9489 ns |  1.00 |         - |
 |    `EmptyGenerate` |      1000 |   1,184.297 ns |     5.8722 ns |  0.03 |         - |
@@ -294,7 +244,3 @@ AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
 |   `GuidV3Generate` |      1000 | 185,048.417 ns | 1,846.3992 ns |  4.07 |         - |
 |   `GuidV4Generate` |      1000 |  46,169.122 ns |   677.1459 ns |  1.02 |         - |
 |   `GuidV5Generate` |      1000 | 182,286.320 ns | 2,713.4311 ns |  4.01 |         - |
-|   `GuidV6Generate` |      1000 | 101,001.340 ns |    35.6305 ns |  2.22 |         - |
-|   `GuidV7Generate` |      1000 |  81,433.678 ns |   488.1122 ns |  1.79 |         - |
-|   `GuidV8Generate` |      1000 |  80,638.863 ns |   226.8748 ns |  1.77 |         - |
-| `MaxValueGenerate` |      1000 |   1,186.112 ns |     3.6155 ns |  0.03 |         - |
