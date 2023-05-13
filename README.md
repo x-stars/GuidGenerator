@@ -264,33 +264,33 @@ e129f27c-5103-5c5c-844b-cdf0a15e160d
 ``` PlainText
 BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22621
 AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
-.NET SDK=7.0.102
-  [Host]     : .NET 6.0.13 (6.0.1322.58009), X64 RyuJIT
-  DefaultJob : .NET 6.0.13 (6.0.1322.58009), X64 RyuJIT
+.NET SDK=7.0.203
+  [Host]     : .NET 6.0.16 (6.0.1623.17311), X64 RyuJIT
+  DefaultJob : .NET 6.0.16 (6.0.1623.17311), X64 RyuJIT
 ```
 
 |             Method | GuidCount |           Mean |        StdDev | Ratio | Allocated |
 |------------------- |----------:|---------------:|--------------:|------:|----------:|
-|      `GuidNewGuid` |         1 |      46.657 ns |     1.5125 ns |  1.00 |         - |
-|    `EmptyGenerate` |         1 |       3.384 ns |     0.0309 ns |  0.07 |         - |
-|   `GuidV1Generate` |         1 |     101.091 ns |     0.0871 ns |  2.15 |         - |
-|   `GuidV2Generate` |         1 |     101.349 ns |     0.2543 ns |  2.17 |         - |
-|   `GuidV3Generate` |         1 |     244.030 ns |     1.5862 ns |  5.20 |         - |
-|   `GuidV4Generate` |         1 |      45.813 ns |     0.2631 ns |  0.98 |         - |
-|   `GuidV5Generate` |         1 |     244.279 ns |     2.2719 ns |  5.21 |         - |
-|   `GuidV6Generate` |         1 |      99.320 ns |     0.0593 ns |  2.12 |         - |
-|   `GuidV7Generate` |         1 |      79.996 ns |     0.4002 ns |  1.70 |         - |
-|   `GuidV8Generate` |         1 |      81.533 ns |     1.8427 ns |  1.74 |         - |
-| `MaxValueGenerate` |         1 |       2.865 ns |     0.0447 ns |  0.06 |         - |
+|      `GuidNewGuid` |         1 |      46.185 ns |     1.8593 ns |  1.00 |         - |
+|    `EmptyGenerate` |         1 |       2.851 ns |     0.0138 ns |  0.06 |         - |
+|   `GuidV1Generate` |         1 |     101.202 ns |     0.1384 ns |  2.09 |         - |
+|   `GuidV2Generate` |         1 |     101.154 ns |     0.1573 ns |  2.09 |         - |
+|   `GuidV3Generate` |         1 |     185.732 ns |     1.7682 ns |  3.84 |         - |
+|   `GuidV4Generate` |         1 |      46.314 ns |     0.1334 ns |  0.96 |         - |
+|   `GuidV5Generate` |         1 |     179.645 ns |     1.2292 ns |  3.71 |         - |
+|   `GuidV6Generate` |         1 |      99.296 ns |     0.0955 ns |  2.05 |         - |
+|   `GuidV7Generate` |         1 |      81.283 ns |     0.2118 ns |  1.68 |         - |
+|   `GuidV8Generate` |         1 |      82.106 ns |     1.1089 ns |  1.70 |         - |
+| `MaxValueGenerate` |         1 |       3.325 ns |     0.0189 ns |  0.07 |         - |
 |                    |           |                |               |       |           |
-|      `GuidNewGuid` |      1000 |  44,732.581 ns |   260.6351 ns |  1.00 |         - |
-|    `EmptyGenerate` |      1000 |   1,160.406 ns |     5.4831 ns |  0.03 |         - |
-|   `GuidV1Generate` |      1000 | 101,209.092 ns |   138.8626 ns |  2.26 |       5 B |
-|   `GuidV2Generate` |      1000 | 101,093.713 ns |   127.8971 ns |  2.26 |       5 B |
-|   `GuidV3Generate` |      1000 | 243,771.667 ns | 1,458.6792 ns |  5.45 |         - |
-|   `GuidV4Generate` |      1000 |  45,142.101 ns |   227.3051 ns |  1.01 |         - |
-|   `GuidV5Generate` |      1000 | 238,567.721 ns | 1,080.7163 ns |  5.33 |         - |
-|   `GuidV6Generate` |      1000 | 101,066.866 ns |    81.8259 ns |  2.26 |         - |
-|   `GuidV7Generate` |      1000 |  80,065.586 ns |   498.4987 ns |  1.79 |         - |
-|   `GuidV8Generate` |      1000 |  80,136.844 ns |   242.1536 ns |  1.79 |         - |
-| `MaxValueGenerate` |      1000 |   1,160.861 ns |     5.2551 ns |  0.03 |         - |
+|      `GuidNewGuid` |      1000 |  45,460.041 ns |   179.9489 ns |  1.00 |         - |
+|    `EmptyGenerate` |      1000 |   1,184.297 ns |     5.8722 ns |  0.03 |         - |
+|   `GuidV1Generate` |      1000 | 101,180.852 ns |   122.3123 ns |  2.23 |       5 B |
+|   `GuidV2Generate` |      1000 | 101,166.615 ns |   120.9984 ns |  2.23 |       5 B |
+|   `GuidV3Generate` |      1000 | 185,048.417 ns | 1,846.3992 ns |  4.07 |         - |
+|   `GuidV4Generate` |      1000 |  46,169.122 ns |   677.1459 ns |  1.02 |         - |
+|   `GuidV5Generate` |      1000 | 182,286.320 ns | 2,713.4311 ns |  4.01 |         - |
+|   `GuidV6Generate` |      1000 | 101,001.340 ns |    35.6305 ns |  2.22 |         - |
+|   `GuidV7Generate` |      1000 |  81,433.678 ns |   488.1122 ns |  1.79 |         - |
+|   `GuidV8Generate` |      1000 |  80,638.863 ns |   226.8748 ns |  1.77 |         - |
+| `MaxValueGenerate` |      1000 |   1,186.112 ns |     3.6155 ns |  0.03 |         - |
