@@ -106,6 +106,7 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         components.SetNodeId(ref guid, nodeId);
     }
 
+#if !FEATURE_DISABLE_UUIDREV
     internal sealed class Sequential : TimeBasedGuidGenerator
     {
         private static new volatile TimeBasedGuidGenerator.Sequential? Singleton;
@@ -161,4 +162,5 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
             return new TimeBasedGuidGenerator.Sequential(NodeIdSource.VolatileRandom);
         }
     }
+#endif
 }

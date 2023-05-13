@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !FEATURE_DISABLE_UUIDREV
+using System;
 using System.Security.Cryptography;
 
 namespace XNetEx.Guids.Generators;
@@ -94,3 +95,4 @@ partial class GuidGenerator
         return GuidGenerator.OfHashAlgorithm(hashingName.Name ?? string.Empty);
     }
 }
+#endif

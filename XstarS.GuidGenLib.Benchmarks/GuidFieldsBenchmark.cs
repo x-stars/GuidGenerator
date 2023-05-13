@@ -12,6 +12,9 @@ public class GuidFieldsBenchmark
     [Params(1, 10, 100, 1000)]
     public int GuidCount;
 
+    private readonly Guid GuidValue = new Guid(
+        -1, -1, -1, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
+
     private readonly byte[] GuidLowerBytes =
         new byte[] { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
 
@@ -31,7 +34,7 @@ public class GuidFieldsBenchmark
     [Benchmark(Baseline = false)]
     public void DeconstructToFields()
     {
-        var guid = Uuid.MaxValue;
+        var guid = this.GuidValue;
         var count = this.GuidCount;
         for (int index = 0; index < count; index++)
         {
@@ -55,7 +58,7 @@ public class GuidFieldsBenchmark
     [Benchmark(Baseline = false)]
     public void DeconstructToFieldsAndArray()
     {
-        var guid = Uuid.MaxValue;
+        var guid = this.GuidValue;
         var count = this.GuidCount;
         for (int index = 0; index < count; index++)
         {

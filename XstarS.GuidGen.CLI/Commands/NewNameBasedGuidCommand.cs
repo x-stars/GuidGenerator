@@ -12,6 +12,7 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
     internal static readonly NewNameBasedGuidCommand Version5 =
         new NewNameBasedGuidCommand(GuidVersion.Version5);
 
+#if !FEATURE_DISABLE_UUIDREV
     internal static readonly NewNameBasedGuidCommand Version8NSha256 =
         new NewNameBasedGuidCommand(hashingName: "SHA256");
 
@@ -20,6 +21,7 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
 
     internal static readonly NewNameBasedGuidCommand Version8NSha512 =
         new NewNameBasedGuidCommand(hashingName: "SHA512");
+#endif
 
     private readonly GuidVersion Version;
 
@@ -94,9 +96,11 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
     {
         return this.HashingName switch
         {
+#if !FEATURE_DISABLE_UUIDREV
             "SHA256" => GuidGenerator.Version8NSha256,
             "SHA384" => GuidGenerator.Version8NSha384,
             "SHA512" => GuidGenerator.Version8NSha512,
+#endif
             _ => (INameBasedGuidGenerator)GuidGenerator.OfVersion(this.Version),
         };
     }
@@ -109,7 +113,9 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
             "URL" => GuidNamespaces.Url,
             "OID" => GuidNamespaces.Oid,
             "X500" => GuidNamespaces.X500,
+#if !FEATURE_DISABLE_UUIDREV
             "MAX" => Uuid.MaxValue,
+#endif
             "NIL" or _ => Guid.Empty,
         };
         return (nsId != Guid.Empty) || (nsName == "NIL");

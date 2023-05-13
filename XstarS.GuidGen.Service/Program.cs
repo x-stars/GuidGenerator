@@ -14,6 +14,7 @@ const BindingFlags nsFlags = BindingFlags.IgnoreCase | BindingFlags.Static | Bin
 static Guid ParseGuidNs(string ns) => (typeof(GuidNamespaces).GetField(ns, nsFlags)?.GetValue(null) as Guid?) ?? Guid.ParseExact(ns, "D");
 static byte[] ParseBase64(string base64) => Convert.FromBase64String(base64.Replace('-', '+').Replace('_', '/') + new string('=', base64.Length % 4));
 
+#if !FEATURE_DISABLE_UUIDREV
 static INameBasedGuidGenerator ParseHashName(string hash) => hash.ToUpperInvariant() switch
 {
     "SHA256" => GuidGenerator.Version8NSha256,
@@ -21,6 +22,7 @@ static INameBasedGuidGenerator ParseHashName(string hash) => hash.ToUpperInvaria
     "SHA512" => GuidGenerator.Version8NSha512,
     _ => throw new ArgumentOutOfRangeException(nameof(hash)),
 };
+#endif
 
 var app = WebApplication.Create(args);
 
@@ -51,6 +53,7 @@ app.MapGet("/guid/v4", HandleCount(() => GuidGenerator.Version4.NewGuid()));
 app.MapGet("/guid/v5/{ns}/{name}", (string ns, string name) => GuidGenerator.Version5.NewGuid(ParseGuidNs(ns), name));
 app.MapPost("/guid/v5/{ns}", (string ns, [FromBody] string name) => GuidGenerator.Version5.NewGuid(ParseGuidNs(ns), ParseBase64(name)));
 
+#if !FEATURE_DISABLE_UUIDREV
 app.MapGet("/guid/v6", HandleCount(() => GuidGenerator.Version6.NewGuid()));
 app.MapGet("/guid/v6p", HandleCount(() => GuidGenerator.Version6P.NewGuid()));
 
@@ -59,5 +62,6 @@ app.MapGet("/guid/v7", HandleCount(() => GuidGenerator.Version7.NewGuid()));
 app.MapGet("/guid/v8", HandleCount(() => GuidGenerator.Version8.NewGuid()));
 app.MapGet("/guid/v8n/{hash}/{ns}/{name}", (string hash, string ns, string name) => ParseHashName(hash).NewGuid(ParseGuidNs(ns), name));
 app.MapPost("/guid/v8n/{hash}/{ns}", (string hash, string ns, [FromBody] string name) => ParseHashName(hash).NewGuid(ParseGuidNs(ns), ParseBase64(name)));
+#endif
 
 app.Run();

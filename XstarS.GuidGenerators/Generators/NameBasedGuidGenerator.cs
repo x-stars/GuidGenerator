@@ -15,8 +15,11 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 
     private volatile HashAlgorithm? FastHashing;
 
+#if !FEATURE_DISABLE_UUIDREV
     private readonly Guid? HashspaceId;
+#endif
 
+#if !FEATURE_DISABLE_UUIDREV
     protected NameBasedGuidGenerator() : this(hashspaceId: null) { }
 
     protected NameBasedGuidGenerator(Guid? hashspaceId)
@@ -26,6 +29,14 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
         this.FastHashing = null;
         this.HashspaceId = hashspaceId;
     }
+#else
+    protected NameBasedGuidGenerator()
+    {
+        var concurrency = Environment.ProcessorCount * 2;
+        this.Hashings = new BlockingCollection<HashAlgorithm>(concurrency);
+        this.FastHashing = null;
+    }
+#endif
 
     public sealed override Guid NewGuid()
     {
@@ -56,6 +67,7 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
     public sealed override Guid NewGuid(Guid nsId, ReadOnlySpan<byte> name)
     {
         const int guidSize = 16;
+#if !FEATURE_DISABLE_UUIDREV
         var hashId = this.HashspaceId;
         var hashIdSize = (hashId is null) ? 0 : guidSize;
         var nameOffset = hashIdSize + guidSize;
@@ -70,6 +82,14 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
         var nsIdResult = nsId.TryWriteUuidBytes(input[hashIdSize..]);
         Debug.Assert(nsIdResult);
         name.CopyTo(input[nameOffset..]);
+#else
+        var inputLength = guidSize + name.Length;
+        var input = (name.Length <= 1024) ?
+            (stackalloc byte[inputLength]) : (new byte[inputLength]);
+        var nsIdResult = nsId.TryWriteUuidBytes(input);
+        Debug.Assert(nsIdResult);
+        name.CopyTo(input[guidSize..]);
+#endif
         return this.ComputeHashToGuid(input);
     }
 #endif
@@ -136,6 +156,7 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
     private unsafe byte[] CreateInput(Guid nsId, byte[] name)
     {
         const int guidSize = 16;
+#if !FEATURE_DISABLE_UUIDREV
         var hashId = this.HashspaceId;
         var hashIdSize = (hashId is null) ? 0 : guidSize;
         var nameOffset = hashIdSize + guidSize;
@@ -150,6 +171,15 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
             *(Guid*)&pInput[hashIdSize] = nsId.ToBigEndian();
         }
         Buffer.BlockCopy(name, 0, input, nameOffset, name.Length);
+#else
+        var inputLength = guidSize + name.Length;
+        var input = new byte[inputLength];
+        fixed (byte* pInput = &input[0])
+        {
+            *(Guid*)pInput = nsId.ToBigEndian();
+        }
+        Buffer.BlockCopy(name, 0, input, guidSize, name.Length);
+#endif
         return input;
     }
 

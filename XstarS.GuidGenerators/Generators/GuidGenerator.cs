@@ -7,7 +7,7 @@ namespace XNetEx.Guids.Generators;
 /// <summary>
 /// Provides methods to generate a <see cref="Guid"/>.
 /// </summary>
-public abstract partial class GuidGenerator : IDisposable, IGuidGeneratorInfo, IGuidGenerator
+public abstract partial class GuidGenerator : IGuidGeneratorInfo, IGuidGenerator
 {
     /// <summary>
     /// Initialize a new instance of the <see cref="GuidGenerator"/> class.
@@ -35,6 +35,7 @@ public abstract partial class GuidGenerator : IDisposable, IGuidGeneratorInfo, I
     /// otherwise, <see langword="false"/>.</returns>
     public virtual bool RequiresInput => this.Version.IsNameBased();
 
+#if !FEATURE_DISABLE_UUIDREV
     /// <summary>
     /// Releases all resources used by this instance.
     /// </summary>
@@ -43,6 +44,7 @@ public abstract partial class GuidGenerator : IDisposable, IGuidGeneratorInfo, I
         this.Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
+#endif
 
     /// <summary>
     /// Generates a new <see cref="Guid"/> instance.
@@ -113,6 +115,7 @@ public abstract partial class GuidGenerator : IDisposable, IGuidGeneratorInfo, I
             "This instance does not support generating a DCE Security Guid.");
     }
 
+#if !FEATURE_DISABLE_UUIDREV
     /// <summary>
     /// Releases the unmanaged resources used by this instance
     /// and optionally releases the managed resources.
@@ -121,6 +124,7 @@ public abstract partial class GuidGenerator : IDisposable, IGuidGeneratorInfo, I
     /// both managed and unmanaged resources; <see langword="false"/>
     /// to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing) { }
+#endif
 
     /// <summary>
     /// Fills the version field of the specified <see cref="Guid"/>.

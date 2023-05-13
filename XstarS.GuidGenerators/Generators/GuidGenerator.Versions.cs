@@ -40,6 +40,7 @@ partial class GuidGenerator
     /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID version 5.</returns>
     public static INameBasedGuidGenerator Version5 => NameBasedGuidGenerator.SHA1Hashing.Instance;
 
+#if !FEATURE_DISABLE_UUIDREV
     /// <summary>
     /// Gets the <see cref="IGuidGenerator"/> instance of RFC 4122 UUID revision version 6.
     /// </summary>
@@ -65,6 +66,7 @@ partial class GuidGenerator
     /// </summary>
     /// <returns>The <see cref="IGuidGenerator"/> instance of <see cref="Uuid.MaxValue"/>.</returns>
     public static IGuidGenerator MaxValue => MaxValueGuidGenerator.Instance;
+#endif
 
     /// <summary>
     /// Gets the <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 1
@@ -74,6 +76,7 @@ partial class GuidGenerator
     /// using a non-volatile random node ID.</returns>
     public static IGuidGenerator Version1R => TimeBasedGuidGenerator.InstanceR;
 
+#if !FEATURE_DISABLE_UUIDREV
     /// <summary>
     /// Gets the <see cref="IGuidGenerator"/> instance of RFC 4122 UUID revision version 6
     /// using a physical (IEEE 802 MAC) address node ID.
@@ -81,6 +84,7 @@ partial class GuidGenerator
     /// <returns>The <see cref="IGuidGenerator"/> instance of RFC 4122 UUID revision version 6
     /// using a physical (IEEE 802 MAC) address node ID.</returns>
     public static IGuidGenerator Version6P => TimeBasedGuidGenerator.Sequential.InstanceP;
+#endif
 
     /// <summary>
     /// Creates a new <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 1
@@ -90,6 +94,7 @@ partial class GuidGenerator
     /// using a volatile random node ID.</returns>
     public static IGuidGenerator CreateVersion1R() => TimeBasedGuidGenerator.CreateInstanceR();
 
+#if !FEATURE_DISABLE_UUIDREV
     /// <summary>
     /// Creates a new <see cref="IGuidGenerator"/> instance of RFC 4122 UUID revision version 6
     /// using a volatile random node ID.
@@ -97,6 +102,7 @@ partial class GuidGenerator
     /// <returns>A new <see cref="IGuidGenerator"/> instance of RFC 4122 UUID revision version 6
     /// using a volatile random node ID.</returns>
     public static IGuidGenerator CreateVersion6() => TimeBasedGuidGenerator.Sequential.CreateInstance();
+#endif
 
     /// <summary>
     /// Gets the <see cref="GuidGenerator"/> instance of the specified <see cref="GuidVersion"/>.
@@ -122,10 +128,12 @@ partial class GuidGenerator
         GuidVersion.Version3 => NameBasedGuidGenerator.MD5Hashing.Instance,
         GuidVersion.Version4 => RandomizedGuidGenerator.Instance,
         GuidVersion.Version5 => NameBasedGuidGenerator.SHA1Hashing.Instance,
+#if !FEATURE_DISABLE_UUIDREV
         GuidVersion.Version6 => TimeBasedGuidGenerator.Sequential.Instance,
         GuidVersion.Version7 => UnixTimeBasedGuidGenerator.Instance,
         GuidVersion.Version8 => CustomGuidGenerator.Example.Instance,
         GuidVersion.MaxValue => MaxValueGuidGenerator.Instance,
+#endif
         _ => throw new ArgumentOutOfRangeException(nameof(version)),
     };
 }

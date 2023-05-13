@@ -52,6 +52,7 @@ public class GuidBuildingTest
         Assert.AreEqual(localId, guidLocalId);
     }
 
+#if !FEATURE_DISABLE_UUIDREV
     [TestMethod]
     public void Version6Guid_BuildFromEmptyGuid_GetInputComponents()
     {
@@ -72,7 +73,6 @@ public class GuidBuildingTest
         CollectionAssert.AreEqual(nodeId, guidNodeId);
     }
 
-
     [TestMethod]
     public void Version7Guid_BuildFromNewGuid_GetInputComponents()
     {
@@ -84,4 +84,5 @@ public class GuidBuildingTest
         _ = guid.TryGetTimestamp(out var guidTimestamp);
         Assert.AreEqual(timestamp, guidTimestamp);
     }
+#endif
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !FEATURE_DISABLE_UUIDREV
+using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -46,3 +47,4 @@ partial class CustomGuidGenerator
         }
     }
 }
+#endif

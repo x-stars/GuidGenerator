@@ -120,10 +120,12 @@ partial class GuidGeneratorTest
             GuidVersion.Version1,
             GuidVersion.Version2,
             GuidVersion.Version4,
+#if !FEATURE_DISABLE_UUIDREV
             GuidVersion.Version6,
             GuidVersion.Version7,
             GuidVersion.Version8,
             GuidVersion.MaxValue,
+#endif
         })
         {
             Assert.ThrowsException<NotSupportedException>(

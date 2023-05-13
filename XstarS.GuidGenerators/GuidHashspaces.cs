@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !FEATURE_DISABLE_UUIDREV
+using System;
 
 namespace XNetEx.Guids;
 
@@ -103,3 +104,4 @@ public static class GuidHashspaces
         0x2e7fc6a4, 0x2919, 0x4edc,
         0xb0, 0xba, 0x7d, 0x70, 0x62, 0xce, 0x4f, 0x0a);
 }
+#endif

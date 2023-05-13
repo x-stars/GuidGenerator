@@ -6,6 +6,7 @@ namespace XNetEx.Guids;
 [TestClass]
 public class GuidUuidBytesTest
 {
+#if !FEATURE_DISABLE_UUIDREV
     [TestMethod]
     public void GuidMaxValue_ToUuidByteArray_GetAllBytesMaxValue()
     {
@@ -15,6 +16,7 @@ public class GuidUuidBytesTest
             Assert.AreEqual(byte.MaxValue, item);
         }
     }
+#endif
 
     [TestMethod]
     public void FromUuidByteArray_ToByteArray_GetReversedByteOrderFields()

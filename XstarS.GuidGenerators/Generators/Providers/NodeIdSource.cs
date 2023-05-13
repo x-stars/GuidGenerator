@@ -3,7 +3,11 @@
 /// <summary>
 /// Represents the source type of a GUID node ID.
 /// </summary>
+#if !FEATURE_DISABLE_UUIDREV
 public enum NodeIdSource
+#else
+internal enum NodeIdSource
+#endif
 {
     /// <summary>
     /// Represents that the node ID is not present.
@@ -26,7 +30,11 @@ public enum NodeIdSource
 /// <summary>
 /// Provides metadata for <see cref="NodeIdSource"/>.
 /// </summary>
+#if !FEATURE_DISABLE_UUIDREV
 public static class NodeIdSourceInfo
+#else
+internal static class NodeIdSourceInfo
+#endif
 {
     /// <summary>
     /// Gets a value that indicates whether a node ID from

@@ -106,6 +106,7 @@ type GuidGeneratorTest() =
                 >> Assert.equalTo Guid.Version.Version5)
         |> Assert.equalTo (Guid.parse "747e7776-7df9-55eb-bf56-c1b6aaebf422")
 
+#if !FEATURE_DISABLE_UUIDREV
     [<TestMethod>]
     member _.NewVersion6_WithoutInput_GetGuidOfVersion1() =
         Guid.newV6 ()
@@ -139,3 +140,4 @@ type GuidGeneratorTest() =
         Guid.newV7 ()
         |> Guid.version
         |> Assert.equalTo Guid.Version.Version7
+#endif

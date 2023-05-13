@@ -1,7 +1,9 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+#if !FEATURE_DISABLE_UUIDREV
+using System;
 using XNetEx.Runtime.CompilerServices;
+#endif
 
 namespace XNetEx.Guids.Generators;
 
@@ -61,6 +63,7 @@ partial class NameBasedGuidGenerator
         protected override HashAlgorithm CreateHashing() => SHA1.Create();
     }
 
+#if !FEATURE_DISABLE_UUIDREV
     internal class CustomHashing : NameBasedGuidGenerator
     {
         private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha256;
@@ -189,4 +192,5 @@ partial class NameBasedGuidGenerator
             }
         }
     }
+#endif
 }

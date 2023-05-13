@@ -87,6 +87,7 @@ public class GuidGeneratorBenchmark
         }
     }
 
+#if !FEATURE_DISABLE_UUIDREV
     [Benchmark]
     public void GuidV6Generate()
     {
@@ -131,4 +132,5 @@ public class GuidGeneratorBenchmark
             var guid = guidGen.NewGuid();
         }
     }
+#endif
 }

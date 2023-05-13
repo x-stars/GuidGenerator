@@ -65,6 +65,7 @@ internal static unsafe class NativeLib
         return GuidCreateNameBased(GuidGenerator.Version5, guid, nsId, name, nameLen);
     }
 
+#if !FEATURE_DISABLE_UUIDREV
     [UnmanagedCallersOnly(EntryPoint = nameof(GuidCreateV6))]
     internal static HResult GuidCreateV6([Out] Guid* guid)
     {
@@ -109,6 +110,7 @@ internal static unsafe class NativeLib
     {
         return GuidCreateNameBased(GuidGenerator.Version8NSha512, guid, nsId, name, nameLen);
     }
+#endif
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static HResult GuidCreate(IGuidGenerator guidGen, Guid* guid)

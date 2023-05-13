@@ -7,6 +7,7 @@ namespace XNetEx.Guids;
 /// </summary>
 public static class Uuid
 {
+#if !FEATURE_DISABLE_UUIDREV
     /// <summary>
     /// A read-only instance of the <see cref="Guid"/> structure whose value is all ones.
     /// </summary>
@@ -14,6 +15,7 @@ public static class Uuid
         // ffffffff-ffff-ffff-ffff-ffffffffffff
         0xffffffff, 0xffff, 0xffff,
         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
+#endif
 
 #if NET7_0_OR_GREATER
     /// <summary>

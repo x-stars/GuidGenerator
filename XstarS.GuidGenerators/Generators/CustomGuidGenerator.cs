@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !FEATURE_DISABLE_UUIDREV
+using System;
 
 namespace XNetEx.Guids.Generators;
 
@@ -135,3 +136,4 @@ public abstract partial class CustomGuidGenerator : GuidGenerator
             ((ulong)newGuid.NodeId(1) << (7 * 8)));
     }
 }
+#endif

@@ -34,6 +34,7 @@ partial class GuidGeneratorTest
         Assert.AreNotEqual(guid0, guid1);
     }
 
+#if !FEATURE_DISABLE_UUIDREV
     [TestMethod]
     public void NewGuid_Version7_GetGuidWithVersion7()
     {
@@ -112,4 +113,5 @@ partial class GuidGeneratorTest
         var guid = GuidGenerator.MaxValue.NewGuid();
         Assert.AreEqual(Uuid.MaxValue, guid);
     }
+#endif
 }

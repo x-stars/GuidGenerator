@@ -31,6 +31,7 @@ public enum GuidVersion : byte
     /// Represents RFC 4122 UUID version 5, the name-based version using the SHA-1 hashing.
     /// </summary>
     Version5 = 5,
+#if !FEATURE_DISABLE_UUIDREV
     /// <summary>
     /// Represents RFC 4122 UUID revision version 6, the reordered time-based version.
     /// </summary>
@@ -47,6 +48,7 @@ public enum GuidVersion : byte
     /// Represents the largest possible value of <see cref="GuidVersion"/>.
     /// </summary>
     MaxValue = 15,
+#endif
 }
 
 /// <summary>
@@ -65,8 +67,12 @@ public static class GuidVersionInfo
     public static bool IsTimeBased(this GuidVersion version) =>
         version == GuidVersion.Version1 ||
         version == GuidVersion.Version2 ||
+#if !FEATURE_DISABLE_UUIDREV
         version == GuidVersion.Version6 ||
         version == GuidVersion.Version7;
+#else
+        false;
+#endif
 
     /// <summary>
     /// Gets a value that indicates whether a <see cref="Guid"/> of
@@ -90,7 +96,11 @@ public static class GuidVersionInfo
     /// otherwise, <see langword="false"/>.</returns>
     public static bool IsRandomized(this GuidVersion version) =>
         version == GuidVersion.Version4 ||
+#if !FEATURE_DISABLE_UUIDREV
         version == GuidVersion.Version7;
+#else
+        false;
+#endif
 
     /// <summary>
     /// Gets a value that indicates whether a <see cref="Guid"/> of
@@ -103,7 +113,11 @@ public static class GuidVersionInfo
     public static bool ContainsClockSequence(this GuidVersion version) =>
         version == GuidVersion.Version1 ||
         version == GuidVersion.Version2 ||
+#if !FEATURE_DISABLE_UUIDREV
         version == GuidVersion.Version6;
+#else
+        false;
+#endif
 
     /// <summary>
     /// Gets a value that indicates whether a <see cref="Guid"/> of
@@ -116,7 +130,11 @@ public static class GuidVersionInfo
     public static bool ContainsNodeId(this GuidVersion version) =>
         version == GuidVersion.Version1 ||
         version == GuidVersion.Version2 ||
+#if !FEATURE_DISABLE_UUIDREV
         version == GuidVersion.Version6;
+#else
+        false;
+#endif
 
     /// <summary>
     /// Gets a value that indicates whether a <see cref="Guid"/> of

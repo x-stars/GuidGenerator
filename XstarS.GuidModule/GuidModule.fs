@@ -1,9 +1,11 @@
 ﻿namespace XNetEx.FSharp.Core
 
 open System
-open System.Security.Cryptography
 open XNetEx.Guids
 open XNetEx.Guids.Generators
+#if !FEATURE_DISABLE_UUIDREV
+open System.Security.Cryptography
+#endif
 
 /// <summary>
 /// Contains operations for working with values of type <see cref="T:System.Guid"/>.
@@ -32,10 +34,12 @@ module Guid =
     /// </summary>
     type Namespace = GuidNamespaces
 
+#if !FEATURE_DISABLE_UUIDREV
     /// <summary>
     /// An abbreviation for the type <see cref="T:XNetEx.Guids.GuidHashspaces"/>.
     /// </summary>
     type Hashspace = GuidHashspaces
+#endif
 
     /// <summary>
     /// An abbreviation for the type <see cref="T:XNetEx.Guids.Generators.GuidGenerator"/>.
@@ -48,11 +52,13 @@ module Guid =
     [<CompiledName("Empty")>]
     let empty = Guid.Empty
 
+#if !FEATURE_DISABLE_UUIDREV
     /// <summary>
     /// Represents the <see cref="T:System.Guid"/> instance whose value is all ones.
     /// </summary>
     [<CompiledName("MaxValue")>]
     let maxValue = Uuid.MaxValue
+#endif
 
     /// <summary>
     /// Represents the namespace ID for a fully-qualified domain name.
@@ -78,6 +84,7 @@ module Guid =
     [<CompiledName("NamespaceX500")>]
     let nsX500 = Namespace.X500
 
+#if !FEATURE_DISABLE_UUIDREV
     /// <summary>
     /// Represents the hashspace ID for the SHA-224 hash algorithm.
     /// </summary>
@@ -149,6 +156,7 @@ module Guid =
     /// </summary>
     [<CompiledName("HashspaceShake256")>]
     let hsShake256 = Hashspace.Shake256
+#endif
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 1.
@@ -297,6 +305,7 @@ module Guid =
     let newV5Enc (nsId: Guid) (enc: Text.Encoding) (name: string) =
         Generator.Version5.NewGuid(nsId, name, enc)
 
+#if !FEATURE_DISABLE_UUIDREV
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6.
     /// </summary>
@@ -538,6 +547,7 @@ module Guid =
     [<CompiledName("NewVersion8NSha512ByEncoding")>]
     let newV8NSha512Enc (nsId: Guid) (enc: Text.Encoding) (name: string) =
         Generator.Version8NSha512.NewGuid(nsId, name, enc)
+#endif
 
     /// <summary>
     /// Loads the GUID generator state from the specified storage file

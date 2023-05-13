@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !FEATURE_DISABLE_UUIDREV
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace XNetEx.Guids.Generators;
@@ -106,3 +107,4 @@ partial class GuidGeneratorTest
         CollectionAssert.AreNotEqual(nodeId0, nodeId1);
     }
 }
+#endif

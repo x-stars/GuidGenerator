@@ -12,6 +12,9 @@ public class GuidUuidBytesBenchmark
     [Params(1, 10, 100, 1000)]
     public int GuidCount;
 
+    private readonly Guid GuidValue = new Guid(
+        -1, -1, -1, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
+
     private readonly byte[] GuidBytes = new byte[]
     {
         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
@@ -72,7 +75,7 @@ public class GuidUuidBytesBenchmark
     [Benchmark(Baseline = true)]
     public void ToByteArray()
     {
-        var guid = Uuid.MaxValue;
+        var guid = this.GuidValue;
         var count = this.GuidCount;
         for (int index = 0; index < count; index++)
         {
@@ -84,7 +87,7 @@ public class GuidUuidBytesBenchmark
     [Benchmark(Baseline = false)]
     public void ToUuidByteArray()
     {
-        var guid = Uuid.MaxValue;
+        var guid = this.GuidValue;
         var count = this.GuidCount;
         for (int index = 0; index < count; index++)
         {
@@ -97,7 +100,7 @@ public class GuidUuidBytesBenchmark
     [Benchmark(Baseline = true)]
     public void TryWriteByteSpan()
     {
-        var guid = Uuid.MaxValue;
+        var guid = this.GuidValue;
         var bytes = (stackalloc byte[16]);
         var count = this.GuidCount;
         for (int index = 0; index < count; index++)
@@ -110,7 +113,7 @@ public class GuidUuidBytesBenchmark
     [Benchmark(Baseline = false)]
     public void TryWriteUuidByteSpan()
     {
-        var guid = Uuid.MaxValue;
+        var guid = this.GuidValue;
         var bytes = (stackalloc byte[16]);
         var count = this.GuidCount;
         for (int index = 0; index < count; index++)

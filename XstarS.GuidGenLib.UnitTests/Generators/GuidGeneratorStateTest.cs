@@ -104,7 +104,11 @@ public partial class GuidGeneratorStateTest
         var loadResult = GuidGenerator.SetStateStorageFile(fileName);
         Assert.IsTrue(loadResult);
         Assert.IsNull(exception);
+#if !FEATURE_DISABLE_UUIDREV
         var guid = GuidGenerator.Version6.NewGuid();
+#else
+        var guid = GuidGenerator.Version1R.NewGuid();
+#endif
         _ = guid.TryGetClockSequence(out var clockSeq);
         Assert.AreEqual(42, clockSeq);
     }
@@ -121,7 +125,11 @@ public partial class GuidGeneratorStateTest
         var guid0 = GuidGenerator.Version1.NewGuid();
         _ = guid0.TryGetClockSequence(out var clockSeq0);
         Assert.AreEqual(42, clockSeq0);
+#if !FEATURE_DISABLE_UUIDREV
         var guid1 = GuidGenerator.Version6.NewGuid();
+#else
+        var guid1 = GuidGenerator.Version1R.NewGuid();
+#endif
         _ = guid1.TryGetClockSequence(out var clockSeq1);
         Assert.AreEqual(44, clockSeq1);
     }

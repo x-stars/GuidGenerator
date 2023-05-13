@@ -1,5 +1,6 @@
 ﻿namespace XNetEx.FSharp.Core
 
+#if !FEATURE_DISABLE_UUIDREV
 open System
 open System.Security.Cryptography
 open Microsoft.VisualStudio.TestTools.UnitTesting
@@ -86,3 +87,4 @@ type GuidGeneratorV8Test() =
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version8)
         |> Assert.equalTo (Guid.parse "da65f7c3-21ae-82e0-a654-97eea9af6ed6")
+#endif

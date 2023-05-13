@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !FEATURE_DISABLE_UUIDREV
+using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using XNetEx.Guids.Components;
@@ -50,3 +51,4 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         return guid;
     }
 }
+#endif
