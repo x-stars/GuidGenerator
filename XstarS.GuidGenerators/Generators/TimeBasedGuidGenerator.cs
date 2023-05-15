@@ -73,8 +73,6 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     private byte[] NodeIdBytes => this.NodeIdProvider.NodeIdBytes;
 
-    private NodeIdSource NodeIdSource => this.NodeIdProvider.SourceType;
-
     internal static TimeBasedGuidGenerator CreateInstanceR()
     {
         return new TimeBasedGuidGenerator(NodeIdSource.VolatileRandom);
