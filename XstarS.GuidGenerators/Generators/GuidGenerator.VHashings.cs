@@ -32,12 +32,13 @@ partial class GuidGenerator
 
     /// <summary>
     /// Creates a new <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the specified hashspace ID and hash algorithm.
+    /// using the specified hashspace ID and hash algorithm with a synchronization lock.
     /// </summary>
     /// <param name="hashspaceId">The hashspace ID used to identify the hash algorithm.</param>
     /// <param name="hashing">The hash algorithm used to transform input values.</param>
     /// <returns>A new <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using <paramref name="hashspaceId"/> and <paramref name="hashing"/>.</returns>
+    /// using <paramref name="hashspaceId"/> and <paramref name="hashing"/>
+    /// with a synchronization lock.</returns>
     /// <exception cref="ArgumentNullException">
     /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">

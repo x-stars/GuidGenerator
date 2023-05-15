@@ -65,28 +65,51 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
 
     public Guid NewGuid()
     {
-        var generator = this.DefaultGenerator;
-        if (generator.TryNewGuid(out var guid))
+        if (this.DefaultGenerator.TryNewGuid(out var guid))
         {
             return guid;
         }
-        var generators = this.Generators;
-        if (generators.TryTake(out generator))
+        if (this.TryNewGuidByPool(out guid))
         {
-            var result = generator.TryNewGuid(out guid);
-            if (!generators.TryAdd(generator))
+            return guid;
+        }
+
+        var generator = this.CreateGenerator();
+        try
+        {
+            return generator.NewGuid();
+        }
+        finally
+        {
+            if (!this.Generators.TryAdd(generator))
             {
                 generator.Dispose();
             }
-            if (result) { return guid; }
         }
-        generator = this.CreateGenerator();
-        guid = generator.NewGuid();
-        if (!generators.TryAdd(generator))
+    }
+
+    private bool TryNewGuidByPool(out Guid result)
+    {
+        var generators = this.Generators;
+        if (generators.TryTake(out var generator))
         {
-            generator.Dispose();
+            try
+            {
+                if (generator.TryNewGuid(out result))
+                {
+                    return true;
+                }
+            }
+            finally
+            {
+                if (!generators.TryAdd(generator))
+                {
+                    generator.Dispose();
+                }
+            }
         }
-        return guid;
+        result = default(Guid);
+        return false;
     }
 
     private IBlockingGuidGenerator CreateGenerator()

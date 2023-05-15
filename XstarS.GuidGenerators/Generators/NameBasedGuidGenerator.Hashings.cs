@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 #if !FEATURE_DISABLE_UUIDREV
 using System;
+using System.Threading;
 using XNetEx.Runtime.CompilerServices;
 #endif
 
@@ -146,7 +147,7 @@ partial class NameBasedGuidGenerator
                     nameof(hashing));
             }
 
-            return new NameBasedGuidGenerator.CustomHashing.Disposable(hashspaceId, hashing.Identity);
+            return new NameBasedGuidGenerator.CustomHashing.Synchronized(hashspaceId, hashing);
         }
 
         internal static NameBasedGuidGenerator.CustomHashing CreateInstance(
@@ -166,7 +167,7 @@ partial class NameBasedGuidGenerator
                 throw new InvalidOperationException("The hash algorithm factory returns null.");
         }
 
-        private sealed class Disposable : NameBasedGuidGenerator.CustomHashing, IDisposable
+        private class Disposable : NameBasedGuidGenerator.CustomHashing, IDisposable
         {
             private volatile bool IsDisposed;
 
@@ -176,7 +177,7 @@ partial class NameBasedGuidGenerator
                 this.IsDisposed = false;
             }
 
-            protected override void Dispose(bool disposing)
+            protected sealed override void Dispose(bool disposing)
             {
                 if (this.IsDisposed) { return; }
                 lock (this.Hashings)
@@ -189,6 +190,46 @@ partial class NameBasedGuidGenerator
                     this.IsDisposed = true;
                 }
                 base.Dispose(disposing);
+            }
+        }
+
+        private sealed class Synchronized : NameBasedGuidGenerator.CustomHashing.Disposable
+        {
+            internal Synchronized(Guid hashspaceId, HashAlgorithm hashing)
+                : base(hashspaceId, hashing.Identity)
+            {
+            }
+
+            private HashAlgorithm DefaultHashing
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    [MethodImpl(MethodImplOptions.Synchronized)]
+                    HashAlgorithm Initialize()
+                    {
+                        return this.FastHashing ??= this.CreateHashing();
+                    }
+
+                    return this.FastHashing ?? Initialize();
+                }
+            }
+
+            protected override HashAlgorithm GetHashing()
+            {
+                var hashing = this.DefaultHashing;
+                Monitor.Enter(hashing);
+                return hashing;
+            }
+
+            protected override void ReturnHashing(HashAlgorithm hashing)
+            {
+                if (hashing != this.DefaultHashing)
+                {
+                    throw new InvalidOperationException(
+                        "An unknown hash algorithm instance is returned.");
+                }
+                Monitor.Exit(hashing);
             }
         }
     }

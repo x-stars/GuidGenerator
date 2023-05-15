@@ -36,9 +36,9 @@ partial class GuidGenerator
 #if !FEATURE_DISABLE_UUIDREV
     /// <summary>
     /// Creates a new blocking-free <see cref="IGuidGenerator"/> instance that uses an object pool
-    /// of <see cref="IBlockingGuidGenerator"/> created by the specified initialization function.
+    /// of <see cref="IBlockingGuidGenerator"/> created by the specified creation delegate.
     /// </summary>
-    /// <param name="factory">The delegate used to create the <see cref="IBlockingGuidGenerator"/>.</param>
+    /// <param name="factory">The delegate used to create <see cref="IBlockingGuidGenerator"/>.</param>
     /// <param name="capacity">The maximum number of instances to retain in the pool,
     /// or -1 to retain unlimited number of instances in the pool.</param>
     /// <returns>A new blocking-free <see cref="IGuidGenerator"/> instance that uses an object pool
@@ -46,7 +46,7 @@ partial class GuidGenerator
     /// <exception cref="ArgumentNullException">
     /// <paramref name="factory"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="capacity"/> is not a positive value and is not -1.</exception>
+    /// <paramref name="capacity"/> is not a positive value and is not equal to -1.</exception>
     public static IGuidGenerator CreatePooled(Func<IBlockingGuidGenerator> factory, int capacity = -1)
     {
         return new GuidGeneratorPool(factory, capacity);

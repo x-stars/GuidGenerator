@@ -121,22 +121,19 @@ partial class GuidGeneratorTest
     }
 
     [TestMethod]
-    public void NewGuid_Version8NCustomByValue_ConcurrentNotGetExpectedGuid()
+    public void NewGuid_Version8NCustomByValue_ConcurrentGetExpectedGuid()
     {
         if (Environment.ProcessorCount <= 1) { return; }
         var hashId = GuidHashspaces.Sha256;
         using var hashing = SHA256.Create();
         using var guidGen = GuidGenerator.CreateVersion8N(hashId, hashing);
-        Assert.ThrowsException<AggregateException>(() =>
+        Parallel.For(0, 1000, index =>
         {
-            Parallel.For(0, 1000, index =>
-            {
-                var nsId = GuidNamespaces.Dns;
-                var name = Array.Empty<byte>();
-                var guid = guidGen.NewGuid(nsId, name);
-                var expected = Guid.Parse("0e38fb05-6337-8c50-a201-6e2ec68fd5ac");
-                Assert.AreEqual(expected, guid);
-            });
+            var nsId = GuidNamespaces.Dns;
+            var name = Array.Empty<byte>();
+            var guid = guidGen.NewGuid(nsId, name);
+            var expected = Guid.Parse("0e38fb05-6337-8c50-a201-6e2ec68fd5ac");
+            Assert.AreEqual(expected, guid);
         });
     }
 
