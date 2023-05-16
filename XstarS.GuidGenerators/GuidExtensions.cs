@@ -49,10 +49,10 @@ public static partial class GuidExtensions
     public static void Deconstruct(this Guid guid,
         out int a, out short b, out short c, out byte[] d)
     {
-        var l = d = new byte[8];
+        var ld = d = new byte[8];
         guid.Deconstruct(out a, out b, out c,
-            out l[0], out l[1], out l[2], out l[3],
-            out l[4], out l[5], out l[6], out l[7]);
+            out ld[0], out ld[1], out ld[2], out ld[3],
+            out ld[4], out ld[5], out ld[6], out ld[7]);
     }
 
     /// <summary>

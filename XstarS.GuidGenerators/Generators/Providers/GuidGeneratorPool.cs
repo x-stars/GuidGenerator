@@ -115,7 +115,8 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
     private IBlockingGuidGenerator CreateGenerator()
     {
         return this.GeneratorFactory.Invoke() ??
-            throw new InvalidOperationException("The GUID generator factory returns null.");
+            throw new InvalidOperationException(
+                "The GUID generator factory returns null.");
     }
 }
 #endif
