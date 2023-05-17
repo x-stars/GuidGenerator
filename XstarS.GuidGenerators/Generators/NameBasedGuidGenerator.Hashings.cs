@@ -167,7 +167,7 @@ partial class NameBasedGuidGenerator
                 throw new InvalidOperationException("The hash algorithm factory returns null.");
         }
 
-        private class Disposable : NameBasedGuidGenerator.CustomHashing, IDisposable
+        private sealed class Disposable : NameBasedGuidGenerator.CustomHashing, IDisposable
         {
             private volatile bool IsDisposed;
 
@@ -177,7 +177,7 @@ partial class NameBasedGuidGenerator
                 this.IsDisposed = false;
             }
 
-            protected sealed override void Dispose(bool disposing)
+            protected override void Dispose(bool disposing)
             {
                 if (this.IsDisposed) { return; }
                 lock (this.Hashings)
@@ -193,26 +193,24 @@ partial class NameBasedGuidGenerator
             }
         }
 
-        private sealed class Synchronized : NameBasedGuidGenerator.CustomHashing.Disposable
+        private sealed class Synchronized : NameBasedGuidGenerator.CustomHashing, IDisposable
         {
             internal Synchronized(Guid hashspaceId, HashAlgorithm hashing)
                 : base(hashspaceId, hashing.Identity)
             {
+                this.Hashings.Dispose();
+                this.FastHashing = hashing;
             }
 
-            private HashAlgorithm DefaultHashing
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get
-                {
-                    [MethodImpl(MethodImplOptions.Synchronized)]
-                    HashAlgorithm Initialize()
-                    {
-                        return this.FastHashing ??= this.CreateHashing();
-                    }
+            private HashAlgorithm DefaultHashing => this.FastHashing!;
 
-                    return this.FastHashing ?? Initialize();
+            protected override void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+                    this.DefaultHashing.Dispose();
                 }
+                base.Dispose(disposing);
             }
 
             protected override HashAlgorithm GetHashing()
