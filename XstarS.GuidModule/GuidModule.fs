@@ -913,6 +913,19 @@ module Guid =
         guid.ReplaceVersion(version)
 
     /// <summary>
+    /// Replaces the version of the current <see cref="T:System.Guid"/>
+    /// with the specified GUID version number.
+    /// </summary>
+    /// <param name="version">The version to use as replacement.</param>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance that is
+    /// equivalent to the <see cref="T:System.Guid"/> except that
+    /// the version replaced with <paramref name="version"/>.</returns>
+    [<CompiledName("ReplaceVersionNumber")>]
+    let replaceVersionNum (version: byte) (guid: Guid) =
+        guid.ReplaceVersion(version)
+
+    /// <summary>
     /// Replaces the timestamp of the current <see cref="T:System.Guid"/> with the specified
     /// <see cref="T:System.DateTime"/> if the <see cref="T:System.Guid"/> is time-based.
     /// </summary>
