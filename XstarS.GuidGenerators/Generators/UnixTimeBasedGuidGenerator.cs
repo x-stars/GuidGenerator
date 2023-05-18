@@ -46,9 +46,22 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         var timestamp = this.CurrentTimestamp;
         var components = this.GuidComponents;
         components.SetTimestamp(ref guid, timestamp);
+        this.FillExtraTimeFields(ref guid, timestamp);
         this.FillVersionField(ref guid);
         Debug.Assert(guid.GetVariant() == this.Variant);
         return guid;
+    }
+
+    private void FillExtraTimeFields(ref Guid guid, long timestamp)
+    {
+        var tsSubMs = timestamp % TimeSpan.TicksPerMillisecond;
+        var tsSubMsFrac = (tsSubMs << (12 + 2)) / TimeSpan.TicksPerMillisecond;
+        ref var timeHi_Ver = ref guid.TimeHi_Ver();
+        var fracHi12 = (int)tsSubMsFrac >> 2;
+        timeHi_Ver = (ushort)(timeHi_Ver & 0xF000 | fracHi12);
+        ref var clkSeqHi_Var = ref guid.ClkSeqHi_Var();
+        var fracLow2 = (int)tsSubMsFrac & ~(-1 << 2);
+        clkSeqHi_Var = (byte)(clkSeqHi_Var & 0xCF | (fracLow2 << 4));
     }
 }
 #endif
