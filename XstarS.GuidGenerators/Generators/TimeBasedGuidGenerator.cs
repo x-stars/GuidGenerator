@@ -5,7 +5,7 @@ using XNetEx.Guids.Components;
 
 namespace XNetEx.Guids.Generators;
 
-internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
+internal partial class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 #if !FEATURE_DISABLE_UUIDREV
     , IBlockingGuidGenerator
 #endif
@@ -22,10 +22,7 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     private readonly GuidGeneratorState GeneratorState;
 
-    protected TimeBasedGuidGenerator()
-        : this(NodeIdSource.PhysicalAddress)
-    {
-    }
+    protected TimeBasedGuidGenerator() : this(NodeIdSource.PhysicalAddress) { }
 
     protected TimeBasedGuidGenerator(NodeIdSource nodeIdSource)
     {
@@ -91,7 +88,7 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         }
     }
 
-    public bool TryNewGuid(out Guid result)
+    public virtual bool TryNewGuid(out Guid result)
     {
         result = default(Guid);
         if (this.TryFillTimeAndNodeFields(ref result))
@@ -117,62 +114,4 @@ internal class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         components.SetNodeId(ref guid, nodeId);
         return true;
     }
-
-#if !FEATURE_DISABLE_UUIDREV
-    internal sealed class Sequential : TimeBasedGuidGenerator
-    {
-        private static new volatile TimeBasedGuidGenerator.Sequential? Singleton;
-
-        private static volatile TimeBasedGuidGenerator.Sequential? SingletonP;
-
-        private Sequential()
-            : base(NodeIdSource.NonVolatileRandom)
-        {
-        }
-
-        private Sequential(NodeIdSource nodeIdSource)
-            : base(nodeIdSource)
-        {
-        }
-
-        internal static new TimeBasedGuidGenerator.Sequential Instance
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                [MethodImpl(MethodImplOptions.Synchronized)]
-                static TimeBasedGuidGenerator.Sequential Initialize()
-                {
-                    return TimeBasedGuidGenerator.Sequential.Singleton ??=
-                        new TimeBasedGuidGenerator.Sequential();
-                }
-
-                return TimeBasedGuidGenerator.Sequential.Singleton ?? Initialize();
-            }
-        }
-
-        internal static TimeBasedGuidGenerator.Sequential InstanceP
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                [MethodImpl(MethodImplOptions.Synchronized)]
-                static TimeBasedGuidGenerator.Sequential Initialize()
-                {
-                    return TimeBasedGuidGenerator.Sequential.SingletonP ??=
-                        new TimeBasedGuidGenerator.Sequential(NodeIdSource.PhysicalAddress);
-                }
-
-                return TimeBasedGuidGenerator.Sequential.SingletonP ?? Initialize();
-            }
-        }
-
-        public override GuidVersion Version => GuidVersion.Version6;
-
-        internal static TimeBasedGuidGenerator.Sequential CreateInstance()
-        {
-            return new TimeBasedGuidGenerator.Sequential(NodeIdSource.VolatileRandom);
-        }
-    }
-#endif
 }

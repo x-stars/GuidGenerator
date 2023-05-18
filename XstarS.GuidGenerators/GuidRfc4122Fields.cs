@@ -23,6 +23,10 @@ internal static class GuidRfc4122Fields
         ref guid.FieldAt<ushort>(6);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static ref ulong LowData(this ref Guid guid) =>
+        ref guid.FieldAt<ulong>(8);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static ref byte ClkSeqHi_Var(this ref Guid guid) =>
         ref guid.FieldAt<byte>(8);
 

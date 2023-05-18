@@ -29,6 +29,7 @@ internal abstract class ProgramCommand
             yield return NewNoInputGuidCommand.Version1R;
 #if !FEATURE_DISABLE_UUIDREV
             yield return NewNoInputGuidCommand.Version6P;
+            yield return NewNoInputGuidCommand.Version6R;
             yield return NewNameBasedGuidCommand.Version8NSha256;
             yield return NewNameBasedGuidCommand.Version8NSha384;
             yield return NewNameBasedGuidCommand.Version8NSha512;

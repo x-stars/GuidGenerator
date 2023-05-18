@@ -20,11 +20,11 @@ public partial class CustomGuidGeneratorTest
     }
 
     [TestMethod]
-    public void GetNodeIdByte_NonVolatileRandom_GetVersion6NodeIdBytes()
+    public void GetNodeIdByte_NonVolatileRandom_GetVersion6RNodeIdBytes()
     {
         var guidGen = new TestCustomGuidGenerator(
             nodeIdSource: NodeIdSource.NonVolatileRandom);
-        _ = GuidGenerator.Version6.NewGuid().TryGetNodeId(out var expected);
+        _ = GuidGenerator.Version6R.NewGuid().TryGetNodeId(out var expected);
         var nodeIdBytes = new[]
         {
             guidGen.GetNodeIdByte(0), guidGen.GetNodeIdByte(1),

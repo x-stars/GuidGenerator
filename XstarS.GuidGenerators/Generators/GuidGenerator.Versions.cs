@@ -102,6 +102,14 @@ partial class GuidGenerator
     /// <returns>The <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID revision version 6
     /// using a physical (IEEE 802 MAC) address node ID.</returns>
     public static IBlockingGuidGenerator Version6P => TimeBasedGuidGenerator.Sequential.InstanceP;
+
+    /// <summary>
+    /// Gets the <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID revision version 6
+    /// using a non-volatile random node ID.
+    /// </summary>
+    /// <returns>The <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID revision version 6
+    /// using a non-volatile random node ID.</returns>
+    public static IBlockingGuidGenerator Version6R => TimeBasedGuidGenerator.Sequential.InstanceR;
 #endif
 
 #if !FEATURE_DISABLE_UUIDREV
@@ -129,7 +137,7 @@ partial class GuidGenerator
     /// </summary>
     /// <returns>A new <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID revision version 6
     /// using a volatile random node ID.</returns>
-    public static IBlockingGuidGenerator CreateVersion6() => TimeBasedGuidGenerator.Sequential.CreateInstance();
+    public static IBlockingGuidGenerator CreateVersion6R() => TimeBasedGuidGenerator.Sequential.CreateInstanceR();
 #endif
 
     /// <summary>

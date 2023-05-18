@@ -38,7 +38,7 @@ internal sealed class ShowHelpCommand : ProgramCommand
             yield return $"        {cmdName} -V2 Domain [SiteID]";
             yield return $"        {cmdName} -V3|-V5 :NS|GuidNS [Name]";
 #if !FEATURE_DISABLE_UUIDREV
-            yield return $"        {cmdName} -V6|-V7|-V8|-V6P [-Cn]";
+            yield return $"        {cmdName} -V6|-V7|-V8|-V6P|-V6R [-Cn]";
             yield return $"        {cmdName} -V8N Hash :NS|GuidNS [Name]";
 #endif
             yield return $"        {cmdName} -?|-H|-Help";
@@ -57,6 +57,8 @@ internal sealed class ShowHelpCommand : ProgramCommand
 #if !FEATURE_DISABLE_UUIDREV
             yield return "    -V6P    generate reordered time-based GUID";
             yield return "            (IEEE 802 MAC address node ID).";
+            yield return "    -V6R    generate reordered time-based GUID";
+            yield return "            (non-volatile random node ID).";
             yield return "    -V8N    generate custom GUID (name-based).";
 #endif
             yield return "    -Cn     generate n GUIDs of the current version.";

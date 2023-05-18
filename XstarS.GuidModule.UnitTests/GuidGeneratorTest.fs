@@ -108,7 +108,7 @@ type GuidGeneratorTest() =
 
 #if !FEATURE_DISABLE_UUIDREV
     [<TestMethod>]
-    member _.NewVersion6_WithoutInput_GetGuidOfVersion1() =
+    member _.NewVersion6_WithoutInput_GetGuidOfVersion6() =
         Guid.newV6 ()
         |> Guid.version
         |> Assert.equalTo Guid.Version.Version6
@@ -123,8 +123,8 @@ type GuidGeneratorTest() =
         |> Assert.equalTo 0x00uy
 
     [<TestMethod>]
-    member _.NewVersion6Sequence_WithoutInput_GetGuidsWithSameNodeId() =
-        Guid.newV6Seq ()
+    member _.NewVersion6RSequence_WithoutInput_GetGuidsWithSameNodeId() =
+        Guid.newV6RSeq ()
         |> Seq.take 2
         |> tee (Seq.map Guid.version
                 >> Seq.iter (Assert.equalTo Guid.Version.Version6))
