@@ -6,8 +6,19 @@ namespace XNetEx.Guids;
 static partial class GuidExtensions
 {
     /// <summary>
-    /// Replaces the version of the current <see cref="Guid"/>
-    /// with the specified <see cref="GuidVersion"/>.
+    /// Replaces the version of the current <see cref="Guid"/> with the specified GUID version number.
+    /// </summary>
+    /// <param name="guid">The <see cref="Guid"/>.</param>
+    /// <param name="version">The version to use as replacement.</param>
+    /// <returns>A new <see cref="Guid"/> instance that is equivalent to the current <see cref="Guid"/>
+    /// except that the version replaced with <paramref name="version"/>.</returns>
+    public static Guid ReplaceVersion(this Guid guid, byte version)
+    {
+        return guid.ReplaceVersion((GuidVersion)version);
+    }
+
+    /// <summary>
+    /// Replaces the version of the current <see cref="Guid"/> with the specified <see cref="GuidVersion"/>.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
     /// <param name="version">The version to use as replacement.</param>
@@ -22,8 +33,7 @@ static partial class GuidExtensions
     }
 
     /// <summary>
-    /// Replaces the version of the current <see cref="Guid"/>
-    /// with the specified <see cref="GuidVariant"/>.
+    /// Replaces the version of the current <see cref="Guid"/> with the specified <see cref="GuidVariant"/>.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
     /// <param name="variant">The variant to use as replacement.</param>

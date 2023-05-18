@@ -125,11 +125,11 @@ internal abstract class NodeIdProvider
     {
         private static volatile NodeIdProvider.RandomNumber? Singleton;
 
-        private readonly byte[] RandomNodeIdBytes;
+        private readonly byte[] NodeIdBytesValue;
 
         private RandomNumber()
         {
-            this.RandomNodeIdBytes =
+            this.NodeIdBytesValue =
                 NodeIdProvider.RandomNumber.CreateNodeIdBytes();
         }
 
@@ -149,7 +149,7 @@ internal abstract class NodeIdProvider
             }
         }
 
-        public override byte[] NodeIdBytes => this.RandomNodeIdBytes;
+        public override byte[] NodeIdBytes => this.NodeIdBytesValue;
 
         public override NodeIdSource SourceType => NodeIdSource.VolatileRandom;
 
@@ -180,7 +180,7 @@ internal abstract class NodeIdProvider
             internal NonVolatile() { }
 
             public override byte[] NodeIdBytes =>
-                GuidGeneratorState.RandomNodeId ?? this.RandomNodeIdBytes;
+                GuidGeneratorState.RandomNodeId ?? this.NodeIdBytesValue;
 
             public override NodeIdSource SourceType => NodeIdSource.NonVolatileRandom;
         }

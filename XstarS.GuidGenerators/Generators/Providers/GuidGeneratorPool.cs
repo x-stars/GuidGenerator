@@ -35,10 +35,14 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            [MethodImpl(MethodImplOptions.Synchronized)]
+            [MethodImpl(MethodImplOptions.NoInlining)]
             IBlockingGuidGenerator Initialize()
             {
-                return this.DefaultGeneratorValue ??= this.CreateGenerator();
+                lock (this.Generators)
+                {
+                    return this.DefaultGeneratorValue ??=
+                        this.CreateGenerator();
+                }
             }
 
             return this.DefaultGeneratorValue ?? Initialize();
@@ -115,7 +119,8 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
     private IBlockingGuidGenerator CreateGenerator()
     {
         return this.GeneratorFactory.Invoke() ??
-            throw new InvalidOperationException("The GUID generator factory returns null.");
+            throw new InvalidOperationException(
+                "The GUID generator factory returns null.");
     }
 }
 #endif

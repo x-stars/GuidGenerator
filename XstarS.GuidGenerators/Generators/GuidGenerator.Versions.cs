@@ -133,12 +133,12 @@ partial class GuidGenerator
 #endif
 
     /// <summary>
-    /// Gets the <see cref="GuidGenerator"/> instance of the specified <see cref="GuidVersion"/>.
+    /// Gets the <see cref="GuidGenerator"/> instance of the specified GUID version number.
     /// </summary>
     /// <param name="version">The version of the <see cref="Guid"/> to generate.</param>
     /// <returns>The <see cref="GuidGenerator"/> instance of <paramref name="version"/>.</returns>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="version"/> is not a valid <see cref="GuidVersion"/> value.</exception>
+    /// <paramref name="version"/> is not a valid GUID version number.</exception>
     public static GuidGenerator OfVersion(byte version) => GuidGenerator.OfVersion((GuidVersion)version);
 
     /// <summary>
