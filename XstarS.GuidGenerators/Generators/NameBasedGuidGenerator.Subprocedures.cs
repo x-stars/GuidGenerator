@@ -1,6 +1,8 @@
 ﻿using System;
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+#endif
 
 namespace XNetEx.Guids.Generators;
 

@@ -56,6 +56,7 @@ app.MapPost("/guid/v5/{ns}", (string ns, [FromBody] string name) => GuidGenerato
 #if !FEATURE_DISABLE_UUIDREV
 app.MapGet("/guid/v6", HandleCount(() => GuidGenerator.Version6.NewGuid()));
 app.MapGet("/guid/v6p", HandleCount(() => GuidGenerator.Version6P.NewGuid()));
+app.MapGet("/guid/v6r", HandleCount(() => GuidGenerator.Version6R.NewGuid()));
 
 app.MapGet("/guid/v7", HandleCount(() => GuidGenerator.Version7.NewGuid()));
 
