@@ -32,6 +32,9 @@ internal class NewNoInputGuidCommand : ProgramCommand
 #if !FEATURE_DISABLE_UUIDREV
     internal static readonly NewNoInputGuidCommand Version6P =
         new NewNoInputGuidCommand(versionName: "Version6P");
+
+    internal static readonly NewNoInputGuidCommand Version6R =
+        new NewNoInputGuidCommand(versionName: "Version6R");
 #endif
 
     private readonly GuidVersion Version;
@@ -90,6 +93,7 @@ internal class NewNoInputGuidCommand : ProgramCommand
             "Version1R" => GuidGenerator.Version1R,
 #if !FEATURE_DISABLE_UUIDREV
             "Version6P" => GuidGenerator.Version6P,
+            "Version6R" => GuidGenerator.Version6R,
 #endif
             _ => GuidGenerator.OfVersion(this.Version),
         };

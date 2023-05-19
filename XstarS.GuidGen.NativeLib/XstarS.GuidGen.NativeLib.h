@@ -63,6 +63,8 @@ __declspec(dllimport)
 HRESULT GuidCreateV6(_Out_ GUID *Guid);
 __declspec(dllimport)
 HRESULT GuidCreateV6P(_Out_ GUID *Guid);
+__declspec(dllimport)
+HRESULT GuidCreateV6R(_Out_ GUID *Guid);
 
 __declspec(dllimport)
 HRESULT GuidCreateV7(_Out_ GUID *Guid);

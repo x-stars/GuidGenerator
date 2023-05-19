@@ -1,70 +1,14 @@
-﻿using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-#if !FEATURE_DISABLE_UUIDREV
+﻿#if !FEATURE_DISABLE_UUIDREV
 using System;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Threading;
 using XNetEx.Runtime.CompilerServices;
-#endif
 
 namespace XNetEx.Guids.Generators;
 
 partial class NameBasedGuidGenerator
 {
-    internal sealed class MD5Hashing : NameBasedGuidGenerator
-    {
-        private static volatile NameBasedGuidGenerator.MD5Hashing? Singleton;
-
-        private MD5Hashing() { }
-
-        internal static NameBasedGuidGenerator.MD5Hashing Instance
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                [MethodImpl(MethodImplOptions.Synchronized)]
-                static NameBasedGuidGenerator.MD5Hashing Initialize()
-                {
-                    return NameBasedGuidGenerator.MD5Hashing.Singleton ??=
-                        new NameBasedGuidGenerator.MD5Hashing();
-                }
-
-                return NameBasedGuidGenerator.MD5Hashing.Singleton ?? Initialize();
-            }
-        }
-
-        public override GuidVersion Version => GuidVersion.Version3;
-
-        protected override HashAlgorithm CreateHashing() => MD5.Create();
-    }
-
-    internal sealed class SHA1Hashing : NameBasedGuidGenerator
-    {
-        private static volatile NameBasedGuidGenerator.SHA1Hashing? Singleton;
-
-        private SHA1Hashing() { }
-
-        internal static NameBasedGuidGenerator.SHA1Hashing Instance
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                [MethodImpl(MethodImplOptions.Synchronized)]
-                static NameBasedGuidGenerator.SHA1Hashing Initialize()
-                {
-                    return NameBasedGuidGenerator.SHA1Hashing.Singleton ??=
-                        new NameBasedGuidGenerator.SHA1Hashing();
-                }
-
-                return NameBasedGuidGenerator.SHA1Hashing.Singleton ?? Initialize();
-            }
-        }
-
-        public override GuidVersion Version => GuidVersion.Version5;
-
-        protected override HashAlgorithm CreateHashing() => SHA1.Create();
-    }
-
-#if !FEATURE_DISABLE_UUIDREV
     internal class CustomHashing : NameBasedGuidGenerator
     {
         private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha256;
@@ -231,5 +175,5 @@ partial class NameBasedGuidGenerator
             }
         }
     }
-#endif
 }
+#endif

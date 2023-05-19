@@ -78,6 +78,12 @@ internal static unsafe class NativeLib
         return GuidCreate(GuidGenerator.Version6P, guid);
     }
 
+    [UnmanagedCallersOnly(EntryPoint = nameof(GuidCreateV6R))]
+    internal static HResult GuidCreateV6R([Out] Guid* guid)
+    {
+        return GuidCreate(GuidGenerator.Version6R, guid);
+    }
+
     [UnmanagedCallersOnly(EntryPoint = nameof(GuidCreateV7))]
     internal static HResult GuidCreateV7([Out] Guid* guid)
     {

@@ -351,14 +351,23 @@ module Guid =
     let newV6P () = Generator.Version6P.NewGuid()
 
     /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6
+    /// using a non-volatile random node ID.
+    /// </summary>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6
+    /// using a non-volatile random node ID.</returns>
+    [<CompiledName("NewVersion6R")>]
+    let newV6R () = Generator.Version6R.NewGuid()
+
+    /// <summary>
     /// Creates a new unlimited sequence that generates <see cref="T:System.Guid"/> instances
     /// of RFC 4122 UUID revision version 6 using a volatile random node ID.
     /// </summary>
     /// <returns>A new unlimited sequence that generates <see cref="T:System.Guid"/> instances
     /// of RFC 4122 UUID revision version 6 using a volatile random node ID.</returns>
-    [<CompiledName("NewVersion6Sequence")>]
-    let newV6Seq () =
-        Generator.CreateVersion6() |> Generator.asSeq
+    [<CompiledName("NewVersion6RSequence")>]
+    let newV6RSeq () =
+        Generator.CreateVersion6R() |> Generator.asSeq
 
     /// <summary>
     /// Creates a new unlimited sequence that generates <see cref="T:System.Guid"/> instances
@@ -366,9 +375,9 @@ module Guid =
     /// </summary>
     /// <returns>A new unlimited sequence that generates <see cref="T:System.Guid"/> instances
     /// of RFC 4122 UUID revision version 6 using a volatile random node ID without blocking.</returns>
-    [<CompiledName("NewVersion6PooledSequence")>]
-    let newV6PoolSeq () =
-        Generator.CreateVersion6 |> Generator.CreatePooled |> Generator.asSeq
+    [<CompiledName("NewVersion6RPooledSequence")>]
+    let newV6RPoolSeq () =
+        Generator.CreateVersion6R |> Generator.CreatePooled |> Generator.asSeq
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 7.
