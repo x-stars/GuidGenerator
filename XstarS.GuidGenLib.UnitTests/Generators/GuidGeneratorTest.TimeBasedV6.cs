@@ -29,6 +29,8 @@ partial class GuidGeneratorTest
         Assert.AreEqual(GuidVariant.Rfc4122, guid.GetVariant());
         var guidP = GuidGenerator.Version6P.NewGuid();
         Assert.AreEqual(GuidVariant.Rfc4122, guidP.GetVariant());
+        var guidR = GuidGenerator.Version6R.NewGuid();
+        Assert.AreEqual(GuidVariant.Rfc4122, guidR.GetVariant());
         var guidV = GuidGenerator.CreateVersion6R().NewGuid();
         Assert.AreEqual(GuidVariant.Rfc4122, guidV.GetVariant());
     }
@@ -88,8 +90,14 @@ partial class GuidGeneratorTest
     }
 
     [TestMethod]
-    public void NewGuid_Version6R_GetGuidsWithSameNodeId()
+    public void NewGuid_Version6PR_GetGuidsWithSameNodeId()
     {
+        var guidGenP = GuidGenerator.Version6P;
+        var guidP0 = guidGenP.NewGuid();
+        _ = guidP0.TryGetNodeId(out var nodeIdP0);
+        var guidP1 = guidGenP.NewGuid();
+        _ = guidP1.TryGetNodeId(out var nodeIdP1);
+        CollectionAssert.AreEqual(nodeIdP0, nodeIdP1);
         var guidGenR = GuidGenerator.Version6R;
         var guidR0 = guidGenR.NewGuid();
         _ = guidR0.TryGetNodeId(out var nodeIdR0);

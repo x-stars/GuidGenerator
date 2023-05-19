@@ -66,7 +66,7 @@ public class PooledGuidGeneratorBenchmark
     {
         this.ParallelInvoke(count =>
         {
-            var guidGen = GuidGenerator.Version6;
+            var guidGen = GuidGenerator.Version6R;
             for (int index = 0; index < count; index++)
             {
                 var guid = guidGen.NewGuid();

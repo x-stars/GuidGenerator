@@ -84,7 +84,7 @@ partial class TimeBasedGuidGenerator
                 if (this.TryFillTimeFields(ref result))
                 {
                     var newGuid = Guid.NewGuid();
-                    result.LowData() = newGuid.LowData();
+                    result.DataLow() = newGuid.DataLow();
                     result.NodeId(0) |= 0x01;
                     this.FillVersionField(ref result);
                     Debug.Assert(result.GetVariant() == this.Variant);
