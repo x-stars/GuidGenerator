@@ -35,6 +35,15 @@ type GuidGeneratorTest() =
         |> fun nodes -> (nodes.[0], nodes.[1])
         |> CollectionAssert.AreEqual
 
+#if !FEATURE_DISABLE_UUIDREV
+    [<TestMethod>]
+    member _.NewVersion1RPooledSequence_WithoutInput_GetGuidsOfVersion1() =
+        Guid.newV1RPoolSeq ()
+        |> Seq.take 10
+        |> Seq.map Guid.version
+        |> Seq.iter (Assert.equalTo Guid.Version.Version1)
+#endif
+
     [<TestMethod>]
     member _.NewVersion2_PersonDomain_GetGuidOfVersion2() =
         Guid.newV2 Guid.Domain.Person
@@ -123,6 +132,15 @@ type GuidGeneratorTest() =
         |> Assert.equalTo 0x00uy
 
     [<TestMethod>]
+    member _.NewVersion6R_WithoutInput_GetNodeIdWithOddFirstByte() =
+        Guid.newV6R ()
+        |> Guid.tryGetNodeId
+        |> tee (Assert.true' << ValueOption.isSome)
+        |> ValueOption.get
+        |> fun nodeId -> nodeId[0] &&& 0x01uy
+        |> Assert.equalTo 0x01uy
+
+    [<TestMethod>]
     member _.NewVersion6RSequence_WithoutInput_GetGuidsWithSameNodeId() =
         Guid.newV6RSeq ()
         |> Seq.take 2
@@ -136,8 +154,25 @@ type GuidGeneratorTest() =
         |> CollectionAssert.AreEqual
 
     [<TestMethod>]
+    member _.NewVersion6RPooledSequence_WithoutInput_GetGuidsOfVersion6() =
+        Guid.newV6RPoolSeq ()
+        |> Seq.take 10
+        |> Seq.map Guid.version
+        |> Seq.iter (Assert.equalTo Guid.Version.Version6)
+
+    [<TestMethod>]
     member _.NewVersion7_WithoutInput_GetGuidOfVersion7() =
         Guid.newV7 ()
         |> Guid.version
         |> Assert.equalTo Guid.Version.Version7
+
+    [<TestMethod>]
+    member _.NewVersion7M_WithoutInput_GetMonotonicVersion7Guids() =
+        fun _ -> Guid.newV7M ()
+        |> Seq.init 1000
+        |> tee (Seq.map Guid.version
+                >> Seq.iter (Assert.equalTo Guid.Version.Version7))
+        |> Seq.pairwise
+        |> Seq.map (fun (lastGuid, guid) -> guid.CompareTo(lastGuid) > 0)
+        |> Assert.Seq.notContains false
 #endif

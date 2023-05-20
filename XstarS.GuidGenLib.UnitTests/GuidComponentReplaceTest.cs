@@ -31,6 +31,19 @@ public partial class GuidComponentReplaceTest
 #endif
 
     [TestMethod]
+    public void ReplaceVersion_GuidNewGuid_GetGuidWithInputVersionNumber()
+    {
+        var versions = Array.ConvertAll(
+            (GuidVersion[])Enum.GetValues(typeof(GuidVersion)),
+            version => (byte)version);
+        foreach (var version in versions)
+        {
+            var guid = Guid.NewGuid().ReplaceVersion(version);
+            Assert.AreEqual(version, (byte)guid.GetVersion());
+        }
+    }
+
+    [TestMethod]
     public void ReplaceVariant_EmptyGuid_GetGuidWithInputVariant()
     {
         var variants = Enum.GetValues(typeof(GuidVariant));

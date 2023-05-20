@@ -3,7 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace XNetEx.Guids.Generators;
 
-partial class GuidGeneratorTest
+[TestClass]
+public class DceSecurityGuidGeneratorTest
 {
     [TestMethod]
     public void NewGuid_Version2_GetGuidWithVersion2()

@@ -1,40 +1,12 @@
-﻿using System;
+﻿#if !FEATURE_DISABLE_UUIDREV
+using System;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace XNetEx.Guids.Generators;
 
-partial class GuidGeneratorTest
+partial class TimeBasedGuidGeneratorTest
 {
-    [TestMethod]
-    public void NewGuid_EmptyVersion_GetEmptyGuid()
-    {
-        var guid = GuidGenerator.Empty.NewGuid();
-        Assert.AreEqual(Guid.Empty, guid);
-    }
-
-    [TestMethod]
-    public void NewGuid_Version4_GetGuidWithVersion4()
-    {
-        var guid = GuidGenerator.Version4.NewGuid();
-        Assert.AreEqual(GuidVersion.Version4, guid.GetVersion());
-    }
-
-    [TestMethod]
-    public void NewGuid_Version4_GetGuidWithRfc4122Variant()
-    {
-        var guid = GuidGenerator.Version4.NewGuid();
-        Assert.AreEqual(GuidVariant.Rfc4122, guid.GetVariant());
-    }
-
-    [TestMethod]
-    public void NewGuid_Version4_GetDifferentGuidValues()
-    {
-        var guid0 = GuidGenerator.Version4.NewGuid();
-        var guid1 = GuidGenerator.Version4.NewGuid();
-        Assert.AreNotEqual(guid0, guid1);
-    }
-
-#if !FEATURE_DISABLE_UUIDREV
     [TestMethod]
     public void NewGuid_Version7_GetGuidWithVersion7()
     {
@@ -86,32 +58,32 @@ partial class GuidGeneratorTest
     }
 
     [TestMethod]
-    public void NewGuid_Version8_GetGuidWithVersion8()
+    public void NewGuid_Version7_GetMonotonicGuids()
     {
-        var guid = GuidGenerator.Version8.NewGuid();
-        Assert.AreEqual(GuidVersion.Version8, guid.GetVersion());
+        var lastGuid = Guid.Empty;
+        var guidGen = GuidGenerator.Version7;
+        for (int index = 0; index < 1000; index++)
+        {
+            var guid = guidGen.NewGuid();
+            Assert.IsTrue(guid.CompareTo(lastGuid) > 0);
+            lastGuid = guid;
+        }
     }
 
     [TestMethod]
-    public void NewGuid_Version8_GetGuidWithRfc4122Variant()
+    public void NewGuid_Version7M_ConcurrentGetMonotonicGuids()
     {
-        var guid = GuidGenerator.Version8.NewGuid();
-        Assert.AreEqual(GuidVariant.Rfc4122, guid.GetVariant());
+        var lastGuid = Guid.Empty;
+        var guidGen = GuidGenerator.Version7M;
+        Parallel.For(0, 1000, index =>
+        {
+            lock (guidGen)
+            {
+                var guid = guidGen.NewGuid();
+                Assert.IsTrue(guid.CompareTo(lastGuid) > 0);
+                lastGuid = guid;
+            }
+        });
     }
-
-    [TestMethod]
-    public void NewGuid_Version8_GetDifferentGuidValues()
-    {
-        var guid0 = GuidGenerator.Version8.NewGuid();
-        var guid1 = GuidGenerator.Version8.NewGuid();
-        Assert.AreNotEqual(guid0, guid1);
-    }
-
-    [TestMethod]
-    public void NewGuid_VersionMaxValue_GetGuidMaxValue()
-    {
-        var guid = GuidGenerator.MaxValue.NewGuid();
-        Assert.AreEqual(Uuid.MaxValue, guid);
-    }
-#endif
 }
+#endif

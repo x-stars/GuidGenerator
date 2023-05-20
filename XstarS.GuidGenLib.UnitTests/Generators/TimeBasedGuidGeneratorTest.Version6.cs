@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace XNetEx.Guids.Generators;
 
-partial class GuidGeneratorTest
+partial class TimeBasedGuidGeneratorTest
 {
     [TestMethod]
     public void NewGuid_Version6_GetGuidWithVersion6()
@@ -87,6 +87,28 @@ partial class GuidGeneratorTest
         _ = guid.TryGetNodeId(out var nodeId);
         var nodeIdByte0 = nodeId![0];
         Assert.AreEqual(0x00, nodeIdByte0 & 0x01);
+    }
+
+    [TestMethod]
+    public void NewGuid_Version6_GetDifferentClockSequences()
+    {
+        var guidGen = GuidGenerator.Version6;
+        var guid0 = guidGen.NewGuid();
+        _ = guid0.TryGetClockSequence(out var clockSeq0);
+        var guid1 = guidGen.NewGuid();
+        _ = guid1.TryGetClockSequence(out var clockSeq1);
+        Assert.AreNotEqual(clockSeq0, clockSeq1);
+    }
+
+    [TestMethod]
+    public void NewGuid_Version6_GetDifferentNodeIds()
+    {
+        var guidGen = GuidGenerator.Version6;
+        var guid0 = guidGen.NewGuid();
+        _ = guid0.TryGetNodeId(out var nodeId0);
+        var guid1 = guidGen.NewGuid();
+        _ = guid1.TryGetNodeId(out var nodeId1);
+        CollectionAssert.AreNotEqual(nodeId0, nodeId1);
     }
 
     [TestMethod]
