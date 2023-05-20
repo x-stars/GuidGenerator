@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace XNetEx.Guids.Generators;
@@ -83,6 +84,35 @@ partial class GuidGeneratorTest
         var guid1 = GuidGenerator.Version7.NewGuid();
         var guid1Lower = GetGuidLower8Bytes(guid1);
         CollectionAssert.AreNotEqual(guid0Lower, guid1Lower);
+    }
+
+    [TestMethod]
+    public void NewGuid_Version7_GetMonotonicGuids()
+    {
+        var lastGuid = Guid.Empty;
+        var guidGen = GuidGenerator.Version7;
+        for (int index = 0; index < 1000; index++)
+        {
+            var guid = guidGen.NewGuid();
+            Assert.IsTrue(guid.CompareTo(lastGuid) > 0);
+            lastGuid = guid;
+        }
+    }
+
+    [TestMethod]
+    public void NewGuid_Version7M_ConcurrentGetMonotonicGuids()
+    {
+        var lastGuid = Guid.Empty;
+        var guidGen = GuidGenerator.Version7M;
+        Parallel.For(0, 1000, index =>
+        {
+            lock (guidGen)
+            {
+                var guid = guidGen.NewGuid();
+                Assert.IsTrue(guid.CompareTo(lastGuid) > 0);
+                lastGuid = guid;
+            }
+        });
     }
 
     [TestMethod]

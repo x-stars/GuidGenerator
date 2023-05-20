@@ -90,6 +90,28 @@ partial class GuidGeneratorTest
     }
 
     [TestMethod]
+    public void NewGuid_Version6_GetDifferentClockSequences()
+    {
+        var guidGen = GuidGenerator.Version6;
+        var guid0 = guidGen.NewGuid();
+        _ = guid0.TryGetClockSequence(out var clockSeq0);
+        var guid1 = guidGen.NewGuid();
+        _ = guid1.TryGetClockSequence(out var clockSeq1);
+        Assert.AreNotEqual(clockSeq0, clockSeq1);
+    }
+
+    [TestMethod]
+    public void NewGuid_Version6_GetDifferentNodeIds()
+    {
+        var guidGen = GuidGenerator.Version6;
+        var guid0 = guidGen.NewGuid();
+        _ = guid0.TryGetNodeId(out var nodeId0);
+        var guid1 = guidGen.NewGuid();
+        _ = guid1.TryGetNodeId(out var nodeId1);
+        CollectionAssert.AreNotEqual(nodeId0, nodeId1);
+    }
+
+    [TestMethod]
     public void NewGuid_Version6PR_GetGuidsWithSameNodeId()
     {
         var guidGenP = GuidGenerator.Version6P;

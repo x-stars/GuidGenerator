@@ -85,6 +85,13 @@ type GuidComponentTest() =
 #endif
 
     [<TestMethod>]
+    member _.ReplaceVersionNumber_Version4Guid_GetInputVersionNumber() =
+        Guid.newV4 ()
+        |> Guid.replaceVersionNum 8uy
+        |> Guid.version
+        |> Assert.equalTo (enumof 8uy)
+
+    [<TestMethod>]
     member _.ReplaceTimestamp_Version1Guid_GetInputDateTime() =
         Guid.parse "00000000-0000-1000-80b4-00c04fd430c8"
         |> Guid.replaceTime (DateTime(0x08BEFFD14FDBF810L, DateTimeKind.Utc))
