@@ -6,29 +6,6 @@ namespace XNetEx.Guids.Generators;
 [TestClass]
 public class GuidGeneratorDerivedTest
 {
-    private sealed class TestGuidGenerator : GuidGenerator
-    {
-        public TestGuidGenerator(
-            GuidVersion version = default,
-            GuidVariant variant = default)
-        {
-            this.Version = version;
-            this.Variant = variant;
-        }
-
-        public override GuidVersion Version { get; }
-
-        public override GuidVariant Variant { get; }
-
-        public override Guid NewGuid()
-        {
-            var guid = Guid.Empty;
-            this.FillVersionField(ref guid);
-            this.FillVariantField(ref guid);
-            return guid;
-        }
-    }
-
     [TestMethod]
     public void FillVersionField_AllPossibleVersion_GetInputVersion()
     {
@@ -52,6 +29,29 @@ public class GuidGeneratorDerivedTest
             var guid = guidGen.NewGuid();
             var guidVariant = guid.GetVariant();
             Assert.AreEqual(variant, guidVariant);
+        }
+    }
+
+    private sealed class TestGuidGenerator : GuidGenerator
+    {
+        public TestGuidGenerator(
+            GuidVersion version = default,
+            GuidVariant variant = default)
+        {
+            this.Version = version;
+            this.Variant = variant;
+        }
+
+        public override GuidVersion Version { get; }
+
+        public override GuidVariant Variant { get; }
+
+        public override Guid NewGuid()
+        {
+            var guid = Guid.Empty;
+            this.FillVersionField(ref guid);
+            this.FillVariantField(ref guid);
+            return guid;
         }
     }
 }

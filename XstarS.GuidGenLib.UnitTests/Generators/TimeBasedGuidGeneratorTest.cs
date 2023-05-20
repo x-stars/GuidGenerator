@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace XNetEx.Guids.Generators;
 
-partial class GuidGeneratorTest
+[TestClass]
+public partial class TimeBasedGuidGeneratorTest
 {
     [TestMethod]
     public void NewGuid_Version1_GetGuidWithVersion1()

@@ -35,12 +35,14 @@ type GuidGeneratorTest() =
         |> fun nodes -> (nodes.[0], nodes.[1])
         |> CollectionAssert.AreEqual
 
+#if !FEATURE_DISABLE_UUIDREV
     [<TestMethod>]
     member _.NewVersion1RPooledSequence_WithoutInput_GetGuidsOfVersion1() =
         Guid.newV1RPoolSeq ()
         |> Seq.take 10
         |> Seq.map Guid.version
         |> Seq.iter (Assert.equalTo Guid.Version.Version1)
+#endif
 
     [<TestMethod>]
     member _.NewVersion2_PersonDomain_GetGuidOfVersion2() =

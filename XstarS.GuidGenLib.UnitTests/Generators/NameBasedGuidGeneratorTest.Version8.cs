@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace XNetEx.Guids.Generators;
 
-partial class GuidGeneratorTest
+partial class NameBasedGuidGeneratorTest
 {
     [TestMethod]
     public void NewGuid_Version8NSha256_GetExpectedGuid()

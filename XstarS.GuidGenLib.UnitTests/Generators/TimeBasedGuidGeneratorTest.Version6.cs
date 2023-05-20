@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace XNetEx.Guids.Generators;
 
-partial class GuidGeneratorTest
+partial class TimeBasedGuidGeneratorTest
 {
     [TestMethod]
     public void NewGuid_Version6_GetGuidWithVersion6()
