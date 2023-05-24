@@ -104,6 +104,7 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
         }
         hashings.Dispose();
         this.FastHashing?.Dispose();
+        this.FastHashing = null;
     }
 #endif
 
