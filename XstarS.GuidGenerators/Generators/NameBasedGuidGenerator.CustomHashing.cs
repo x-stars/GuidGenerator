@@ -113,27 +113,35 @@ partial class NameBasedGuidGenerator
 
         private sealed class Disposable : NameBasedGuidGenerator.CustomHashing, IDisposable
         {
-            private volatile bool IsDisposed;
+            private volatile int DisposeState;
 
             internal Disposable(Guid hashspaceId, Func<HashAlgorithm> hashingFactory)
                 : base(hashspaceId, hashingFactory)
             {
-                this.IsDisposed = false;
+                this.DisposeState = 0;
             }
 
             protected override void Dispose(bool disposing)
             {
-                if (this.IsDisposed) { return; }
-                lock (this.Hashings)
+                if (Interlocked.CompareExchange(ref this.DisposeState, 1, 0) == 0)
                 {
-                    if (this.IsDisposed) { return; }
                     if (disposing)
                     {
                         this.DisposeHashings();
                     }
-                    this.IsDisposed = true;
+                    this.DisposeState = 2;
                 }
                 base.Dispose(disposing);
+            }
+
+            protected override void ReturnHashing(HashAlgorithm hashing)
+            {
+                if (this.DisposeState != 0)
+                {
+                    hashing.Dispose();
+                    return;
+                }
+                base.ReturnHashing(hashing);
             }
         }
 

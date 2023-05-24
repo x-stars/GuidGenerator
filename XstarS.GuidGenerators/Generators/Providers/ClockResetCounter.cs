@@ -41,15 +41,15 @@ internal abstract class ClockResetCounter
             var lastTs = Local.LastTimestamp;
             if (timestamp == lastTs)
             {
-                var nextCounter = Local.Counter + 1;
-                if (nextCounter >= CounterLimit)
+                var counter = Local.Counter + 1;
+                if (counter >= CounterLimit)
                 {
                     sequence = (short)0;
                     return false;
                 }
-                Local.Counter = nextCounter;
+                Local.Counter = counter;
                 var baseSeq = Local.BaseSequence;
-                sequence = (short)(baseSeq + nextCounter - 1);
+                sequence = (short)(baseSeq + counter);
             }
             else
             {

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace XNetEx.Guids.Generators;
 
@@ -13,7 +14,7 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
 
     private volatile IBlockingGuidGenerator? DefaultGeneratorValue;
 
-    private volatile bool IsDisposed;
+    private volatile int DisposeState;
 
     internal GuidGeneratorPool(Func<IBlockingGuidGenerator> factory, int capacity = -1)
     {
@@ -23,7 +24,7 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
             new BlockingCollection<IBlockingGuidGenerator>() :
             new BlockingCollection<IBlockingGuidGenerator>(capacity);
         this.DefaultGeneratorValue = null;
-        this.IsDisposed = false;
+        this.DisposeState = 0;
     }
 
     public GuidVersion Version => this.DefaultGenerator.Version;
@@ -40,8 +41,12 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
             {
                 lock (this.Generators)
                 {
-                    return this.DefaultGeneratorValue ??=
-                        this.CreateGenerator();
+                    if (this.DisposeState != 0)
+                    {
+                        throw new ObjectDisposedException(this.GetType().Name);
+                    }
+
+                    return this.DefaultGeneratorValue ??= this.CreateGenerator();
                 }
             }
 
@@ -51,10 +56,8 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
 
     public void Dispose()
     {
-        if (this.IsDisposed) { return; }
-        lock (this.Generators)
+        if (Interlocked.CompareExchange(ref this.DisposeState, 1, 0) == 0)
         {
-            if (this.IsDisposed) { return; }
             var generators = this.Generators;
             generators.CompleteAdding();
             while (generators.TryTake(out var generator))
@@ -62,8 +65,9 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
                 generator.Dispose();
             }
             generators.Dispose();
-            this.DefaultGenerator.Dispose();
-            this.IsDisposed = true;
+            this.DefaultGeneratorValue?.Dispose();
+            this.DefaultGeneratorValue = null;
+            this.DisposeState = 2;
         }
     }
 
@@ -85,17 +89,13 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
         }
         finally
         {
-            if (!this.Generators.TryAdd(generator))
-            {
-                generator.Dispose();
-            }
+            this.ReturnGenerator(generator);
         }
     }
 
     private bool TryNewGuidByPool(out Guid result)
     {
-        var generators = this.Generators;
-        if (generators.TryTake(out var generator))
+        if (this.Generators.TryTake(out var generator))
         {
             try
             {
@@ -106,10 +106,7 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
             }
             finally
             {
-                if (!generators.TryAdd(generator))
-                {
-                    generator.Dispose();
-                }
+                this.ReturnGenerator(generator);
             }
         }
         result = default(Guid);
@@ -121,6 +118,19 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
         return this.GeneratorFactory.Invoke() ??
             throw new InvalidOperationException(
                 "The GUID generator factory returns null.");
+    }
+
+    private void ReturnGenerator(IBlockingGuidGenerator generator)
+    {
+        if (this.DisposeState != 0)
+        {
+            generator.Dispose();
+            return;
+        }
+        if (!this.Generators.TryAdd(generator))
+        {
+            generator.Dispose();
+        }
     }
 }
 #endif

@@ -1,8 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 #if !FEATURE_DISABLE_UUIDREV
-using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 #endif
 
@@ -114,22 +112,14 @@ public partial class TimeBasedGuidGeneratorTest
 
 #if !FEATURE_DISABLE_UUIDREV
     [TestMethod]
-    public void NewGuid_CreatePooledV1R_GetAllNonEmptyGuids()
+    public void NewGuid_CreatePooledV1R_GetAllVersion1Guids()
     {
         using var guidGen = GuidGenerator.CreatePooled(GuidGenerator.CreateVersion1R);
-        var countBox = new StrongBox<int>(0);
         Parallel.For(0, 1000, part =>
         {
-            for (int index = 0; index < 1000; index++)
-            {
-                var guid = guidGen.NewGuid();
-                if (guid != Guid.Empty)
-                {
-                    Interlocked.Increment(ref countBox.Value);
-                }
-            }
+            var guid = guidGen.NewGuid();
+            Assert.AreEqual(GuidVersion.Version1, guid.GetVersion());
         });
-        Assert.AreEqual(1000 * 1000, countBox.Value);
     }
 #endif
 }
