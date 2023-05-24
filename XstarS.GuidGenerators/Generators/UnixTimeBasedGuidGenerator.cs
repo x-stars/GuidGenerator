@@ -76,7 +76,7 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
             {
                 var components = this.GuidComponents;
                 components.SetTimestamp(ref guid, timestamp);
-                this.FillMonotinicityFields(ref guid, timestamp, sequence);
+                this.FillMonotonicityFields(ref guid, timestamp, sequence);
                 this.FillVersionField(ref guid);
                 Debug.Assert(guid.GetVariant() == this.Variant);
                 return guid;
@@ -85,7 +85,7 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         }
     }
 
-    private void FillMonotinicityFields(ref Guid guid, long timestamp, short sequence)
+    private void FillMonotonicityFields(ref Guid guid, long timestamp, short sequence)
     {
         var tsSubMs = timestamp % TimeSpan.TicksPerMillisecond;
         var tsSubMsFrac = (tsSubMs << (12 + 2)) / TimeSpan.TicksPerMillisecond;
@@ -94,7 +94,7 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         timeHi_Ver = (ushort)(timeHi_Ver & 0xF000 | fracHi12);
         ref var clkSeqHi_Var = ref guid.ClkSeqHi_Var();
         var fracLow2 = (int)tsSubMsFrac & ~(-1 << 2);
-        var seqHi4 = (byte)(sequence >> (1 * 8));
+        var seqHi4 = (byte)((int)sequence >> 8);
         var fracLow2_seqHi4 = (fracLow2 << 4) | seqHi4;
         clkSeqHi_Var = (byte)(clkSeqHi_Var & 0xC0 | fracLow2_seqHi4);
         guid.ClkSeqLow() = (byte)sequence;
