@@ -71,12 +71,13 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         while (true)
         {
             var timestamp = this.CurrentTimestamp;
+            var tsSubMsFrac = this.GetSubMillisecondFraction(timestamp);
             var counter = this.ClockResetCounter;
-            if (counter.TryGetSequence(ref guid, timestamp, out var sequence))
+            if (counter.TryGetSequence(ref guid, tsSubMsFrac, out var sequence))
             {
                 var components = this.GuidComponents;
                 components.SetTimestamp(ref guid, timestamp);
-                this.FillMonotonicityFields(ref guid, timestamp, sequence);
+                this.FillMonotonicityFields(ref guid, tsSubMsFrac, sequence);
                 this.FillVersionField(ref guid);
                 Debug.Assert(guid.GetVariant() == this.Variant);
                 return guid;
@@ -85,18 +86,19 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         }
     }
 
-    private void FillMonotonicityFields(ref Guid guid, long timestamp, short sequence)
+    private short GetSubMillisecondFraction(long timestamp)
     {
         var tsSubMs = timestamp % TimeSpan.TicksPerMillisecond;
-        var tsSubMsFrac = (tsSubMs << (12 + 2)) / TimeSpan.TicksPerMillisecond;
+        var tsSubMsFrac = (tsSubMs << 12) / TimeSpan.TicksPerMillisecond;
+        return (short)tsSubMsFrac;
+    }
+
+    private void FillMonotonicityFields(ref Guid guid, short tsSubMsFrac, short sequence)
+    {
         ref var timeHi_Ver = ref guid.TimeHi_Ver();
-        var fracHi12 = (int)tsSubMsFrac >> 2;
-        timeHi_Ver = (ushort)(timeHi_Ver & 0xF000 | fracHi12);
+        timeHi_Ver = (ushort)(timeHi_Ver & 0xF000 | (ushort)tsSubMsFrac);
         ref var clkSeqHi_Var = ref guid.ClkSeqHi_Var();
-        var fracLow2 = (int)tsSubMsFrac & ~(-1 << 2);
-        var seqHi4 = (byte)((int)sequence >> 8);
-        var fracLow2_seqHi4 = (fracLow2 << 4) | seqHi4;
-        clkSeqHi_Var = (byte)(clkSeqHi_Var & 0xC0 | fracLow2_seqHi4);
+        clkSeqHi_Var = (byte)(clkSeqHi_Var & 0xC0 | (byte)(sequence >> 8));
         guid.ClkSeqLow() = (byte)sequence;
     }
 }
