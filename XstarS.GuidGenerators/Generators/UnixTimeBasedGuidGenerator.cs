@@ -86,6 +86,7 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private short GetSubMillisecondFraction(long timestamp)
     {
         var tsSubMs = timestamp % TimeSpan.TicksPerMillisecond;
