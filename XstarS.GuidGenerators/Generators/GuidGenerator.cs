@@ -7,7 +7,7 @@ namespace XNetEx.Guids.Generators;
 /// <summary>
 /// Provides methods to generate a <see cref="Guid"/>.
 /// </summary>
-public abstract partial class GuidGenerator : IGuidGeneratorInfo, IGuidGenerator
+public abstract partial class GuidGenerator : IGuidGenerator, IGuidGeneratorInfo
 {
     /// <summary>
     /// Initialize a new instance of the <see cref="GuidGenerator"/> class.
