@@ -6,7 +6,9 @@ namespace XNetEx.Guids.Generators;
 
 internal abstract class ClockResetCounter
 {
-    internal const int CounterLimit = 1 << 10;
+    internal const int SequenceMask = ~(-1 << 14);
+
+    internal const int CounterGuard = 1 << 12;
 
     private ClockResetCounter() { }
 
@@ -20,45 +22,41 @@ internal abstract class ClockResetCounter
     }
 
     public abstract bool TryGetSequence(
-        ref Guid newGuid, long timestamp, out short sequence);
+        ref Guid newGuid, short timestamp, out short sequence);
 
     private sealed class Local : ClockResetCounter
     {
         internal static readonly ClockResetCounter.Local Instance =
             new ClockResetCounter.Local();
 
-        [ThreadStatic] private static long LastTimestamp;
+        [ThreadStatic] private static short LastTimestamp;
 
-        [ThreadStatic] private static int BaseSequence;
-
-        [ThreadStatic] private static int Counter;
+        [ThreadStatic] private static short Sequence;
 
         private Local() { }
 
         public override bool TryGetSequence(
-            ref Guid newGuid, long timestamp, out short sequence)
+            ref Guid newGuid, short timestamp, out short sequence)
         {
             var lastTs = Local.LastTimestamp;
             if (timestamp == lastTs)
             {
-                var counter = Local.Counter + 1;
-                if (counter >= CounterLimit)
+                var nextSeq = Local.Sequence + 1;
+                if (nextSeq > SequenceMask)
                 {
                     sequence = (short)0;
                     return false;
                 }
-                Local.Counter = counter;
-                var baseSeq = Local.BaseSequence;
-                sequence = (short)(baseSeq + counter);
+                Local.Sequence = (short)nextSeq;
+                sequence = (short)nextSeq;
             }
             else
             {
                 var clkSeqHi = newGuid.ClkSeqHi_Var() << 8;
                 var guidClkSeq = clkSeqHi | newGuid.ClkSeqLow();
-                var newBaseSeq = guidClkSeq & ~(-1 << 12) & ~CounterLimit;
-                Local.BaseSequence = newBaseSeq;
-                Local.Counter = 0;
-                sequence = (short)newBaseSeq;
+                var newSeq = guidClkSeq & SequenceMask & ~CounterGuard;
+                Local.Sequence = (short)newSeq;
+                sequence = (short)newSeq;
             }
             Local.LastTimestamp = timestamp;
             return true;
@@ -70,24 +68,23 @@ internal abstract class ClockResetCounter
         internal static readonly ClockResetCounter.Global Instance =
             new ClockResetCounter.Global();
 
-        // InitFlag: 63, LastTs: 62~32, BaseSeq: 27~16, Counter: 11~0.
-        private /*volatile*/ long SequenceState;
+        // InitFlag: 31, LastTs: 30~16, Sequence: 14~0.
+        private volatile int SequenceState;
 
         private Global()
         {
-            this.SequenceState = -1L;
+            this.SequenceState = -1;
         }
 
         public override bool TryGetSequence(
-            ref Guid newGuid, long timestamp, out short sequence)
+            ref Guid newGuid, short timestamp, out short sequence)
         {
             var initLastTs = -1;
-            var tsLow31 = (int)(timestamp & ~(-1 << 31));
             var spinner = new SpinWait();
             while (true)
             {
-                var state = Volatile.Read(ref this.SequenceState);
-                var lastTs = (int)(state >> 32);
+                var state = this.SequenceState;
+                var lastTs = (short)(state >> 16);
                 if (initLastTs == -1)
                 {
                     initLastTs = lastTs;
@@ -98,11 +95,11 @@ internal abstract class ClockResetCounter
                     return false;
                 }
 
-                if (tsLow31 == lastTs)
+                if (timestamp == lastTs)
                 {
                     var nextState = state + 1;
-                    var counter = (ushort)nextState;
-                    if (counter >= CounterLimit)
+                    var nextSeq = (int)(short)nextState;
+                    if (nextSeq > SequenceMask)
                     {
                         sequence = (short)0;
                         return false;
@@ -110,8 +107,7 @@ internal abstract class ClockResetCounter
                     if (Interlocked.CompareExchange(
                         ref this.SequenceState, nextState, state) == state)
                     {
-                        var baseSeq = (ushort)(nextState >> 16);
-                        sequence = (short)(baseSeq + counter);
+                        sequence = (short)nextSeq;
                         return true;
                     }
                 }
@@ -119,12 +115,12 @@ internal abstract class ClockResetCounter
                 {
                     var clkSeqHi = newGuid.ClkSeqHi_Var() << 8;
                     var guidClkSeq = clkSeqHi | newGuid.ClkSeqLow();
-                    var newBaseSeq = guidClkSeq & ~(-1 << 12) & ~CounterLimit;
-                    var nextState = ((long)tsLow31 << 32) | ((long)newBaseSeq << 16);
+                    var newSeq = guidClkSeq & SequenceMask & ~CounterGuard;
+                    var nextState = ((int)timestamp << 16) | newSeq;
                     if (Interlocked.CompareExchange(
                         ref this.SequenceState, nextState, state) == state)
                     {
-                        sequence = (short)newBaseSeq;
+                        sequence = (short)newSeq;
                         return true;
                     }
                 }

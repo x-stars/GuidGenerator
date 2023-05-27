@@ -60,12 +60,13 @@ module Guid =
         /// <returns>A new unlimited sequence that generates <see cref="T:System.Guid"/> instances
         /// by the specified <see cref="T:XNetEx.Guids.Generators.IGuidGenerator"/>.</returns>
         [<CompiledName("AsSequence")>]
-        let internal asSeq (guidGen: IGuidGenerator) =
+        let asSeq (guidGen: IGuidGenerator) =
             seq { while true do yield guidGen.NewGuid() }
 
     /// <summary>
     /// Represents the <see cref="T:System.Guid"/> instance whose value is all zeros.
     /// </summary>
+    [<ValueAsStaticProperty>]
     [<CompiledName("Empty")>]
     let empty = Guid.Empty
 
@@ -73,6 +74,7 @@ module Guid =
     /// <summary>
     /// Represents the <see cref="T:System.Guid"/> instance whose value is all ones.
     /// </summary>
+    [<ValueAsStaticProperty>]
     [<CompiledName("MaxValue")>]
     let maxValue = Uuid.MaxValue
 #endif
@@ -80,24 +82,28 @@ module Guid =
     /// <summary>
     /// Represents the namespace ID for a fully-qualified domain name.
     /// </summary>
+    [<ValueAsStaticProperty>]
     [<CompiledName("NamespaceDns")>]
     let nsDns = Namespace.Dns
 
     /// <summary>
     /// Represents the namespace ID for a URL.
     /// </summary>
+    [<ValueAsStaticProperty>]
     [<CompiledName("NamespaceUrl")>]
     let nsUrl = Namespace.Url
 
     /// <summary>
     /// Represents the namespace ID for an ISO OID.
     /// </summary>
+    [<ValueAsStaticProperty>]
     [<CompiledName("NamespaceOid")>]
     let nsOid = Namespace.Oid
 
     /// <summary>
     /// Represents the namespace ID for an X.500 DN.
     /// </summary>
+    [<ValueAsStaticProperty>]
     [<CompiledName("NamespaceX500")>]
     let nsX500 = Namespace.X500
 
@@ -105,72 +111,84 @@ module Guid =
     /// <summary>
     /// Represents the hashspace ID for the SHA-224 hash algorithm.
     /// </summary>
+    [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha224")>]
     let hsSha224 = Hashspace.Sha224
 
     /// <summary>
     /// Represents the hashspace ID for the SHA-256 hash algorithm.
     /// </summary>
+    [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha256")>]
     let hsSha256 = Hashspace.Sha256
 
     /// <summary>
     /// Represents the hashspace ID for the SHA-384 hash algorithm.
     /// </summary>
+    [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha384")>]
     let hsSha384 = Hashspace.Sha384
 
     /// <summary>
     /// Represents the hashspace ID for the SHA-512 hash algorithm.
     /// </summary>
+    [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha512")>]
     let hsSha512 = Hashspace.Sha512
 
     /// <summary>
     /// Represents the hashspace ID for the SHA-512/224 hash algorithm.
     /// </summary>
+    [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha512T224")>]
     let hsSha512T224 = Hashspace.Sha512T224
 
     /// <summary>
     /// Represents the hashspace ID for the SHA-512/256 hash algorithm.
     /// </summary>
+    [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha512T256")>]
     let hsSha512T256 = Hashspace.Sha512T256
 
     /// <summary>
     /// Represents the hashspace ID for the SHA3-224 hash algorithm.
     /// </summary>
+    [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha3D224")>]
     let hsSha3D224 = Hashspace.Sha3D224
 
     /// <summary>
     /// Represents the hashspace ID for the SHA3-256 hash algorithm.
     /// </summary>
+    [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha3D256")>]
     let hsSha3D256 = Hashspace.Sha3D256
 
     /// <summary>
     /// Represents the hashspace ID for the SHA3-384 hash algorithm.
     /// </summary>
+    [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha3D384")>]
     let hsSha3D384 = Hashspace.Sha3D384
 
     /// <summary>
     /// Represents the hashspace ID for the SHA3-512 hash algorithm.
     /// </summary>
+    [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha3D512")>]
     let hsSha3D512 = Hashspace.Sha3D512
 
     /// <summary>
     /// Represents the hashspace ID for the SHAKE128 hash algorithm.
     /// </summary>
+    [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceShake128")>]
     let hsShake128 = Hashspace.Shake128
 
     /// <summary>
     /// Represents the hashspace ID for the SHAKE256 hash algorithm.
     /// </summary>
+    [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceShake256")>]
     let hsShake256 = Hashspace.Shake256
 #endif
