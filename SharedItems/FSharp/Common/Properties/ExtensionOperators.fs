@@ -4,9 +4,13 @@
 
 namespace global
 
+open System.Diagnostics
+open System.Diagnostics.CodeAnalysis
+
 /// <summary>
 /// Contains a set of extension operators and functions.
 /// </summary>
+[<DebuggerNonUserCode; ExcludeFromCodeCoverage>]
 [<AutoOpen>]
 module internal ExtensionOperators =
 
@@ -16,8 +20,8 @@ module internal ExtensionOperators =
     /// <param name="value">The input value.</param>
     /// <returns>The value as an enumeration.</returns>
     [<CompiledName("EnumOfValue")>]
-    let inline enumof<'T, 'Enum when 'Enum: enum<'T>> value =
-        LanguagePrimitives.EnumOfValue<'T, 'Enum> value
+    let inline enumof (value: 'T) : 'Enum =
+        LanguagePrimitives.EnumOfValue value
 
     /// <summary>
     /// Reverses the order of arguments of an infix operator
@@ -27,8 +31,8 @@ module internal ExtensionOperators =
     /// <param name="arg2">The right operand of the operator.</param>
     /// <param name="arg1">The left operand of the operator.</param>
     /// <returns>The return value of the infix operator.</returns>
-    [<CompiledName("InvokeOpAsFunc")>]
-    let inline op (func: 'T1 -> 'T2 -> 'TR) =
+    [<CompiledName("OperatorAsFunc")>]
+    let inline op (func: 'T1 -> 'T2 -> 'U) =
         fun arg2 arg1 -> func arg1 arg2
 
     /// <summary>
@@ -37,7 +41,7 @@ module internal ExtensionOperators =
     /// <param name="action">The action to apply.</param>
     /// <param name="value">The input value.</param>
     /// <returns>The input value.</returns>
-    [<CompiledName("TeeAction")>]
+    [<CompiledName("TeeActionBack")>]
     let inline tee (action: 'T -> unit) value =
         action value
         value
@@ -49,6 +53,7 @@ module internal ExtensionOperators =
     /// <param name="value">The input value.</param>
     /// <param name="action">The action to apply.</param>
     /// <returns>The input value.</returns>
+    [<CompiledName("TeeAction")>]
     let inline ( |- ) value (action: 'T -> unit) =
         action value
         value

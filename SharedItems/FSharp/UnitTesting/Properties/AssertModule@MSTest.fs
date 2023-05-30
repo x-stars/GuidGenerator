@@ -6,6 +6,8 @@ namespace XNetEx.FSharp.UnitTesting.MSTest
 
 open System
 open System.Collections
+open System.Diagnostics
+open System.Diagnostics.CodeAnalysis
 open System.Text.RegularExpressions
 open Microsoft.VisualStudio.TestTools.UnitTesting
 
@@ -13,24 +15,39 @@ open Microsoft.VisualStudio.TestTools.UnitTesting
 /// A collection of functions to test various conditions within unit tests.
 /// If the condition being tested is not met, an exception is raised.
 /// </summary>
+[<DebuggerNonUserCode; ExcludeFromCodeCoverage>]
 [<RequireQualifiedAccess>]
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module internal Assert =
 
     /// <summary>
-    /// Provides a <see cref="T:System.Collections.ICollection"/> wrapper to
-    /// the type <see cref="T:Microsoft.FSharp.Collections.seq`1"/>.
+    /// Provides an <see cref="T:System.Collections.ICollection"/> wrapper
+    /// to the type <see cref="T:Microsoft.FSharp.Collections.seq`1"/>.
     /// </summary>
     /// <param name="source">The <see cref="T:Microsoft.FSharp.Collections.seq`1"/>.</param>
+    [<DebuggerNonUserCode; ExcludeFromCodeCoverage>]
     [<Sealed>]
     type private SeqWrapper<'T>(source: seq<'T>) =
+
+        /// <summary>
+        /// Returns an <see cref="T:System.Collections.ICollection"/> wrapper
+        /// to the type <see cref="T:Microsoft.FSharp.Collections.seq`1"/>.
+        /// </summary>
+        /// <param name="source">The <see cref="T:Microsoft.FSharp.Collections.seq`1"/>.</param>
+        /// <returns>An <see cref="T:System.Collections.ICollection"/> wrapper
+        /// of <paramref name="source"/>.</returns>
+        static member Of(source: seq<'T>) =
+            match source with
+            | null -> null
+            | :? ICollection as collection -> collection
+            | _ -> SeqWrapper<'T>(source)
+
         interface ICollection with
             member _.Count = Seq.length source
             member _.IsSynchronized = false
             member _.SyncRoot = source
             member _.CopyTo(array, index) =
-                source |> Seq.iteri (fun num item ->
-                    array.SetValue(item, index + num))
+                (Seq.toArray source).CopyTo(array, index)
             member _.GetEnumerator() = source.GetEnumerator()
 
     /// <summary>
@@ -217,7 +234,7 @@ module internal Assert =
     /// Raised if <paramref name="element"/> is not found in <paramref name="sequence"/>.</exception>
     [<CompiledName("InSequence")>]
     let inline inSeq<'T> sequence (element: 'T) =
-        CollectionAssert.Contains(SeqWrapper<'T>(sequence), element)
+        CollectionAssert.Contains(SeqWrapper<'T>.Of(sequence), element)
 
     /// <summary>
     /// Tests whether the specified sequence does not contain the specified element
@@ -230,7 +247,7 @@ module internal Assert =
     /// Raised if <paramref name="element"/> is found in <paramref name="sequence"/>.</exception>
     [<CompiledName("NotInSequence")>]
     let inline notInSeq<'T> sequence (element: 'T) =
-        CollectionAssert.DoesNotContain(SeqWrapper<'T>(sequence), element)
+        CollectionAssert.DoesNotContain(SeqWrapper<'T>.Of(sequence), element)
 
     /// <summary>
     /// Tests whether the code specified by <paramref name="action"/> raises
@@ -251,6 +268,7 @@ module internal Assert =
     /// A collection of functions to test various conditions associated with sequences within unit tests.
     /// If the condition being tested is not met, an exception is raised.
     /// </summary>
+    [<DebuggerNonUserCode; ExcludeFromCodeCoverage>]
     [<RequireQualifiedAccess>]
     module Seq =
 
@@ -264,7 +282,7 @@ module internal Assert =
         /// Raised if a <see langword="null"/> element is found in <paramref name="sequence"/>.</exception>
         [<CompiledName("AllNotNull")>]
         let inline allNotNull<'T> sequence =
-            CollectionAssert.AllItemsAreNotNull(SeqWrapper<'T>(sequence))
+            CollectionAssert.AllItemsAreNotNull(SeqWrapper<'T>.Of(sequence))
 
         /// <summary>
         /// Tests whether all elements in the specified sequence are instances of the expected type
@@ -280,7 +298,7 @@ module internal Assert =
         /// of an element in <paramref name="sequence"/>.</exception>
         [<CompiledName("AllOfType")>]
         let inline allOfType<'T> sequence =
-            CollectionAssert.AllItemsAreInstancesOfType(SeqWrapper(Seq.cast<obj> sequence), typeof<'T>)
+            CollectionAssert.AllItemsAreInstancesOfType(SeqWrapper.Of(Seq.cast<obj> sequence), typeof<'T>)
 
         /// <summary>
         /// Tests whether all items in the specified sequence are unique or not
@@ -292,7 +310,7 @@ module internal Assert =
         /// Raised if a two or more equal elements are found in <paramref name="sequence"/>.</exception>
         [<CompiledName("ItemsUnique")>]
         let inline itemsUnique<'T> sequence =
-            CollectionAssert.AllItemsAreUnique(SeqWrapper<'T>(sequence))
+            CollectionAssert.AllItemsAreUnique(SeqWrapper<'T>.Of(sequence))
 
         /// <summary>
         /// Tests whether the specified sequences are equal
@@ -308,7 +326,7 @@ module internal Assert =
         /// Raised if <paramref name="expected"/> is not equal to <paramref name="actual"/>.</exception>
         [<CompiledName("EqualTo")>]
         let inline equalTo<'T> expected actual =
-            CollectionAssert.AreEqual(SeqWrapper<'T>(expected), SeqWrapper<'T>(actual))
+            CollectionAssert.AreEqual(SeqWrapper<'T>.Of(expected), SeqWrapper<'T>.Of(actual))
 
         /// <summary>
         /// Tests whether the specified sequences are unequal
@@ -324,7 +342,7 @@ module internal Assert =
         /// Raised if <paramref name="notExpected"/> is equal to <paramref name="actual"/>.</exception>
         [<CompiledName("NotEqualTo")>]
         let inline notEqualTo<'T> notExpected actual =
-            CollectionAssert.AreNotEqual(SeqWrapper<'T>(notExpected), SeqWrapper<'T>(actual))
+            CollectionAssert.AreNotEqual(SeqWrapper<'T>.Of(notExpected), SeqWrapper<'T>.Of(actual))
 
         /// <summary>
         /// Tests whether two sequences contain the same elements
@@ -339,7 +357,7 @@ module internal Assert =
         /// Raised if an element was found in one of the sequences but not the other.</exception>
         [<CompiledName("SetEqualTo")>]
         let inline setEqualTo<'T> expected actual =
-            CollectionAssert.AreEquivalent(SeqWrapper<'T>(expected), SeqWrapper<'T>(actual))
+            CollectionAssert.AreEquivalent(SeqWrapper<'T>.Of(expected), SeqWrapper<'T>.Of(actual))
 
         /// <summary>
         /// Tests whether two sequences contain the different elements
@@ -355,7 +373,7 @@ module internal Assert =
         /// including the same number of duplicate occurrences of each element.</exception>
         [<CompiledName("NotSetEqualTo")>]
         let inline notSetEqualTo<'T> notExpected actual =
-            CollectionAssert.AreNotEquivalent(SeqWrapper<'T>(notExpected), SeqWrapper<'T>(actual))
+            CollectionAssert.AreNotEquivalent(SeqWrapper<'T>.Of(notExpected), SeqWrapper<'T>.Of(actual))
 
         /// <summary>
         /// Tests whether the specified sequence contains the specified element
@@ -368,7 +386,7 @@ module internal Assert =
         /// Raised if <paramref name="element"/> is not found in <paramref name="sequence"/>.</exception>
         [<CompiledName("Contains")>]
         let inline contains<'T> (element: 'T) sequence =
-            CollectionAssert.Contains(SeqWrapper<'T>(sequence), element)
+            CollectionAssert.Contains(SeqWrapper<'T>.Of(sequence), element)
 
         /// <summary>
         /// Tests whether the specified sequence does not contain the specified element
@@ -381,7 +399,7 @@ module internal Assert =
         /// Raised if <paramref name="element"/> is found in <paramref name="sequence"/>.</exception>
         [<CompiledName("NotContains")>]
         let inline notContains<'T> (element: 'T) sequence =
-            CollectionAssert.DoesNotContain(SeqWrapper<'T>(sequence), element)
+            CollectionAssert.DoesNotContain(SeqWrapper<'T>.Of(sequence), element)
 
         /// <summary>
         /// Tests whether one sequence is a subset of another sequence
@@ -397,7 +415,7 @@ module internal Assert =
         /// is not found in <paramref name="superset"/>.</exception>
         [<CompiledName("SubsetOf")>]
         let inline subsetOf<'T> superset sequence =
-            CollectionAssert.IsSubsetOf(SeqWrapper<'T>(sequence), SeqWrapper<'T>(superset))
+            CollectionAssert.IsSubsetOf(SeqWrapper<'T>.Of(sequence), SeqWrapper<'T>.Of(superset))
 
         /// <summary>
         /// Tests whether one sequence is not a subset of another sequence
@@ -413,7 +431,7 @@ module internal Assert =
         /// is also found in <paramref name="superset"/>.</exception>
         [<CompiledName("NotSubsetOf")>]
         let inline notSubsetOf<'T> superset sequence =
-            CollectionAssert.IsNotSubsetOf(SeqWrapper<'T>(sequence), SeqWrapper<'T>(superset))
+            CollectionAssert.IsNotSubsetOf(SeqWrapper<'T>.Of(sequence), SeqWrapper<'T>.Of(superset))
 
         /// <summary>
         /// Tests whether one sequence is a superset of another sequence
@@ -429,7 +447,7 @@ module internal Assert =
         /// is not found in <paramref name="sequence"/>.</exception>
         [<CompiledName("SupersetOf")>]
         let inline supersetOf<'T> subset sequence =
-            CollectionAssert.IsSubsetOf(SeqWrapper<'T>(subset), SeqWrapper<'T>(sequence))
+            CollectionAssert.IsSubsetOf(SeqWrapper<'T>.Of(subset), SeqWrapper<'T>.Of(sequence))
 
         /// <summary>
         /// Tests whether one sequence is not a subset of another sequence
@@ -445,12 +463,13 @@ module internal Assert =
         /// is also found in <paramref name="sequence"/>.</exception>
         [<CompiledName("NotSupersetOf")>]
         let inline notSupersetOf<'T> subset sequence =
-            CollectionAssert.IsNotSubsetOf(SeqWrapper<'T>(subset), SeqWrapper<'T>(sequence))
+            CollectionAssert.IsNotSubsetOf(SeqWrapper<'T>.Of(subset), SeqWrapper<'T>.Of(sequence))
 
     /// <summary>
     /// A collection of functions to test various conditions associated with strings within unit tests.
     /// If the condition being tested is not met, an exception is raised.
     /// </summary>
+    [<DebuggerNonUserCode; ExcludeFromCodeCoverage>]
     [<RequireQualifiedAccess>]
     module String =
 
