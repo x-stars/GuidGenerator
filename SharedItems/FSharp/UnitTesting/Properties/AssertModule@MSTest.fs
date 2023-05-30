@@ -6,6 +6,8 @@ namespace XNetEx.FSharp.UnitTesting.MSTest
 
 open System
 open System.Collections
+open System.Diagnostics
+open System.Diagnostics.CodeAnalysis
 open System.Text.RegularExpressions
 open Microsoft.VisualStudio.TestTools.UnitTesting
 
@@ -13,6 +15,7 @@ open Microsoft.VisualStudio.TestTools.UnitTesting
 /// A collection of functions to test various conditions within unit tests.
 /// If the condition being tested is not met, an exception is raised.
 /// </summary>
+[<DebuggerNonUserCode; ExcludeFromCodeCoverage>]
 [<RequireQualifiedAccess>]
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module internal Assert =
@@ -22,6 +25,7 @@ module internal Assert =
     /// to the type <see cref="T:Microsoft.FSharp.Collections.seq`1"/>.
     /// </summary>
     /// <param name="source">The <see cref="T:Microsoft.FSharp.Collections.seq`1"/>.</param>
+    [<DebuggerNonUserCode; ExcludeFromCodeCoverage>]
     [<Sealed>]
     type private SeqWrapper<'T>(source: seq<'T>) =
 
@@ -264,6 +268,7 @@ module internal Assert =
     /// A collection of functions to test various conditions associated with sequences within unit tests.
     /// If the condition being tested is not met, an exception is raised.
     /// </summary>
+    [<DebuggerNonUserCode; ExcludeFromCodeCoverage>]
     [<RequireQualifiedAccess>]
     module Seq =
 
@@ -464,6 +469,7 @@ module internal Assert =
     /// A collection of functions to test various conditions associated with strings within unit tests.
     /// If the condition being tested is not met, an exception is raised.
     /// </summary>
+    [<DebuggerNonUserCode; ExcludeFromCodeCoverage>]
     [<RequireQualifiedAccess>]
     module String =
 

@@ -4,9 +4,13 @@
 
 namespace global
 
+open System.Diagnostics
+open System.Diagnostics.CodeAnalysis
+
 /// <summary>
 /// Contains a set of extension operators and functions.
 /// </summary>
+[<DebuggerNonUserCode; ExcludeFromCodeCoverage>]
 [<AutoOpen>]
 module internal ExtensionOperators =
 
