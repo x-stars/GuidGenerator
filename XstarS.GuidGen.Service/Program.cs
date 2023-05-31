@@ -9,7 +9,7 @@ using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
 static Func<int?, object> HandleCount(Func<Guid> newGuid) =>
-    (int? count) => (count is null) ? (object)newGuid() : Enumerable.Range(0, (int)count).Select(index => newGuid()).ToArray();
+    (int? count) => (count is null) ? (object)newGuid() : Enumerable.Range(0, (int)count).Select(index => newGuid());
 const BindingFlags nsFlags = BindingFlags.IgnoreCase | BindingFlags.Static | BindingFlags.Public;
 static Guid ParseGuidNs(string ns) => (typeof(GuidNamespaces).GetField(ns, nsFlags)?.GetValue(null) as Guid?) ?? Guid.ParseExact(ns, "D");
 static byte[] ParseBase64(string base64) => Convert.FromBase64String(base64.Replace('-', '+').Replace('_', '/') + new string('=', base64.Length % 4));
