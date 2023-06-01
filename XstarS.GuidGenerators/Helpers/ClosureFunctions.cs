@@ -14,7 +14,7 @@ internal static class ClosureFunctions
     /// <typeparam name="T">The type of the current instance.</typeparam>
     /// <param name="value">The current instance.</param>
     /// <returns>The current instance.</returns>
-    public static T Identity<T>(this T value) where T : class => value;
+    public static T Identity<T>(this T value) where T : class? => value;
 
     /// <summary>
     /// Returns the current instance.

@@ -44,9 +44,10 @@ internal sealed class NewDceSecurityGuidCommand : ProgramCommand
             nSiteId = (int)siteId;
         }
 
+        var stdout = Console.Out;
         var guidGen = GuidGenerator.Version2;
         var guid = guidGen.NewGuid(domain, nSiteId);
-        Console.WriteLine(guid);
+        stdout.WriteLine(in guid);
         return true;
     }
 
