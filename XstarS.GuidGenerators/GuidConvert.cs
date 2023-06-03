@@ -70,13 +70,13 @@ public static class Uuid
     /// Returns a 128-bit unsigned integer
     /// that contains the value of the <see cref="Guid"/>.
     /// </summary>
-    /// <param name="guid">The <see cref="Guid"/> to convert.</param>
+    /// <param name="value">The <see cref="Guid"/> to convert.</param>
     /// <returns>A 128-bit unsigned integer
     /// that contains the value of the <see cref="Guid"/>.</returns>
     [CLSCompliant(false)]
-    public static UInt128 ToUInt128(Guid guid)
+    public static UInt128 ToUInt128(Guid value)
     {
-        return GuidExtensions.ToUInt128(guid);
+        return GuidExtensions.ToUInt128(value);
     }
 #endif
 
@@ -84,12 +84,12 @@ public static class Uuid
     /// Returns a 16-element byte array that contains the fields
     /// of the <see cref="Guid"/> in big-endian order.
     /// </summary>
-    /// <param name="guid">The <see cref="Guid"/> to convert.</param>
+    /// <param name="value">The <see cref="Guid"/> to convert.</param>
     /// <returns>A 16-element byte array that contains the fields
     /// of the <see cref="Guid"/> in big-endian order.</returns>
-    public static byte[] ToByteArray(Guid guid)
+    public static byte[] ToByteArray(Guid value)
     {
-        return GuidExtensions.ToUuidByteArray(guid);
+        return GuidExtensions.ToUuidByteArray(value);
     }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -97,14 +97,14 @@ public static class Uuid
     /// Tries to write the fields of the <see cref="Guid"/>
     /// into a span of bytes in big-endian order.
     /// </summary>
-    /// <param name="guid">The <see cref="Guid"/> to write.</param>
+    /// <param name="value">The <see cref="Guid"/> to write.</param>
     /// <param name="destination">When this method returns <see langword="true"/>,
     /// contains the fields of the <see cref="Guid"/> in big-endian order.</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/> is successfully
     /// written to the specified span; otherwise, <see langword="false"/>.</returns>
-    public static bool TryWriteBytes(Guid guid, Span<byte> destination)
+    public static bool TryWriteBytes(Guid value, Span<byte> destination)
     {
-        return GuidExtensions.TryWriteUuidBytes(guid, destination);
+        return GuidExtensions.TryWriteUuidBytes(value, destination);
     }
 #endif
 
@@ -144,13 +144,13 @@ public static class Uuid
     /// <see cref="Guid"/> structure, provided that the string is in the URN format.
     /// </summary>
     /// <param name="input">The string to convert.</param>
-    /// <param name="guid">When this method returns <see langword="true"/>,
+    /// <param name="result">When this method returns <see langword="true"/>,
     /// contains the parsed <see cref="Guid"/> value.</param>
     /// <returns><see langword="true"/> if the parse operation was successful;
     /// otherwise, <see langword="false"/>.</returns>
-    public static bool TryParseUrn(string input, out Guid guid)
+    public static bool TryParseUrn(string input, out Guid result)
     {
-        return GuidExtensions.TryParseUrn(input, out guid);
+        return GuidExtensions.TryParseUrn(input, out result);
     }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -160,13 +160,13 @@ public static class Uuid
     /// </summary>
     /// <param name="input">A read-only span containing
     /// the characters representing the GUID to convert.</param>
-    /// <param name="guid">When this method returns <see langword="true"/>,
+    /// <param name="result">When this method returns <see langword="true"/>,
     /// contains the parsed <see cref="Guid"/> value.</param>
     /// <returns><see langword="true"/> if the parse operation was successful;
     /// otherwise, <see langword="false"/>.</returns>
-    public static bool TryParseUrn(ReadOnlySpan<char> input, out Guid guid)
+    public static bool TryParseUrn(ReadOnlySpan<char> input, out Guid result)
     {
-        return GuidExtensions.TryParseUrn(input, out guid);
+        return GuidExtensions.TryParseUrn(input, out result);
     }
 #endif
 
@@ -174,12 +174,12 @@ public static class Uuid
     /// Returns a URN string representation
     /// of the value of this <see cref="Guid"/> instance.
     /// </summary>
-    /// <param name="guid">The <see cref="Guid"/> to convert.</param>
+    /// <param name="value">The <see cref="Guid"/> to convert.</param>
     /// <returns>The value of this <see cref="Guid"/>, represented as a series
     /// of lowercase hexadecimal digits in the URN format.</returns>
-    public static string ToUrnString(Guid guid)
+    public static string ToUrnString(Guid value)
     {
-        return GuidExtensions.ToUrnString(guid);
+        return GuidExtensions.ToUrnString(value);
     }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -187,7 +187,7 @@ public static class Uuid
     /// Tries to write the <see cref="Guid"/> instance
     /// into the provided character span in the URN format.
     /// </summary>
-    /// <param name="guid">The <see cref="Guid"/> to write.</param>
+    /// <param name="value">The <see cref="Guid"/> to write.</param>
     /// <param name="destination">The span in which
     /// to write the <see cref="Guid"/> as a span of characters.</param>
     /// <param name="charsWritten">When this method returns <see langword="true"/>,
@@ -195,9 +195,9 @@ public static class Uuid
     /// <returns><see langword="true"/> if the formatting operation was successful;
     /// otherwise, <see langword="false"/>.</returns>
     public static bool TryFormatUrn(
-        Guid guid, Span<char> destination, out int charsWritten)
+        Guid value, Span<char> destination, out int charsWritten)
     {
-        return GuidExtensions.TryFormatUrn(guid, destination, out charsWritten);
+        return GuidExtensions.TryFormatUrn(value, destination, out charsWritten);
     }
 #endif
 }
