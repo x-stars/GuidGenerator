@@ -47,22 +47,17 @@ module Guid =
     /// </summary>
     type Generator = GuidGenerator
 
-    /// <summary>
-    /// Contains operations for working with values of GUID generator types.
-    /// </summary>
-    [<RequireQualifiedAccess>]
-    [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
-    module internal Generator =
+    type IGuidGenerator with
 
         /// <summary>
         /// Creates a new unlimited sequence that generates <see cref="T:System.Guid"/> instances
-        /// by the specified <see cref="T:XNetEx.Guids.Generators.IGuidGenerator"/>.
+        /// by the current <see cref="T:XNetEx.Guids.Generators.IGuidGenerator"/>.
         /// </summary>
         /// <returns>A new unlimited sequence that generates <see cref="T:System.Guid"/> instances
-        /// by the specified <see cref="T:XNetEx.Guids.Generators.IGuidGenerator"/>.</returns>
-        [<CompiledName("AsSequence")>]
-        let asSeq (guidGen: IGuidGenerator) =
-            seq { while true do yield guidGen.NewGuid() }
+        /// by the current <see cref="T:XNetEx.Guids.Generators.IGuidGenerator"/>.</returns>
+        [<CompiledName("GeneratorAsSequence")>]
+        member internal this.AsSequence() =
+            seq { while true do yield this.NewGuid() }
 
     /// <summary>
     /// Represents the <see cref="T:System.Guid"/> instance whose value is all zeros.
@@ -218,7 +213,7 @@ module Guid =
     /// of RFC 4122 UUID version 1 using a volatile random node ID.</returns>
     [<CompiledName("NewVersion1RSequence")>]
     let newV1RSeq () =
-        Generator.CreateVersion1R() |> Generator.asSeq
+        Generator.CreateVersion1R().AsSequence()
 
 #if !FEATURE_DISABLE_UUIDREV
     /// <summary>
@@ -229,7 +224,7 @@ module Guid =
     /// of RFC 4122 UUID version 1 using a volatile random node ID without blocking.</returns>
     [<CompiledName("NewVersion1RPooledSequence")>]
     let newV1RPoolSeq () =
-        Generator.CreateVersion1R |> Generator.CreatePooled |> Generator.asSeq
+        Generator.CreatePooled(Func<_>(Generator.CreateVersion1R)).AsSequence()
 #endif
 
     /// <summary>
@@ -386,7 +381,7 @@ module Guid =
     /// of RFC 4122 UUID revision version 6 using a volatile random node ID.</returns>
     [<CompiledName("NewVersion6RSequence")>]
     let newV6RSeq () =
-        Generator.CreateVersion6R() |> Generator.asSeq
+        Generator.CreateVersion6R().AsSequence()
 
     /// <summary>
     /// Creates a new unlimited sequence that generates <see cref="T:System.Guid"/> instances
@@ -396,7 +391,7 @@ module Guid =
     /// of RFC 4122 UUID revision version 6 using a volatile random node ID without blocking.</returns>
     [<CompiledName("NewVersion6RPooledSequence")>]
     let newV6RPoolSeq () =
-        Generator.CreateVersion6R |> Generator.CreatePooled |> Generator.asSeq
+        Generator.CreatePooled(Func<_>(Generator.CreateVersion6R)).AsSequence()
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 7.
