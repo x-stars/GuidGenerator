@@ -25,17 +25,12 @@ partial class CustomGuidGeneratorTest
     {
         static byte[] GetGuidRandomBytes(Guid guid)
         {
-            var (_, _, random01, random2, random3,
-                random4, random5, random6, random7,
-                random8, random9) = guid;
-            var random0 = (byte)((uint)random01 >> (0 * 8));
-            var random1 = (byte)((uint)random01 >> (1 * 8));
-            return new[]
-            {
-                random0, random1, random2, random3,
-                random4, random5, random6, random7,
-                random8, random9,
-            };
+            var random = new byte[10];
+            var (_, _, random01, lower8) = guid;
+            random[0] = (byte)((uint)random01 >> (0 * 8));
+            random[1] = (byte)((uint)random01 >> (1 * 8));
+            Buffer.BlockCopy(lower8, 0, random, 2, 8);
+            return random;
         }
 
         var guid0 = GuidGenerator.Version8.NewGuid();

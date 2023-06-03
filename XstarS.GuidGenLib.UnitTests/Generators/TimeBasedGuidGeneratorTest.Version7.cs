@@ -37,23 +37,10 @@ partial class TimeBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version7_GetDifferentLower8Bytes()
     {
-        static byte[] GetGuidLower8Bytes(Guid guid)
-        {
-            var (_, _, _,
-                lower0, lower1, lower2, lower3,
-                lower4, lower5, lower6, lower7
-                ) = guid;
-            return new[]
-            {
-                lower0, lower1, lower2, lower3,
-                lower4, lower5, lower6, lower7,
-            };
-        }
-
         var guid0 = GuidGenerator.Version7.NewGuid();
-        var guid0Lower = GetGuidLower8Bytes(guid0);
+        var (_, _, _, guid0Lower) = guid0;
         var guid1 = GuidGenerator.Version7.NewGuid();
-        var guid1Lower = GetGuidLower8Bytes(guid1);
+        var (_, _, _, guid1Lower) = guid1;
         CollectionAssert.AreNotEqual(guid0Lower, guid1Lower);
     }
 
