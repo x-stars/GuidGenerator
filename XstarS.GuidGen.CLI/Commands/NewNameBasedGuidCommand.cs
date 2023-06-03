@@ -107,9 +107,9 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
         };
     }
 
-    private bool TryParseNamespace(string nsName, out Guid nsId)
+    private bool TryParseNamespace(string name, out Guid result)
     {
-        nsId = nsName switch
+        result = name switch
         {
             "DNS" => GuidNamespaces.Dns,
             "URL" => GuidNamespaces.Url,
@@ -120,6 +120,6 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
 #endif
             "NIL" or _ => Guid.Empty,
         };
-        return (nsId != Guid.Empty) || (nsName == "NIL");
+        return (result != Guid.Empty) || (name == "NIL");
     }
 }

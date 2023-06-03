@@ -67,30 +67,30 @@ static partial class GuidExtensions
     /// <see cref="Guid"/> structure, provided that the string is in the URN format.
     /// </summary>
     /// <param name="input">The string to convert.</param>
-    /// <param name="guid">When this method returns <see langword="true"/>,
+    /// <param name="result">When this method returns <see langword="true"/>,
     /// contains the parsed <see cref="Guid"/> value.</param>
     /// <returns><see langword="true"/> if the parse operation was successful;
     /// otherwise, <see langword="false"/>.</returns>
-    public static bool TryParseUrn(string input, out Guid guid)
+    public static bool TryParseUrn(string input, out Guid result)
     {
         if (input is null)
         {
-            guid = default(Guid);
+            result = default(Guid);
             return false;
         }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        return GuidExtensions.TryParseUrn((ReadOnlySpan<char>)input, out guid);
+        return GuidExtensions.TryParseUrn((ReadOnlySpan<char>)input, out result);
 #else
         var guidUrnString = input.Trim();
         if (!guidUrnString.StartsWith("urn:uuid:", StringComparison.OrdinalIgnoreCase))
         {
-            guid = default(Guid);
+            result = default(Guid);
             return false;
         }
 
         var guidString = guidUrnString[9..];
-        return Guid.TryParseExact(guidString, "D", out guid);
+        return Guid.TryParseExact(guidString, "D", out result);
 #endif
     }
 
@@ -101,21 +101,21 @@ static partial class GuidExtensions
     /// </summary>
     /// <param name="input">A read-only span containing
     /// the characters representing the GUID to convert.</param>
-    /// <param name="guid">When this method returns <see langword="true"/>,
+    /// <param name="result">When this method returns <see langword="true"/>,
     /// contains the parsed <see cref="Guid"/> value.</param>
     /// <returns><see langword="true"/> if the parse operation was successful;
     /// otherwise, <see langword="false"/>.</returns>
-    public static bool TryParseUrn(ReadOnlySpan<char> input, out Guid guid)
+    public static bool TryParseUrn(ReadOnlySpan<char> input, out Guid result)
     {
         var guidUrnString = input.Trim();
         if (!guidUrnString.StartsWith("urn:uuid:", StringComparison.OrdinalIgnoreCase))
         {
-            guid = default(Guid);
+            result = default(Guid);
             return false;
         }
 
         var guidString = guidUrnString[9..];
-        return Guid.TryParseExact(guidString, "D", out guid);
+        return Guid.TryParseExact(guidString, "D", out result);
     }
 #endif
 
@@ -164,13 +164,13 @@ static partial class GuidExtensions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void FormatUrnCore(Span<char> destination, Guid guid)
+    private static void FormatUrnCore(Span<char> destination, Guid value)
     {
         const int urnFormatLength = 9 + 36;
         Debug.Assert(destination.Length >= urnFormatLength);
         ((ReadOnlySpan<char>)"urn:uuid:").CopyTo(destination);
         var guidBuffer = destination[9..urnFormatLength];
-        var result = guid.TryFormat(guidBuffer, out int guidCharsWritten, "D");
+        var result = value.TryFormat(guidBuffer, out int guidCharsWritten, "D");
         Debug.Assert(result && (guidCharsWritten == 36));
     }
 #endif
