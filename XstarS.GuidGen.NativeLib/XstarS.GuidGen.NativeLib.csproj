@@ -13,7 +13,7 @@
   <PropertyGroup>
     <Authors>XstarS</Authors>
     <Company>XstarS</Company>
-    <Version>1.7.1</Version>
+    <Version>1.7.5</Version>
     <Product>XstarS GUID Generator</Product>
     <AssemblyTitle>$(Product) Native Library</AssemblyTitle>
     <Copyright>Copyright © $(Company) 2022</Copyright>
