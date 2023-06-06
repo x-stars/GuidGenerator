@@ -35,7 +35,8 @@ type GuidGeneratorV8Test() =
 
     [<TestMethod>]
     member _.NewVersion8NByEncoding_Sha256HashingExampleDns_GetExpectedGuid() =
-        Guid.newV8NEnc Guid.hsSha256 (SHA256.Create())
+        use sha256Hashing = SHA256.Create()
+        Guid.newV8NEnc Guid.hsSha256 sha256Hashing
                        Guid.nsDns Text.Encoding.Unicode "www.example.com"
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version8)
