@@ -9,7 +9,7 @@ namespace XNetEx.Guids.Generators;
 public sealed class StateStorageExceptionEventArgs : EventArgs
 {
     /// <summary>
-    /// Initialize a new instance of the <see cref="StateStorageExceptionEventArgs"/> class.
+    /// Initializes a new instance of the <see cref="StateStorageExceptionEventArgs"/> class.
     /// </summary>
     /// <param name="exception">The exception thrown by the storage operation.</param>
     /// <param name="fileName">The path of the state storage file.</param>

@@ -15,7 +15,7 @@ public abstract partial class CustomGuidGenerator : GuidGenerator
     private readonly NodeIdProvider NodeIdProvider;
 
     /// <summary>
-    /// Initialize a new instance of the <see cref="CustomGuidGenerator"/> class.
+    /// Initializes a new instance of the <see cref="CustomGuidGenerator"/> class.
     /// </summary>
     protected CustomGuidGenerator()
         : this(default(DateTime), NodeIdSource.None)
@@ -23,7 +23,7 @@ public abstract partial class CustomGuidGenerator : GuidGenerator
     }
 
     /// <summary>
-    /// Initialize a new instance of the <see cref="CustomGuidGenerator"/> class
+    /// Initializes a new instance of the <see cref="CustomGuidGenerator"/> class
     /// with the specified epoch <see cref="DateTime"/> and <see cref="NodeIdSource"/>.
     /// </summary>
     /// <param name="epochDateTime">The epoch <see cref="DateTime"/>

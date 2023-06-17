@@ -8,7 +8,7 @@ internal abstract class ProgramCommand
 {
     protected ProgramCommand() { }
 
-    private bool SupportPathExt =>
+    private bool SupportsPathExt =>
         Environment.OSVersion.Platform < PlatformID.Unix;
 
     public static bool Execute(string[] args)
@@ -54,7 +54,7 @@ internal abstract class ProgramCommand
     {
         var cmdPath = Environment.GetCommandLineArgs()[0];
         var cmdName = Path.GetFileNameWithoutExtension(cmdPath);
-        if (this.SupportPathExt)
+        if (this.SupportsPathExt)
         {
             var cmdExt = Path.GetExtension(cmdPath);
             if (cmdExt.Length > 0)

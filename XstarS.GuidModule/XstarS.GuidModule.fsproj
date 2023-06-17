@@ -26,12 +26,13 @@
   <PropertyGroup>
     <PackageId>$(AssemblyName)</PackageId>
     <PackageVersion>$(Version)</PackageVersion>
+    <PackageTags>fsharp guid guid-generator rfc4122 uuid</PackageTags>
     <Description>Provides RFC 4122 UUID compliant GUID operations for F#.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/x-stars/GuidGenerator</PackageProjectUrl>
+    <PackageReleaseNotes>$(PackageProjectUrl)/releases/tag/v$(PackageVersion)</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/x-stars/GuidGenerator</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>fsharp guid guid-generator rfc4122 uuid</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup>
