@@ -7,7 +7,7 @@ namespace XNetEx.Guids.Generators;
 public class NameBasedGuidGeneratorBenchmark
 {
     [CLSCompliant(false)]
-    [Params(1, 10, 100, 1000)]
+    [Params(0, 10, 1000, 1000000)]
     public int NameLength;
 
     private byte[] Name = null!;
