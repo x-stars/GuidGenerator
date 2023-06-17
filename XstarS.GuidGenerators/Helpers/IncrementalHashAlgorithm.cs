@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 #if !NETCOREAPP3_0_OR_GREATER
 using System.Runtime.InteropServices;
 #endif
@@ -20,6 +21,7 @@ internal static class IncrementalHashAlgorithm
     /// or <paramref name="buffer"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">
     /// <paramref name="hashing"/> object has already been disposed.</exception>
+    [DynamicDependency(nameof(MethodBridge.AppendData), typeof(MethodBridge))]
     public static void AppendData(this HashAlgorithm hashing, byte[] buffer)
     {
         if (hashing is null)
@@ -46,6 +48,8 @@ internal static class IncrementalHashAlgorithm
     /// and <paramref name="count"/> is larger than the length of <paramref name="buffer"/>.</exception>
     /// <exception cref="ObjectDisposedException">
     /// <paramref name="hashing"/> object has already been disposed.</exception>
+    [DynamicDependency(nameof(MethodBridge.AppendData), typeof(MethodBridge))]
+
     public static void AppendData(
         this HashAlgorithm hashing, byte[] buffer, int offset, int count)
     {
@@ -67,6 +71,7 @@ internal static class IncrementalHashAlgorithm
     /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">
     /// <paramref name="hashing"/> object has already been disposed.</exception>
+    [DynamicDependency(nameof(MethodBridge.AppendData), typeof(MethodBridge))]
     public static void AppendData(this HashAlgorithm hashing, ReadOnlySpan<byte> source)
     {
         if (hashing is null)
@@ -87,6 +92,7 @@ internal static class IncrementalHashAlgorithm
     /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">
     /// <paramref name="hashing"/> object has already been disposed.</exception>
+    [DynamicDependency(nameof(MethodBridge.GetFinalHash), typeof(MethodBridge))]
     public static byte[] GetFinalHash(this HashAlgorithm hashing)
     {
         if (hashing is null)
@@ -111,6 +117,7 @@ internal static class IncrementalHashAlgorithm
     /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">
     /// <paramref name="hashing"/> object has already been disposed.</exception>
+    [DynamicDependency(nameof(MethodBridge.TryGetFinalHash), typeof(MethodBridge))]
     public static bool TryGetFinalHash(
         this HashAlgorithm hashing, Span<byte> destination, out int bytesWritten)
     {
