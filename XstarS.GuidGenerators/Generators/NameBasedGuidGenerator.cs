@@ -54,9 +54,7 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         return this.NewGuid(nsId, (ReadOnlySpan<byte>)name);
 #else
-        var input = this.CreateInput(nsId, name);
-        var hash = this.ComputeHash(input);
-        return this.HashToGuid(hash);
+        return this.ComputeHashToGuid(nsId, name);
 #endif
     }
 
