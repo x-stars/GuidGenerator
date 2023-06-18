@@ -155,7 +155,7 @@ namespace System.Security.Cryptography
 #endif
         private static MethodBridge AsBridge(this HashAlgorithm hashing)
         {
-#if NETCOREAPP3_0_OR_GREATER
+#if UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER
             return Unsafe.As<MethodBridge>(hashing);
 #else
             return new UncheckedCasting() { Source = hashing }.Target!;

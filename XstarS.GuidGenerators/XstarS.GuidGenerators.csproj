@@ -54,6 +54,17 @@
     <Compile Include="..\SharedItems\SkipLocalsInit\**\*.cs" />
   </ItemGroup>
 
+  <ItemGroup Condition="('$(TargetFramework.TrimEnd(`.0123456789`))'=='net' And
+                         '$(TargetFramework.CompareTo(`net5.0`))'&lt;'0') Or
+                        ('$(TargetFramework.TrimEnd(`.0123456789`))'=='netcoreapp' And
+                         '$(TargetFramework.CompareTo(`netcoreapp3.0`))'&lt;'0') Or
+                        ('$(TargetFramework.TrimEnd(`.0123456789`))'=='netstandard')">
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
+  </ItemGroup>
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);UNSAFE_HELPERS</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup Condition="'$(TargetFramework.Split(`-`)[0])'=='net5.0' Or
                         '$(TargetFramework.TrimEnd(`.0123456789`))'=='netcoreapp' Or
                         '$(TargetFramework.TrimEnd(`.0123456789`))'=='netstandard'">

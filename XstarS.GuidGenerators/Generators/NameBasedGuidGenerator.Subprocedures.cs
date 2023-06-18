@@ -1,4 +1,7 @@
 ﻿using System;
+#if UNSAFE_HELPERS
+using System.Runtime.CompilerServices;
+#endif
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -126,11 +129,15 @@ partial class NameBasedGuidGenerator
                 "The algorithm's hash size is less than 128 bits.");
         }
 
+#if UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER
+        var uuid = Unsafe.ReadUnaligned<Guid>(ref hash[0]);
+#else
         var uuid = default(Guid);
         fixed (byte* pHash = &hash[0])
         {
             uuid = *(Guid*)pHash;
         }
+#endif
         var guid = uuid.ToBigEndian();
         this.FillVersionField(ref guid);
         this.FillVariantField(ref guid);
