@@ -32,7 +32,7 @@ module internal ExtensionOperators =
     /// <param name="arg1">The left operand of the operator.</param>
     /// <returns>The return value of the infix operator.</returns>
     [<CompiledName("OperatorAsFunc")>]
-    let inline op (func: 'T1 -> 'T2 -> 'U) =
+    let inline op (func: 'T1 -> 'T2 -> 'U) : 'T2 -> 'T1 -> 'U =
         fun arg2 arg1 -> func arg1 arg2
 
     /// <summary>
@@ -42,7 +42,7 @@ module internal ExtensionOperators =
     /// <param name="value">The input value.</param>
     /// <returns>The input value.</returns>
     [<CompiledName("TeeActionBack")>]
-    let inline tee (action: 'T -> unit) value =
+    let inline tee (action: 'T -> unit) (value: 'T) : 'T =
         action value
         value
 
@@ -54,6 +54,6 @@ module internal ExtensionOperators =
     /// <param name="action">The action to apply.</param>
     /// <returns>The input value.</returns>
     [<CompiledName("TeeAction")>]
-    let inline ( |- ) value (action: 'T -> unit) =
+    let inline ( |- ) (value: 'T) (action: 'T -> unit) : 'T =
         action value
         value

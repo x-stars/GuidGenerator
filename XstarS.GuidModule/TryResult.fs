@@ -13,7 +13,7 @@ module internal TryResult =
     /// <param name="out">The output value the try-operation.</param>
     /// <returns>An <see cref="T:Microsoft.FSharp.Core.option`1"/> of the try-operation result.</returns>
     [<CompiledName("ToOption")>]
-    let inline toOption (res: bool, out: 'T) =
+    let inline toOption (res: bool, out: 'T) : 'T option =
         if res then Some out else None
 
     /// <summary>
@@ -24,7 +24,7 @@ module internal TryResult =
     /// <param name="out2">The second output value the try-operation.</param>
     /// <returns>An <see cref="T:Microsoft.FSharp.Core.option`1"/> of the try-operation result.</returns>
     [<CompiledName("ToOption2")>]
-    let inline toOption2 (res: bool, out1: 'T1, out2: 'T2) =
+    let inline toOption2 (res: bool, out1: 'T1, out2: 'T2) : ('T1 * 'T2) option =
         if res then Some (out1, out2) else None
 
     /// <summary>
@@ -34,7 +34,7 @@ module internal TryResult =
     /// <param name="out">The output value the try-operation.</param>
     /// <returns>A <see cref="T:Microsoft.FSharp.Core.voption`1"/> of the try-operation result.</returns>
     [<CompiledName("ToValueOption")>]
-    let inline toVOption (res: bool, out: 'T) =
+    let inline toVOption (res: bool, out: 'T) : 'T voption =
         if res then ValueSome out else ValueNone
 
     /// <summary>
@@ -45,5 +45,5 @@ module internal TryResult =
     /// <param name="out2">The second output value the try-operation.</param>
     /// <returns>A <see cref="T:Microsoft.FSharp.Core.voption`1"/> of the try-operation result.</returns>
     [<CompiledName("ToValueOption2")>]
-    let inline toVOption2 (res: bool, out1: 'T1, out2: 'T2) =
+    let inline toVOption2 (res: bool, out1: 'T1, out2: 'T2) : struct ('T1 * 'T2) voption =
         if res then ValueSome struct (out1, out2) else ValueNone
