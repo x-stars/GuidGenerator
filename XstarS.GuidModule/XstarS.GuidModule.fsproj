@@ -28,6 +28,7 @@
     <PackageVersion>$(Version)</PackageVersion>
     <PackageTags>fsharp guid guid-generator rfc4122 uuid</PackageTags>
     <Description>Provides RFC 4122 UUID compliant GUID operations for F#.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/x-stars/GuidGenerator</PackageProjectUrl>
     <PackageReleaseNotes>$(PackageProjectUrl)/releases/tag/v$(PackageVersion)</PackageReleaseNotes>
@@ -53,6 +54,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
     <Compile Include="TryResult.fs" />
     <Compile Include="GuidModule.fs" />
   </ItemGroup>

@@ -56,7 +56,7 @@ module Guid =
         /// <returns>A new unlimited sequence that generates <see cref="T:System.Guid"/> instances
         /// by the current <see cref="T:XNetEx.Guids.Generators.IGuidGenerator"/>.</returns>
         [<CompiledName("GeneratorAsSequence")>]
-        member internal this.AsSequence() =
+        member internal this.AsSequence() : seq<Guid> =
             seq { while true do yield this.NewGuid() }
 
     /// <summary>
@@ -64,7 +64,7 @@ module Guid =
     /// </summary>
     [<ValueAsStaticProperty>]
     [<CompiledName("Empty")>]
-    let empty = Guid.Empty
+    let empty: Guid = Guid.Empty
 
 #if !FEATURE_DISABLE_UUIDREV
     /// <summary>
@@ -72,7 +72,7 @@ module Guid =
     /// </summary>
     [<ValueAsStaticProperty>]
     [<CompiledName("MaxValue")>]
-    let maxValue = Uuid.MaxValue
+    let maxValue: Guid = Uuid.MaxValue
 #endif
 
     /// <summary>
@@ -80,28 +80,28 @@ module Guid =
     /// </summary>
     [<ValueAsStaticProperty>]
     [<CompiledName("NamespaceDns")>]
-    let nsDns = Namespace.Dns
+    let nsDns: Guid = Namespace.Dns
 
     /// <summary>
     /// Represents the namespace ID for a URL.
     /// </summary>
     [<ValueAsStaticProperty>]
     [<CompiledName("NamespaceUrl")>]
-    let nsUrl = Namespace.Url
+    let nsUrl: Guid = Namespace.Url
 
     /// <summary>
     /// Represents the namespace ID for an ISO OID.
     /// </summary>
     [<ValueAsStaticProperty>]
     [<CompiledName("NamespaceOid")>]
-    let nsOid = Namespace.Oid
+    let nsOid: Guid = Namespace.Oid
 
     /// <summary>
     /// Represents the namespace ID for an X.500 DN.
     /// </summary>
     [<ValueAsStaticProperty>]
     [<CompiledName("NamespaceX500")>]
-    let nsX500 = Namespace.X500
+    let nsX500: Guid = Namespace.X500
 
 #if !FEATURE_DISABLE_UUIDREV
     /// <summary>
@@ -109,84 +109,84 @@ module Guid =
     /// </summary>
     [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha224")>]
-    let hsSha224 = Hashspace.Sha224
+    let hsSha224: Guid = Hashspace.Sha224
 
     /// <summary>
     /// Represents the hashspace ID for the SHA-256 hash algorithm.
     /// </summary>
     [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha256")>]
-    let hsSha256 = Hashspace.Sha256
+    let hsSha256: Guid = Hashspace.Sha256
 
     /// <summary>
     /// Represents the hashspace ID for the SHA-384 hash algorithm.
     /// </summary>
     [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha384")>]
-    let hsSha384 = Hashspace.Sha384
+    let hsSha384: Guid = Hashspace.Sha384
 
     /// <summary>
     /// Represents the hashspace ID for the SHA-512 hash algorithm.
     /// </summary>
     [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha512")>]
-    let hsSha512 = Hashspace.Sha512
+    let hsSha512: Guid = Hashspace.Sha512
 
     /// <summary>
     /// Represents the hashspace ID for the SHA-512/224 hash algorithm.
     /// </summary>
     [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha512T224")>]
-    let hsSha512T224 = Hashspace.Sha512T224
+    let hsSha512T224: Guid = Hashspace.Sha512T224
 
     /// <summary>
     /// Represents the hashspace ID for the SHA-512/256 hash algorithm.
     /// </summary>
     [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha512T256")>]
-    let hsSha512T256 = Hashspace.Sha512T256
+    let hsSha512T256: Guid = Hashspace.Sha512T256
 
     /// <summary>
     /// Represents the hashspace ID for the SHA3-224 hash algorithm.
     /// </summary>
     [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha3D224")>]
-    let hsSha3D224 = Hashspace.Sha3D224
+    let hsSha3D224: Guid = Hashspace.Sha3D224
 
     /// <summary>
     /// Represents the hashspace ID for the SHA3-256 hash algorithm.
     /// </summary>
     [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha3D256")>]
-    let hsSha3D256 = Hashspace.Sha3D256
+    let hsSha3D256: Guid = Hashspace.Sha3D256
 
     /// <summary>
     /// Represents the hashspace ID for the SHA3-384 hash algorithm.
     /// </summary>
     [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha3D384")>]
-    let hsSha3D384 = Hashspace.Sha3D384
+    let hsSha3D384: Guid = Hashspace.Sha3D384
 
     /// <summary>
     /// Represents the hashspace ID for the SHA3-512 hash algorithm.
     /// </summary>
     [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceSha3D512")>]
-    let hsSha3D512 = Hashspace.Sha3D512
+    let hsSha3D512: Guid = Hashspace.Sha3D512
 
     /// <summary>
     /// Represents the hashspace ID for the SHAKE128 hash algorithm.
     /// </summary>
     [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceShake128")>]
-    let hsShake128 = Hashspace.Shake128
+    let hsShake128: Guid = Hashspace.Shake128
 
     /// <summary>
     /// Represents the hashspace ID for the SHAKE256 hash algorithm.
     /// </summary>
     [<ValueAsStaticProperty>]
     [<CompiledName("HashspaceShake256")>]
-    let hsShake256 = Hashspace.Shake256
+    let hsShake256: Guid = Hashspace.Shake256
 #endif
 
     /// <summary>
@@ -194,7 +194,7 @@ module Guid =
     /// </summary>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 1.</returns>
     [<CompiledName("NewVersion1")>]
-    let newV1 () = Generator.Version1.NewGuid()
+    let newV1 () : Guid = Generator.Version1.NewGuid()
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 1
@@ -203,7 +203,7 @@ module Guid =
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 1
     /// using a non-volatile random node ID.</returns>
     [<CompiledName("NewVersion1R")>]
-    let newV1R () = Generator.Version1R.NewGuid()
+    let newV1R () : Guid = Generator.Version1R.NewGuid()
 
     /// <summary>
     /// Creates a new unlimited sequence that generates <see cref="T:System.Guid"/> instances
@@ -212,7 +212,7 @@ module Guid =
     /// <returns>A new unlimited sequence that generates <see cref="T:System.Guid"/> instances
     /// of RFC 4122 UUID version 1 using a volatile random node ID.</returns>
     [<CompiledName("NewVersion1RSequence")>]
-    let newV1RSeq () =
+    let newV1RSeq () : seq<Guid> =
         Generator.CreateVersion1R().AsSequence()
 
 #if !FEATURE_DISABLE_UUIDREV
@@ -223,7 +223,7 @@ module Guid =
     /// <returns>A new unlimited sequence that generates <see cref="T:System.Guid"/> instances
     /// of RFC 4122 UUID version 1 using a volatile random node ID without blocking.</returns>
     [<CompiledName("NewVersion1RPooledSequence")>]
-    let newV1RPoolSeq () =
+    let newV1RPoolSeq () : seq<Guid> =
         Generator.CreatePooled(Func<_>(Generator.CreateVersion1R)).AsSequence()
 #endif
 
@@ -236,7 +236,7 @@ module Guid =
     /// <exception cref="T:System.PlatformNotSupportedException">
     /// The current operating system does not support getting the local user or group ID.</exception>
     [<CompiledName("NewVersion2")>]
-    let newV2 (domain: Domain) =
+    let newV2 (domain: Domain) : Guid =
         Generator.Version2.NewGuid(domain)
 
     /// <summary>
@@ -246,7 +246,7 @@ module Guid =
     /// <param name="localId">The local ID of the organization.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 2.</returns>
     [<CompiledName("NewVersion2OfOrg")>]
-    let newV2Org (localId: int) =
+    let newV2Org (localId: int) : Guid =
         Generator.Version2.NewGuid(Domain.Org, localId)
 
     /// <summary>
@@ -257,7 +257,7 @@ module Guid =
     /// <param name="localId">The local ID of the domain.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 2.</returns>
     [<CompiledName("NewVersion2OfOther")>]
-    let newV2Other (domain: Domain) (localId: int) =
+    let newV2Other (domain: Domain) (localId: int) : Guid =
         Generator.Version2.NewGuid(domain, localId)
 
     /// <summary>
@@ -270,7 +270,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion3")>]
-    let newV3 (nsId: Guid) (name: byte[]) =
+    let newV3 (nsId: Guid) (name: byte[]) : Guid =
         Generator.Version3.NewGuid(nsId, name)
 
     /// <summary>
@@ -283,7 +283,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion3ByString")>]
-    let newV3S (nsId: Guid) (name: string) =
+    let newV3S (nsId: Guid) (name: string) : Guid =
         Generator.Version3.NewGuid(nsId, name)
 
     /// <summary>
@@ -297,7 +297,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion3ByEncoding")>]
-    let newV3Enc (nsId: Guid) (enc: Text.Encoding) (name: string) =
+    let newV3Enc (nsId: Guid) (enc: Text.Encoding) (name: string) : Guid =
         Generator.Version3.NewGuid(nsId, name, enc)
 
     /// <summary>
@@ -305,7 +305,7 @@ module Guid =
     /// </summary>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 4.</returns>
     [<CompiledName("NewVersion4")>]
-    let newV4 () = Generator.Version4.NewGuid()
+    let newV4 () : Guid = Generator.Version4.NewGuid()
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
@@ -317,7 +317,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion5")>]
-    let newV5 (nsId: Guid) (name: byte[]) =
+    let newV5 (nsId: Guid) (name: byte[]) : Guid =
         Generator.Version5.NewGuid(nsId, name)
 
     /// <summary>
@@ -330,7 +330,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion5ByString")>]
-    let newV5S (nsId: Guid) (name: string) =
+    let newV5S (nsId: Guid) (name: string) : Guid =
         Generator.Version5.NewGuid(nsId, name)
 
     /// <summary>
@@ -344,7 +344,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion5ByEncoding")>]
-    let newV5Enc (nsId: Guid) (enc: Text.Encoding) (name: string) =
+    let newV5Enc (nsId: Guid) (enc: Text.Encoding) (name: string) : Guid =
         Generator.Version5.NewGuid(nsId, name, enc)
 
 #if !FEATURE_DISABLE_UUIDREV
@@ -353,7 +353,7 @@ module Guid =
     /// </summary>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6.</returns>
     [<CompiledName("NewVersion6")>]
-    let newV6 () = Generator.Version6.NewGuid()
+    let newV6 () : Guid = Generator.Version6.NewGuid()
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6
@@ -362,7 +362,7 @@ module Guid =
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6
     /// using a physical (IEEE 802 MAC) address node ID.</returns>
     [<CompiledName("NewVersion6P")>]
-    let newV6P () = Generator.Version6P.NewGuid()
+    let newV6P () : Guid = Generator.Version6P.NewGuid()
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6
@@ -371,7 +371,7 @@ module Guid =
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6
     /// using a non-volatile random node ID.</returns>
     [<CompiledName("NewVersion6R")>]
-    let newV6R () = Generator.Version6R.NewGuid()
+    let newV6R () : Guid = Generator.Version6R.NewGuid()
 
     /// <summary>
     /// Creates a new unlimited sequence that generates <see cref="T:System.Guid"/> instances
@@ -380,7 +380,7 @@ module Guid =
     /// <returns>A new unlimited sequence that generates <see cref="T:System.Guid"/> instances
     /// of RFC 4122 UUID revision version 6 using a volatile random node ID.</returns>
     [<CompiledName("NewVersion6RSequence")>]
-    let newV6RSeq () =
+    let newV6RSeq () : seq<Guid> =
         Generator.CreateVersion6R().AsSequence()
 
     /// <summary>
@@ -390,7 +390,7 @@ module Guid =
     /// <returns>A new unlimited sequence that generates <see cref="T:System.Guid"/> instances
     /// of RFC 4122 UUID revision version 6 using a volatile random node ID without blocking.</returns>
     [<CompiledName("NewVersion6RPooledSequence")>]
-    let newV6RPoolSeq () =
+    let newV6RPoolSeq () : seq<Guid> =
         Generator.CreatePooled(Func<_>(Generator.CreateVersion6R)).AsSequence()
 
     /// <summary>
@@ -398,7 +398,7 @@ module Guid =
     /// </summary>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 7.</returns>
     [<CompiledName("NewVersion7")>]
-    let newV7 () = Generator.Version7.NewGuid()
+    let newV7 () : Guid = Generator.Version7.NewGuid()
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 7
@@ -407,7 +407,7 @@ module Guid =
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 7
     /// that ensures global monotonicity of generated values.</returns>
     [<CompiledName("NewVersion7M")>]
-    let newV7M () = Generator.Version7M.NewGuid()
+    let newV7M () : Guid = Generator.Version7M.NewGuid()
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
@@ -416,7 +416,7 @@ module Guid =
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
     /// example implementation (UUIDREV Appendix C.7).</returns>
     [<CompiledName("NewVersion8")>]
-    let newV8 () = Generator.Version8.NewGuid()
+    let newV8 () : Guid = Generator.Version8.NewGuid()
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
@@ -435,7 +435,7 @@ module Guid =
     /// The hash size of <paramref name="hashing"/> is less than 128 bits.</exception>
     [<CompiledName("NewVersion8N")>]
     let newV8N (hashId: Guid) (hashing: HashAlgorithm)
-               (nsId: Guid) (name: byte[]) =
+               (nsId: Guid) (name: byte[]) : Guid =
         Generator.CreateVersion8N(hashId, hashing).NewGuid(nsId, name)
 
     /// <summary>
@@ -455,7 +455,7 @@ module Guid =
     /// The hash size of <paramref name="hashing"/> is less than 128 bits.</exception>
     [<CompiledName("NewVersion8NByString")>]
     let newV8NS (hashId: Guid) (hashing: HashAlgorithm)
-                (nsId: Guid) (name: string) =
+                (nsId: Guid) (name: string) : Guid =
         Generator.CreateVersion8N(hashId, hashing).NewGuid(nsId, name)
 
     /// <summary>
@@ -476,7 +476,7 @@ module Guid =
     /// The hash size of <paramref name="hashing"/> is less than 128 bits.</exception>
     [<CompiledName("NewVersion8NByEncoding")>]
     let newV8NEnc (hashId: Guid) (hashing: HashAlgorithm)
-                  (nsId: Guid) (enc: Text.Encoding) (name: string) =
+                  (nsId: Guid) (enc: Text.Encoding) (name: string) : Guid =
         Generator.CreateVersion8N(hashId, hashing).NewGuid(nsId, name, enc)
 
     /// <summary>
@@ -491,7 +491,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion8NSha256")>]
-    let newV8NSha256 (nsId: Guid) (name: byte[]) =
+    let newV8NSha256 (nsId: Guid) (name: byte[]) : Guid =
         Generator.Version8NSha256.NewGuid(nsId, name)
 
     /// <summary>
@@ -506,7 +506,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion8NSha256ByString")>]
-    let newV8NSha256S (nsId: Guid) (name: string) =
+    let newV8NSha256S (nsId: Guid) (name: string) : Guid =
         Generator.Version8NSha256.NewGuid(nsId, name)
 
     /// <summary>
@@ -522,7 +522,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion8NSha256ByEncoding")>]
-    let newV8NSha256Enc (nsId: Guid) (enc: Text.Encoding) (name: string) =
+    let newV8NSha256Enc (nsId: Guid) (enc: Text.Encoding) (name: string) : Guid =
         Generator.Version8NSha256.NewGuid(nsId, name, enc)
 
     /// <summary>
@@ -537,7 +537,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion8NSha384")>]
-    let newV8NSha384 (nsId: Guid) (name: byte[]) =
+    let newV8NSha384 (nsId: Guid) (name: byte[]) : Guid =
         Generator.Version8NSha384.NewGuid(nsId, name)
 
     /// <summary>
@@ -552,7 +552,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion8NSha384ByString")>]
-    let newV8NSha384S (nsId: Guid) (name: string) =
+    let newV8NSha384S (nsId: Guid) (name: string) : Guid =
         Generator.Version8NSha384.NewGuid(nsId, name)
 
     /// <summary>
@@ -568,7 +568,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion8NSha384ByEncoding")>]
-    let newV8NSha384Enc (nsId: Guid) (enc: Text.Encoding) (name: string) =
+    let newV8NSha384Enc (nsId: Guid) (enc: Text.Encoding) (name: string) : Guid =
         Generator.Version8NSha384.NewGuid(nsId, name, enc)
 
     /// <summary>
@@ -583,7 +583,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion8NSha512")>]
-    let newV8NSha512 (nsId: Guid) (name: byte[]) =
+    let newV8NSha512 (nsId: Guid) (name: byte[]) : Guid =
         Generator.Version8NSha512.NewGuid(nsId, name)
 
     /// <summary>
@@ -598,7 +598,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion8NSha512ByString")>]
-    let newV8NSha512S (nsId: Guid) (name: string) =
+    let newV8NSha512S (nsId: Guid) (name: string) : Guid =
         Generator.Version8NSha512.NewGuid(nsId, name)
 
     /// <summary>
@@ -614,7 +614,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion8NSha512ByEncoding")>]
-    let newV8NSha512Enc (nsId: Guid) (enc: Text.Encoding) (name: string) =
+    let newV8NSha512Enc (nsId: Guid) (enc: Text.Encoding) (name: string) : Guid =
         Generator.Version8NSha512.NewGuid(nsId, name, enc)
 #endif
 
@@ -627,7 +627,7 @@ module Guid =
     /// <returns><see langword="true"/> if the state storage loading operation
     /// is successful; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("LoadGeneratorState")>]
-    let loadState (fileName: string) =
+    let loadState (fileName: string) : bool =
         Generator.SetStateStorageFile(fileName)
 
     /// <summary>
@@ -636,7 +636,7 @@ module Guid =
     /// </summary>
     /// <param name="callback">The function to call when the event is triggered.</param>
     [<CompiledName("OnStateStorageException")>]
-    let onStateExn (callback: StateStorageExceptionEventArgs -> unit) =
+    let onStateExn (callback: StateStorageExceptionEventArgs -> unit) : unit =
         Generator.StateStorageException.Add(callback)
 
     /// <summary>
@@ -657,7 +657,8 @@ module Guid =
     /// <returns>A new <see cref="T:System.Guid"/> instance
     /// of the specified fields of integers and bytes.</returns>
     [<CompiledName("OfFields")>]
-    let ofFields (a: int) b c (d, e) (f, g, h, i, j, k) =
+    let ofFields (a: int) (b: int16) (c: int16) (d: byte, e: byte)
+                 (f: byte, g: byte, h: byte, i: byte, j: byte, k: byte) : Guid =
         Guid(a, b, c, d, e, f, g, h, i, j, k)
 
     /// <summary>
@@ -672,7 +673,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentException">
     /// <paramref name="bytes"/> not 16 bytes long.</exception>
     [<CompiledName("OfByteArray")>]
-    let ofBytes (bytes: byte[]) = Guid(bytes)
+    let ofBytes (bytes: byte[]) : Guid = Guid(bytes)
 
     /// <summary>
     /// Creates a new <see cref="T:System.Guid"/> instance
@@ -686,7 +687,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentException">
     /// <paramref name="bytes"/> not 16 bytes long.</exception>
     [<CompiledName("OfUuidByteArray")>]
-    let ofBytesUuid (bytes: byte[]) =
+    let ofBytesUuid (bytes: byte[]) : Guid =
         Uuid.FromByteArray(bytes)
 
     /// <summary>
@@ -695,7 +696,8 @@ module Guid =
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>An 11-element tuple that contains fields of the <see cref="T:System.Guid"/>.</returns>
     [<CompiledName("ToFields")>]
-    let toFields (guid: Guid) =
+    let toFields (guid: Guid) : struct (int * int16 * int16 * struct (byte * byte) *
+                                struct (byte * byte * byte * byte * byte * byte)) =
         let (a, b, c, d, e, f, g, h, i, j, k) = guid.Deconstruct()
         struct (a, b, c, struct (d, e), struct (f, g, h, i, j, k))
 
@@ -707,7 +709,7 @@ module Guid =
     /// <returns>A 16-element byte array that contains fields
     /// of the <see cref="T:System.Guid"/> in little-endian order.</returns>
     [<CompiledName("ToByteArray")>]
-    let toBytes (guid: Guid) = guid.ToByteArray()
+    let toBytes (guid: Guid) : byte[] = guid.ToByteArray()
 
     /// <summary>
     /// Returns a 16-element byte array that contains fields
@@ -717,7 +719,7 @@ module Guid =
     /// <returns>A 16-element byte array that contains fields
     /// of the <see cref="T:System.Guid"/> in big-endian order.</returns>
     [<CompiledName("ToUuidByteArray")>]
-    let toBytesUuid (guid: Guid) = guid.ToUuidByteArray()
+    let toBytesUuid (guid: Guid) : byte[] = guid.ToUuidByteArray()
 
     /// <summary>
     /// Converts the string representation of a GUID to the equivalent <see cref="T:System.Guid"/> instance.
@@ -729,7 +731,7 @@ module Guid =
     /// <exception cref="T:System.FormatException">
     /// <paramref name="input"/> is not in a recognized format.</exception>
     [<CompiledName("Parse")>]
-    let parse (input: string) = Guid.Parse(input)
+    let parse (input: string) : Guid = Guid.Parse(input)
 
     /// <summary>
     /// Converts the string representation of a GUID to the equivalent <see cref="T:System.Guid"/> instance,
@@ -744,7 +746,7 @@ module Guid =
     /// <exception cref="T:System.FormatException">
     /// <paramref name="input"/> is not in the format specified by <paramref name="format"/>.</exception>
     [<CompiledName("ParseExact")>]
-    let parseExact (format: string) (input: string) =
+    let parseExact (format: string) (input: string) : Guid =
         Guid.ParseExact(input, format)
 
     /// <summary>
@@ -758,7 +760,7 @@ module Guid =
     /// <exception cref="T:System.FormatException">
     /// <paramref name="input"/> is not in the URN format.</exception>
     [<CompiledName("ParseUrn")>]
-    let parseUrn (input: string) = Uuid.ParseUrn(input)
+    let parseUrn (input: string) : Guid = Uuid.ParseUrn(input)
 
     /// <summary>
     /// Tries to convert the string representation of a GUID to the equivalent
@@ -768,7 +770,7 @@ module Guid =
     /// <returns>A <see cref="T:System.Guid"/> instance that contains the value that was parsed,
     /// or <c>ValueNone</c> if the parse operation was failed.</returns>
     [<CompiledName("TryParse")>]
-    let tryParse (input: string) =
+    let tryParse (input: string) : Guid voption =
         Guid.TryParse(input) |> TryResult.toVOption
 
     /// <summary>
@@ -782,7 +784,7 @@ module Guid =
     /// <returns>A <see cref="T:System.Guid"/> instance that contains the value that was parsed,
     /// or <c>ValueNone</c> if the parse operation was failed.</returns>
     [<CompiledName("TryParseExact")>]
-    let tryParseExact (format: string) (input: string) =
+    let tryParseExact (format: string) (input: string) : Guid voption =
         Guid.TryParseExact(input, format) |> TryResult.toVOption
 
     /// <summary>
@@ -794,7 +796,7 @@ module Guid =
     /// <returns>A <see cref="T:System.Guid"/> instance that contains the value that was parsed,
     /// or <c>ValueNone</c> if the parse operation was failed.</returns>
     [<CompiledName("TryParseUrn")>]
-    let tryParseUrn (input: string) =
+    let tryParseUrn (input: string) : Guid voption =
         Uuid.TryParseUrn(input) |> TryResult.toVOption
 
     /// <summary>
@@ -811,7 +813,7 @@ module Guid =
     /// The value of format is not <see langword="null"/>,
     /// an empty string (""), "N", "D", "B", "P", or "X".</exception>
     [<CompiledName("Format")>]
-    let format (format: string) (guid: Guid) =
+    let format (format: string) (guid: Guid) : string =
         guid.ToString(format)
 
     /// <summary>
@@ -821,7 +823,7 @@ module Guid =
     /// <returns>The value of the <see cref="T:System.Guid"/>, represented as a series
     /// of lowercase hexadecimal digits in the URN format.</returns>
     [<CompiledName("FormatUrn")>]
-    let formatUrn (guid: Guid) = guid.ToUrnString()
+    let formatUrn (guid: Guid) : string = guid.ToUrnString()
 
     /// <summary>
     /// Gets the variant of the <see cref="T:System.Guid"/>.
@@ -846,7 +848,7 @@ module Guid =
     /// <returns><see langword="true"/> if the <see cref="T:System.Guid"/>
     /// is of the RFC 4122 variant; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("IsRfc4122Uuid")>]
-    let internal isRfc4122 (guid: Guid) =
+    let internal isRfc4122 (guid: Guid) : bool =
         variant guid = Variant.Rfc4122
 
     /// <summary>
@@ -857,7 +859,7 @@ module Guid =
     /// <returns><see langword="true"/> if the <see cref="T:System.Guid"/>
     /// is generated based on the current time; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("IsTimeBased")>]
-    let isTimeBased (guid: Guid) =
+    let isTimeBased (guid: Guid) : bool =
         (isRfc4122 guid) && (version guid).IsTimeBased()
 
     /// <summary>
@@ -868,7 +870,7 @@ module Guid =
     /// <returns><see langword="true"/> if the <see cref="T:System.Guid"/>
     /// is generated based on the input name; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("IsNameBased")>]
-    let isNameBased (guid: Guid) =
+    let isNameBased (guid: Guid) : bool =
         (isRfc4122 guid) && (version guid).IsNameBased()
 
     /// <summary>
@@ -878,7 +880,7 @@ module Guid =
     /// <returns><see langword="true"/> if the <see cref="T:System.Guid"/>
     /// is generated randomly; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("IsRandomized")>]
-    let isRandomized (guid: Guid) =
+    let isRandomized (guid: Guid) : bool =
         (isRfc4122 guid) && (version guid).IsRandomized()
 
     /// <summary>
@@ -888,7 +890,7 @@ module Guid =
     /// <returns><see langword="true"/> if the <see cref="T:System.Guid"/>
     /// contains a clock sequence; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("ContainsClockSequence")>]
-    let hasClockSeq (guid: Guid) =
+    let hasClockSeq (guid: Guid) : bool =
         (isRfc4122 guid) && (version guid).ContainsClockSequence()
 
     /// <summary>
@@ -898,7 +900,7 @@ module Guid =
     /// <returns><see langword="true"/> if the <see cref="T:System.Guid"/>
     /// contains local ID data; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("ContainsLocalId")>]
-    let hasLocalId (guid: Guid) =
+    let hasLocalId (guid: Guid) : bool =
         (isRfc4122 guid) && (version guid).ContainsLocalId()
 
     /// <summary>
@@ -908,7 +910,7 @@ module Guid =
     /// <returns><see langword="true"/> if the <see cref="T:System.Guid"/>
     /// contains node ID data; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("ContainsNodeId")>]
-    let hasNodeId (guid: Guid) =
+    let hasNodeId (guid: Guid) : bool =
         (isRfc4122 guid) && (version guid).ContainsNodeId()
 
     /// <summary>
@@ -965,7 +967,7 @@ module Guid =
     /// equivalent to this <see cref="T:System.Guid"/> except that
     /// the version replaced with <paramref name="variant"/>.</returns>
     [<CompiledName("ReplaceVariant")>]
-    let replaceVariant (variant: Variant) (guid: Guid) =
+    let replaceVariant (variant: Variant) (guid: Guid) : Guid =
         guid.ReplaceVariant(variant)
 
     /// <summary>
@@ -978,7 +980,7 @@ module Guid =
     /// equivalent to the <see cref="T:System.Guid"/> except that
     /// the version replaced with <paramref name="version"/>.</returns>
     [<CompiledName("ReplaceVersion")>]
-    let replaceVersion (version: Version) (guid: Guid) =
+    let replaceVersion (version: Version) (guid: Guid) : Guid =
         guid.ReplaceVersion(version)
 
     /// <summary>
@@ -991,7 +993,7 @@ module Guid =
     /// equivalent to the <see cref="T:System.Guid"/> except that
     /// the version replaced with <paramref name="version"/>.</returns>
     [<CompiledName("ReplaceVersionNumber")>]
-    let replaceVersionNum (version: byte) (guid: Guid) =
+    let replaceVersionNum (version: byte) (guid: Guid) : Guid =
         guid.ReplaceVersion(version)
 
     /// <summary>
@@ -1005,7 +1007,7 @@ module Guid =
     /// the timestamp replaced with <paramref name="time"/>, or the original value
     /// if the <see cref="T:System.Guid"/> is not time-based.</returns>
     [<CompiledName("ReplaceTimestamp")>]
-    let replaceTime (time: DateTime) (guid: Guid) =
+    let replaceTime (time: DateTime) (guid: Guid) : Guid =
         guid.ReplaceTimestamp(time)
 
     /// <summary>
@@ -1019,7 +1021,7 @@ module Guid =
     /// the timestamp replaced with <paramref name="time"/>, or the original value
     /// if the <see cref="T:System.Guid"/> is not time-based.</returns>
     [<CompiledName("ReplaceTimestampByOffset")>]
-    let replaceTimeOffset (time: DateTimeOffset) (guid: Guid) =
+    let replaceTimeOffset (time: DateTimeOffset) (guid: Guid) : Guid =
         guid.ReplaceTimestamp(time)
 
     /// <summary>
@@ -1033,7 +1035,7 @@ module Guid =
     /// the clock sequence replaced with <paramref name="clockSeq"/>, or the original value
     /// if the <see cref="T:System.Guid"/> does not contain a clock sequence.</returns>
     [<CompiledName("ReplaceClockSequence")>]
-    let replaceClockSeq (clockSeq: int16) (guid: Guid) =
+    let replaceClockSeq (clockSeq: int16) (guid: Guid) : Guid =
         guid.ReplaceClockSequence(clockSeq)
 
     /// <summary>
@@ -1050,7 +1052,7 @@ module Guid =
     /// and the local ID replaced with and <paramref name="localId"/>, or the original value
     /// if the <see cref="T:System.Guid"/> is not a DCE Security UUID.</returns>
     [<CompiledName("ReplaceDomainAndLocalId")>]
-    let replaceLocalId (domain: Domain) (localId: int) (guid: Guid) =
+    let replaceLocalId (domain: Domain) (localId: int) (guid: Guid) : Guid =
         guid.ReplaceDomainAndLocalId(domain, localId)
 
     /// <summary>
@@ -1068,5 +1070,5 @@ module Guid =
     /// <exception cref="T:System.ArgumentException">
     /// <paramref name="nodeId"/> is not 6 bytes long.</exception>
     [<CompiledName("ReplaceNodeId")>]
-    let replaceNodeId (nodeId: byte[]) (guid: Guid) =
+    let replaceNodeId (nodeId: byte[]) (guid: Guid) : Guid =
         guid.ReplaceNodeId(nodeId)
