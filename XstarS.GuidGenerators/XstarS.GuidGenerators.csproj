@@ -29,6 +29,7 @@
     <PackageVersion>$(Version)</PackageVersion>
     <PackageTags>guid guid-generator rfc4122 uuid uuidrev</PackageTags>
     <Description>Provides RFC 4122 UUID compliant GUID generators for .NET platform.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/x-stars/GuidGenerator</PackageProjectUrl>
     <PackageReleaseNotes>$(PackageProjectUrl)/releases/tag/v$(PackageVersion)</PackageReleaseNotes>
@@ -52,6 +53,10 @@
   <ItemGroup>
     <Compile Include="..\SharedItems\Common\**\*.cs" />
     <Compile Include="..\SharedItems\SkipLocalsInit\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup Condition="('$(TargetFramework.TrimEnd(`.0123456789`))'=='net' And
