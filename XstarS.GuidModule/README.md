@@ -1,7 +1,6 @@
-﻿# F# GUID Module
+﻿# .NET GUID Generator
 
-Provides RFC 4122 UUID and RFC4122bis UUIDREV (draft) compliant GUID operations for F#.
-The orders of input parameters are adjusted to match F# pipeline patterns.
+Provides RFC 4122 UUID compliant GUID generators for .NET platform.
 
 ## RFC 4122 UUID Standard
 
@@ -18,21 +17,12 @@ There is also a special Nil UUID whose bytes are all `0x00`s, which is equivalen
 > * [RFC 4122 UUID Standard](https://www.rfc-editor.org/rfc/rfc4122)
 > * [DCE Security UUID Standard](https://pubs.opengroup.org/onlinepubs/9696989899/chap5.htm)
 
-## RFC4122bis UUIDREV Draft
-
-RFC4122bis UUIDREV defines the following three versions of UUID:
-
-* Version 6: The reordered time-based version, field-compatible with Version 1 except that the timestamp is reordered to big-endian order
-* Version 7: The Unix Epoch time-based version, contains a 48-bit timestamp and a 74-bit random number, field-compatible with ULID
-* Version 8: Reserved for custom UUID formats, fields except the variant and version are user-defined
-
-There is also a special Max UUID whose bytes are all `0xff`s, which has no equivalent implementation in .NET (provided in this project).
-
-> * [RFC4122bis UUIDREV Draft](https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis)
-
 ## F# GUID Module Usage
 
 Core module: `XNetEx.FSharp.Core.Guid`.
+
+Provides RFC 4122 UUID and RFC4122bis UUIDREV (draft) compliant GUID operations for F#.
+The orders of input parameters are adjusted to match F# pipeline patterns.
 
 ### RFC 4122 GUID Generation
 
@@ -47,8 +37,6 @@ let loadResult = Guid.loadState "state.bin"
 let guidV1 = Guid.newV1 () // 3944a871-aa14-11ed-8791-a9a9a46de54f
 // generate randomized GUID.
 let guidV4 = Guid.newV4 () // 0658f02d-45a4-4c25-b9d0-8ddbda3c3e08
-// generate Unix time-based GUID.
-let guidV7 = Guid.newV7 () // 018640c6-0dc9-7189-a644-31acdba4cabc
 
 // generate name-based GUID.
 let guidV3 = Guid.newV3S Guid.nsDns "github.com"
@@ -59,17 +47,11 @@ let guidV5 = "github.com" |> Guid.newV5S Guid.nsDns
 // build time-based GUID.
 let guid6 = Guid.empty
             |> Guid.replaceVariant Guid.Variant.Rfc4122
-            |> Guid.replaceVersion Guid.Version.Version6
+            |> Guid.replaceVersion Guid.Version.Version1
             |> Guid.replaceTime DateTime.UtcNow
             |> Guid.replaceClockSeq 0x0123s
             |> Guid.replaceNodeId (Array.init 6 (((+) 1) >> byte))
-            // 1edaa178-dec2-6054-8123-010203040506
-
-// build Unix time-based GUID.
-let guid7 = Guid.newV4 ()
-            |> Guid.replaceVersion Guid.Version.Version7
-            |> Guid.replaceTime DateTime.UtcNow
-            // 018640db-de47-7ab9-bf00-6119a1033265
+            // 8dec2054-aa17-11ed-8123-010203040506
 ```
 
 ### Common GUID Operations

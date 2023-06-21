@@ -1,6 +1,6 @@
 ﻿# .NET GUID Generator
 
-Provides RFC 4122 UUID and RFC4122bis UUIDREV (draft) compliant GUID generators for .NET platform.
+Provides RFC 4122 UUID compliant GUID generators for .NET platform.
 
 ## RFC 4122 UUID Standard
 
@@ -17,18 +17,6 @@ There is also a special Nil UUID whose bytes are all `0x00`s, which is equivalen
 > * [RFC 4122 UUID Standard](https://www.rfc-editor.org/rfc/rfc4122)
 > * [DCE Security UUID Standard](https://pubs.opengroup.org/onlinepubs/9696989899/chap5.htm)
 
-## RFC4122bis UUIDREV Draft
-
-RFC4122bis UUIDREV defines the following three versions of UUID:
-
-* Version 6: The reordered time-based version, field-compatible with Version 1 except that the timestamp is reordered to big-endian order
-* Version 7: The Unix Epoch time-based version, contains a 48-bit timestamp and a 74-bit random number, field-compatible with ULID
-* Version 8: Reserved for custom UUID formats, fields except the variant and version are user-defined
-
-There is also a special Max UUID whose bytes are all `0xff`s, which has no equivalent implementation in .NET (provided in this project).
-
-> * [RFC4122bis UUIDREV Draft](https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis)
-
 ## GUID Generator Library Usage
 
 ### Get Generator Instance by Static Properties
@@ -44,10 +32,6 @@ var guidV1 = GuidGenerator.Version1.NewGuid();
 // name-based GUID generation.
 var guidV5 = GuidGenerator.Version5.NewGuid(GuidNamespaces.Dns, "github.com");
 // 6fca3dd2-d61d-58de-9363-1574b382ea68s
-
-// Unix time-based GUID generation.
-var guidV7 = GuidGenerator.Version7.NewGuid();
-// 018640c6-0dc9-7189-a644-31acdba4cabc
 ```
 
 ### Get Generator Instance by the Factory Method
@@ -63,10 +47,6 @@ var guidV1 = GuidGenerator.OfVersion(1).NewGuid();
 // generate name-based GUID.
 var guidV5 = GuidGenerator.OfVersion(5).NewGuid(GuidNamespaces.Dns, "github.com");
 // 6fca3dd2-d61d-58de-9363-1574b382ea68s
-
-// generate Unix time-based GUID.
-var guidV7 = GuidGenerator.OfVersion(7).NewGuid();
-// 018640c6-0dc9-7189-a644-31acdba4cabc
 ```
 
 ### GUID Generator State Storage
@@ -100,17 +80,11 @@ using System;
 using XNetEx.Guids;
 
 // build time-based GUID.
-var guidV6 = Guid.Empty
+var guidV1 = Guid.Empty
     .ReplaceVariant(GuidVariant.Rfc4122)
-    .ReplaceVersion(GuidVersion.Version6)
+    .ReplaceVersion(GuidVersion.Version1)
     .ReplaceTimestamp(new DateTime(0x08BEFFD14FDBF810, DateTimeKind.Utc))
     .ReplaceClockSequence((short)0x00b4)
     .ReplaceNodeId(new byte[] { 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8 });
-    // 1d19dad6-ba7b-6810-80b4-00c04fd430c8
-
-// build Unix time-based GUID.
-var guidV7 = Guid.NewGuid()
-    .ReplaceVersion(GuidVersion.Version7)
-    .ReplaceTimestamp(new DateTime(0x08D9F638A666EB00, DateTimeKind.Utc));
-    // 017f22e2-79b0-774a-8e21-a60c1ca56e82
+    // 6ba7b810-9dad-11d1-80b4-00c04fd430c8
 ```
