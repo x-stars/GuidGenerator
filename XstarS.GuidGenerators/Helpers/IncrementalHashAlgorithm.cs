@@ -75,7 +75,7 @@ namespace System.Security.Cryptography
             hashing.AsBridge().AppendData(buffer, offset, count);
         }
 
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         /// <summary>
         /// Appends the specified data into the hash algorithm for computing the hash.
         /// </summary>
@@ -121,7 +121,7 @@ namespace System.Security.Cryptography
             return hashing.AsBridge().GetFinalHash();
         }
 
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         /// <summary>
         /// Finalizes the hash computation and attempts to retrieve the hash value.
         /// </summary>
@@ -182,7 +182,7 @@ namespace System.Security.Cryptography
                 this.HashCore(buffer, offset, count);
             }
 
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
             public void AppendData(ReadOnlySpan<byte> source)
             {
                 this.State = 1;
@@ -198,7 +198,7 @@ namespace System.Security.Cryptography
                 return (byte[])hash.Clone();
             }
 
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
             public bool TryGetFinalHash(Span<byte> destination, out int bytesWritten)
             {
                 var result = this.TryHashFinal(destination, out bytesWritten);
