@@ -59,8 +59,8 @@
     <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
-  <ItemGroup Condition="('$(TargetFramework.TrimEnd(`.0123456789`))'=='net' And
-                         '$(TargetFramework.CompareTo(`net5.0`))'&lt;'0') Or
+  <ItemGroup Condition="('$(TargetFramework.Split(`-`)[0].TrimEnd(`.0123456789`))'=='net' And
+                         '$(TargetFramework.Split(`-`)[0].CompareTo(`net5.0`))'&lt;'0') Or
                         ('$(TargetFramework.TrimEnd(`.0123456789`))'=='netcoreapp' And
                          '$(TargetFramework.CompareTo(`netcoreapp3.0`))'&lt;'0') Or
                         ('$(TargetFramework.TrimEnd(`.0123456789`))'=='netstandard')">
