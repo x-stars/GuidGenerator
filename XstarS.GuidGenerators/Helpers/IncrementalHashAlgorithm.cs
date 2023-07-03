@@ -33,6 +33,7 @@ namespace System.Security.Cryptography
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
 #if !FEATURE_DISABLE_TRIMMING || NET5_0_OR_GREATER
+        [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.AppendData), typeof(MethodBridge))]
 #endif
         public static void AppendData(this HashAlgorithm hashing, byte[] buffer)
@@ -62,6 +63,7 @@ namespace System.Security.Cryptography
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
 #if !FEATURE_DISABLE_TRIMMING || NET5_0_OR_GREATER
+        [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.AppendData), typeof(MethodBridge))]
 #endif
         public static void AppendData(
@@ -86,6 +88,7 @@ namespace System.Security.Cryptography
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
 #if !FEATURE_DISABLE_TRIMMING || NET5_0_OR_GREATER
+        [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.AppendData), typeof(MethodBridge))]
 #endif
         public static void AppendData(this HashAlgorithm hashing, ReadOnlySpan<byte> source)
@@ -109,6 +112,7 @@ namespace System.Security.Cryptography
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
 #if !FEATURE_DISABLE_TRIMMING || NET5_0_OR_GREATER
+        [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.GetFinalHash), typeof(MethodBridge))]
 #endif
         public static byte[] GetFinalHash(this HashAlgorithm hashing)
@@ -136,6 +140,7 @@ namespace System.Security.Cryptography
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
 #if !FEATURE_DISABLE_TRIMMING || NET5_0_OR_GREATER
+        [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.TryGetFinalHash), typeof(MethodBridge))]
 #endif
         public static bool TryGetFinalHash(
@@ -175,6 +180,8 @@ namespace System.Security.Cryptography
         [DebuggerNonUserCode, ExcludeFromCodeCoverage]
         private abstract class MethodBridge : HashAlgorithm
         {
+            internal static MethodBridge Instance => Validator.Instance;
+
             public void AppendData(byte[] buffer, int offset, int count)
             {
                 this.ValidateInput(buffer, offset, count);
@@ -216,7 +223,7 @@ namespace System.Security.Cryptography
             [DebuggerNonUserCode, ExcludeFromCodeCoverage]
             private sealed class Validator : MethodBridge
             {
-                internal static readonly Validator Instance = new Validator();
+                internal static new readonly Validator Instance = new Validator();
 
                 public override void Initialize() => throw new NotImplementedException();
 
