@@ -1,10 +1,9 @@
 ﻿using System;
-#if UNSAFE_HELPERS
-using System.Runtime.CompilerServices;
-#endif
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+#elif UNSAFE_HELPERS
+using System.Runtime.CompilerServices;
 #endif
 
 namespace XNetEx.Guids.Generators;
