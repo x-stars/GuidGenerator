@@ -8,7 +8,7 @@ internal abstract class ClockResetCounter
 {
     internal const int SequenceMask = ~(-1 << 14);
 
-    internal const int CounterGuard = 1 << 12;
+    internal const int CounterGuard = 1 << 10;
 
     private ClockResetCounter() { }
 

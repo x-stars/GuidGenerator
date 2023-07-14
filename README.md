@@ -1,6 +1,6 @@
 ﻿# .NET GUID Generator
 
-[English](README.md) | [简体中文](README.zh-cn.md)
+[English](README.md) | [简体中文](README.zh-CN.md)
 
 Provides RFC 4122 UUID and RFC4122bis UUIDREV (draft) compliant GUID generators for .NET platform.
 
