@@ -1,6 +1,6 @@
 ﻿# .NET GUID 生成器
 
-[English](README.md) | [简体中文](README.zh-cn.md)
+[English](README.md) | [简体中文](README.zh-CN.md)
 
 为 .NET 平台提供符合 RFC 4122 UUID 标准的 GUID 生成器。
 
