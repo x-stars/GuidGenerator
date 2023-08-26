@@ -67,10 +67,10 @@ type GuidGeneratorTest() =
 
     [<TestMethod>]
     member _.NewVersion3_EmptyName_GetExpectedGuid() =
-        Guid.newV3 Guid.nsDns (Array.zeroCreate<byte> 0)
+        Guid.newV3 Guid.empty Array.empty
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version3)
-        |> Assert.equalTo (Guid.parse "c87ee674-4ddc-3efe-a74e-dfe25da5d7b3")
+        |> Assert.equalTo (Guid.parse "4ae71336-e44b-39bf-b9d2-752e234818a5")
 
     [<TestMethod>]
     member _.NewVersion3ByString_SpecifiedUrl_GetExpectedGuid() =
@@ -95,10 +95,10 @@ type GuidGeneratorTest() =
 
     [<TestMethod>]
     member _.NewVersion5_EmptyName_GetExpectedGuid() =
-        Guid.newV5 Guid.nsDns (Array.zeroCreate<byte> 0)
+        Guid.newV5 Guid.empty Array.empty
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version5)
-        |> Assert.equalTo (Guid.parse "4ebd0208-8328-5d69-8c44-ec50939c0967")
+        |> Assert.equalTo (Guid.parse "e129f27c-5103-5c5c-844b-cdf0a15e160d")
 
     [<TestMethod>]
     member _.NewVersion5ByString_SpecifiedUrl_GetExpectedGuid() =
