@@ -75,11 +75,11 @@ partial class GuidGenerator
     /// <paramref name="hashingName"/> does not represent a supported hash algorithm.</exception>
     public static INameBasedGuidGenerator OfHashAlgorithm(string hashingName) => hashingName switch
     {
-        nameof(HashAlgorithmName.MD5) => GuidGenerator.Version3,
-        nameof(HashAlgorithmName.SHA1) => GuidGenerator.Version5,
-        nameof(HashAlgorithmName.SHA256) => GuidGenerator.Version8NSha256,
-        nameof(HashAlgorithmName.SHA384) => GuidGenerator.Version8NSha384,
-        nameof(HashAlgorithmName.SHA512) => GuidGenerator.Version8NSha512,
+        nameof(HashAlgorithmName.MD5) => NameBasedGuidGenerator.MD5Hashing.Instance,
+        nameof(HashAlgorithmName.SHA1) => NameBasedGuidGenerator.SHA1Hashing.Instance,
+        nameof(HashAlgorithmName.SHA256) => NameBasedGuidGenerator.CustomHashing.InstanceSha256,
+        nameof(HashAlgorithmName.SHA384) => NameBasedGuidGenerator.CustomHashing.InstanceSha384,
+        nameof(HashAlgorithmName.SHA512) => NameBasedGuidGenerator.CustomHashing.InstanceSha512,
         null => throw new ArgumentNullException(nameof(hashingName)),
         _ => throw new ArgumentOutOfRangeException(nameof(hashingName)),
     };
