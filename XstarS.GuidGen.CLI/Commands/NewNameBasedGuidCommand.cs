@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
@@ -14,13 +15,13 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
 
 #if !FEATURE_DISABLE_UUIDREV
     internal static readonly NewNameBasedGuidCommand Version8NSha256 =
-        new NewNameBasedGuidCommand(hashingName: "SHA256");
+        new NewNameBasedGuidCommand(nameof(HashAlgorithmName.SHA256));
 
     internal static readonly NewNameBasedGuidCommand Version8NSha384 =
-        new NewNameBasedGuidCommand(hashingName: "SHA384");
+        new NewNameBasedGuidCommand(nameof(HashAlgorithmName.SHA384));
 
     internal static readonly NewNameBasedGuidCommand Version8NSha512 =
-        new NewNameBasedGuidCommand(hashingName: "SHA512");
+        new NewNameBasedGuidCommand(nameof(HashAlgorithmName.SHA512));
 #endif
 
     private readonly GuidVersion Version;
@@ -99,9 +100,7 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
         return this.HashingName switch
         {
 #if !FEATURE_DISABLE_UUIDREV
-            "SHA256" => GuidGenerator.Version8NSha256,
-            "SHA384" => GuidGenerator.Version8NSha384,
-            "SHA512" => GuidGenerator.Version8NSha512,
+            string => GuidGenerator.OfHashAlgorithm(this.HashingName),
 #endif
             _ => (INameBasedGuidGenerator)GuidGenerator.OfVersion(this.Version),
         };

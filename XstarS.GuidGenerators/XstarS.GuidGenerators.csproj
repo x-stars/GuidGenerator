@@ -6,7 +6,6 @@
     <RootNamespace>XNetEx.Guids</RootNamespace>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <IsTrimmable>true</IsTrimmable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
@@ -50,6 +49,19 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework.Split(`-`)[0].TrimEnd(`.0123456789`))'=='net' And
+                            '$(TargetFramework.Split(`-`)[0].CompareTo(`net5.0`))'&gt;='0'">
+    <IsTrimmable>true</IsTrimmable>
+  </PropertyGroup>
+
+  <ItemGroup Condition="!('$(TargetFramework.Split(`-`)[0].TrimEnd(`.0123456789`))'=='net' And
+                          '$(TargetFramework.Split(`-`)[0].CompareTo(`net5.0`))'&gt;='0')">
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>IsTrimmable</_Parameter1>
+      <_Parameter2>True</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\SharedItems\Common\**\*.cs" />

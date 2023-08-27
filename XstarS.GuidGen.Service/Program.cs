@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,12 +16,11 @@ static Guid ParseGuidNs(string ns) => (typeof(GuidNamespaces).GetField(ns, nsFla
 static byte[] ParseBase64(string base64) => Convert.FromBase64String(base64.Replace('-', '+').Replace('_', '/') + new string('=', base64.Length % 4));
 
 #if !FEATURE_DISABLE_UUIDREV
-static INameBasedGuidGenerator ParseHashName(string hash) => hash.ToUpperInvariant() switch
+static INameBasedGuidGenerator ParseHashName(string hashingName) => hashingName.ToUpperInvariant() switch
 {
-    "SHA256" => GuidGenerator.Version8NSha256,
-    "SHA384" => GuidGenerator.Version8NSha384,
-    "SHA512" => GuidGenerator.Version8NSha512,
-    _ => throw new ArgumentOutOfRangeException(nameof(hash)),
+    nameof(HashAlgorithmName.MD5) or nameof(HashAlgorithmName.SHA1) =>
+        throw new ArgumentOutOfRangeException(nameof(hashingName)),
+    _ => GuidGenerator.OfHashAlgorithm(hashingName.ToUpperInvariant()),
 };
 #endif
 

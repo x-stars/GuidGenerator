@@ -4,7 +4,6 @@
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <RootNamespace>XNetEx.FSharp.Core</RootNamespace>
     <LangVersion>latest</LangVersion>
-    <IsTrimmable>true</IsTrimmable>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <WarnOn>FS3390</WarnOn>
   </PropertyGroup>
@@ -48,6 +47,19 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework.Split(`-`)[0].TrimEnd(`.0123456789`))'=='net' And
+                            '$(TargetFramework.Split(`-`)[0].CompareTo(`net5.0`))'&gt;='0'">
+    <IsTrimmable>true</IsTrimmable>
+  </PropertyGroup>
+
+  <ItemGroup Condition="!('$(TargetFramework.Split(`-`)[0].TrimEnd(`.0123456789`))'=='net' And
+                          '$(TargetFramework.Split(`-`)[0].CompareTo(`net5.0`))'&gt;='0')">
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>IsTrimmable</_Parameter1>
+      <_Parameter2>True</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\SharedItems\FSharp\Common\**\*.fs" />
