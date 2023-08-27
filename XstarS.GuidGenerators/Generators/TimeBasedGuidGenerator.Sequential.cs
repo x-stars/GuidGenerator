@@ -15,8 +15,6 @@ partial class TimeBasedGuidGenerator
 
         private static volatile TimeBasedGuidGenerator.Sequential? SingletonP;
 
-        private Sequential() : base(NodeIdSource.NonVolatileRandom) { }
-
         private Sequential(NodeIdSource nodeIdSource) : base(nodeIdSource) { }
 
         internal static new TimeBasedGuidGenerator.Sequential Instance
@@ -44,7 +42,7 @@ partial class TimeBasedGuidGenerator
                 static TimeBasedGuidGenerator.Sequential Initialize()
                 {
                     return TimeBasedGuidGenerator.Sequential.SingletonR ??=
-                        new TimeBasedGuidGenerator.Sequential();
+                        new TimeBasedGuidGenerator.Sequential(NodeIdSource.NonVolatileRandom);
                 }
 
                 return TimeBasedGuidGenerator.Sequential.SingletonR ?? Initialize();

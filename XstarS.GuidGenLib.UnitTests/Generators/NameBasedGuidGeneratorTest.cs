@@ -9,10 +9,10 @@ public partial class NameBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version3_GetExpectedGuid()
     {
-        var nsId = GuidNamespaces.Dns;
+        var nsId = Guid.Empty;
         var name = Array.Empty<byte>();
         var guid = GuidGenerator.Version3.NewGuid(nsId, name);
-        var expected = Guid.Parse("c87ee674-4ddc-3efe-a74e-dfe25da5d7b3");
+        var expected = Guid.Parse("4ae71336-e44b-39bf-b9d2-752e234818a5");
         Assert.AreEqual(expected, guid);
     }
 
@@ -20,10 +20,10 @@ public partial class NameBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version3SpanName_GetExpectedGuid()
     {
-        var nsId = GuidNamespaces.Dns;
+        var nsId = Guid.Empty;
         var name = ReadOnlySpan<byte>.Empty;
         var guid = GuidGenerator.Version3.NewGuid(nsId, name);
-        var expected = Guid.Parse("c87ee674-4ddc-3efe-a74e-dfe25da5d7b3");
+        var expected = Guid.Parse("4ae71336-e44b-39bf-b9d2-752e234818a5");
         Assert.AreEqual(expected, guid);
     }
 #endif
@@ -62,10 +62,10 @@ public partial class NameBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version5_GetExpectedGuid()
     {
-        var nsId = GuidNamespaces.Dns;
+        var nsId = Guid.Empty;
         var name = Array.Empty<byte>();
         var guid = GuidGenerator.Version5.NewGuid(nsId, name);
-        var expected = Guid.Parse("4ebd0208-8328-5d69-8c44-ec50939c0967");
+        var expected = Guid.Parse("e129f27c-5103-5c5c-844b-cdf0a15e160d");
         Assert.AreEqual(expected, guid);
     }
 
@@ -73,10 +73,10 @@ public partial class NameBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version5SpanName_GetExpectedGuid()
     {
-        var nsId = GuidNamespaces.Dns;
+        var nsId = Guid.Empty;
         var name = ReadOnlySpan<byte>.Empty;
         var guid = GuidGenerator.Version5.NewGuid(nsId, name);
-        var expected = Guid.Parse("4ebd0208-8328-5d69-8c44-ec50939c0967");
+        var expected = Guid.Parse("e129f27c-5103-5c5c-844b-cdf0a15e160d");
         Assert.AreEqual(expected, guid);
     }
 #endif

@@ -1,11 +1,6 @@
-#ifndef __XSTARS_GUIDGEN_NATIVELIB_H__
-#define __XSTARS_GUIDGEN_NATIVELIB_H__
+#pragma once
 
 #ifdef _WIN32
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#pragma once
-#endif
 
 #include <windows.h>
 #include <guiddef.h>
@@ -89,5 +84,3 @@ HRESULT GuidCreateV8NSha512(_Out_ GUID *Guid,
 #endif
 
 #endif /* _WIN32 */
-
-#endif /* __XSTARS_GUIDGEN_NATIVELIB_H__ */
