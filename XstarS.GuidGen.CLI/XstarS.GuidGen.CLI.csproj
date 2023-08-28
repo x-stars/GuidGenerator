@@ -31,7 +31,7 @@
                             '$(TargetFramework.Split(`-`)[0].CompareTo(`net7.0`))'&gt;='0'">
     <PublishAot>true</PublishAot>
     <PublishTrimmed>true</PublishTrimmed>
-    <TrimMode>Link</TrimMode>
+    <TrimMode>full</TrimMode>
     <StripSymbols>true</StripSymbols>
     <InvariantGlobalization>true</InvariantGlobalization>
     <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
