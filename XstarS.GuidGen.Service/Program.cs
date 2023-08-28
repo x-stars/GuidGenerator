@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,20 +15,19 @@ static Guid ParseGuidNs(string ns) => (typeof(GuidNamespaces).GetField(ns, nsFla
 static byte[] ParseBase64(string base64) => Convert.FromBase64String(base64.Replace('-', '+').Replace('_', '/') + new string('=', base64.Length % 4));
 
 #if !FEATURE_DISABLE_UUIDREV
-static INameBasedGuidGenerator ParseHashName(string hashingName) => hashingName.ToUpperInvariant() switch
+static INameBasedGuidGenerator ParseHashName(string hashingName)
 {
-    nameof(HashAlgorithmName.MD5) or nameof(HashAlgorithmName.SHA1) =>
-        throw new ArgumentOutOfRangeException(nameof(hashingName)),
-    _ => GuidGenerator.OfHashAlgorithm(hashingName.ToUpperInvariant()),
-};
+    var guidGen = GuidGenerator.OfHashAlgorithm(hashingName.ToUpperInvariant());
+    return (guidGen.Version == GuidVersion.Version8) ? guidGen : throw new ArgumentOutOfRangeException(nameof(hashingName));
+}
 #endif
 
 var app = WebApplication.Create(args);
 
 GuidGenerator.StateStorageException += (sender, e) =>
 {
-    var logLevel = ((e.OperationType != FileAccess.Read) && (e.Exception is not FileNotFoundException)) ?
-                    LogLevel.Warning : LogLevel.Information;
+    var isFirstLoad = (e.OperationType == FileAccess.Read) && (e.Exception is FileNotFoundException);
+    var logLevel = isFirstLoad ? LogLevel.Information : LogLevel.Warning;
     app.Logger.Log(logLevel, e.Exception, "{exception}: {message}", e.Exception.GetType(), e.Exception.Message);
 };
 var storageDir = Environment.GetFolderPath(
