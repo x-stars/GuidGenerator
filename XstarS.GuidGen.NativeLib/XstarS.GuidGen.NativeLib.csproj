@@ -30,7 +30,7 @@
   <PropertyGroup>
     <PublishAot>true</PublishAot>
     <PublishTrimmed>true</PublishTrimmed>
-    <TrimMode>Link</TrimMode>
+    <TrimMode>full</TrimMode>
     <StripSymbols>true</StripSymbols>
     <InvariantGlobalization>true</InvariantGlobalization>
     <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
