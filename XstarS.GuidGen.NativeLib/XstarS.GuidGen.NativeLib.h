@@ -77,6 +77,21 @@ HRESULT GuidCreateV8NSha384(_Out_ GUID *Guid,
 __declspec(dllimport)
 HRESULT GuidCreateV8NSha512(_Out_ GUID *Guid,
     _In_ const GUID *NsId, _In_ const UCHAR *Name, SIZE_T NameLen);
+__declspec(dllimport)
+HRESULT GuidCreateV8NSha3D256(_Out_ GUID *Guid,
+    _In_ const GUID *NsId, _In_ const UCHAR *Name, SIZE_T NameLen);
+__declspec(dllimport)
+HRESULT GuidCreateV8NSha3D384(_Out_ GUID *Guid,
+    _In_ const GUID *NsId, _In_ const UCHAR *Name, SIZE_T NameLen);
+__declspec(dllimport)
+HRESULT GuidCreateV8NSha3D512(_Out_ GUID *Guid,
+    _In_ const GUID *NsId, _In_ const UCHAR *Name, SIZE_T NameLen);
+__declspec(dllimport)
+HRESULT GuidCreateV8NShake128(_Out_ GUID *Guid,
+    _In_ const GUID *NsId, _In_ const UCHAR *Name, SIZE_T NameLen);
+__declspec(dllimport)
+HRESULT GuidCreateV8NShake256(_Out_ GUID *Guid,
+    _In_ const GUID *NsId, _In_ const UCHAR *Name, SIZE_T NameLen);
 #endif
 
 #ifdef __cplusplus
