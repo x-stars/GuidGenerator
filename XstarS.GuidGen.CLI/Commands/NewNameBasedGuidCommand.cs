@@ -15,13 +15,30 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
 
 #if !FEATURE_DISABLE_UUIDREV
     internal static readonly NewNameBasedGuidCommand Version8NSha256 =
-        new NewNameBasedGuidCommand(nameof(HashAlgorithmName.SHA256));
+        new NewNameBasedGuidCommand(HashAlgorithmNames.SHA256);
 
     internal static readonly NewNameBasedGuidCommand Version8NSha384 =
-        new NewNameBasedGuidCommand(nameof(HashAlgorithmName.SHA384));
+        new NewNameBasedGuidCommand(HashAlgorithmNames.SHA384);
 
     internal static readonly NewNameBasedGuidCommand Version8NSha512 =
-        new NewNameBasedGuidCommand(nameof(HashAlgorithmName.SHA512));
+        new NewNameBasedGuidCommand(HashAlgorithmNames.SHA512);
+
+#if NET8_0_OR_GREATER
+    internal static readonly NewNameBasedGuidCommand Version8NSha3D256 =
+        new NewNameBasedGuidCommand(HashAlgorithmNames.SHA3_256);
+
+    internal static readonly NewNameBasedGuidCommand Version8NSha3D384 =
+        new NewNameBasedGuidCommand(HashAlgorithmNames.SHA3_384);
+
+    internal static readonly NewNameBasedGuidCommand Version8NSha3D512 =
+        new NewNameBasedGuidCommand(HashAlgorithmNames.SHA3_512);
+
+    internal static readonly NewNameBasedGuidCommand Version8NShake128 =
+        new NewNameBasedGuidCommand(HashAlgorithmNames.SHAKE128);
+
+    internal static readonly NewNameBasedGuidCommand Version8NShake256 =
+        new NewNameBasedGuidCommand(HashAlgorithmNames.SHAKE256);
+#endif
 #endif
 
     private readonly GuidVersion Version;

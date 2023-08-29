@@ -33,6 +33,13 @@ internal abstract class ProgramCommand
             yield return NewNameBasedGuidCommand.Version8NSha256;
             yield return NewNameBasedGuidCommand.Version8NSha384;
             yield return NewNameBasedGuidCommand.Version8NSha512;
+#if NET8_0_OR_GREATER
+            yield return NewNameBasedGuidCommand.Version8NSha3D256;
+            yield return NewNameBasedGuidCommand.Version8NSha3D384;
+            yield return NewNameBasedGuidCommand.Version8NSha3D512;
+            yield return NewNameBasedGuidCommand.Version8NShake128;
+            yield return NewNameBasedGuidCommand.Version8NShake256;
+#endif
 #endif
             yield return ShowHelpCommand.Instance;
             yield return InvalidSyntaxCommand.Instance;

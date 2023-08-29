@@ -9,9 +9,17 @@ internal static class Program
 {
     internal static int Main(string[] args)
     {
-        Program.ConfigureStateStorage();
-        var result = ProgramCommand.Execute(args);
-        return result ? 0 : 1;
+        try
+        {
+            Program.ConfigureStateStorage();
+            var result = ProgramCommand.Execute(args);
+            return result ? 0 : 1;
+        }
+        catch (PlatformNotSupportedException ex)
+        {
+            Console.Error.WriteLine(ex.Message);
+            return 2;
+        }
     }
 
     private static void ConfigureStateStorage()
