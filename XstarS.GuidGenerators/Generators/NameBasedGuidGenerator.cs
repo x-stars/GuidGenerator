@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Threading;
+using XNetEx.Collections.Concurrent;
 
 namespace XNetEx.Guids.Generators;
 
 internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGenerator
 {
-    private readonly BlockingCollection<HashAlgorithm> Hashings;
+    private readonly BoundedCollection<HashAlgorithm> Hashings;
 
     private volatile HashAlgorithm? FastHashing;
 
@@ -22,7 +22,7 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
     protected NameBasedGuidGenerator(Guid? hashspaceId)
     {
         var concurrency = Environment.ProcessorCount * 2;
-        this.Hashings = new BlockingCollection<HashAlgorithm>(concurrency);
+        this.Hashings = new BoundedCollection<HashAlgorithm>(concurrency);
         this.FastHashing = null;
         this.HashspaceId = hashspaceId;
     }
@@ -97,12 +97,10 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
     protected void DisposeHashings()
     {
         var hashings = this.Hashings;
-        hashings.CompleteAdding();
         while (hashings.TryTake(out var hashing))
         {
             hashing.Dispose();
         }
-        hashings.Dispose();
         this.FastHashing?.Dispose();
         this.FastHashing = null;
     }
