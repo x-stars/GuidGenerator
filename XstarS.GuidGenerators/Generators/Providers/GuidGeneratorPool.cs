@@ -1,8 +1,8 @@
 ﻿#if !FEATURE_DISABLE_UUIDREV
 using System;
-using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using XNetEx.Collections.Concurrent;
 
 namespace XNetEx.Guids.Generators;
 
@@ -10,7 +10,7 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
 {
     private readonly Func<IBlockingGuidGenerator> GeneratorFactory;
 
-    private readonly BlockingCollection<IBlockingGuidGenerator> Generators;
+    private readonly BoundedCollection<IBlockingGuidGenerator> Generators;
 
     private volatile IBlockingGuidGenerator? DefaultGeneratorValue;
 
@@ -20,9 +20,8 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
     {
         this.GeneratorFactory = factory ??
             throw new ArgumentNullException(nameof(factory));
-        this.Generators = (capacity == -1) ?
-            new BlockingCollection<IBlockingGuidGenerator>() :
-            new BlockingCollection<IBlockingGuidGenerator>(capacity);
+        this.Generators = new BoundedCollection<IBlockingGuidGenerator>(
+            (capacity == -1) ? int.MaxValue : (capacity + ~(capacity >> 31)));
         this.DefaultGeneratorValue = null;
         this.DisposeState = 0;
     }
@@ -59,12 +58,10 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
         if (Interlocked.CompareExchange(ref this.DisposeState, 1, 0) == 0)
         {
             var generators = this.Generators;
-            generators.CompleteAdding();
             while (generators.TryTake(out var generator))
             {
                 generator.Dispose();
             }
-            generators.Dispose();
             this.DefaultGeneratorValue?.Dispose();
             this.DefaultGeneratorValue = null;
             this.DisposeState = 2;
