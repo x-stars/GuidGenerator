@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 #if NETCOREAPP3_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
@@ -9,23 +10,26 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace XNetEx.Collections.Concurrent;
 
-internal sealed class BoundedCollection<T> : IProducerConsumerCollection<T>
+[DebuggerDisplay($"Count = {{{nameof(Count)}}}")]
+[DebuggerTypeProxy(typeof(BoundedCollection<>.DebugView))]
+internal sealed class BoundedCollection<T>
+    : IProducerConsumerCollection<T>, IReadOnlyCollection<T>
 {
     private readonly ConcurrentQueue<T> Items;
-
-    private readonly int Capacity;
 
     private volatile int ItemsCount;
 
     public BoundedCollection(int capacity)
     {
-        this.Items = new ConcurrentQueue<T>();
         this.Capacity = (capacity >= 0) ? capacity :
             throw new ArgumentOutOfRangeException(nameof(capacity));
+        this.Items = new ConcurrentQueue<T>();
         this.ItemsCount = 0;
     }
 
     public int Count => this.Items.Count;
+
+    public int Capacity { get; }
 
     object ICollection.SyncRoot => ((ICollection)this.Items).SyncRoot;
 
@@ -71,5 +75,18 @@ internal sealed class BoundedCollection<T> : IProducerConsumerCollection<T>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return ((IEnumerable)this.Items).GetEnumerator();
+    }
+
+    private sealed class DebugView
+    {
+        private readonly BoundedCollection<T> Value;
+
+        internal DebugView(BoundedCollection<T> value)
+        {
+            this.Value = value;
+        }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
+        public T[] Items => this.Value.ToArray();
     }
 }
