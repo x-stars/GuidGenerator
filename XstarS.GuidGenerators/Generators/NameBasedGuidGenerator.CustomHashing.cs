@@ -150,7 +150,6 @@ partial class NameBasedGuidGenerator
             internal Synchronized(Guid hashspaceId, HashAlgorithm hashing)
                 : base(hashspaceId, hashing.Identity)
             {
-                this.Hashings.Dispose();
                 this.FastHashing = hashing;
             }
 

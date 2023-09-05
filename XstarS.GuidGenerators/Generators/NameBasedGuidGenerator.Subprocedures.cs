@@ -53,11 +53,13 @@ partial class NameBasedGuidGenerator
 
     private Guid HashToGuid(ReadOnlySpan<byte> hash)
     {
+#if !FEATURE_DISABLE_UUIDREV
         if (hash.Length < 16)
         {
             throw new InvalidOperationException(
                 "The algorithm's hash size is less than 128 bits.");
         }
+#endif
 
         var uuid = MemoryMarshal.Read<Guid>(hash);
         var guid = uuid.ToBigEndian();
@@ -106,11 +108,13 @@ partial class NameBasedGuidGenerator
 
     private unsafe Guid HashToGuid(byte[] hash)
     {
+#if !FEATURE_DISABLE_UUIDREV
         if (hash.Length < 16)
         {
             throw new InvalidOperationException(
                 "The algorithm's hash size is less than 128 bits.");
         }
+#endif
 
         var uuid = default(Guid);
         fixed (byte* pHash = &hash[0])
