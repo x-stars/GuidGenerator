@@ -112,7 +112,7 @@ public class GuidGeneratorConcurrentBenchmark
         });
     }
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     [Benchmark]
     public void GuidV6Generate()
     {

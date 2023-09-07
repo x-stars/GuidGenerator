@@ -121,7 +121,7 @@ public partial class NameBasedGuidGeneratorTest
             GuidVersion.Version1,
             GuidVersion.Version2,
             GuidVersion.Version4,
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
             GuidVersion.Version6,
             GuidVersion.Version7,
             GuidVersion.Version8,

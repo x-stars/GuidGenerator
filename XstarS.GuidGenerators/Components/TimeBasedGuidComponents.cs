@@ -27,7 +27,7 @@ internal abstract class TimeBasedGuidComponents : GuidComponents, ITimeBasedGuid
 
     protected abstract void SetTimestampCore(ref Guid guid, long timestamp);
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     internal sealed new class Version7 : TimeBasedGuidComponents
     {
         internal static readonly TimeBasedGuidComponents.Version7 Instance =

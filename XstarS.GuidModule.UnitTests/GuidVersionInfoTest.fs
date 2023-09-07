@@ -72,7 +72,7 @@ type GuidVersionInfoTest() =
         |- (Assert.false' << Guid.hasLocalId)
         |> ignore
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     [<TestMethod>]
     member _.GuidVersionInfo_Version6Guid_GetExpectedFlags() =
         Guid.newV6 ()

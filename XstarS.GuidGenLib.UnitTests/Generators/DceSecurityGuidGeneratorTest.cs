@@ -101,7 +101,7 @@ public class DceSecurityGuidGeneratorTest
             GuidVersion.Version3,
             GuidVersion.Version4,
             GuidVersion.Version5,
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
             GuidVersion.Version6,
             GuidVersion.Version7,
             GuidVersion.Version8,

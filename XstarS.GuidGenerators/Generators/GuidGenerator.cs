@@ -35,7 +35,7 @@ public abstract partial class GuidGenerator : IGuidGenerator, IGuidGeneratorInfo
     /// otherwise, <see langword="false"/>.</returns>
     public virtual bool RequiresInput => this.Version.IsNameBased();
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     /// <summary>
     /// Releases all resources used by this instance.
     /// </summary>
@@ -115,7 +115,7 @@ public abstract partial class GuidGenerator : IGuidGenerator, IGuidGeneratorInfo
             "This instance does not support generating a DCE Security Guid.");
     }
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     /// <summary>
     /// Releases the unmanaged resources used by this instance
     /// and optionally releases the managed resources.

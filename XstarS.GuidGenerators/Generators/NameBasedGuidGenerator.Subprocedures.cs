@@ -12,7 +12,7 @@ partial class NameBasedGuidGenerator
     private Guid ComputeHashToGuid(Guid nsId, ReadOnlySpan<byte> name)
     {
         const int guidSize = 16;
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
         var hashId = this.HashspaceId;
         var hashIdSize = (hashId is null) ? 0 : guidSize;
         var nameOffset = hashIdSize + guidSize;
@@ -62,7 +62,7 @@ partial class NameBasedGuidGenerator
 
     private Guid HashToGuid(ReadOnlySpan<byte> hash)
     {
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
         if (hash.Length < 16)
         {
             throw new InvalidOperationException(
@@ -80,7 +80,7 @@ partial class NameBasedGuidGenerator
     private unsafe byte[] CreateInput(Guid nsId, byte[] name)
     {
         const int guidSize = 16;
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
         var hashId = this.HashspaceId;
         var hashIdSize = (hashId is null) ? 0 : guidSize;
         var nameOffset = hashIdSize + guidSize;
@@ -122,7 +122,7 @@ partial class NameBasedGuidGenerator
 
     private unsafe Guid HashToGuid(byte[] hash)
     {
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
         if (hash.Length < 16)
         {
             throw new InvalidOperationException(

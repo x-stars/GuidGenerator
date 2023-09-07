@@ -51,7 +51,7 @@ partial class GuidComponentTest
     }
 #endif
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     [TestMethod]
     public void TryGetNodeId_Version6Guid_GetExpectedBytes()
     {
@@ -85,7 +85,7 @@ partial class GuidComponentTest
             "a9ec4420-7252-3c11-ab70-512e10273537",
             "2502f1d5-c2a9-47d3-b6d8-d7670094ace2",
             "768a7b1b-ae51-5c0a-bc9d-a85a343f2c24",
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
             "017f22e2-79b0-7cc3-98c4-dc0c0c07398f",
             "05db6c94-bba6-8702-88aa-548f4d6cd700",
             "ffffffff-ffff-ffff-ffff-ffffffffffff",
@@ -109,7 +109,7 @@ partial class GuidComponentTest
             "a9ec4420-7252-3c11-ab70-512e10273537",
             "2502f1d5-c2a9-47d3-b6d8-d7670094ace2",
             "768a7b1b-ae51-5c0a-bc9d-a85a343f2c24",
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
             "017f22e2-79b0-7cc3-98c4-dc0c0c07398f",
             "05db6c94-bba6-8702-88aa-548f4d6cd700",
             "ffffffff-ffff-ffff-ffff-ffffffffffff",
