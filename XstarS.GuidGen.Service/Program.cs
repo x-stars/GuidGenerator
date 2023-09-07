@@ -52,7 +52,7 @@ app.MapGet("/v5/{ns}/{name}", (string ns, string name) =>
 app.MapPost("/v5/{ns}", (string ns, [FromBody] string name) =>
     GuidGenerator.Version5.NewGuid(ParseGuidNs(ns), ParseBase64(name)));
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
 app.MapGet("/v6", (int? count) => NewGuidCount(GuidGenerator.Version6, count));
 app.MapGet("/v6p", (int? count) => NewGuidCount(GuidGenerator.Version6P, count));
 app.MapGet("/v6r", (int? count) => NewGuidCount(GuidGenerator.Version6R, count));
@@ -75,7 +75,7 @@ static Guid ParseGuidNs(string nsNameOrId) => nsNameOrId.ToUpperInvariant() swit
 {
     "DNS" => GuidNamespaces.Dns, "URL" => GuidNamespaces.Url,
     "OID" => GuidNamespaces.Oid, "X500" => GuidNamespaces.X500,
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     "MAX" => Uuid.MaxValue,
 #endif
     "NIL" => Guid.Empty, _ => Guid.ParseExact(nsNameOrId, "D"),
@@ -84,7 +84,7 @@ static Guid ParseGuidNs(string nsNameOrId) => nsNameOrId.ToUpperInvariant() swit
 static byte[] ParseBase64(string base64) =>
     Convert.FromBase64String(base64.Replace('-', '+').Replace('_', '/') + new string('=', base64.Length % 4));
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
 static INameBasedGuidGenerator ParseHashName(string hashingName)
 {
     var guidGen = GuidGenerator.OfHashAlgorithm(hashingName.ToUpperInvariant());

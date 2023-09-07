@@ -1,4 +1,4 @@
-﻿#if !FEATURE_DISABLE_UUIDREV && NET8_0_OR_GREATER
+﻿#if !UUIDREV_DISABLE && NET8_0_OR_GREATER
 using System;
 using System.Security.Cryptography;
 
