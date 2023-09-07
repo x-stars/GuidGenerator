@@ -1,0 +1,15 @@
+<Project>
+
+  <PropertyGroup>
+    <Authors>XstarS</Authors>
+    <Company>XstarS</Company>
+    <Version>2.0.0-rc-00</Version>
+    <Product>XstarS GUID Generator</Product>
+    <Copyright>Copyright © $(Company) 2022</Copyright>
+    <FileVersion>$(Version.Split('-')[0]).0</FileVersion>
+    <VersionMajor>$(Version.Split('.')[0])</VersionMajor>
+    <VersionMinor>$(Version.Split('.')[1])</VersionMinor>
+    <AssemblyVersion>$(VersionMajor).$(VersionMinor).0.0</AssemblyVersion>
+  </PropertyGroup>
+
+</Project>
