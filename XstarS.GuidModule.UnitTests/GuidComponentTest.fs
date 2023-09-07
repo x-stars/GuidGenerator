@@ -43,7 +43,7 @@ type GuidComponentTest() =
         |> ValueOption.get
         |> Assert.equalTo (Guid.Domain.Org, 0x6ba7b810)
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     [<TestMethod>]
     member _.TryGetNodeId_Version6Guid_GetExpectedNodeId() =
         Guid.parse "1d19dad6-ba7b-6810-80b4-00c04fd430c8"
@@ -68,7 +68,7 @@ type GuidComponentTest() =
         |> Guid.variant
         |> Assert.equalTo Guid.Variant.Rfc4122
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     [<TestMethod>]
     member _.ReplaceVersion_GuidMaxValue_GetInputVersion() =
         Guid.maxValue
@@ -100,7 +100,7 @@ type GuidComponentTest() =
         |> ValueOption.get
         |> Assert.equalTo (DateTime(0x08BEFFD14FDBF810L, DateTimeKind.Utc))
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     [<TestMethod>]
     member _.ReplaceTimestampOffset_Version6Guid_GetInputDateTimeUtc() =
         Guid.parse "00000000-0000-6000-80b4-00c04fd430c8"
@@ -138,7 +138,7 @@ type GuidComponentTest() =
         |> ValueOption.get
         |> Assert.equalTo (Guid.Domain.Org, 0x6ba7b810)
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     [<TestMethod>]
     member _.ReplaceNodeId_Version6Guid_GetInputNodeId() =
         Guid.parse "1d19dad6-ba7b-6810-80b4-000000000000"

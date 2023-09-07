@@ -12,11 +12,11 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 
     private volatile HashAlgorithm? FastHashing;
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     private readonly Guid? HashspaceId;
 #endif
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     protected NameBasedGuidGenerator() : this(hashspaceId: null) { }
 
     protected NameBasedGuidGenerator(Guid? hashspaceId)
@@ -93,7 +93,7 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
         }
     }
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     protected void DisposeHashings()
     {
         var hashings = this.Hashings;

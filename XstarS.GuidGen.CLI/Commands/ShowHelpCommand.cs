@@ -29,7 +29,7 @@ internal sealed class ShowHelpCommand : ProgramCommand
         IEnumerable<string> GetHelpMessage()
         {
             var cmdName = this.GetCommandName();
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
             yield return $"Generate RFC 4122 revision compliant GUIDs.";
 #else
             yield return $"Generate RFC 4122 compliant GUIDs.";
@@ -37,7 +37,7 @@ internal sealed class ShowHelpCommand : ProgramCommand
             yield return $"Usage:  {cmdName} [-V1|-V4|-V1R] [-Cn]";
             yield return $"        {cmdName} -V2 Domain [SiteID]";
             yield return $"        {cmdName} -V3|-V5 :NS|GuidNS [Name]";
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
             yield return $"        {cmdName} -V6|-V7|-V8|-V6P|-V6R [-Cn]";
             yield return $"        {cmdName} -V8N Hash :NS|GuidNS [Name]";
 #endif
@@ -48,13 +48,13 @@ internal sealed class ShowHelpCommand : ProgramCommand
             yield return "    -V3     generate name-based GUID by MD5 hashing.";
             yield return "    -V4     generate pseudo-random GUID (default).";
             yield return "    -V5     generate name-based GUID by SHA1 hashing.";
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
             yield return "    -V6     generate reordered time-based GUID.";
             yield return "    -V7     generate Unix Epoch time-based GUID.";
             yield return "    -V8     generate custom GUID (example impl).";
 #endif
             yield return "    -V1R    generate time-based GUID (random node ID).";
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
             yield return "    -V6P    generate reordered time-based GUID";
             yield return "            (IEEE 802 MAC address node ID).";
             yield return "    -V6R    generate reordered time-based GUID";
@@ -71,7 +71,7 @@ internal sealed class ShowHelpCommand : ProgramCommand
             yield return "    GuidNS  specify a user-defined GUID namespace.";
             yield return "    Name    specify the name to generate GUID,";
             yield return "            or empty to read from standard input.";
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
             yield return "    Hash    specify a well-known hash algorithm,";
             yield return "            which can be SHA256, SHA384 or SHA512.";
 #endif
