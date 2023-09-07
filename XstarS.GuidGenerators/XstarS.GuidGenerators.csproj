@@ -10,60 +10,19 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
 
+  <Import Project="..\BuildItems\AssemblyInfo.Build.props" />
   <PropertyGroup>
-    <Authors>XstarS</Authors>
-    <Company>XstarS</Company>
-    <Version>1.7.5</Version>
-    <Product>XstarS GUID Generator</Product>
     <AssemblyTitle>$(Product) Library</AssemblyTitle>
-    <Copyright>Copyright © $(Company) 2022</Copyright>
-    <FileVersion>$(Version.Split('-')[0]).0</FileVersion>
-    <VersionMajor>$(Version.Split('.')[0])</VersionMajor>
-    <VersionMinor>$(Version.Split('.')[1])</VersionMinor>
-    <AssemblyVersion>$(VersionMajor).$(VersionMinor).0.0</AssemblyVersion>
-    <DefineConstants>$(DefineConstants);UUIDREV_DISABLE</DefineConstants>
   </PropertyGroup>
 
+  <Import Project="..\BuildItems\NuGetPack.Build.props" />
   <PropertyGroup>
-    <PackageId>$(AssemblyName)</PackageId>
-    <PackageVersion>$(Version)</PackageVersion>
-    <PackageTags>guid guid-generator rfc4122 uuid</PackageTags>
+    <PackageTags>guid guid-generator rfc4122 uuid uuidrev</PackageTags>
     <Description>Provides RFC 4122 UUID compliant GUID generators for .NET platform.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/x-stars/GuidGenerator</PackageProjectUrl>
-    <PackageReleaseNotes>$(PackageProjectUrl)/releases/tag/v$(PackageVersion)</PackageReleaseNotes>
-    <RepositoryUrl>https://github.com/x-stars/GuidGenerator</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\GuidGenerator.snk</AssemblyOriginatorKeyFile>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <IsTrimmable>$(
-      '$(TargetFramework.Split(`-`)[0].TrimEnd(`.0123456789`))'=='net' And
-      '$(TargetFramework.Split(`-`)[0].CompareTo(`net5.0`))'&gt;='0'
-    )</IsTrimmable>
-    <DefineConstants>$(DefineConstants);IS_TRIMMABLE</DefineConstants>
-  </PropertyGroup>
-
-  <ItemGroup Condition="'$(IsTrimmable)'!='true'">
-    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-      <_Parameter1>IsTrimmable</_Parameter1>
-      <_Parameter2>True</_Parameter2>
-    </AssemblyAttribute>
-  </ItemGroup>
+  <Import Project="..\BuildItems\Trimming.Build.props" />
 
   <ItemGroup>
     <Compile Include="..\SharedItems\Common\**\*.cs" />
@@ -78,10 +37,6 @@
                         '$(TargetFramework.TrimEnd(`.0123456789`))'=='netcoreapp' Or
                         '$(TargetFramework.TrimEnd(`.0123456789`))'=='netstandard'">
     <PackageReference Include="System.Security.Principal.Windows" Version="4.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

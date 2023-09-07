@@ -7,18 +7,9 @@
     <WarnOn>FS3390</WarnOn>
   </PropertyGroup>
 
+  <Import Project="..\BuildItems\AssemblyInfo.Build.props" />
   <PropertyGroup>
-    <Authors>XstarS</Authors>
-    <Company>XstarS</Company>
-    <Version>1.7.5</Version>
-    <Product>XstarS GUID Generator</Product>
     <AssemblyTitle>$(Product) Module UnitTests</AssemblyTitle>
-    <Copyright>Copyright © $(Company) 2022</Copyright>
-    <FileVersion>$(Version.Split('-')[0]).0</FileVersion>
-    <VersionMajor>$(Version.Split('.')[0])</VersionMajor>
-    <VersionMinor>$(Version.Split('.')[1])</VersionMinor>
-    <AssemblyVersion>$(VersionMajor).$(VersionMinor).0.0</AssemblyVersion>
-    <DefineConstants>$(DefineConstants);UUIDREV_DISABLE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>
