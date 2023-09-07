@@ -65,7 +65,7 @@ internal static unsafe class NativeLib
         return GuidCreateNameBased(GuidGenerator.Version5, guid, nsId, name, nameLen);
     }
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     [UnmanagedCallersOnly(EntryPoint = nameof(GuidCreateV6))]
     internal static HResult GuidCreateV6([Out] Guid* guid)
     {

@@ -4,7 +4,7 @@ open System
 open FSharp.Compiler.Internals
 open XNetEx.Guids
 open XNetEx.Guids.Generators
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
 open System.Security.Cryptography
 #endif
 
@@ -35,7 +35,7 @@ module Guid =
     /// </summary>
     type Namespace = GuidNamespaces
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     /// <summary>
     /// An abbreviation for the type <see cref="T:XNetEx.Guids.GuidHashspaces"/>.
     /// </summary>
@@ -66,7 +66,7 @@ module Guid =
     [<CompiledName("Empty")>]
     let empty: Guid = Guid.Empty
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     /// <summary>
     /// Represents the <see cref="T:System.Guid"/> instance whose value is all ones.
     /// </summary>
@@ -103,7 +103,7 @@ module Guid =
     [<CompiledName("NamespaceX500")>]
     let nsX500: Guid = Namespace.X500
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     /// <summary>
     /// Represents the hashspace ID for the SHA-224 hash algorithm.
     /// </summary>
@@ -215,7 +215,7 @@ module Guid =
     let newV1RSeq () : seq<Guid> =
         Generator.CreateVersion1R().AsSequence()
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     /// <summary>
     /// Creates a new unlimited sequence that generates <see cref="T:System.Guid"/> instances
     /// of RFC 4122 UUID version 1 using a volatile random node ID without blocking.
@@ -347,7 +347,7 @@ module Guid =
     let newV5Enc (nsId: Guid) (enc: Text.Encoding) (name: string) : Guid =
         Generator.Version5.NewGuid(nsId, name, enc)
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6.
     /// </summary>

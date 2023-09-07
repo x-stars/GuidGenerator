@@ -6,7 +6,7 @@ namespace XNetEx.Guids.Generators;
 /// Provides information of the generated <see cref="Guid"/>.
 /// </summary>
 public interface IGuidGeneratorInfo
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     : IDisposable
 #endif
 {
@@ -100,7 +100,7 @@ public interface IDceSecurityGuidGenerator : IGuidGeneratorInfo
     Guid NewGuid(DceSecurityDomain domain, int? localId = null);
 }
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
 /// <summary>
 /// Provides a method to generate a <see cref="Guid"/> with blocking.
 /// </summary>

@@ -52,7 +52,7 @@ public class GuidBuildingTest
         Assert.AreEqual(localId, guidLocalId);
     }
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     [TestMethod]
     public void Version6Guid_BuildFromEmptyGuid_GetInputComponents()
     {

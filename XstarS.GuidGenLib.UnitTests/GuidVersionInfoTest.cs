@@ -77,7 +77,7 @@ public class GuidVersionInfoTest
         Assert.IsFalse(version.ContainsLocalId());
     }
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     [TestMethod]
     public void GuidVersionInfo_GuidVersion6_GetExpectedFlags()
     {

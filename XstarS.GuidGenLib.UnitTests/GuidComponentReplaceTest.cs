@@ -17,7 +17,7 @@ public partial class GuidComponentReplaceTest
         }
     }
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     [TestMethod]
     public void ReplaceVersion_GuidMaxValue_GetGuidWithInputVersion()
     {
@@ -54,7 +54,7 @@ public partial class GuidComponentReplaceTest
         }
     }
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     [TestMethod]
     public void ReplaceVariant_GuidMaxValue_GetGuidWithInputVariant()
     {
@@ -91,7 +91,7 @@ public partial class GuidComponentReplaceTest
             "a9ec4420-7252-3c11-ab70-512e10273537",
             "2502f1d5-c2a9-47d3-b6d8-d7670094ace2",
             "768a7b1b-ae51-5c0a-bc9d-a85a343f2c24",
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
             "1d19dad6-ba7b-6810-80b4-00c04fd430c8",
             "017f22e2-79b0-7cc3-98c4-dc0c0c07398f",
             "05db6c94-bba6-8702-88aa-548f4d6cd700",

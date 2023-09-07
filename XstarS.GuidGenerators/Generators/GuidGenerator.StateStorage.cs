@@ -33,7 +33,7 @@ partial class GuidGenerator
         return GuidGeneratorState.SetStorageFile(fileName);
     }
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     /// <summary>
     /// Creates a new blocking-free <see cref="IGuidGenerator"/> instance that uses an object pool
     /// of <see cref="IBlockingGuidGenerator"/> created by the specified creation delegate.

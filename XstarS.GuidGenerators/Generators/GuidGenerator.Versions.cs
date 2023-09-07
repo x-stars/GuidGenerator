@@ -10,7 +10,7 @@ partial class GuidGenerator
     /// <returns>The <see cref="IGuidGenerator"/> instance of <see cref="Guid.Empty"/>.</returns>
     public static IGuidGenerator Empty => EmptyGuidGenerator.Instance;
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     /// <summary>
     /// Gets the <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID version 1.
     /// </summary>
@@ -48,7 +48,7 @@ partial class GuidGenerator
     /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID version 5.</returns>
     public static INameBasedGuidGenerator Version5 => NameBasedGuidGenerator.SHA1Hashing.Instance;
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     /// <summary>
     /// Gets the <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID revision version 6.
     /// </summary>
@@ -76,7 +76,7 @@ partial class GuidGenerator
     public static IGuidGenerator MaxValue => MaxValueGuidGenerator.Instance;
 #endif
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     /// <summary>
     /// Gets the <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID version 1
     /// using a non-volatile random node ID.
@@ -94,7 +94,7 @@ partial class GuidGenerator
     public static IGuidGenerator Version1R => TimeBasedGuidGenerator.InstanceR;
 #endif
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     /// <summary>
     /// Gets the <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID revision version 6
     /// using a physical (IEEE 802 MAC) address node ID.
@@ -120,7 +120,7 @@ partial class GuidGenerator
     public static IGuidGenerator Version7M => UnixTimeBasedGuidGenerator.InstanceM;
 #endif
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     /// <summary>
     /// Creates a new <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID version 1
     /// using a volatile random node ID.
@@ -138,7 +138,7 @@ partial class GuidGenerator
     public static IGuidGenerator CreateVersion1R() => TimeBasedGuidGenerator.CreateInstanceR();
 #endif
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     /// <summary>
     /// Creates a new <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID revision version 6
     /// using a volatile random node ID.
@@ -172,7 +172,7 @@ partial class GuidGenerator
         GuidVersion.Version3 => NameBasedGuidGenerator.MD5Hashing.Instance,
         GuidVersion.Version4 => RandomizedGuidGenerator.Instance,
         GuidVersion.Version5 => NameBasedGuidGenerator.SHA1Hashing.Instance,
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
         GuidVersion.Version6 => TimeBasedGuidGenerator.Sequential.Instance,
         GuidVersion.Version7 => UnixTimeBasedGuidGenerator.Instance,
         GuidVersion.Version8 => CustomGuidGenerator.Example.Instance,

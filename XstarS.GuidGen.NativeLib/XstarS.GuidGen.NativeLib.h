@@ -53,7 +53,7 @@ __declspec(dllimport)
 HRESULT GuidCreateV5(_Out_ GUID *Guid,
     _In_ const GUID *NsId, _In_ const UCHAR *Name, SIZE_T NameLen);
 
-#ifndef FEATURE_DISABLE_UUIDREV
+#ifndef UUIDREV_DISABLE
 __declspec(dllimport)
 HRESULT GuidCreateV6(_Out_ GUID *Guid);
 __declspec(dllimport)

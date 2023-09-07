@@ -44,7 +44,7 @@ public partial class GuidComponentTest
             [GuidVersion.Version3] = "a9ec4420-7252-3c11-ab70-512e10273537",
             [GuidVersion.Version4] = "2502f1d5-c2a9-47d3-b6d8-d7670094ace2",
             [GuidVersion.Version5] = "768a7b1b-ae51-5c0a-bc9d-a85a343f2c24",
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
             [GuidVersion.Version6] = "1d19dad6-ba7b-6810-80b4-00c04fd430c8",
             [GuidVersion.Version7] = "017f22e2-79b0-7cc3-98c4-dc0c0c07398f",
             [GuidVersion.Version8] = "05db6c94-bba6-8702-88aa-548f4d6cd700",
@@ -62,7 +62,7 @@ public partial class GuidComponentTest
     {
         foreach (var (version, guidText) in new Dictionary<GuidVersion, string>()
         {
-#if FEATURE_DISABLE_UUIDREV
+#if UUIDREV_DISABLE
             [(GuidVersion)0x6] = "00000000-0000-6000-bfff-ffffffffffff",
             [(GuidVersion)0x7] = "00000000-0000-7000-bfff-ffffffffffff",
             [(GuidVersion)0x8] = "00000000-0000-8000-bfff-ffffffffffff",
@@ -73,7 +73,7 @@ public partial class GuidComponentTest
             [(GuidVersion)0xC] = "00000000-0000-c000-bfff-ffffffffffff",
             [(GuidVersion)0xD] = "00000000-0000-d000-bfff-ffffffffffff",
             [(GuidVersion)0xE] = "00000000-0000-e000-bfff-ffffffffffff",
-#if FEATURE_DISABLE_UUIDREV
+#if UUIDREV_DISABLE
             [(GuidVersion)0xF] = "ffffffff-ffff-ffff-ffff-ffffffffffff",
 #endif
         })
@@ -101,7 +101,7 @@ public partial class GuidComponentTest
     public void GetVariant_SpecialGuids_GetExpectedGuidVariant()
     {
         Assert.AreEqual(GuidVariant.Ncs, Guid.Empty.GetVariant());
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
         Assert.AreEqual(GuidVariant.Reserved, Uuid.MaxValue.GetVariant());
 #endif
     }
@@ -126,7 +126,7 @@ public partial class GuidComponentTest
             "a9ec4420-7252-3c11-ab70-512e10273537",
             "2502f1d5-c2a9-47d3-b6d8-d7670094ace2",
             "768a7b1b-ae51-5c0a-bc9d-a85a343f2c24",
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
             "1d19dad6-ba7b-6810-80b4-00c04fd430c8",
             "017f22e2-79b0-7cc3-98c4-dc0c0c07398f",
             "05db6c94-bba6-8702-88aa-548f4d6cd700",
