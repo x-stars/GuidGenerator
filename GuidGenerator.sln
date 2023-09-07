@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildItems", "BuildItems", 
 		BuildItems\AssemblyInfo.Build.props = BuildItems\AssemblyInfo.Build.props
 		BuildItems\NativeAOT.Build.props = BuildItems\NativeAOT.Build.props
 		BuildItems\NuGetPack.Build.props = BuildItems\NuGetPack.Build.props
+		BuildItems\RefUnsafe.Build.props = BuildItems\RefUnsafe.Build.props
 		BuildItems\Trimming.Build.props = BuildItems\Trimming.Build.props
 	EndProjectSection
 EndProject

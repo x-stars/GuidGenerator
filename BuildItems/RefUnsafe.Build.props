@@ -1,0 +1,15 @@
+<Project>
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);UNSAFE_HELPERS</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="('$(TargetFramework.Split(`-`)[0].TrimEnd(`.0123456789`))'=='net' And
+                         '$(TargetFramework.Split(`-`)[0].CompareTo(`net5.0`))'&lt;'0') Or
+                        ('$(TargetFramework.TrimEnd(`.0123456789`))'=='netcoreapp' And
+                         '$(TargetFramework.CompareTo(`netcoreapp3.0`))'&lt;'0') Or
+                        ('$(TargetFramework.TrimEnd(`.0123456789`))'=='netstandard')">
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
+  </ItemGroup>
+
+</Project>
