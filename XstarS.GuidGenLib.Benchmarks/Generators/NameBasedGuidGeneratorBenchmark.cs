@@ -46,7 +46,7 @@ public class NameBasedGuidGeneratorBenchmark
         var guid = guidGen.NewGuid(Guid.Empty, this.Name);
     }
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     [Benchmark]
     public void GuidV8NSha256Generate()
     {

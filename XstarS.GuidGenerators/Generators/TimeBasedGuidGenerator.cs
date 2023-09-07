@@ -6,7 +6,7 @@ using XNetEx.Guids.Components;
 namespace XNetEx.Guids.Generators;
 
 internal partial class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     , IBlockingGuidGenerator
 #endif
 {

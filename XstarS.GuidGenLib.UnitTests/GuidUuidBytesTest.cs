@@ -6,7 +6,7 @@ namespace XNetEx.Guids;
 [TestClass]
 public class GuidUuidBytesTest
 {
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     [TestMethod]
     public void GuidMaxValue_ToUuidByteArray_GetAllBytesMaxValue()
     {

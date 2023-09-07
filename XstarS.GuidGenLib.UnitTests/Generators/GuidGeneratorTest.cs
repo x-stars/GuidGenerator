@@ -1,6 +1,6 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
 using System.Security.Cryptography;
 #endif
 
@@ -18,7 +18,7 @@ public partial class GuidGeneratorTest
         Assert.AreSame(GuidGenerator.Version3, GuidGenerator.OfVersion(3));
         Assert.AreSame(GuidGenerator.Version4, GuidGenerator.OfVersion(4));
         Assert.AreSame(GuidGenerator.Version5, GuidGenerator.OfVersion(5));
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
         Assert.AreSame(GuidGenerator.Version6, GuidGenerator.OfVersion(6));
         Assert.AreSame(GuidGenerator.Version7, GuidGenerator.OfVersion(7));
         Assert.AreSame(GuidGenerator.Version8, GuidGenerator.OfVersion(8));
@@ -41,7 +41,7 @@ public partial class GuidGeneratorTest
                        GuidGenerator.OfVersion(GuidVersion.Version4));
         Assert.AreSame(GuidGenerator.Version5,
                        GuidGenerator.OfVersion(GuidVersion.Version5));
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
         Assert.AreSame(GuidGenerator.Version6,
                        GuidGenerator.OfVersion(GuidVersion.Version6));
         Assert.AreSame(GuidGenerator.Version7,
@@ -67,7 +67,7 @@ public partial class GuidGeneratorTest
             () => GuidGenerator.OfVersion((GuidVersion)0xFF));
     }
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     [TestMethod]
     public void OfHashAlgorithm_AllSupportedNameStrings_GetSameInstanceOfVersion()
     {

@@ -37,7 +37,7 @@ partial class NameBasedGuidGenerator
     private void AppendPrefixData(HashAlgorithm hashing, Guid nsId)
     {
         var guidBytes = (stackalloc byte[16]);
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
         var hashId = this.HashspaceId;
         if (hashId is Guid hashIdValue)
         {
@@ -53,7 +53,7 @@ partial class NameBasedGuidGenerator
 
     private Guid HashToGuid(ReadOnlySpan<byte> hash)
     {
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
         if (hash.Length < 16)
         {
             throw new InvalidOperationException(
@@ -88,7 +88,7 @@ partial class NameBasedGuidGenerator
     private unsafe void AppendPrefixData(HashAlgorithm hashing, Guid nsId)
     {
         var guidBytes = new byte[16];
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
         var hashId = this.HashspaceId;
         if (hashId is Guid hashIdValue)
         {
@@ -108,7 +108,7 @@ partial class NameBasedGuidGenerator
 
     private unsafe Guid HashToGuid(byte[] hash)
     {
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
         if (hash.Length < 16)
         {
             throw new InvalidOperationException(

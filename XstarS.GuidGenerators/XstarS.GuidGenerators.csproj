@@ -49,13 +49,15 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework.Split(`-`)[0].TrimEnd(`.0123456789`))'=='net' And
-                            '$(TargetFramework.Split(`-`)[0].CompareTo(`net5.0`))'&gt;='0'">
-    <IsTrimmable>true</IsTrimmable>
+  <PropertyGroup>
+    <IsTrimmable>$(
+      '$(TargetFramework.Split(`-`)[0].TrimEnd(`.0123456789`))'=='net' And
+      '$(TargetFramework.Split(`-`)[0].CompareTo(`net5.0`))'&gt;='0'
+    )</IsTrimmable>
+    <DefineConstants>$(DefineConstants);IS_TRIMMABLE</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition="!('$(TargetFramework.Split(`-`)[0].TrimEnd(`.0123456789`))'=='net' And
-                          '$(TargetFramework.Split(`-`)[0].CompareTo(`net5.0`))'&gt;='0')">
+  <ItemGroup Condition="'$(IsTrimmable)'!='true'">
     <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
       <_Parameter1>IsTrimmable</_Parameter1>
       <_Parameter2>True</_Parameter2>

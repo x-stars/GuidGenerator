@@ -1,6 +1,6 @@
 ﻿namespace XNetEx.FSharp.Core
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
 open System
 open System.Security.Cryptography
 open Microsoft.VisualStudio.TestTools.UnitTesting
