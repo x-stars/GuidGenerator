@@ -32,7 +32,7 @@ namespace System.Security.Cryptography
         /// or <paramref name="buffer"/> is <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if !FEATURE_DISABLE_TRIMMING || NET5_0_OR_GREATER
+#if IS_TRIMMABLE || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.AppendData), typeof(MethodBridge))]
 #endif
@@ -62,7 +62,7 @@ namespace System.Security.Cryptography
         /// and <paramref name="count"/> is larger than the length of <paramref name="buffer"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if !FEATURE_DISABLE_TRIMMING || NET5_0_OR_GREATER
+#if IS_TRIMMABLE || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.AppendData), typeof(MethodBridge))]
 #endif
@@ -87,7 +87,7 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if !FEATURE_DISABLE_TRIMMING || NET5_0_OR_GREATER
+#if IS_TRIMMABLE || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.AppendData), typeof(MethodBridge))]
 #endif
@@ -111,7 +111,7 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if !FEATURE_DISABLE_TRIMMING || NET5_0_OR_GREATER
+#if IS_TRIMMABLE || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.GetFinalHash), typeof(MethodBridge))]
 #endif
@@ -139,7 +139,7 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if !FEATURE_DISABLE_TRIMMING || NET5_0_OR_GREATER
+#if IS_TRIMMABLE || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.TryGetFinalHash), typeof(MethodBridge))]
 #endif
