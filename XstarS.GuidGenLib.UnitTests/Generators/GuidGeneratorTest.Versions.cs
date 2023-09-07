@@ -34,7 +34,7 @@ partial class GuidGeneratorTest
         Assert.AreNotEqual(guid0, guid1);
     }
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     [TestMethod]
     public void NewGuid_Version8_GetGuidWithVersion8()
     {

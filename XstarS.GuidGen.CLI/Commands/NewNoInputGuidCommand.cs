@@ -15,7 +15,7 @@ internal class NewNoInputGuidCommand : ProgramCommand
     internal static readonly NewNoInputGuidCommand Version4 =
         new NewNoInputGuidCommand(GuidVersion.Version4);
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     internal static readonly NewNoInputGuidCommand Version6 =
         new NewNoInputGuidCommand(GuidVersion.Version6);
 
@@ -29,7 +29,7 @@ internal class NewNoInputGuidCommand : ProgramCommand
     internal static readonly NewNoInputGuidCommand Version1R =
         new NewNoInputGuidCommand(versionName: "Version1R");
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     internal static readonly NewNoInputGuidCommand Version6P =
         new NewNoInputGuidCommand(versionName: "Version6P");
 
@@ -92,7 +92,7 @@ internal class NewNoInputGuidCommand : ProgramCommand
         return this.VersionName switch
         {
             "Version1R" => GuidGenerator.Version1R,
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
             "Version6P" => GuidGenerator.Version6P,
             "Version6R" => GuidGenerator.Version6R,
 #endif

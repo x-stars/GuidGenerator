@@ -72,7 +72,7 @@ internal abstract class TimeNodeBasedGuidComponents
         }
     }
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     internal sealed new class Version6 : TimeNodeBasedGuidComponents
     {
         internal static readonly TimeNodeBasedGuidComponents.Version6 Instance =

@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
 using System.Threading.Tasks;
 #endif
 
@@ -110,7 +110,7 @@ public partial class TimeBasedGuidGeneratorTest
         CollectionAssert.AreNotEqual(nodeId0, nodeId1);
     }
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     [TestMethod]
     public void NewGuid_CreatePooledV1R_GetAllVersion1Guids()
     {

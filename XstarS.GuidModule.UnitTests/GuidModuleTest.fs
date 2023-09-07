@@ -13,7 +13,7 @@ type GuidModuleTest() =
         |> Assert.equalTo (0, 0s, 0s, (0uy, 0uy),
                            (0uy, 0uy, 0uy, 0uy, 0uy, 0uy))
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     [<TestMethod>]
     member _.GuidMaxValue_ToFields_GetAllFieldsMaxValue() =
         Guid.maxValue

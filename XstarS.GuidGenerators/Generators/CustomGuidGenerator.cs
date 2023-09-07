@@ -1,4 +1,4 @@
-﻿#if !FEATURE_DISABLE_UUIDREV
+﻿#if !UUIDREV_DISABLE
 using System;
 
 namespace XNetEx.Guids.Generators;

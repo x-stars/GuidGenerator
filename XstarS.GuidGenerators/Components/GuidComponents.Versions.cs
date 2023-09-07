@@ -20,7 +20,7 @@ partial class GuidComponents
 
     public static IGuidCommonComponents Version5 => GuidComponents.Instance;
 
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
     public static ITimeNodeBasedGuidComponents Version6 => TimeNodeBasedGuidComponents.Version6.Instance;
 
     public static ITimeBasedGuidComponents Version7 => TimeBasedGuidComponents.Version7.Instance;
@@ -38,7 +38,7 @@ partial class GuidComponents
         GuidVersion.Version3 => GuidComponents.Instance,
         GuidVersion.Version4 => GuidComponents.Instance,
         GuidVersion.Version5 => GuidComponents.Instance,
-#if !FEATURE_DISABLE_UUIDREV
+#if !UUIDREV_DISABLE
         GuidVersion.Version6 => TimeNodeBasedGuidComponents.Version6.Instance,
         GuidVersion.Version7 => TimeBasedGuidComponents.Version7.Instance,
         GuidVersion.Version8 => GuidComponents.Instance,
