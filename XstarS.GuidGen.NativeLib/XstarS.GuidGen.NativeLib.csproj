@@ -20,7 +20,7 @@
     <VersionMajor>$(Version.Split('.')[0])</VersionMajor>
     <VersionMinor>$(Version.Split('.')[1])</VersionMinor>
     <AssemblyVersion>$(VersionMajor).$(VersionMinor).0.0</AssemblyVersion>
-    <DefineConstants>$(DefineConstants);FEATURE_DISABLE_UUIDREV</DefineConstants>
+    <DefineConstants>$(DefineConstants);UUIDREV_DISABLE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>
