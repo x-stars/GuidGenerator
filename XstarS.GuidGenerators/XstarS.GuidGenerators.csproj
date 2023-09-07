@@ -17,7 +17,7 @@
 
   <Import Project="..\BuildItems\NuGetPack.Build.props" />
   <PropertyGroup>
-    <PackageTags>guid guid-generator rfc4122 uuid uuidrev</PackageTags>
+    <PackageTags>guid guid-generator rfc4122 uuid</PackageTags>
     <Description>Provides RFC 4122 UUID compliant GUID generators for .NET platform.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
