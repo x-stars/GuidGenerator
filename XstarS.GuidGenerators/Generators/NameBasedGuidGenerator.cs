@@ -30,7 +30,7 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
     protected NameBasedGuidGenerator()
     {
         var concurrency = Environment.ProcessorCount * 2;
-        this.Hashings = new BlockingCollection<HashAlgorithm>(concurrency);
+        this.Hashings = new BoundedCollection<HashAlgorithm>(concurrency);
         this.FastHashing = null;
     }
 #endif
