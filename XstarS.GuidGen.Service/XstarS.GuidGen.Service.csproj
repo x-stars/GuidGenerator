@@ -17,29 +17,8 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <PublishAot>true</PublishAot>
-    <PublishTrimmed>true</PublishTrimmed>
-    <TrimMode>full</TrimMode>
-    <StripSymbols>true</StripSymbols>
-    <InvariantGlobalization>true</InvariantGlobalization>
-    <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
-    <IlcGenerateStackTraceData>true</IlcGenerateStackTraceData>
-    <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework.Split(`-`)[0].TrimEnd(`.0123456789`))'=='net' And
-                            '$(TargetFramework.Split(`-`)[0].CompareTo(`net5.0`))'&gt;='0'">
-    <IsTrimmable>true</IsTrimmable>
-  </PropertyGroup>
-
-  <ItemGroup Condition="!('$(TargetFramework.Split(`-`)[0].TrimEnd(`.0123456789`))'=='net' And
-                          '$(TargetFramework.Split(`-`)[0].CompareTo(`net5.0`))'&gt;='0')">
-    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-      <_Parameter1>IsTrimmable</_Parameter1>
-      <_Parameter2>True</_Parameter2>
-    </AssemblyAttribute>
-  </ItemGroup>
+  <Import Project="..\BuildItems\Trimming.Build.props" />
+  <Import Project="..\BuildItems\NativeAOT.Build.props" />
 
   <ItemGroup>
     <Compile Include="..\SharedItems\Common\**\*.cs" />
