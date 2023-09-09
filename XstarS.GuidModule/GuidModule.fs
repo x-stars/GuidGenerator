@@ -9,6 +9,11 @@ open System.Security.Cryptography
 #endif
 
 /// <summary>
+/// An abbreviation for the CLI type <see cref="T:System.Guid"/>.
+/// </summary>
+type Guid = System.Guid
+
+/// <summary>
 /// Contains operations for working with values of type <see cref="T:System.Guid"/>.
 /// </summary>
 [<RequireQualifiedAccess>]
