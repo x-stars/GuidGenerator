@@ -1,12 +1,17 @@
 ﻿namespace XNetEx.FSharp.Core
 
 open System
-open FSharp.Compiler.Internals
+open FSharp.Core.CompilerServices
 open XNetEx.Guids
 open XNetEx.Guids.Generators
 #if !UUIDREV_DISABLE
 open System.Security.Cryptography
 #endif
+
+/// <summary>
+/// An abbreviation for the CLI type <see cref="T:System.Guid"/>.
+/// </summary>
+type Guid = System.Guid
 
 /// <summary>
 /// Contains operations for working with values of type <see cref="T:System.Guid"/>.
