@@ -31,7 +31,9 @@
     <Compile Include="..\XstarS.GuidGenerators\**\*.cs"
              Exclude="..\XstarS.GuidGenerators\bin\**\*.cs;
                       ..\XstarS.GuidGenerators\obj\**\*.cs;
-                      ..\XstarS.GuidGenerators\Properties\**\*.cs" />
+                      ..\XstarS.GuidGenerators\Properties\**\*.cs">
+      <Visible>false</Visible>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework.Split(`-`)[0])'=='net5.0' Or
