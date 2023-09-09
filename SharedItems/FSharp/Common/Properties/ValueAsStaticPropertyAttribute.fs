@@ -2,7 +2,7 @@
 // This file is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-namespace FSharp.Compiler.Internals
+namespace FSharp.Core.CompilerServices
 
 open System
 open System.Diagnostics

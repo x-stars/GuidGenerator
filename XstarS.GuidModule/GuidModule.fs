@@ -1,7 +1,7 @@
 ﻿namespace XNetEx.FSharp.Core
 
 open System
-open FSharp.Compiler.Internals
+open FSharp.Core.CompilerServices
 open XNetEx.Guids
 open XNetEx.Guids.Generators
 #if !UUIDREV_DISABLE
