@@ -68,6 +68,14 @@ partial class NameBasedGuidGenerator
         return guid;
     }
 #else
+    private static class LocalBuffers
+    {
+        [ThreadStatic] private static byte[]? GuidBytesValue;
+
+        internal static byte[] GuidBytes =>
+            LocalBuffers.GuidBytesValue ??= new byte[16];
+    }
+
     private Guid ComputeHashToGuid(Guid nsId, byte[] name)
     {
         var hashing = this.GetHashing();
@@ -87,7 +95,7 @@ partial class NameBasedGuidGenerator
 
     private unsafe void AppendPrefixData(HashAlgorithm hashing, Guid nsId)
     {
-        var guidBytes = new byte[16];
+        var guidBytes = LocalBuffers.GuidBytes;
 #if !UUIDREV_DISABLE
         var hashId = this.HashspaceId;
         if (hashId is Guid hashIdValue)
