@@ -134,6 +134,15 @@ partial class NameBasedGuidGenerator
                 base.Dispose(disposing);
             }
 
+            protected override HashAlgorithm GetHashing()
+            {
+                if (this.DisposeState != 0)
+                {
+                    throw new ObjectDisposedException(nameof(NameBasedGuidGenerator));
+                }
+                return base.GetHashing();
+            }
+
             protected override void ReturnHashing(HashAlgorithm hashing)
             {
                 if (this.DisposeState != 0)
