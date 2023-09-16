@@ -10,7 +10,7 @@ public class GuidComponentBenchmark
     [Params(1, 10, 100, 1000)]
     public int GuidCount;
 
-    private Guid[]? GuidValues;
+    private Guid[] GuidValues = Array.Empty<Guid>();
 
     [GlobalSetup]
     public void PrepareGuidValues()
@@ -29,7 +29,7 @@ public class GuidComponentBenchmark
     [Benchmark]
     public void GetVersion()
     {
-        var guids = this.GuidValues!;
+        var guids = this.GuidValues;
         foreach (var guid in guids)
         {
             var version = guid.GetVersion();
@@ -39,7 +39,7 @@ public class GuidComponentBenchmark
     [Benchmark]
     public void GetVariant()
     {
-        var guids = this.GuidValues!;
+        var guids = this.GuidValues;
         foreach (var guid in guids)
         {
             var variant = guid.GetVariant();
@@ -49,7 +49,7 @@ public class GuidComponentBenchmark
     [Benchmark]
     public void TryGetTimestamp()
     {
-        var guids = this.GuidValues!;
+        var guids = this.GuidValues;
         foreach (var guid in guids)
         {
             _ = guid.TryGetTimestamp(out var timestamp);
@@ -59,7 +59,7 @@ public class GuidComponentBenchmark
     [Benchmark]
     public void TryGetClockSequence()
     {
-        var guids = this.GuidValues!;
+        var guids = this.GuidValues;
         foreach (var guid in guids)
         {
             _ = guid.TryGetClockSequence(out var clockSeq);
@@ -69,7 +69,7 @@ public class GuidComponentBenchmark
     [Benchmark]
     public void TryGetDomainAndLocalId()
     {
-        var guids = this.GuidValues!;
+        var guids = this.GuidValues;
         foreach (var guid in guids)
         {
             _ = guid.TryGetDomainAndLocalId(
@@ -80,7 +80,7 @@ public class GuidComponentBenchmark
     [Benchmark]
     public void TryGetNodeId()
     {
-        var guids = this.GuidValues!;
+        var guids = this.GuidValues;
         foreach (var guid in guids)
         {
             _ = guid.TryGetNodeId(out var nodeId);
@@ -92,7 +92,7 @@ public class GuidComponentBenchmark
     public void TryWriteNodeId()
     {
         var nodeId = (stackalloc byte[6]);
-        var guids = this.GuidValues!;
+        var guids = this.GuidValues;
         foreach (var guid in guids)
         {
             _ = guid.TryWriteNodeId(nodeId);
