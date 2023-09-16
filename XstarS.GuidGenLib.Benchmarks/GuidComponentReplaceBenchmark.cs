@@ -10,7 +10,7 @@ public class GuidComponentReplaceBenchmark
     [Params(1, 10, 100, 1000)]
     public int GuidCount;
 
-    private Guid[]? GuidValues;
+    private Guid[] GuidValues = Array.Empty<Guid>();
 
     private readonly DateTime Timestamp =
         new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -35,7 +35,7 @@ public class GuidComponentReplaceBenchmark
     public void ReplaceVersion()
     {
         var version = default(GuidVersion);
-        var guids = this.GuidValues!;
+        var guids = this.GuidValues;
         foreach (var guid in guids)
         {
             _ = guid.ReplaceVersion(version);
@@ -46,7 +46,7 @@ public class GuidComponentReplaceBenchmark
     public void ReplaceVariant()
     {
         var variant = default(GuidVariant);
-        var guids = this.GuidValues!;
+        var guids = this.GuidValues;
         foreach (var guid in guids)
         {
             _ = guid.ReplaceVariant(variant);
@@ -57,7 +57,7 @@ public class GuidComponentReplaceBenchmark
     public void ReplaceTimestamp()
     {
         var timestamp = this.Timestamp;
-        var guids = this.GuidValues!;
+        var guids = this.GuidValues;
         foreach (var guid in guids)
         {
             _ = guid.ReplaceTimestamp(timestamp);
@@ -68,7 +68,7 @@ public class GuidComponentReplaceBenchmark
     public void ReplaceClockSequence()
     {
         var clockSeq = default(short);
-        var guids = this.GuidValues!;
+        var guids = this.GuidValues;
         foreach (var guid in guids)
         {
             _ = guid.ReplaceClockSequence(clockSeq);
@@ -80,7 +80,7 @@ public class GuidComponentReplaceBenchmark
     {
         var domain = default(DceSecurityDomain);
         var localId = default(int);
-        var guids = this.GuidValues!;
+        var guids = this.GuidValues;
         foreach (var guid in guids)
         {
             _ = guid.ReplaceDomainAndLocalId(domain, localId);
@@ -91,7 +91,7 @@ public class GuidComponentReplaceBenchmark
     public void ReplaceNodeId()
     {
         var nodeId = this.GuidNodeId;
-        var guids = this.GuidValues!;
+        var guids = this.GuidValues;
         foreach (var guid in guids)
         {
             _ = guid.ReplaceNodeId(nodeId);
@@ -103,7 +103,7 @@ public class GuidComponentReplaceBenchmark
     public void ReplaceNodeIdSpan()
     {
         var nodeId = (Span<byte>)this.GuidNodeId;
-        var guids = this.GuidValues!;
+        var guids = this.GuidValues;
         foreach (var guid in guids)
         {
             _ = guid.ReplaceNodeId(nodeId);
