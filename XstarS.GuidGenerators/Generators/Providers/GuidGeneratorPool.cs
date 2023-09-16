@@ -57,13 +57,7 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
     {
         if (Interlocked.CompareExchange(ref this.DisposeState, 1, 0) == 0)
         {
-            var generators = this.Generators;
-            while (generators.TryTake(out var generator))
-            {
-                generator.Dispose();
-            }
-            this.DefaultGeneratorValue?.Dispose();
-            this.DefaultGeneratorValue = null;
+            this.DisposeGenerators();
             this.DisposeState = 2;
         }
     }
@@ -128,6 +122,17 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
         {
             generator.Dispose();
         }
+    }
+
+    private void DisposeGenerators()
+    {
+        var generators = this.Generators;
+        while (generators.TryTake(out var generator))
+        {
+            generator.Dispose();
+        }
+        this.DefaultGeneratorValue?.Dispose();
+        this.DefaultGeneratorValue = null;
     }
 }
 #endif
