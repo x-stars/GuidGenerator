@@ -2,22 +2,17 @@
 // This file is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-#if !(NETFRAMEWORK || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER)
-#warning This framework does not support full HashAlgorithm features.
-#endif
-
 #pragma warning disable
 #nullable enable
+#define CHECK_DISPOSED
 
 namespace System.Security.Cryptography
 {
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     using System.Runtime.CompilerServices;
 #if !NETCOREAPP3_0_OR_GREATER
     using System.Runtime.InteropServices;
-#endif
 #endif
 
     /// <summary>
@@ -36,10 +31,14 @@ namespace System.Security.Cryptography
         /// or <paramref name="buffer"/> is <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
+#if IS_TRIMMABLE || NET5_0_OR_GREATER
+        [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
+        [DynamicDependency(nameof(MethodBridge.AppendData), typeof(MethodBridge))]
+#endif
         public static void AppendData(this HashAlgorithm hashing, byte[] buffer)
         {
             IncrementalHashAlgorithm.ThrowIfNull(hashing);
-            hashing.TransformBlock(buffer, 0, buffer?.Length ?? 0, null, 0);
+            hashing.AsBridge().AppendData(buffer, 0, buffer?.Length ?? 0);
         }
 
         /// <summary>
@@ -58,11 +57,15 @@ namespace System.Security.Cryptography
         /// and <paramref name="count"/> is larger than the length of <paramref name="buffer"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
+#if IS_TRIMMABLE || NET5_0_OR_GREATER
+        [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
+        [DynamicDependency(nameof(MethodBridge.AppendData), typeof(MethodBridge))]
+#endif
         public static void AppendData(
             this HashAlgorithm hashing, byte[] buffer, int offset, int count)
         {
             IncrementalHashAlgorithm.ThrowIfNull(hashing);
-            hashing.TransformBlock(buffer, offset, count, null, 0);
+            hashing.AsBridge().AppendData(buffer, offset, count);
         }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -95,11 +98,14 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
+#if IS_TRIMMABLE || NET5_0_OR_GREATER
+        [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
+        [DynamicDependency(nameof(MethodBridge.GetFinalHash), typeof(MethodBridge))]
+#endif
         public static byte[] GetFinalHash(this HashAlgorithm hashing)
         {
             IncrementalHashAlgorithm.ThrowIfNull(hashing);
-            hashing.TransformFinalBlock(Array.Empty<byte>(), 0, 0);
-            return hashing.Hash!;
+            return hashing.AsBridge().GetFinalHash();
         }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -136,8 +142,9 @@ namespace System.Security.Cryptography
             }
         }
 
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         private static MethodBridge AsBridge(this HashAlgorithm hashing)
         {
 #if NETCOREAPP3_0_OR_GREATER
@@ -154,6 +161,7 @@ namespace System.Security.Cryptography
         {
             [FieldOffset(0)] public HashAlgorithm Source;
             [FieldOffset(0)] public MethodBridge Target;
+            [FieldOffset(0)] public StrongBox<bool> Fields;
         }
 #endif
 
@@ -162,13 +170,37 @@ namespace System.Security.Cryptography
         {
             internal static readonly MethodBridge Instance = new NonPublicMembers();
 
+            public void AppendData(byte[] buffer, int offset, int count)
+            {
+                this.CheckDisposed();
+                this.ValidateInput(buffer, offset, count);
+#if NETFRAMEWORK || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER
+                this.State = 1;
+#endif
+                this.HashCore(buffer, offset, count);
+            }
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
             public void AppendData(ReadOnlySpan<byte> source)
             {
                 this.CheckDisposed();
                 this.State = 1;
                 this.HashCore(source);
             }
+#endif
 
+            public byte[] GetFinalHash()
+            {
+                this.CheckDisposed();
+                var hash = this.HashFinal();
+#if NETFRAMEWORK || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER
+                this.HashValue = hash;
+                this.State = 0;
+#endif
+                return (byte[])hash.Clone();
+            }
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
             public bool TryGetFinalHash(Span<byte> destination, out int bytesWritten)
             {
                 this.CheckDisposed();
@@ -180,15 +212,90 @@ namespace System.Security.Cryptography
                 }
                 return false;
             }
+#endif
 
+            [Conditional("CHECK_DISPOSED")]
             private void CheckDisposed()
             {
-                this.TryComputeHash(ReadOnlySpan<byte>.Empty, Span<byte>.Empty, out _);
+#if CHECK_DISPOSED
+                if (NonPublicMembers.GetDisposedField(this))
+                {
+                    throw new ObjectDisposedException(nameof(HashAlgorithm));
+                }
+#endif
+            }
+
+            private void ValidateInput(byte[] buffer, int offset, int count)
+            {
+                if (buffer == null)
+                    throw new ArgumentNullException(nameof(buffer));
+                if (offset < 0)
+                    throw new ArgumentOutOfRangeException(
+                        nameof(offset), "Non-negative number required.");
+                if ((count < 0) || (count > buffer.Length))
+                    throw new ArgumentException("Value was invalid.");
+                if ((buffer.Length - count) < offset)
+                    throw new ArgumentException(
+                        "Offset and length were out of bounds for the array " +
+                        "or count is greater than the number of elements " +
+                        "from index to the end of the source collection.");
             }
 
             [DebuggerNonUserCode, ExcludeFromCodeCoverage]
             private sealed class NonPublicMembers : MethodBridge
             {
+#if CHECK_DISPOSED
+                private static readonly int DisposedFieldOffset =
+                    NonPublicMembers.GetDisposedFieldOffset();
+
+                private readonly bool EndField;
+
+#if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+                public static unsafe bool GetDisposedField(MethodBridge instance)
+                {
+#if NETCOREAPP3_0_OR_GREATER
+                    var instField0 = Unsafe.As<StrongBox<bool>>(instance);
+                    return Unsafe.AddByteOffset(
+                        ref instField0.Value, (nint)NonPublicMembers.DisposedFieldOffset);
+#else
+                    var instField0 = new UncheckedCasting() { Target = instance }.Fields!;
+                    fixed (bool* pField0 = &instField0.Value)
+                    {
+                        return pField0[NonPublicMembers.DisposedFieldOffset];
+                    }
+#endif
+                }
+
+                private static unsafe int GetDisposedFieldOffset()
+                {
+                    var instance = new NonPublicMembers();
+#if NETCOREAPP3_0_OR_GREATER
+                    var instField0 = Unsafe.As<StrongBox<bool>>(instance);
+#else
+                    var instField0 = new UncheckedCasting() { Target = instance }.Fields!;
+#endif
+                    fixed (bool* pField0 = &instField0.Value, pFieldEnd = &instance.EndField)
+                    {
+                        var values = stackalloc bool[(int)(pFieldEnd - pField0)];
+                        for (bool* pField = pField0; pField < pFieldEnd; pField++)
+                        {
+                            values[pField - pField0] = *pField;
+                        }
+                        instance.Dispose();
+                        for (bool* pField = pField0; pField < pFieldEnd; pField++)
+                        {
+                            if (*pField != values[pField - pField0])
+                            {
+                                return (int)(pField - pField0);
+                            }
+                        }
+                    }
+                    throw new NotSupportedException("Cannot find the disposed flag field.");
+                }
+#endif
+
                 public override void Initialize() => throw new NotImplementedException();
 
                 protected override void HashCore(byte[] array, int ibStart, int cbSize) { }
@@ -196,7 +303,6 @@ namespace System.Security.Cryptography
                 protected override byte[] HashFinal() => throw new NotImplementedException();
             }
         }
-#endif
     }
 }
 
