@@ -80,12 +80,12 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> object has already been disposed.</exception>
 #if IS_TRIMMABLE || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
-        [DynamicDependency(nameof(MethodBridge.AppendData), typeof(MethodBridge))]
+        [DynamicDependency(nameof(MethodBridge.AppendDataS), typeof(MethodBridge))]
 #endif
         public static void AppendData(this HashAlgorithm hashing, ReadOnlySpan<byte> source)
         {
             IncrementalHashAlgorithm.ThrowIfNull(hashing);
-            hashing.AsBridge().AppendData(source);
+            hashing.AsBridge().AppendDataS(source);
         }
 #endif
 
@@ -181,7 +181,7 @@ namespace System.Security.Cryptography
             }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-            public void AppendData(ReadOnlySpan<byte> source)
+            public void AppendDataS(ReadOnlySpan<byte> source)
             {
                 this.CheckDisposed();
                 this.State = 1;
