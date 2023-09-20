@@ -692,8 +692,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentException">
     /// <paramref name="bytes"/> not 16 bytes long.</exception>
     [<CompiledName("OfUuidByteArray")>]
-    let ofBytesUuid (bytes: byte[]) : Guid =
-        Uuid.FromByteArray(bytes)
+    let ofBytesUuid (bytes: byte[]) : Guid = Uuid.FromByteArray(bytes)
 
     /// <summary>
     /// Returns fields of integers and bytes of the <see cref="T:System.Guid"/>.
@@ -701,8 +700,9 @@ module Guid =
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>An 11-element tuple that contains fields of the <see cref="T:System.Guid"/>.</returns>
     [<CompiledName("ToFields")>]
-    let toFields (guid: Guid) : struct (int * int16 * int16 * struct (byte * byte) *
-                                struct (byte * byte * byte * byte * byte * byte)) =
+    let toFields (guid: Guid)
+        : struct (int * int16 * int16 * struct (byte * byte) *
+                  struct (byte * byte * byte * byte * byte * byte)) =
         let (a, b, c, d, e, f, g, h, i, j, k) = guid.Deconstruct()
         struct (a, b, c, struct (d, e), struct (f, g, h, i, j, k))
 
