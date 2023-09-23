@@ -255,6 +255,7 @@ namespace System.Security.Cryptography
 #endif
                 public static unsafe bool GetDisposedField(MethodBridge instance)
                 {
+                    if (NonPublicMembers.DisposedFieldOffset < 0) { return false; }
 #if NETCOREAPP3_0_OR_GREATER
                     var instField0 = Unsafe.As<StrongBox<bool>>(instance);
                     return Unsafe.AddByteOffset(
@@ -286,13 +287,14 @@ namespace System.Security.Cryptography
                         instance.Dispose();
                         for (bool* pField = pField0; pField < pFieldEnd; pField++)
                         {
-                            if (*pField != values[pField - pField0])
+                            if (*pField && !values[pField - pField0])
                             {
                                 return (int)(pField - pField0);
                             }
                         }
                     }
-                    throw new NotSupportedException("Cannot find the disposed flag field.");
+                    Debug.Assert(false, "Cannot find the disposed flag field.");
+                    return -1;
                 }
 #endif
 
