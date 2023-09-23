@@ -70,8 +70,7 @@ partial class NameBasedGuidGenerator
         }
 #endif
 
-        var uuid = MemoryMarshal.Read<Guid>(hash);
-        var guid = uuid.ToBigEndian();
+        var guid = Uuid.FromBytes(hash[..16]);
         this.FillVersionField(ref guid);
         this.FillVariantField(ref guid);
         return guid;
