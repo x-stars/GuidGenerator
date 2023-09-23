@@ -692,8 +692,7 @@ module Guid =
     /// <exception cref="T:System.ArgumentException">
     /// <paramref name="bytes"/> not 16 bytes long.</exception>
     [<CompiledName("OfUuidByteArray")>]
-    let ofBytesUuid (bytes: byte[]) : Guid =
-        Uuid.FromByteArray(bytes)
+    let ofBytesUuid (bytes: byte[]) : Guid = Uuid.FromByteArray(bytes)
 
     /// <summary>
     /// Returns fields of integers and bytes of the <see cref="T:System.Guid"/>.
@@ -701,8 +700,9 @@ module Guid =
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>An 11-element tuple that contains fields of the <see cref="T:System.Guid"/>.</returns>
     [<CompiledName("ToFields")>]
-    let toFields (guid: Guid) : struct (int * int16 * int16 * struct (byte * byte) *
-                                struct (byte * byte * byte * byte * byte * byte)) =
+    let toFields (guid: Guid)
+        : struct (int * int16 * int16 * struct (byte * byte) *
+                  struct (byte * byte * byte * byte * byte * byte)) =
         let (a, b, c, d, e, f, g, h, i, j, k) = guid.Deconstruct()
         struct (a, b, c, struct (d, e), struct (f, g, h, i, j, k))
 
@@ -776,7 +776,7 @@ module Guid =
     /// or <c>ValueNone</c> if the parse operation was failed.</returns>
     [<CompiledName("TryParse")>]
     let tryParse (input: string) : Guid voption =
-        Guid.TryParse(input) |> TryResult.toVOption
+        Guid.TryParse(input) |> TryResult.toValueOption
 
     /// <summary>
     /// Tries to convert the string representation of a GUID to the equivalent
@@ -790,7 +790,7 @@ module Guid =
     /// or <c>ValueNone</c> if the parse operation was failed.</returns>
     [<CompiledName("TryParseExact")>]
     let tryParseExact (format: string) (input: string) : Guid voption =
-        Guid.TryParseExact(input, format) |> TryResult.toVOption
+        Guid.TryParseExact(input, format) |> TryResult.toValueOption
 
     /// <summary>
     /// Tries to convert the string representation of a GUID to the equivalent
@@ -802,7 +802,7 @@ module Guid =
     /// or <c>ValueNone</c> if the parse operation was failed.</returns>
     [<CompiledName("TryParseUrn")>]
     let tryParseUrn (input: string) : Guid voption =
-        Uuid.TryParseUrn(input) |> TryResult.toVOption
+        Uuid.TryParseUrn(input) |> TryResult.toValueOption
 
     /// <summary>
     /// Returns a string representation of the value of the <see cref="T:System.Guid"/>,
@@ -927,7 +927,7 @@ module Guid =
     /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not time-based.</returns>
     [<CompiledName("TryGetTimestamp")>]
     let tryGetTime (guid: Guid) : DateTime voption =
-        guid.TryGetTimestamp() |> TryResult.toVOption
+        guid.TryGetTimestamp() |> TryResult.toValueOption
 
     /// <summary>
     /// Tries to get the clock sequence represented by the <see cref="T:System.Guid"/>.
@@ -938,7 +938,7 @@ module Guid =
     /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> does not contain a clock sequence.</returns>
     [<CompiledName("TryGetClockSequence")>]
     let tryGetClockSeq (guid: Guid) : int16 voption =
-        guid.TryGetClockSequence() |> TryResult.toVOption
+        guid.TryGetClockSequence() |> TryResult.toValueOption
 
     /// <summary>
     /// Tries to get the DCE Security domain and local ID represented by the <see cref="T:System.Guid"/>.
@@ -949,7 +949,7 @@ module Guid =
     /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not a DCE Security UUID.</returns>
     [<CompiledName("TryGetDomainAndLocalId")>]
     let tryGetLocalId (guid: Guid) : struct (Domain * int) voption =
-        guid.TryGetDomainAndLocalId() |> TryResult.toVOption2
+        guid.TryGetDomainAndLocalId() |> TryResult.toValueOption2
 
     /// <summary>
     /// Tries to get the node ID represented by the <see cref="T:System.Guid"/>.
@@ -960,7 +960,7 @@ module Guid =
     /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> does not contain node ID data.</returns>
     [<CompiledName("TryGetNodeId")>]
     let tryGetNodeId (guid: Guid) : byte[] voption =
-        guid.TryGetNodeId() |> TryResult.toVOption
+        guid.TryGetNodeId() |> TryResult.toValueOption
 
     /// <summary>
     /// Replaces the version of the current <see cref="T:System.Guid"/>
