@@ -121,6 +121,8 @@ partial class NameBasedGuidGenerator
                 this.DisposeState = 0;
             }
 
+            protected override bool TrackHashing => true;
+
             protected override void Dispose(bool disposing)
             {
                 if (Interlocked.CompareExchange(ref this.DisposeState, 1, 0) == 0)
@@ -156,33 +158,37 @@ partial class NameBasedGuidGenerator
 
         private sealed class Synchronized : NameBasedGuidGenerator.CustomHashing, IDisposable
         {
+            private readonly HashAlgorithm GlobalHashing;
+
             internal Synchronized(Guid hashspaceId, HashAlgorithm hashing)
                 : base(hashspaceId, hashing.Identity)
             {
-                this.FastHashing = hashing;
+                this.GlobalHashing = hashing;
+                this.LocalHashing.Dispose();
             }
-
-            private HashAlgorithm DefaultHashing => this.FastHashing!;
 
             protected override void Dispose(bool disposing)
             {
                 if (disposing)
                 {
-                    this.DefaultHashing.Dispose();
+                    lock (this.GlobalHashing)
+                    {
+                        this.GlobalHashing.Dispose();
+                    }
                 }
                 base.Dispose(disposing);
             }
 
             protected override HashAlgorithm GetHashing()
             {
-                var hashing = this.DefaultHashing;
+                var hashing = this.GlobalHashing;
                 Monitor.Enter(hashing);
                 return hashing;
             }
 
             protected override void ReturnHashing(HashAlgorithm hashing)
             {
-                if (hashing != this.DefaultHashing)
+                if (hashing != this.GlobalHashing)
                 {
                     throw new InvalidOperationException(
                         "An unknown hash algorithm instance is returned.");
