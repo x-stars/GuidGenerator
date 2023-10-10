@@ -33,7 +33,8 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> object has already been disposed.</exception>
 #if IS_TRIMMABLE || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
-        [DynamicDependency(nameof(MethodBridge.AppendData), typeof(MethodBridge))]
+        [DynamicDependency(nameof(MethodBridge.AppendData) +
+            "(System.Byte[],System.Int32,System.Int32)", typeof(MethodBridge))]
 #endif
         public static void AppendData(this HashAlgorithm hashing, byte[] buffer)
         {
@@ -59,7 +60,8 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> object has already been disposed.</exception>
 #if IS_TRIMMABLE || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
-        [DynamicDependency(nameof(MethodBridge.AppendData), typeof(MethodBridge))]
+        [DynamicDependency(nameof(MethodBridge.AppendData) +
+            "(System.Byte[],System.Int32,System.Int32)", typeof(MethodBridge))]
 #endif
         public static void AppendData(
             this HashAlgorithm hashing, byte[] buffer, int offset, int count)
@@ -80,12 +82,13 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> object has already been disposed.</exception>
 #if IS_TRIMMABLE || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
-        [DynamicDependency(nameof(MethodBridge.AppendDataS), typeof(MethodBridge))]
+        [DynamicDependency(nameof(MethodBridge.AppendData) +
+            "(System.ReadOnlySpan{System.Byte})", typeof(MethodBridge))]
 #endif
         public static void AppendData(this HashAlgorithm hashing, ReadOnlySpan<byte> source)
         {
             IncrementalHashAlgorithm.ThrowIfNull(hashing);
-            hashing.AsBridge().AppendDataS(source);
+            hashing.AsBridge().AppendData(source);
         }
 #endif
 
@@ -100,7 +103,7 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> object has already been disposed.</exception>
 #if IS_TRIMMABLE || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
-        [DynamicDependency(nameof(MethodBridge.GetFinalHash), typeof(MethodBridge))]
+        [DynamicDependency(nameof(MethodBridge.GetFinalHash) + "()", typeof(MethodBridge))]
 #endif
         public static byte[] GetFinalHash(this HashAlgorithm hashing)
         {
@@ -124,7 +127,8 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> object has already been disposed.</exception>
 #if IS_TRIMMABLE || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
-        [DynamicDependency(nameof(MethodBridge.TryGetFinalHash), typeof(MethodBridge))]
+        [DynamicDependency(nameof(MethodBridge.TryGetFinalHash) +
+            "(System.Span{System.Byte},System.Int32@)", typeof(MethodBridge))]
 #endif
         public static bool TryGetFinalHash(
             this HashAlgorithm hashing, Span<byte> destination, out int bytesWritten)
@@ -181,7 +185,7 @@ namespace System.Security.Cryptography
             }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-            public void AppendDataS(ReadOnlySpan<byte> source)
+            public void AppendData(ReadOnlySpan<byte> source)
             {
                 this.CheckDisposed();
                 this.State = 1;
