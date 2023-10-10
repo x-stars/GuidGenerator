@@ -11,15 +11,13 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 {
     private static volatile UnixTimeBasedGuidGenerator? Singleton;
 
-    private static volatile UnixTimeBasedGuidGenerator? SingletonM;
-
     private readonly GuidComponents GuidComponents;
 
     private readonly TimestampProvider TimestampProvider;
 
     private readonly ClockResetCounter ClockResetCounter;
 
-    private UnixTimeBasedGuidGenerator() : this(isGlobalMonotonic: false) { }
+    private UnixTimeBasedGuidGenerator() : this(isGlobalMonotonic: true) { }
 
     private UnixTimeBasedGuidGenerator(bool isGlobalMonotonic)
     {
@@ -41,22 +39,6 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
             }
 
             return UnixTimeBasedGuidGenerator.Singleton ?? Initialize();
-        }
-    }
-
-    internal static UnixTimeBasedGuidGenerator InstanceM
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get
-        {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            static UnixTimeBasedGuidGenerator Initialize()
-            {
-                return UnixTimeBasedGuidGenerator.SingletonM ??=
-                    new UnixTimeBasedGuidGenerator(isGlobalMonotonic: true);
-            }
-
-            return UnixTimeBasedGuidGenerator.SingletonM ?? Initialize();
         }
     }
 
