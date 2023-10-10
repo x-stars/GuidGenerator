@@ -167,8 +167,8 @@ type GuidGeneratorTest() =
         |> Assert.equalTo Guid.Version.Version7
 
     [<TestMethod>]
-    member _.NewVersion7M_WithoutInput_GetMonotonicVersion7Guids() =
-        fun _ -> Guid.newV7M ()
+    member _.NewVersion7_WithoutInput_GetMonotonicVersion7Guids() =
+        fun _ -> Guid.newV7 ()
         |> Seq.init 1000
         |> tee (Seq.map Guid.version
                 >> Seq.iter (Assert.equalTo Guid.Version.Version7))

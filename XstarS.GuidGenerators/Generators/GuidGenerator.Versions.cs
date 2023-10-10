@@ -110,14 +110,6 @@ partial class GuidGenerator
     /// <returns>The <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID revision version 6
     /// using a non-volatile random node ID.</returns>
     public static IBlockingGuidGenerator Version6R => TimeBasedGuidGenerator.Sequential.InstanceR;
-
-    /// <summary>
-    /// Gets the <see cref="IGuidGenerator"/> instance of RFC 4122 UUID revision version 7
-    /// that ensures global monotonicity of generated values.
-    /// </summary>
-    /// <returns>The <see cref="IGuidGenerator"/> instance of RFC 4122 UUID revision version 7
-    /// that ensures global monotonicity of generated values.</returns>
-    public static IGuidGenerator Version7M => UnixTimeBasedGuidGenerator.InstanceM;
 #endif
 
 #if !UUIDREV_DISABLE
