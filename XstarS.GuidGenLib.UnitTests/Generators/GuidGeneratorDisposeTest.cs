@@ -26,7 +26,6 @@ public class GuidGeneratorDisposeTest
             (GuidGenerator)GuidGenerator.Version1R,
             (GuidGenerator)GuidGenerator.Version6P,
             (GuidGenerator)GuidGenerator.Version6R,
-            (GuidGenerator)GuidGenerator.Version7M,
             (GuidGenerator)GuidGenerator.Version8NSha256,
             (GuidGenerator)GuidGenerator.Version8NSha384,
             (GuidGenerator)GuidGenerator.Version8NSha512,

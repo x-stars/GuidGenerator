@@ -1,13 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net461;net472;net6.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
     <RootNamespace>XstarS.GuidGen</RootNamespace>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(PublishTrimmed)'!='true'">
+    <TargetFrameworks>net461;net472;$(TargetFrameworks)</TargetFrameworks>
   </PropertyGroup>
 
   <Import Project="..\BuildItems\AssemblyInfo.Build.props" />

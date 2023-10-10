@@ -406,15 +406,6 @@ module Guid =
     let newV7 () : Guid = Generator.Version7.NewGuid()
 
     /// <summary>
-    /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 7
-    /// that ensures global monotonicity of generated values.
-    /// </summary>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 7
-    /// that ensures global monotonicity of generated values.</returns>
-    [<CompiledName("NewVersion7M")>]
-    let newV7M () : Guid = Generator.Version7M.NewGuid()
-
-    /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
     /// example implementation (UUIDREV Appendix C.7).
     /// </summary>

@@ -1,6 +1,6 @@
 ﻿#if !UUIDREV_DISABLE
 using System;
-using System.Runtime.CompilerServices;
+using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Threading;
 using XNetEx.Runtime.CompilerServices;
@@ -11,66 +11,12 @@ partial class NameBasedGuidGenerator
 {
     internal partial class CustomHashing : NameBasedGuidGenerator
     {
-        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha256;
-
-        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha384;
-
-        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha512;
-
         private readonly Func<HashAlgorithm> HashingFactory;
 
         private CustomHashing(Guid hashspaceId, Func<HashAlgorithm> hashingFactory)
             : base(hashspaceId)
         {
             this.HashingFactory = hashingFactory;
-        }
-
-        internal static NameBasedGuidGenerator.CustomHashing InstanceSha256
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                [MethodImpl(MethodImplOptions.Synchronized)]
-                static NameBasedGuidGenerator.CustomHashing Initialize()
-                {
-                    return NameBasedGuidGenerator.CustomHashing.SingletonSha256 ??=
-                        new NameBasedGuidGenerator.CustomHashing(GuidHashspaces.Sha256, SHA256.Create);
-                }
-
-                return NameBasedGuidGenerator.CustomHashing.SingletonSha256 ?? Initialize();
-            }
-        }
-
-        internal static NameBasedGuidGenerator.CustomHashing InstanceSha384
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                [MethodImpl(MethodImplOptions.Synchronized)]
-                static NameBasedGuidGenerator.CustomHashing Initialize()
-                {
-                    return NameBasedGuidGenerator.CustomHashing.SingletonSha384 ??=
-                        new NameBasedGuidGenerator.CustomHashing(GuidHashspaces.Sha384, SHA384.Create);
-                }
-
-                return NameBasedGuidGenerator.CustomHashing.SingletonSha384 ?? Initialize();
-            }
-        }
-
-        internal static NameBasedGuidGenerator.CustomHashing InstanceSha512
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                [MethodImpl(MethodImplOptions.Synchronized)]
-                static NameBasedGuidGenerator.CustomHashing Initialize()
-                {
-                    return NameBasedGuidGenerator.CustomHashing.SingletonSha512 ??=
-                        new NameBasedGuidGenerator.CustomHashing(GuidHashspaces.Sha512, SHA512.Create);
-                }
-
-                return NameBasedGuidGenerator.CustomHashing.SingletonSha512 ?? Initialize();
-            }
         }
 
         public sealed override GuidVersion Version => GuidVersion.Version8;
@@ -121,6 +67,8 @@ partial class NameBasedGuidGenerator
                 this.DisposeState = 0;
             }
 
+            protected override bool TrackHashing => true;
+
             protected override void Dispose(bool disposing)
             {
                 if (Interlocked.CompareExchange(ref this.DisposeState, 1, 0) == 0)
@@ -156,37 +104,37 @@ partial class NameBasedGuidGenerator
 
         private sealed class Synchronized : NameBasedGuidGenerator.CustomHashing, IDisposable
         {
+            private readonly HashAlgorithm GlobalHashing;
+
             internal Synchronized(Guid hashspaceId, HashAlgorithm hashing)
                 : base(hashspaceId, hashing.Identity)
             {
-                this.FastHashing = hashing;
+                this.GlobalHashing = hashing;
+                this.LocalHashing.Dispose();
             }
-
-            private HashAlgorithm DefaultHashing => this.FastHashing!;
 
             protected override void Dispose(bool disposing)
             {
                 if (disposing)
                 {
-                    this.DefaultHashing.Dispose();
+                    lock (this.GlobalHashing)
+                    {
+                        this.GlobalHashing.Dispose();
+                    }
                 }
                 base.Dispose(disposing);
             }
 
             protected override HashAlgorithm GetHashing()
             {
-                var hashing = this.DefaultHashing;
+                var hashing = this.GlobalHashing;
                 Monitor.Enter(hashing);
                 return hashing;
             }
 
             protected override void ReturnHashing(HashAlgorithm hashing)
             {
-                if (hashing != this.DefaultHashing)
-                {
-                    throw new InvalidOperationException(
-                        "An unknown hash algorithm instance is returned.");
-                }
+                Debug.Assert(hashing == this.GlobalHashing);
                 Monitor.Exit(hashing);
             }
         }
