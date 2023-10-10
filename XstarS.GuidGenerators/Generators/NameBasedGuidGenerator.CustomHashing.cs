@@ -1,7 +1,6 @@
-#if !UUIDREV_DISABLE
+﻿#if !UUIDREV_DISABLE
 using System;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Threading;
 using XNetEx.Runtime.CompilerServices;
@@ -10,68 +9,14 @@ namespace XNetEx.Guids.Generators;
 
 partial class NameBasedGuidGenerator
 {
-    internal class CustomHashing : NameBasedGuidGenerator
+    internal partial class CustomHashing : NameBasedGuidGenerator
     {
-        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha256;
-
-        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha384;
-
-        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha512;
-
         private readonly Func<HashAlgorithm> HashingFactory;
 
         private CustomHashing(Guid hashspaceId, Func<HashAlgorithm> hashingFactory)
             : base(hashspaceId)
         {
             this.HashingFactory = hashingFactory;
-        }
-
-        internal static NameBasedGuidGenerator.CustomHashing InstanceSha256
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                [MethodImpl(MethodImplOptions.Synchronized)]
-                static NameBasedGuidGenerator.CustomHashing Initialize()
-                {
-                    return NameBasedGuidGenerator.CustomHashing.SingletonSha256 ??=
-                        new NameBasedGuidGenerator.CustomHashing(GuidHashspaces.Sha256, SHA256.Create);
-                }
-
-                return NameBasedGuidGenerator.CustomHashing.SingletonSha256 ?? Initialize();
-            }
-        }
-
-        internal static NameBasedGuidGenerator.CustomHashing InstanceSha384
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                [MethodImpl(MethodImplOptions.Synchronized)]
-                static NameBasedGuidGenerator.CustomHashing Initialize()
-                {
-                    return NameBasedGuidGenerator.CustomHashing.SingletonSha384 ??=
-                        new NameBasedGuidGenerator.CustomHashing(GuidHashspaces.Sha384, SHA384.Create);
-                }
-
-                return NameBasedGuidGenerator.CustomHashing.SingletonSha384 ?? Initialize();
-            }
-        }
-
-        internal static NameBasedGuidGenerator.CustomHashing InstanceSha512
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                [MethodImpl(MethodImplOptions.Synchronized)]
-                static NameBasedGuidGenerator.CustomHashing Initialize()
-                {
-                    return NameBasedGuidGenerator.CustomHashing.SingletonSha512 ??=
-                        new NameBasedGuidGenerator.CustomHashing(GuidHashspaces.Sha512, SHA512.Create);
-                }
-
-                return NameBasedGuidGenerator.CustomHashing.SingletonSha512 ?? Initialize();
-            }
         }
 
         public sealed override GuidVersion Version => GuidVersion.Version8;
