@@ -1,5 +1,6 @@
-﻿#if !UUIDREV_DISABLE
+#if !UUIDREV_DISABLE
 using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Threading;
@@ -188,11 +189,7 @@ partial class NameBasedGuidGenerator
 
             protected override void ReturnHashing(HashAlgorithm hashing)
             {
-                if (hashing != this.GlobalHashing)
-                {
-                    throw new InvalidOperationException(
-                        "An unknown hash algorithm instance is returned.");
-                }
+                Debug.Assert(hashing == this.GlobalHashing);
                 Monitor.Exit(hashing);
             }
         }

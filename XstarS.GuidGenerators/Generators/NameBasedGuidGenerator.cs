@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Threading;
@@ -69,11 +70,12 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
     protected virtual HashAlgorithm GetHashing()
     {
         var hashing = this.LocalHashing.Value!;
+        Debug.Assert(hashing is not null);
         if (this.TrackHashing)
         {
             this.LocalHashing.Value = null;
         }
-        return hashing;
+        return hashing!;
     }
 
     protected virtual void ReturnHashing(HashAlgorithm hashing)
