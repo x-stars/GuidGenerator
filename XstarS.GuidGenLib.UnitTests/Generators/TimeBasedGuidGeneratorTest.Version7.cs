@@ -58,10 +58,10 @@ partial class TimeBasedGuidGeneratorTest
     }
 
     [TestMethod]
-    public void NewGuid_Version7M_ConcurrentGetMonotonicGuids()
+    public void NewGuid_Version7_ConcurrentGetMonotonicGuids()
     {
         var lastGuid = Guid.Empty;
-        var guidGen = GuidGenerator.Version7M;
+        var guidGen = GuidGenerator.Version7;
         Parallel.For(0, 1000, index =>
         {
             lock (guidGen)

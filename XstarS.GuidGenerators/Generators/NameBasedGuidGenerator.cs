@@ -1,16 +1,14 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Threading;
-using XNetEx.Collections.Concurrent;
 
 namespace XNetEx.Guids.Generators;
 
 internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGenerator
 {
-    private readonly BoundedCollection<HashAlgorithm> Hashings;
-
-    private volatile HashAlgorithm? FastHashing;
+    private readonly ThreadLocal<HashAlgorithm?> LocalHashing;
 
 #if !UUIDREV_DISABLE
     private readonly Guid? HashspaceId;
@@ -21,19 +19,19 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 
     protected NameBasedGuidGenerator(Guid? hashspaceId)
     {
-        var concurrency = Environment.ProcessorCount * 2;
-        this.Hashings = new BoundedCollection<HashAlgorithm>(concurrency);
-        this.FastHashing = null;
+        this.LocalHashing = new ThreadLocal<HashAlgorithm?>(
+            this.CreateHashing, trackAllValues: true);
         this.HashspaceId = hashspaceId;
     }
 #else
     protected NameBasedGuidGenerator()
     {
-        var concurrency = Environment.ProcessorCount * 2;
-        this.Hashings = new BoundedCollection<HashAlgorithm>(concurrency);
-        this.FastHashing = null;
+        this.LocalHashing = new ThreadLocal<HashAlgorithm?>(
+            this.CreateHashing, trackAllValues: true);
     }
 #endif
+
+    protected virtual bool TrackHashing => false;
 
     public sealed override Guid NewGuid()
     {
@@ -71,38 +69,32 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 
     protected virtual HashAlgorithm GetHashing()
     {
-        var hashing = Interlocked.Exchange(ref this.FastHashing, null);
-        if (hashing is null)
+        var hashing = this.LocalHashing.Value!;
+        Debug.Assert(hashing is not null);
+        if (this.TrackHashing)
         {
-            if (!this.Hashings.TryTake(out hashing))
-            {
-                hashing = this.CreateHashing();
-            }
+            this.LocalHashing.Value = null;
         }
-        return hashing;
+        return hashing!;
     }
 
     protected virtual void ReturnHashing(HashAlgorithm hashing)
     {
-        if (Interlocked.CompareExchange(ref this.FastHashing, hashing, null) != null)
+        if (this.TrackHashing)
         {
-            if (!this.Hashings.TryAdd(hashing))
-            {
-                hashing.Dispose();
-            }
+            this.LocalHashing.Value = hashing;
         }
     }
 
 #if !UUIDREV_DISABLE
     protected void DisposeHashings()
     {
-        var hashings = this.Hashings;
-        while (hashings.TryTake(out var hashing))
+        var hashings = this.LocalHashing.Values;
+        foreach (var hashing in hashings)
         {
-            hashing.Dispose();
+            hashing?.Dispose();
         }
-        this.FastHashing?.Dispose();
-        this.FastHashing = null;
+        this.LocalHashing.Dispose();
     }
 #endif
 
