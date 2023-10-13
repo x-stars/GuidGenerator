@@ -22,7 +22,7 @@ type GuidGeneratorV8Test() =
                     Guid.empty Array.empty
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version8)
-        |> Assert.equalTo (Guid.parse "1133a3b1-c2ec-87f2-ade0-dfef9f3cd913")
+        |> Assert.equalTo (Guid.parse "374708ff-f771-8dd5-979e-c875d56cd228")
 
     [<TestMethod>]
     member _.NewVersion8NByString_Sha256HashingExampleDns_GetExpectedGuid() =
@@ -31,7 +31,7 @@ type GuidGeneratorV8Test() =
                      Guid.nsDns "www.example.com"
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version8)
-        |> Assert.equalTo (Guid.parse "401835fd-a627-870a-873f-ed73f2bc5b2c")
+        |> Assert.equalTo (Guid.parse "5c146b14-3c52-8afd-938a-375d0df1fbf6")
 
     [<TestMethod>]
     member _.NewVersion8NByEncoding_Sha256HashingExampleDns_GetExpectedGuid() =
@@ -40,54 +40,54 @@ type GuidGeneratorV8Test() =
                        Guid.nsDns Text.Encoding.Unicode "www.example.com"
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version8)
-        |> Assert.equalTo (Guid.parse "909371f1-5575-8bf9-82e4-0a96ce6c1f90")
+        |> Assert.equalTo (Guid.parse "55e88991-1eda-876a-8ff8-65f5a9fbd5db")
 
     [<TestMethod>]
     member _.NewVersion8NSha256_EmptyName_GetExpectedGuid() =
         Guid.newV8NSha256 Guid.empty Array.empty
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version8)
-        |> Assert.equalTo (Guid.parse "1133a3b1-c2ec-87f2-ade0-dfef9f3cd913")
+        |> Assert.equalTo (Guid.parse "374708ff-f771-8dd5-979e-c875d56cd228")
 
     [<TestMethod>]
     member _.NewVersion8NSha256ByString_ExampleDns_GetExpectedGuid() =
         Guid.newV8NSha256S Guid.nsDns "www.example.com"
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version8)
-        |> Assert.equalTo (Guid.parse "401835fd-a627-870a-873f-ed73f2bc5b2c")
+        |> Assert.equalTo (Guid.parse "5c146b14-3c52-8afd-938a-375d0df1fbf6")
 
     [<TestMethod>]
     member _.NewVersion8NSha256ByEncoding_ExampleDns_GetExpectedGuid() =
         Guid.newV8NSha256Enc Guid.nsDns Text.Encoding.Unicode "www.example.com"
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version8)
-        |> Assert.equalTo (Guid.parse "909371f1-5575-8bf9-82e4-0a96ce6c1f90")
+        |> Assert.equalTo (Guid.parse "55e88991-1eda-876a-8ff8-65f5a9fbd5db")
 
     [<TestMethod>]
     member _.NewVersion8NSha384_EmptyName_GetExpectedGuid() =
         Guid.newV8NSha384 Guid.empty Array.empty
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version8)
-        |> Assert.equalTo (Guid.parse "d1799304-22a5-8cd7-911d-0c1b82c5123c")
+        |> Assert.equalTo (Guid.parse "ae40659d-a119-8cde-88df-474b5e36416a")
 
     [<TestMethod>]
     member _.NewVersion8NSha384ByString_ExampleDns_GetExpectedGuid() =
         Guid.newV8NSha384S Guid.nsDns "www.example.com"
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version8)
-        |> Assert.equalTo (Guid.parse "cbf4bd9c-024c-849c-bb0d-8bffc5be3afe")
+        |> Assert.equalTo (Guid.parse "3df00ae4-42a7-8066-88ad-1f925b8b8e54")
 
     [<TestMethod>]
     member _.NewVersion8NSha512_EmptyName_GetExpectedGuid() =
         Guid.newV8NSha512 Guid.empty Array.empty
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version8)
-        |> Assert.equalTo (Guid.parse "6db9934e-1903-80bb-bfaa-75577a22b99a")
+        |> Assert.equalTo (Guid.parse "0b6cbac8-38df-87f4-bea1-bd0df00ec282")
 
     [<TestMethod>]
     member _.NewVersion8NSha512ByString_ExampleDns_GetExpectedGuid() =
         Guid.newV8NSha512S Guid.nsDns "www.example.com"
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version8)
-        |> Assert.equalTo (Guid.parse "da65f7c3-21ae-82e0-a654-97eea9af6ed6")
+        |> Assert.equalTo (Guid.parse "94ee4ddb-9f36-8018-9ccf-86a4441691e0")
 #endif

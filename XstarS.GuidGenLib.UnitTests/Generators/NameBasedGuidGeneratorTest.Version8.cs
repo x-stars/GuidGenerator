@@ -15,7 +15,7 @@ partial class NameBasedGuidGeneratorTest
         var nsId = Guid.Empty;
         var name = Array.Empty<byte>();
         var guid = GuidGenerator.Version8NSha256.NewGuid(nsId, name);
-        var expected = Guid.Parse("1133a3b1-c2ec-87f2-ade0-dfef9f3cd913");
+        var expected = Guid.Parse("374708ff-f771-8dd5-979e-c875d56cd228");
         Assert.AreEqual(expected, guid);
     }
 
@@ -25,7 +25,7 @@ partial class NameBasedGuidGeneratorTest
         var nsId = GuidNamespaces.Dns;
         var name = "www.example.com";
         var guid = GuidGenerator.Version8NSha256.NewGuid(nsId, name);
-        var expected = Guid.Parse("401835fd-a627-870a-873f-ed73f2bc5b2c");
+        var expected = Guid.Parse("5c146b14-3c52-8afd-938a-375d0df1fbf6");
         Assert.AreEqual(expected, guid);
     }
 
@@ -36,7 +36,7 @@ partial class NameBasedGuidGeneratorTest
         var name = "www.example.com";
         var encoding = Encoding.Unicode;
         var guid = GuidGenerator.Version8NSha256.NewGuid(nsId, name, encoding);
-        var expected = Guid.Parse("909371f1-5575-8bf9-82e4-0a96ce6c1f90");
+        var expected = Guid.Parse("55e88991-1eda-876a-8ff8-65f5a9fbd5db");
         Assert.AreEqual(expected, guid);
     }
 
@@ -46,7 +46,7 @@ partial class NameBasedGuidGeneratorTest
         var nsId = Guid.Empty;
         var name = Array.Empty<byte>();
         var guid = GuidGenerator.Version8NSha384.NewGuid(nsId, name);
-        var expected = Guid.Parse("d1799304-22a5-8cd7-911d-0c1b82c5123c");
+        var expected = Guid.Parse("ae40659d-a119-8cde-88df-474b5e36416a");
         Assert.AreEqual(expected, guid);
     }
 
@@ -56,7 +56,7 @@ partial class NameBasedGuidGeneratorTest
         var nsId = GuidNamespaces.Dns;
         var name = "www.example.com";
         var guid = GuidGenerator.Version8NSha384.NewGuid(nsId, name);
-        var expected = Guid.Parse("cbf4bd9c-024c-849c-bb0d-8bffc5be3afe");
+        var expected = Guid.Parse("3df00ae4-42a7-8066-88ad-1f925b8b8e54");
         Assert.AreEqual(expected, guid);
     }
 
@@ -66,7 +66,7 @@ partial class NameBasedGuidGeneratorTest
         var nsId = Guid.Empty;
         var name = Array.Empty<byte>();
         var guid = GuidGenerator.Version8NSha512.NewGuid(nsId, name);
-        var expected = Guid.Parse("6db9934e-1903-80bb-bfaa-75577a22b99a");
+        var expected = Guid.Parse("0b6cbac8-38df-87f4-bea1-bd0df00ec282");
         Assert.AreEqual(expected, guid);
     }
 
@@ -76,7 +76,7 @@ partial class NameBasedGuidGeneratorTest
         var nsId = GuidNamespaces.Dns;
         var name = "www.example.com";
         var guid = GuidGenerator.Version8NSha512.NewGuid(nsId, name);
-        var expected = Guid.Parse("da65f7c3-21ae-82e0-a654-97eea9af6ed6");
+        var expected = Guid.Parse("94ee4ddb-9f36-8018-9ccf-86a4441691e0");
         Assert.AreEqual(expected, guid);
     }
 
@@ -88,7 +88,7 @@ partial class NameBasedGuidGeneratorTest
         var nsId = GuidNamespaces.Dns;
         var name = Array.Empty<byte>();
         var guid = guidGen.NewGuid(nsId, name);
-        var expected = Guid.Parse("0e38fb05-6337-8c50-a201-6e2ec68fd5ac");
+        var expected = Guid.Parse("4ebc3bf9-4458-8d83-baae-f9d9dc2ad979");
         Assert.AreEqual(expected, guid);
     }
 
@@ -100,7 +100,7 @@ partial class NameBasedGuidGeneratorTest
         var nsId = GuidNamespaces.Dns;
         var name = "www.example.com";
         var guid = guidGen.NewGuid(nsId, name);
-        var expected = Guid.Parse("401835fd-a627-870a-873f-ed73f2bc5b2c");
+        var expected = Guid.Parse("5c146b14-3c52-8afd-938a-375d0df1fbf6");
         Assert.AreEqual(expected, guid);
     }
 
@@ -113,7 +113,7 @@ partial class NameBasedGuidGeneratorTest
         var name = "www.example.com";
         var encoding = Encoding.Unicode;
         var guid = guidGen.NewGuid(nsId, name, encoding);
-        var expected = Guid.Parse("909371f1-5575-8bf9-82e4-0a96ce6c1f90");
+        var expected = Guid.Parse("55e88991-1eda-876a-8ff8-65f5a9fbd5db");
         Assert.AreEqual(expected, guid);
     }
 
@@ -128,7 +128,7 @@ partial class NameBasedGuidGeneratorTest
             var nsId = Guid.Empty;
             var name = Array.Empty<byte>();
             var guid = guidGen.NewGuid(nsId, name);
-            var expected = Guid.Parse("1133a3b1-c2ec-87f2-ade0-dfef9f3cd913");
+            var expected = Guid.Parse("374708ff-f771-8dd5-979e-c875d56cd228");
             Assert.AreEqual(expected, guid);
         });
     }
@@ -142,7 +142,7 @@ partial class NameBasedGuidGeneratorTest
             var nsId = Guid.Empty;
             var name = Array.Empty<byte>();
             var guid = guidGen.NewGuid(nsId, name);
-            var expected = Guid.Parse("1133a3b1-c2ec-87f2-ade0-dfef9f3cd913");
+            var expected = Guid.Parse("374708ff-f771-8dd5-979e-c875d56cd228");
             Assert.AreEqual(expected, guid);
         });
     }
