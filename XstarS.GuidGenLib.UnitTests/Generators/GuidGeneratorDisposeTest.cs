@@ -122,9 +122,8 @@ public class GuidGeneratorDisposeTest
     [TestMethod]
     public void NewGuid_NameBasedGeneratorByFactory_ThrowExceptionAfterDisposed()
     {
-        var hashId = GuidHashspaces.Sha256;
         var factory = (Func<HashAlgorithm>)SHA256.Create;
-        var guidGen = GuidGenerator.CreateVersion8N(hashId, factory);
+        var guidGen = GuidGenerator.CreateVersion8N(factory);
         _ = guidGen.NewGuid(Guid.Empty, Array.Empty<byte>());
         guidGen.Dispose();
         Assert.ThrowsException<ObjectDisposedException>(
@@ -135,9 +134,8 @@ public class GuidGeneratorDisposeTest
     [TestMethod]
     public void GuidInfo_NameBasedGeneratorByFactory_KeepUsableAfterDisposed()
     {
-        var hashId = GuidHashspaces.Sha256;
         var factory = (Func<HashAlgorithm>)SHA256.Create;
-        var guidGen = GuidGenerator.CreateVersion8N(hashId, factory);
+        var guidGen = GuidGenerator.CreateVersion8N(factory);
         var version0 = guidGen.Version;
         var variant0 = guidGen.Variant;
         guidGen.Dispose();
@@ -151,9 +149,8 @@ public class GuidGeneratorDisposeTest
     [TestMethod]
     public void NewGuid_NameBasedGeneratorByInstance_ThrowExceptionAfterDisposed()
     {
-        var hashId = GuidHashspaces.Sha256;
         using var hashing = SHA256.Create();
-        var guidGen = GuidGenerator.CreateVersion8N(hashId, hashing);
+        var guidGen = GuidGenerator.CreateVersion8N(hashing);
         _ = guidGen.NewGuid(Guid.Empty, Array.Empty<byte>());
         guidGen.Dispose();
         Assert.ThrowsException<ObjectDisposedException>(
@@ -164,9 +161,8 @@ public class GuidGeneratorDisposeTest
     [TestMethod]
     public void GuidInfo_NameBasedGeneratorByInstance_KeepUsableAfterDisposed()
     {
-        var hashId = GuidHashspaces.Sha256;
         using var hashing = SHA256.Create();
-        var guidGen = GuidGenerator.CreateVersion8N(hashId, hashing);
+        var guidGen = GuidGenerator.CreateVersion8N(hashing);
         var version0 = guidGen.Version;
         var variant0 = guidGen.Variant;
         guidGen.Dispose();

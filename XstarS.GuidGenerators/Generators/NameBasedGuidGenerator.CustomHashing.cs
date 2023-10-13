@@ -13,8 +13,7 @@ partial class NameBasedGuidGenerator
     {
         private readonly Func<HashAlgorithm> HashingFactory;
 
-        private CustomHashing(Guid hashspaceId, Func<HashAlgorithm> hashingFactory)
-            : base(hashspaceId)
+        private CustomHashing(Func<HashAlgorithm> hashingFactory)
         {
             this.HashingFactory = hashingFactory;
         }
@@ -23,8 +22,7 @@ partial class NameBasedGuidGenerator
 
         public sealed override bool RequiresInput => true;
 
-        internal static NameBasedGuidGenerator.CustomHashing CreateInstance(
-            Guid hashspaceId, HashAlgorithm hashing)
+        internal static NameBasedGuidGenerator.CustomHashing CreateInstance(HashAlgorithm hashing)
         {
             if (hashing is null)
             {
@@ -37,18 +35,17 @@ partial class NameBasedGuidGenerator
                     nameof(hashing));
             }
 
-            return new NameBasedGuidGenerator.CustomHashing.Synchronized(hashspaceId, hashing);
+            return new NameBasedGuidGenerator.CustomHashing.Synchronized(hashing);
         }
 
-        internal static NameBasedGuidGenerator.CustomHashing CreateInstance(
-            Guid hashspaceId, Func<HashAlgorithm> hashingFactory)
+        internal static NameBasedGuidGenerator.CustomHashing CreateInstance(Func<HashAlgorithm> hashingFactory)
         {
             if (hashingFactory is null)
             {
                 throw new ArgumentNullException(nameof(hashingFactory));
             }
 
-            return new NameBasedGuidGenerator.CustomHashing.Disposable(hashspaceId, hashingFactory);
+            return new NameBasedGuidGenerator.CustomHashing.Disposable(hashingFactory);
         }
 
         protected sealed override HashAlgorithm CreateHashing()
@@ -61,8 +58,8 @@ partial class NameBasedGuidGenerator
         {
             private volatile int DisposeState;
 
-            internal Disposable(Guid hashspaceId, Func<HashAlgorithm> hashingFactory)
-                : base(hashspaceId, hashingFactory)
+            internal Disposable(Func<HashAlgorithm> hashingFactory)
+                : base(hashingFactory)
             {
                 this.DisposeState = 0;
             }
@@ -106,8 +103,8 @@ partial class NameBasedGuidGenerator
         {
             private readonly HashAlgorithm GlobalHashing;
 
-            internal Synchronized(Guid hashspaceId, HashAlgorithm hashing)
-                : base(hashspaceId, hashing.Identity)
+            internal Synchronized(HashAlgorithm hashing)
+                : base(hashing.Identity)
             {
                 this.GlobalHashing = hashing;
                 this.LocalHashing.Dispose();

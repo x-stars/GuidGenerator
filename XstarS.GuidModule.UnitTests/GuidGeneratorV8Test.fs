@@ -18,7 +18,7 @@ type GuidGeneratorV8Test() =
     [<TestMethod>]
     member _.NewVersion8N_Sha256HashingEmptyName_GetExpectedGuid() =
         use sha256Hashing = SHA256.Create()
-        Guid.newV8N Guid.hsSha256 sha256Hashing
+        Guid.newV8N sha256Hashing
                     Guid.empty Array.empty
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version8)
@@ -27,7 +27,7 @@ type GuidGeneratorV8Test() =
     [<TestMethod>]
     member _.NewVersion8NByString_Sha256HashingExampleDns_GetExpectedGuid() =
         use sha256Hashing = SHA256.Create()
-        Guid.newV8NS Guid.hsSha256 sha256Hashing
+        Guid.newV8NS sha256Hashing
                      Guid.nsDns "www.example.com"
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version8)
@@ -36,7 +36,7 @@ type GuidGeneratorV8Test() =
     [<TestMethod>]
     member _.NewVersion8NByEncoding_Sha256HashingExampleDns_GetExpectedGuid() =
         use sha256Hashing = SHA256.Create()
-        Guid.newV8NEnc Guid.hsSha256 sha256Hashing
+        Guid.newV8NEnc sha256Hashing
                        Guid.nsDns Text.Encoding.Unicode "www.example.com"
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version8)

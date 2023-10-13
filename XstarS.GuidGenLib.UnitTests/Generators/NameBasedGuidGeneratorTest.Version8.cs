@@ -83,9 +83,8 @@ partial class NameBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version8NCustomSha256_GetExpectedGuid()
     {
-        var hashId = GuidHashspaces.Sha256;
         using var hashing = SHA256.Create();
-        using var guidGen = GuidGenerator.CreateVersion8N(hashId, hashing);
+        using var guidGen = GuidGenerator.CreateVersion8N(hashing);
         var nsId = GuidNamespaces.Dns;
         var name = Array.Empty<byte>();
         var guid = guidGen.NewGuid(nsId, name);
@@ -96,9 +95,8 @@ partial class NameBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version8NCustomSha256StringName_GetExpectedGuid()
     {
-        var hashId = GuidHashspaces.Sha256;
         using var hashing = SHA256.Create();
-        using var guidGen = GuidGenerator.CreateVersion8N(hashId, hashing);
+        using var guidGen = GuidGenerator.CreateVersion8N(hashing);
         var nsId = GuidNamespaces.Dns;
         var name = "www.example.com";
         var guid = guidGen.NewGuid(nsId, name);
@@ -109,9 +107,8 @@ partial class NameBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version8NCustomSha256UnicodeStringName_GetExpectedGuid()
     {
-        var hashId = GuidHashspaces.Sha256;
         using var hashing = SHA256.Create();
-        using var guidGen = GuidGenerator.CreateVersion8N(hashId, hashing);
+        using var guidGen = GuidGenerator.CreateVersion8N(hashing);
         var nsId = GuidNamespaces.Dns;
         var name = "www.example.com";
         var encoding = Encoding.Unicode;
@@ -124,9 +121,8 @@ partial class NameBasedGuidGeneratorTest
     public void NewGuid_Version8NCustomByValue_ConcurrentGetExpectedGuid()
     {
         if (Environment.ProcessorCount <= 1) { return; }
-        var hashId = GuidHashspaces.Sha256;
         using var hashing = SHA256.Create();
-        using var guidGen = GuidGenerator.CreateVersion8N(hashId, hashing);
+        using var guidGen = GuidGenerator.CreateVersion8N(hashing);
         Parallel.For(0, 1000, index =>
         {
             var nsId = Guid.Empty;
@@ -140,8 +136,7 @@ partial class NameBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version8NCustomByDelegate_ConcurrentGetExpectedGuid()
     {
-        var hashId = GuidHashspaces.Sha256;
-        using var guidGen = GuidGenerator.CreateVersion8N(hashId, SHA256.Create);
+        using var guidGen = GuidGenerator.CreateVersion8N(SHA256.Create);
         Parallel.For(0, 1000, index =>
         {
             var nsId = Guid.Empty;
