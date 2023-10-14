@@ -41,9 +41,12 @@ partial class CustomGuidGenerator
         private void FillTimestampFields(ref Guid guid)
         {
             var timestamp = this.GetCurrentTimestamp();
-            var tsNanoSec = timestamp * 100;
-            guid.TimeLow() = (uint)(tsNanoSec >> (2 * 8));
-            guid.TimeMid() = (ushort)(tsNanoSec >> (0 * 8));
+            var ts10NanoSec = timestamp * 100;
+            guid.TimeLow() = (uint)(ts10NanoSec >> (4 * 8 - 4));
+            guid.TimeMid() = (ushort)(ts10NanoSec >> (2 * 8 - 4));
+            var timeHi = (ushort)((ts10NanoSec >> (0 * 8)) & ~0xF000);
+            ref var timeHi_Ver = ref guid.TimeHi_Ver();
+            timeHi_Ver = (ushort)(timeHi_Ver & 0xF000 | timeHi);
         }
     }
 }
