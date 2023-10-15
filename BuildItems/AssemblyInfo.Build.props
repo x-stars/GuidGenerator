@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Authors>XstarS</Authors>
     <Company>XstarS</Company>
-    <Version>1.7.5</Version>
+    <Version>1.7.8</Version>
     <Product>XstarS GUID Generator</Product>
     <Copyright>Copyright © $(Company) 2022</Copyright>
     <FileVersion>$(Version.Split('-')[0]).0</FileVersion>
