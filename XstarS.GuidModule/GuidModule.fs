@@ -520,13 +520,13 @@ module Guid =
 #if NET8_0_OR_GREATER
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA3-256 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHA3-256 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA3-256 hashspace ID and hash algorithm.</returns>
+    /// using the SHA3-256 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.PlatformNotSupportedException">
@@ -537,13 +537,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA3-256 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHA3-256 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA3-256 hashspace ID and hash algorithm.</returns>
+    /// using the SHA3-256 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.PlatformNotSupportedException">
@@ -554,14 +554,14 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA3-256 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHA3-256 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA3-256 hashspace ID and hash algorithm.</returns>
+    /// using the SHA3-256 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.PlatformNotSupportedException">
@@ -572,13 +572,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA3-384 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHA3-384 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA3-384 hashspace ID and hash algorithm.</returns>
+    /// using the SHA3-384 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.PlatformNotSupportedException">
@@ -589,13 +589,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA3-384 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHA3-384 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA3-384 hashspace ID and hash algorithm.</returns>
+    /// using the SHA3-384 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.PlatformNotSupportedException">
@@ -606,14 +606,14 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA3-384 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHA3-384 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA3-384 hashspace ID and hash algorithm.</returns>
+    /// using the SHA3-384 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.PlatformNotSupportedException">
@@ -624,13 +624,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA3-512 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHA3-512 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA3-512 hashspace ID and hash algorithm.</returns>
+    /// using the SHA3-512 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.PlatformNotSupportedException">
@@ -641,13 +641,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA3-512 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHA3-512 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA3-512 hashspace ID and hash algorithm.</returns>
+    /// using the SHA3-512 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.PlatformNotSupportedException">
@@ -658,14 +658,14 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA3-512 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHA3-512 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA3-512 hashspace ID and hash algorithm.</returns>
+    /// using the SHA3-512 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.PlatformNotSupportedException">
@@ -676,13 +676,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHAKE128 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHAKE128 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHAKE128 hashspace ID and hash algorithm.</returns>
+    /// using the SHAKE128 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.PlatformNotSupportedException">
@@ -693,13 +693,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHAKE128 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHAKE128 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHAKE128 hashspace ID and hash algorithm.</returns>
+    /// using the SHAKE128 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.PlatformNotSupportedException">
@@ -710,14 +710,14 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHAKE128 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHAKE128 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHAKE128 hashspace ID and hash algorithm.</returns>
+    /// using the SHAKE128 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.PlatformNotSupportedException">
@@ -728,13 +728,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHAKE256 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHAKE256 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHAKE256 hashspace ID and hash algorithm.</returns>
+    /// using the SHAKE256 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.PlatformNotSupportedException">
@@ -745,13 +745,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHAKE256 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHAKE256 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHAKE256 hashspace ID and hash algorithm.</returns>
+    /// using the SHAKE256 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.PlatformNotSupportedException">
@@ -762,14 +762,14 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHAKE256 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHAKE256 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHAKE256 hashspace ID and hash algorithm.</returns>
+    /// using the SHAKE256 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.PlatformNotSupportedException">

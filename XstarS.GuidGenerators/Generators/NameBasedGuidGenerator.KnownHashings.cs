@@ -88,7 +88,7 @@ partial class NameBasedGuidGenerator
                 {
                     using (var validatePlatform = SHA3_256.Create()) { }
                     return NameBasedGuidGenerator.CustomHashing.SingletonSha3D256 ??=
-                        new NameBasedGuidGenerator.CustomHashing(GuidHashspaces.Sha3D256, SHA3_256.Create);
+                        new NameBasedGuidGenerator.CustomHashing(SHA3_256.Create);
                 }
 
                 return NameBasedGuidGenerator.CustomHashing.SingletonSha3D256 ?? Initialize();
@@ -105,7 +105,7 @@ partial class NameBasedGuidGenerator
                 {
                     using (var validatePlatform = SHA3_384.Create()) { }
                     return NameBasedGuidGenerator.CustomHashing.SingletonSha3D384 ??=
-                        new NameBasedGuidGenerator.CustomHashing(GuidHashspaces.Sha3D384, SHA3_384.Create);
+                        new NameBasedGuidGenerator.CustomHashing(SHA3_384.Create);
                 }
 
                 return NameBasedGuidGenerator.CustomHashing.SingletonSha3D384 ?? Initialize();
@@ -122,7 +122,7 @@ partial class NameBasedGuidGenerator
                 {
                     using (var validatePlatform = SHA3_512.Create()) { }
                     return NameBasedGuidGenerator.CustomHashing.SingletonSha3D512 ??=
-                        new NameBasedGuidGenerator.CustomHashing(GuidHashspaces.Sha3D512, SHA3_512.Create);
+                        new NameBasedGuidGenerator.CustomHashing(SHA3_512.Create);
                 }
 
                 return NameBasedGuidGenerator.CustomHashing.SingletonSha3D512 ?? Initialize();
@@ -139,7 +139,7 @@ partial class NameBasedGuidGenerator
                 {
                     using (var validatePlatform = new Shake128()) { }
                     return NameBasedGuidGenerator.CustomHashing.SingletonShake128 ??=
-                        new NameBasedGuidGenerator.CustomHashing(GuidHashspaces.Shake128, Shake128D.Create256);
+                        new NameBasedGuidGenerator.CustomHashing(Shake128D.Create256);
                 }
 
                 return NameBasedGuidGenerator.CustomHashing.SingletonShake128 ?? Initialize();
@@ -156,7 +156,7 @@ partial class NameBasedGuidGenerator
                 {
                     using (var validatePlatform = new Shake256()) { }
                     return NameBasedGuidGenerator.CustomHashing.SingletonShake256 ??=
-                        new NameBasedGuidGenerator.CustomHashing(GuidHashspaces.Shake256, Shake256D.Create512);
+                        new NameBasedGuidGenerator.CustomHashing(Shake256D.Create512);
                 }
 
                 return NameBasedGuidGenerator.CustomHashing.SingletonShake256 ?? Initialize();

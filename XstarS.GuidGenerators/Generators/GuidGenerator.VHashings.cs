@@ -33,50 +33,50 @@ partial class GuidGenerator
 #if NET8_0_OR_GREATER
     /// <summary>
     /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA3-256 hashspace ID and hash algorithm.
+    /// using the SHA3-256 hash algorithm.
     /// </summary>
     /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA3-256 hashspace ID and hash algorithm.</returns>
+    /// using the SHA3-256 hash algorithm.</returns>
     /// <exception cref="PlatformNotSupportedException">
     /// This platform does not support the SHA3-256 hash algorithm.</exception>
     public static INameBasedGuidGenerator Version8NSha3D256 => NameBasedGuidGenerator.CustomHashing.InstanceSha3D256;
 
     /// <summary>
     /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA3-384 hashspace ID and hash algorithm.
+    /// using the SHA3-384 hash algorithm.
     /// </summary>
     /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA3-384 hashspace ID and hash algorithm.</returns>
+    /// using the SHA3-384 hash algorithm.</returns>
     /// <exception cref="PlatformNotSupportedException">
     /// This platform does not support the SHA3-384 hash algorithm.</exception>
     public static INameBasedGuidGenerator Version8NSha3D384 => NameBasedGuidGenerator.CustomHashing.InstanceSha3D384;
 
     /// <summary>
     /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA3-512 hashspace ID and hash algorithm.
+    /// using the SHA3-512 hash algorithm.
     /// </summary>
     /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA3-512 hashspace ID and hash algorithm.</returns>
+    /// using the SHA3-512 hash algorithm.</returns>
     /// <exception cref="PlatformNotSupportedException">
     /// This platform does not support the SHA3-512 hash algorithm.</exception>
     public static INameBasedGuidGenerator Version8NSha3D512 => NameBasedGuidGenerator.CustomHashing.InstanceSha3D512;
 
     /// <summary>
     /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHAKE128 hashspace ID and hash algorithm.
+    /// using the SHAKE128 hash algorithm.
     /// </summary>
     /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHAKE128 hashspace ID and hash algorithm.</returns>
+    /// using the SHAKE128 hash algorithm.</returns>
     /// <exception cref="PlatformNotSupportedException">
     /// This platform does not support the SHAKE128 hash algorithm.</exception>
     public static INameBasedGuidGenerator Version8NShake128 => NameBasedGuidGenerator.CustomHashing.InstanceShake128;
 
     /// <summary>
     /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHAKE256 hashspace ID and hash algorithm.
+    /// using the SHAKE256 hash algorithm.
     /// </summary>
     /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHAKE256 hashspace ID and hash algorithm.</returns>
+    /// using the SHAKE256 hash algorithm.</returns>
     /// <exception cref="PlatformNotSupportedException">
     /// This platform does not support the SHAKE256 hash algorithm.</exception>
     public static INameBasedGuidGenerator Version8NShake256 => NameBasedGuidGenerator.CustomHashing.InstanceShake256;
