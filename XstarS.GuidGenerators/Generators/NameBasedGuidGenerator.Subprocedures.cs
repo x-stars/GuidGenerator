@@ -1,7 +1,6 @@
 ﻿using System;
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 #endif
 
 namespace XNetEx.Guids.Generators;
@@ -12,29 +11,12 @@ partial class NameBasedGuidGenerator
     private Guid ComputeHashToGuid(Guid nsId, ReadOnlySpan<byte> name)
     {
         const int guidSize = 16;
-#if !UUIDREV_DISABLE
-        var hashId = this.HashspaceId;
-        var hashIdSize = (hashId is null) ? 0 : guidSize;
-        var nameOffset = hashIdSize + guidSize;
-        var inputLength = nameOffset + name.Length;
-        var input = (name.Length <= 1024) ?
-            (stackalloc byte[inputLength]) : (new byte[inputLength]);
-        if (hashId is Guid hashIdValue)
-        {
-            var hashIdResult = hashIdValue.TryWriteUuidBytes(input);
-            Debug.Assert(hashIdResult);
-        }
-        var nsIdResult = nsId.TryWriteUuidBytes(input[hashIdSize..]);
-        Debug.Assert(nsIdResult);
-        name.CopyTo(input[nameOffset..]);
-#else
         var inputLength = guidSize + name.Length;
         var input = (name.Length <= 1024) ?
             (stackalloc byte[inputLength]) : (new byte[inputLength]);
         var nsIdResult = nsId.TryWriteUuidBytes(input);
         Debug.Assert(nsIdResult);
         name.CopyTo(input[guidSize..]);
-#endif
         return this.ComputeHashToGuid(input);
     }
 
@@ -79,22 +61,6 @@ partial class NameBasedGuidGenerator
     private unsafe byte[] CreateInput(Guid nsId, byte[] name)
     {
         const int guidSize = 16;
-#if !UUIDREV_DISABLE
-        var hashId = this.HashspaceId;
-        var hashIdSize = (hashId is null) ? 0 : guidSize;
-        var nameOffset = hashIdSize + guidSize;
-        var inputLength = nameOffset + name.Length;
-        var input = new byte[inputLength];
-        fixed (byte* pInput = &input[0])
-        {
-            if (hashId is Guid hashIdValue)
-            {
-                *(Guid*)pInput = hashIdValue.ToBigEndian();
-            }
-            *(Guid*)&pInput[hashIdSize] = nsId.ToBigEndian();
-        }
-        Buffer.BlockCopy(name, 0, input, nameOffset, name.Length);
-#else
         var inputLength = guidSize + name.Length;
         var input = new byte[inputLength];
         fixed (byte* pInput = &input[0])
@@ -102,7 +68,6 @@ partial class NameBasedGuidGenerator
             *(Guid*)pInput = nsId.ToBigEndian();
         }
         Buffer.BlockCopy(name, 0, input, guidSize, name.Length);
-#endif
         return input;
     }
 
