@@ -17,7 +17,7 @@ partial class CustomGuidGeneratorTest
             ((ulong)(ushort)ts10NsMid << (2 * 8 - 4)) |
             ((ulong)(ushort)ts10NsLow & ~0xF000UL));
         var nowTicks = DateTime.UtcNow.Ticks - epoch.Ticks;
-        var now10NanoSec = (nowTicks * 100) & ~(-1L << (8 * 8 - 4));
+        var now10NanoSec = (nowTicks * 10) & ~(-1L << (8 * 8 - 4));
         var ticksDiff = Math.Abs((ts10NanoSec - now10NanoSec) * 10 / 100);
         Assert.IsTrue(ticksDiff < TimeSpan.TicksPerSecond);
     }
