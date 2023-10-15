@@ -63,10 +63,10 @@ partial class GuidGenerator
 
     /// <summary>
     /// Gets the <see cref="IGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// example implementation (UUIDREV Appendix C.7).
+    /// example implementation (UUIDREV Appendix C.1).
     /// </summary>
     /// <returns>The <see cref="IGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// example implementation (UUIDREV Appendix C.7).</returns>
+    /// example implementation (UUIDREV Appendix C.1).</returns>
     public static IGuidGenerator Version8 => CustomGuidGenerator.Example.Instance;
 
     /// <summary>

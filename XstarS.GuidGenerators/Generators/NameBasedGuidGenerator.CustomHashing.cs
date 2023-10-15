@@ -13,42 +13,24 @@ partial class NameBasedGuidGenerator
     {
         private readonly Func<HashAlgorithm> HashingFactory;
 
-        private CustomHashing(Guid hashspaceId, Func<HashAlgorithm> hashingFactory)
-            : base(hashspaceId)
+        private CustomHashing(Func<HashAlgorithm> hashingFactory)
         {
-            this.HashingFactory = hashingFactory;
+            this.HashingFactory = hashingFactory ??
+                throw new ArgumentNullException(nameof(hashingFactory));
         }
 
         public sealed override GuidVersion Version => GuidVersion.Version8;
 
         public sealed override bool RequiresInput => true;
 
-        internal static NameBasedGuidGenerator.CustomHashing CreateInstance(
-            Guid hashspaceId, HashAlgorithm hashing)
+        internal static NameBasedGuidGenerator.CustomHashing CreateInstance(HashAlgorithm hashing)
         {
-            if (hashing is null)
-            {
-                throw new ArgumentNullException(nameof(hashing));
-            }
-            if (hashing.HashSize < 16 * 8)
-            {
-                throw new ArgumentException(
-                    "The algorithm's hash size is less than 128 bits.",
-                    nameof(hashing));
-            }
-
-            return new NameBasedGuidGenerator.CustomHashing.Synchronized(hashspaceId, hashing);
+            return new NameBasedGuidGenerator.CustomHashing.Synchronized(hashing);
         }
 
-        internal static NameBasedGuidGenerator.CustomHashing CreateInstance(
-            Guid hashspaceId, Func<HashAlgorithm> hashingFactory)
+        internal static NameBasedGuidGenerator.CustomHashing CreateInstance(Func<HashAlgorithm> hashingFactory)
         {
-            if (hashingFactory is null)
-            {
-                throw new ArgumentNullException(nameof(hashingFactory));
-            }
-
-            return new NameBasedGuidGenerator.CustomHashing.Disposable(hashspaceId, hashingFactory);
+            return new NameBasedGuidGenerator.CustomHashing.Disposable(hashingFactory);
         }
 
         protected sealed override HashAlgorithm CreateHashing()
@@ -61,8 +43,8 @@ partial class NameBasedGuidGenerator
         {
             private volatile int DisposeState;
 
-            internal Disposable(Guid hashspaceId, Func<HashAlgorithm> hashingFactory)
-                : base(hashspaceId, hashingFactory)
+            internal Disposable(Func<HashAlgorithm> hashingFactory)
+                : base(hashingFactory)
             {
                 this.DisposeState = 0;
             }
@@ -106,9 +88,20 @@ partial class NameBasedGuidGenerator
         {
             private readonly HashAlgorithm GlobalHashing;
 
-            internal Synchronized(Guid hashspaceId, HashAlgorithm hashing)
-                : base(hashspaceId, hashing.Identity)
+            internal Synchronized(HashAlgorithm hashing)
+                : base(hashing.Identity)
             {
+                if (hashing is null)
+                {
+                    throw new ArgumentNullException(nameof(hashing));
+                }
+                if (hashing.HashSize < 16 * 8)
+                {
+                    throw new ArgumentException(
+                        "The algorithm's hash size is less than 128 bits.",
+                        nameof(hashing));
+                }
+
                 this.GlobalHashing = hashing;
                 this.LocalHashing.Dispose();
             }
