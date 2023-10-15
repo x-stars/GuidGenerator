@@ -8,26 +8,26 @@ partial class GuidGenerator
 {
     /// <summary>
     /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-256 hashspace ID and hash algorithm.
+    /// using the SHA-256 hash algorithm.
     /// </summary>
     /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-256 hashspace ID and hash algorithm.</returns>
+    /// using the SHA-256 hash algorithm.</returns>
     public static INameBasedGuidGenerator Version8NSha256 => NameBasedGuidGenerator.CustomHashing.InstanceSha256;
 
     /// <summary>
     /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-384 hashspace ID and hash algorithm.
+    /// using the SHA-384 hash algorithm.
     /// </summary>
     /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-384 hashspace ID and hash algorithm.</returns>
+    /// using the SHA-384 hash algorithm.</returns>
     public static INameBasedGuidGenerator Version8NSha384 => NameBasedGuidGenerator.CustomHashing.InstanceSha384;
 
     /// <summary>
     /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-512 hashspace ID and hash algorithm.
+    /// using the SHA-512 hash algorithm.
     /// </summary>
     /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-512 hashspace ID and hash algorithm.</returns>
+    /// using the SHA-512 hash algorithm.</returns>
     public static INameBasedGuidGenerator Version8NSha512 => NameBasedGuidGenerator.CustomHashing.InstanceSha512;
 
 #if NET8_0_OR_GREATER
@@ -84,36 +84,32 @@ partial class GuidGenerator
 
     /// <summary>
     /// Creates a new <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the specified hashspace ID and hash algorithm with a synchronization lock.
+    /// using the specified hash algorithm with a synchronization lock.
     /// </summary>
-    /// <param name="hashspaceId">The hashspace ID used to identify the hash algorithm.</param>
     /// <param name="hashing">The hash algorithm used to transform input values.</param>
     /// <returns>A new <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using <paramref name="hashspaceId"/> and <paramref name="hashing"/>
-    /// with a synchronization lock.</returns>
+    /// using <paramref name="hashing"/> with a synchronization lock.</returns>
     /// <exception cref="ArgumentNullException">
     /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">
     /// <see cref="HashAlgorithm.HashSize"/> of <paramref name="hashing"/> is less than 128.</exception>
-    public static INameBasedGuidGenerator CreateVersion8N(Guid hashspaceId, HashAlgorithm hashing)
+    public static INameBasedGuidGenerator CreateVersion8N(HashAlgorithm hashing)
     {
-        return NameBasedGuidGenerator.CustomHashing.CreateInstance(hashspaceId, hashing);
+        return NameBasedGuidGenerator.CustomHashing.CreateInstance(hashing);
     }
 
     /// <summary>
     /// Creates a new <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using the specified hashspace ID and hash algorithm creation delegate.
+    /// using the specified hash algorithm creation delegate.
     /// </summary>
-    /// <param name="hashspaceId">The hashspace ID used to identify the hash algorithm.</param>
     /// <param name="hashingFactory">The delegate used to create the hash algorithm.</param>
     /// <returns>A new <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// using <paramref name="hashspaceId"/> and the hash algorithm
-    /// created by <paramref name="hashingFactory"/>.</returns>
+    /// using the hash algorithm created by <paramref name="hashingFactory"/>.</returns>
     /// <exception cref="ArgumentNullException">
     /// <paramref name="hashingFactory"/> is <see langword="null"/>.</exception>
-    public static INameBasedGuidGenerator CreateVersion8N(Guid hashspaceId, Func<HashAlgorithm> hashingFactory)
+    public static INameBasedGuidGenerator CreateVersion8N(Func<HashAlgorithm> hashingFactory)
     {
-        return NameBasedGuidGenerator.CustomHashing.CreateInstance(hashspaceId, hashingFactory);
+        return NameBasedGuidGenerator.CustomHashing.CreateInstance(hashingFactory);
     }
 
     /// <summary>

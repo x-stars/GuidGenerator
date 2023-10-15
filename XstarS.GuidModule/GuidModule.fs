@@ -40,13 +40,6 @@ module Guid =
     /// </summary>
     type Namespace = GuidNamespaces
 
-#if !UUIDREV_DISABLE
-    /// <summary>
-    /// An abbreviation for the type <see cref="T:XNetEx.Guids.GuidHashspaces"/>.
-    /// </summary>
-    type Hashspace = GuidHashspaces
-#endif
-
     /// <summary>
     /// An abbreviation for the type <see cref="T:XNetEx.Guids.Generators.GuidGenerator"/>.
     /// </summary>
@@ -107,92 +100,6 @@ module Guid =
     [<ValueAsStaticProperty>]
     [<CompiledName("NamespaceX500")>]
     let nsX500: Guid = Namespace.X500
-
-#if !UUIDREV_DISABLE
-    /// <summary>
-    /// Represents the hashspace ID for the SHA-224 hash algorithm.
-    /// </summary>
-    [<ValueAsStaticProperty>]
-    [<CompiledName("HashspaceSha224")>]
-    let hsSha224: Guid = Hashspace.Sha224
-
-    /// <summary>
-    /// Represents the hashspace ID for the SHA-256 hash algorithm.
-    /// </summary>
-    [<ValueAsStaticProperty>]
-    [<CompiledName("HashspaceSha256")>]
-    let hsSha256: Guid = Hashspace.Sha256
-
-    /// <summary>
-    /// Represents the hashspace ID for the SHA-384 hash algorithm.
-    /// </summary>
-    [<ValueAsStaticProperty>]
-    [<CompiledName("HashspaceSha384")>]
-    let hsSha384: Guid = Hashspace.Sha384
-
-    /// <summary>
-    /// Represents the hashspace ID for the SHA-512 hash algorithm.
-    /// </summary>
-    [<ValueAsStaticProperty>]
-    [<CompiledName("HashspaceSha512")>]
-    let hsSha512: Guid = Hashspace.Sha512
-
-    /// <summary>
-    /// Represents the hashspace ID for the SHA-512/224 hash algorithm.
-    /// </summary>
-    [<ValueAsStaticProperty>]
-    [<CompiledName("HashspaceSha512T224")>]
-    let hsSha512T224: Guid = Hashspace.Sha512T224
-
-    /// <summary>
-    /// Represents the hashspace ID for the SHA-512/256 hash algorithm.
-    /// </summary>
-    [<ValueAsStaticProperty>]
-    [<CompiledName("HashspaceSha512T256")>]
-    let hsSha512T256: Guid = Hashspace.Sha512T256
-
-    /// <summary>
-    /// Represents the hashspace ID for the SHA3-224 hash algorithm.
-    /// </summary>
-    [<ValueAsStaticProperty>]
-    [<CompiledName("HashspaceSha3D224")>]
-    let hsSha3D224: Guid = Hashspace.Sha3D224
-
-    /// <summary>
-    /// Represents the hashspace ID for the SHA3-256 hash algorithm.
-    /// </summary>
-    [<ValueAsStaticProperty>]
-    [<CompiledName("HashspaceSha3D256")>]
-    let hsSha3D256: Guid = Hashspace.Sha3D256
-
-    /// <summary>
-    /// Represents the hashspace ID for the SHA3-384 hash algorithm.
-    /// </summary>
-    [<ValueAsStaticProperty>]
-    [<CompiledName("HashspaceSha3D384")>]
-    let hsSha3D384: Guid = Hashspace.Sha3D384
-
-    /// <summary>
-    /// Represents the hashspace ID for the SHA3-512 hash algorithm.
-    /// </summary>
-    [<ValueAsStaticProperty>]
-    [<CompiledName("HashspaceSha3D512")>]
-    let hsSha3D512: Guid = Hashspace.Sha3D512
-
-    /// <summary>
-    /// Represents the hashspace ID for the SHAKE128 hash algorithm.
-    /// </summary>
-    [<ValueAsStaticProperty>]
-    [<CompiledName("HashspaceShake128")>]
-    let hsShake128: Guid = Hashspace.Shake128
-
-    /// <summary>
-    /// Represents the hashspace ID for the SHAKE256 hash algorithm.
-    /// </summary>
-    [<ValueAsStaticProperty>]
-    [<CompiledName("HashspaceShake256")>]
-    let hsShake256: Guid = Hashspace.Shake256
-#endif
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 1.
@@ -407,83 +314,80 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// example implementation (UUIDREV Appendix C.7).
+    /// example implementation (UUIDREV Appendix C.1).
     /// </summary>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// example implementation (UUIDREV Appendix C.7).</returns>
+    /// example implementation (UUIDREV Appendix C.1).</returns>
     [<CompiledName("NewVersion8")>]
     let newV8 () : Guid = Generator.Version8.NewGuid()
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the specified hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the specified hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
-    /// <param name="hashId">The hashspace <see cref="T:System.Guid"/>.</param>
     /// <param name="hashing">The hash algorithm.</param>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using <paramref name="hashId"/> and <paramref name="hashing"/>.</returns>
+    /// using <paramref name="hashing"/>.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="hashing"/> or <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.ArgumentException">
     /// The hash size of <paramref name="hashing"/> is less than 128 bits.</exception>
     [<CompiledName("NewVersion8N")>]
-    let newV8N (hashId: Guid) (hashing: HashAlgorithm)
+    let newV8N (hashing: HashAlgorithm)
                (nsId: Guid) (name: byte[]) : Guid =
-        Generator.CreateVersion8N(hashId, hashing).NewGuid(nsId, name)
+        Generator.CreateVersion8N(hashing).NewGuid(nsId, name)
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the specified hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the specified hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
-    /// <param name="hashId">The hashspace <see cref="T:System.Guid"/>.</param>
     /// <param name="hashing">The hash algorithm.</param>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using <paramref name="hashId"/> and <paramref name="hashing"/>.</returns>
+    /// using <paramref name="hashing"/>.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="hashing"/> or <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.ArgumentException">
     /// The hash size of <paramref name="hashing"/> is less than 128 bits.</exception>
     [<CompiledName("NewVersion8NByString")>]
-    let newV8NS (hashId: Guid) (hashing: HashAlgorithm)
+    let newV8NS (hashing: HashAlgorithm)
                 (nsId: Guid) (name: string) : Guid =
-        Generator.CreateVersion8N(hashId, hashing).NewGuid(nsId, name)
+        Generator.CreateVersion8N(hashing).NewGuid(nsId, name)
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the specified hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the specified hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
-    /// <param name="hashId">The hashspace <see cref="T:System.Guid"/>.</param>
     /// <param name="hashing">The hash algorithm.</param>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using <paramref name="hashId"/> and <paramref name="hashing"/>.</returns>
+    /// using <paramref name="hashing"/>.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="hashing"/> or <paramref name="name"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.ArgumentException">
     /// The hash size of <paramref name="hashing"/> is less than 128 bits.</exception>
     [<CompiledName("NewVersion8NByEncoding")>]
-    let newV8NEnc (hashId: Guid) (hashing: HashAlgorithm)
+    let newV8NEnc (hashing: HashAlgorithm)
                   (nsId: Guid) (enc: Text.Encoding) (name: string) : Guid =
-        Generator.CreateVersion8N(hashId, hashing).NewGuid(nsId, name, enc)
+        Generator.CreateVersion8N(hashing).NewGuid(nsId, name, enc)
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA-256 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHA-256 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-256 hashspace ID and hash algorithm.</returns>
+    /// using the SHA-256 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion8NSha256")>]
@@ -492,13 +396,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA-256 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHA-256 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-256 hashspace ID and hash algorithm.</returns>
+    /// using the SHA-256 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion8NSha256ByString")>]
@@ -507,14 +411,14 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA-256 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHA-256 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-256 hashspace ID and hash algorithm.</returns>
+    /// using the SHA-256 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion8NSha256ByEncoding")>]
@@ -523,13 +427,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA-384 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHA-384 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-384 hashspace ID and hash algorithm.</returns>
+    /// using the SHA-384 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion8NSha384")>]
@@ -538,13 +442,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA-384 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHA-384 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-384 hashspace ID and hash algorithm.</returns>
+    /// using the SHA-384 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion8NSha384ByString")>]
@@ -553,14 +457,14 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA-384 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHA-384 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-384 hashspace ID and hash algorithm.</returns>
+    /// using the SHA-384 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion8NSha384ByEncoding")>]
@@ -569,13 +473,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA-512 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHA-512 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-512 hashspace ID and hash algorithm.</returns>
+    /// using the SHA-512 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion8NSha512")>]
@@ -584,13 +488,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA-512 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHA-512 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-512 hashspace ID and hash algorithm.</returns>
+    /// using the SHA-512 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion8NSha512ByString")>]
@@ -599,14 +503,14 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA-512 hashspace ID and hash algorithm
+    /// of RFC 4122 UUID revision version 8 using the SHA-512 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <param name="name">The name string.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// using the SHA-512 hashspace ID and hash algorithm.</returns>
+    /// using the SHA-512 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
     [<CompiledName("NewVersion8NSha512ByEncoding")>]

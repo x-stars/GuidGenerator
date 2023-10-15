@@ -10,26 +10,11 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 {
     private readonly ThreadLocal<HashAlgorithm?> LocalHashing;
 
-#if !UUIDREV_DISABLE
-    private readonly Guid? HashspaceId;
-#endif
-
-#if !UUIDREV_DISABLE
-    protected NameBasedGuidGenerator() : this(hashspaceId: null) { }
-
-    protected NameBasedGuidGenerator(Guid? hashspaceId)
-    {
-        this.LocalHashing = new ThreadLocal<HashAlgorithm?>(
-            this.CreateHashing, trackAllValues: true);
-        this.HashspaceId = hashspaceId;
-    }
-#else
     protected NameBasedGuidGenerator()
     {
         this.LocalHashing = new ThreadLocal<HashAlgorithm?>(
             this.CreateHashing, trackAllValues: true);
     }
-#endif
 
     protected virtual bool TrackHashing => false;
 

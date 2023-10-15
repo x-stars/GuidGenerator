@@ -9,7 +9,7 @@ namespace XNetEx.Guids.Generators;
 
 partial class NameBasedGuidGenerator
 {
-    partial class CustomHashing : NameBasedGuidGenerator
+    partial class CustomHashing
     {
         private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha256;
 
@@ -38,7 +38,7 @@ partial class NameBasedGuidGenerator
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
                     return NameBasedGuidGenerator.CustomHashing.SingletonSha256 ??=
-                        new NameBasedGuidGenerator.CustomHashing(GuidHashspaces.Sha256, SHA256.Create);
+                        new NameBasedGuidGenerator.CustomHashing(SHA256.Create);
                 }
 
                 return NameBasedGuidGenerator.CustomHashing.SingletonSha256 ?? Initialize();
@@ -54,7 +54,7 @@ partial class NameBasedGuidGenerator
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
                     return NameBasedGuidGenerator.CustomHashing.SingletonSha384 ??=
-                        new NameBasedGuidGenerator.CustomHashing(GuidHashspaces.Sha384, SHA384.Create);
+                        new NameBasedGuidGenerator.CustomHashing(SHA384.Create);
                 }
 
                 return NameBasedGuidGenerator.CustomHashing.SingletonSha384 ?? Initialize();
@@ -70,7 +70,7 @@ partial class NameBasedGuidGenerator
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
                     return NameBasedGuidGenerator.CustomHashing.SingletonSha512 ??=
-                        new NameBasedGuidGenerator.CustomHashing(GuidHashspaces.Sha512, SHA512.Create);
+                        new NameBasedGuidGenerator.CustomHashing(SHA512.Create);
                 }
 
                 return NameBasedGuidGenerator.CustomHashing.SingletonSha512 ?? Initialize();

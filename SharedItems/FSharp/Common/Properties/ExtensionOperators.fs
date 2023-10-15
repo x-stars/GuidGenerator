@@ -25,7 +25,7 @@ module internal ExtensionOperators =
 
     /// <summary>
     /// Reverses the order of arguments of an infix operator
-    /// to translate it into a normal function.
+    /// to translate it into a normal F# function.
     /// </summary>
     /// <param name="func">The infix operator function.</param>
     /// <param name="arg2">The right operand of the operator.</param>
@@ -41,7 +41,7 @@ module internal ExtensionOperators =
     /// <param name="action">The action to apply.</param>
     /// <param name="value">The input value.</param>
     /// <returns>The input value.</returns>
-    [<CompiledName("TeeActionBack")>]
+    [<CompiledName("TeeAction")>]
     let inline tee (action: 'T -> unit) (value: 'T) : 'T =
         action value
         value
@@ -53,7 +53,7 @@ module internal ExtensionOperators =
     /// <param name="value">The input value.</param>
     /// <param name="action">The action to apply.</param>
     /// <returns>The input value.</returns>
-    [<CompiledName("TeeAction")>]
+    [<CompiledName("op_TeeAction")>]
     let inline ( |- ) (value: 'T) (action: 'T -> unit) : 'T =
         action value
         value
