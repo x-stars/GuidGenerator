@@ -36,15 +36,6 @@ partial class NameBasedGuidGenerator
     private void AppendPrefixData(HashAlgorithm hashing, Guid nsId)
     {
         var guidBytes = (stackalloc byte[16]);
-#if !UUIDREV_DISABLE
-        var hashId = this.HashspaceId;
-        if (hashId is Guid hashIdValue)
-        {
-            var hashIdResult = hashIdValue.TryWriteUuidBytes(guidBytes);
-            Debug.Assert(hashIdResult);
-            hashing.AppendData(guidBytes);
-        }
-#endif
         var nsIdResult = nsId.TryWriteUuidBytes(guidBytes);
         Debug.Assert(nsIdResult);
         hashing.AppendData(guidBytes);
@@ -94,17 +85,6 @@ partial class NameBasedGuidGenerator
     private unsafe void AppendPrefixData(HashAlgorithm hashing, Guid nsId)
     {
         var guidBytes = LocalBuffers.GuidBytes;
-#if !UUIDREV_DISABLE
-        var hashId = this.HashspaceId;
-        if (hashId is Guid hashIdValue)
-        {
-            fixed (byte* pGuidBytes = &guidBytes[0])
-            {
-                *(Guid*)pGuidBytes = hashIdValue.ToBigEndian();
-            }
-            hashing.AppendData(guidBytes);
-        }
-#endif
         fixed (byte* pGuidBytes = &guidBytes[0])
         {
             *(Guid*)pGuidBytes = nsId.ToBigEndian();
