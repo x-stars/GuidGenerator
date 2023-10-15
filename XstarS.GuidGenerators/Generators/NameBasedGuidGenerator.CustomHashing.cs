@@ -15,7 +15,8 @@ partial class NameBasedGuidGenerator
 
         private CustomHashing(Func<HashAlgorithm> hashingFactory)
         {
-            this.HashingFactory = hashingFactory;
+            this.HashingFactory = hashingFactory ??
+                throw new ArgumentNullException(nameof(hashingFactory));
         }
 
         public sealed override GuidVersion Version => GuidVersion.Version8;
@@ -24,27 +25,11 @@ partial class NameBasedGuidGenerator
 
         internal static NameBasedGuidGenerator.CustomHashing CreateInstance(HashAlgorithm hashing)
         {
-            if (hashing is null)
-            {
-                throw new ArgumentNullException(nameof(hashing));
-            }
-            if (hashing.HashSize < 16 * 8)
-            {
-                throw new ArgumentException(
-                    "The algorithm's hash size is less than 128 bits.",
-                    nameof(hashing));
-            }
-
             return new NameBasedGuidGenerator.CustomHashing.Synchronized(hashing);
         }
 
         internal static NameBasedGuidGenerator.CustomHashing CreateInstance(Func<HashAlgorithm> hashingFactory)
         {
-            if (hashingFactory is null)
-            {
-                throw new ArgumentNullException(nameof(hashingFactory));
-            }
-
             return new NameBasedGuidGenerator.CustomHashing.Disposable(hashingFactory);
         }
 
@@ -106,6 +91,17 @@ partial class NameBasedGuidGenerator
             internal Synchronized(HashAlgorithm hashing)
                 : base(hashing.Identity)
             {
+                if (hashing is null)
+                {
+                    throw new ArgumentNullException(nameof(hashing));
+                }
+                if (hashing.HashSize < 16 * 8)
+                {
+                    throw new ArgumentException(
+                        "The algorithm's hash size is less than 128 bits.",
+                        nameof(hashing));
+                }
+
                 this.GlobalHashing = hashing;
                 this.LocalHashing.Dispose();
             }

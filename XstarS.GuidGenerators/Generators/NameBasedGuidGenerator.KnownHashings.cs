@@ -6,7 +6,7 @@ namespace XNetEx.Guids.Generators;
 
 partial class NameBasedGuidGenerator
 {
-    partial class CustomHashing : NameBasedGuidGenerator
+    partial class CustomHashing
     {
         private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha256;
 
