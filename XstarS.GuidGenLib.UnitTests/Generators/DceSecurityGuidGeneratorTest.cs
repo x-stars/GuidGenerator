@@ -59,8 +59,7 @@ public class DceSecurityGuidGeneratorTest
         var tsTicks = timestamp.Ticks;
         var nowTicks = DateTime.UtcNow.Ticks;
         var ticksDiff = Math.Abs(nowTicks - tsTicks);
-        var ticksPerSec = TimeSpan.FromSeconds(10).Ticks;
-        Assert.IsTrue(ticksDiff < (ticksPerSec * 60 * 10));
+        Assert.IsTrue(ticksDiff < (TimeSpan.TicksPerMinute * 10));
     }
 
     [TestMethod]
