@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using XNetEx.Guids.Components;
 
@@ -110,11 +111,12 @@ public static partial class GuidExtensions
         var version = guid.GetVersion();
         var components = GuidComponents.OfVersion(version);
         var tsTicks = components.GetTimestamp(ref guid);
-        try
+        Debug.Assert(tsTicks >= DateTime.MinValue.Ticks);
+        if (tsTicks <= DateTime.MaxValue.Ticks)
         {
             timestamp = new DateTime(tsTicks, DateTimeKind.Utc);
         }
-        catch (ArgumentOutOfRangeException)
+        else
         {
             const ulong utcFlag = 1UL << 62;
             const ulong flagsMask = 3UL << 62;
