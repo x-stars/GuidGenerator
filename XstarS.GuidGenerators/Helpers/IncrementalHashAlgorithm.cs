@@ -297,7 +297,7 @@ namespace System.Security.Cryptography
                             }
                         }
                     }
-                    Debug.Assert(false, "Cannot find the disposed flag field.");
+                    Debug.Fail("Cannot find the disposed flag field.");
                     return -1;
                 }
 #endif
