@@ -11,14 +11,14 @@ open XNetEx.FSharp.UnitTesting.MSTest
 [<DoNotParallelize>]
 type GuidGeneratorStateTest() =
 
-    let catchStateExn () : ref<exn> =
+    let catchStateLoadExn () : inref<exn> =
         let refExn = ref null
         Guid.onStateExn (fun e ->
             if e.OperationType = FileAccess.Read then
-                refExn.Value <- e.Exception)
-        refExn
+                refExn.contents <- e.Exception)
+        &refExn.contents
 
-    let createTempFile (fileName: outref<string>): IDisposable =
+    let createTempFile (fileName: outref<string>) : IDisposable =
         let tempFile = Path.GetTempFileName()
         fileName <- tempFile
         new DisposeAction(fun _ ->
@@ -30,7 +30,7 @@ type GuidGeneratorStateTest() =
 
     [<TestMethod>]
     member _.LoadGeneratorState_FileWithRandomNodeId_GetNodeIdFromFile() =
-        let refExn = catchStateExn ()
+        let exception' = &catchStateLoadExn ()
         let mutable fileName = null
         use tempFile = createTempFile &fileName
         let addByte1 = (op (+) 1) >> byte
@@ -46,7 +46,7 @@ type GuidGeneratorStateTest() =
         fileName
         |> Guid.loadState
         |> Assert.true'
-        refExn.Value
+        exception'
         |> Assert.null'
         Guid.newV1R ()
         |> Guid.tryGetNodeId
@@ -56,14 +56,14 @@ type GuidGeneratorStateTest() =
 
     [<TestMethod>]
     member _.OnStateException_NonExistingFile_CatchFileNotFoundException() =
-        let refExn = catchStateExn ()
+        let exception' = &catchStateLoadExn ()
         let mutable fileName = null
         use tempFile = createTempFile &fileName
         fileName
         |> tee (File.Delete)
         |> Guid.loadState
         |> Assert.false'
-        refExn.Value
+        exception'
         |> Assert.ofType<FileNotFoundException>
 
     [<TestCleanup>]
