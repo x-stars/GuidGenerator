@@ -41,8 +41,7 @@ partial class TimeBasedGuidGeneratorTest
         var tsTicks = timestamp.Ticks;
         var nowTicks = DateTime.UtcNow.Ticks;
         var ticksDiff = Math.Abs(nowTicks - tsTicks);
-        var ticksPerSec = TimeSpan.FromSeconds(1).Ticks;
-        Assert.IsTrue(ticksDiff < ticksPerSec);
+        Assert.IsTrue(ticksDiff < TimeSpan.TicksPerSecond);
     }
 
     [TestMethod]
