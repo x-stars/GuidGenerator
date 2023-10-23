@@ -14,12 +14,10 @@ partial class NameBasedGuidGenerator
         var hashing = this.GetHashing();
         try
         {
-            hashing.Initialize();
-            this.AppendPrefixData(hashing, nsId);
-            hashing.AppendData(name);
             var hashSize = hashing.HashSize / 8;
             var hash = (stackalloc byte[hashSize]);
-            var result = hashing.TryGetFinalHash(hash, out var bytesWritten);
+            var result = this.TryComputeHash(
+                hashing, nsId, name, hash, out var bytesWritten);
             if (!result || (bytesWritten != hashSize))
             {
                 throw new InvalidOperationException(
@@ -33,12 +31,17 @@ partial class NameBasedGuidGenerator
         }
     }
 
-    private void AppendPrefixData(HashAlgorithm hashing, Guid nsId)
+    private bool TryComputeHash(
+        HashAlgorithm hashing, Guid nsId, ReadOnlySpan<byte> name,
+        Span<byte> destination, out int bytesWritten)
     {
+        hashing.Initialize();
         var guidBytes = (stackalloc byte[16]);
         var nsIdResult = nsId.TryWriteUuidBytes(guidBytes);
         Debug.Assert(nsIdResult);
         hashing.AppendData(guidBytes);
+        hashing.AppendData(name);
+        return hashing.TryGetFinalHash(destination, out bytesWritten);
     }
 
     private Guid HashToGuid(ReadOnlySpan<byte> hash)
@@ -70,10 +73,7 @@ partial class NameBasedGuidGenerator
         var hashing = this.GetHashing();
         try
         {
-            hashing.Initialize();
-            this.AppendPrefixData(hashing, nsId);
-            hashing.AppendData(name);
-            var hash = hashing.GetFinalHash();
+            var hash = this.ComputeHash(hashing, nsId, name);
             return this.HashToGuid(hash);
         }
         finally
@@ -82,14 +82,18 @@ partial class NameBasedGuidGenerator
         }
     }
 
-    private unsafe void AppendPrefixData(HashAlgorithm hashing, Guid nsId)
+    private unsafe byte[] ComputeHash(
+        HashAlgorithm hashing, Guid nsId, byte[] name)
     {
+        hashing.Initialize();
         var guidBytes = LocalBuffers.GuidBytes;
         fixed (byte* pGuidBytes = &guidBytes[0])
         {
             *(Guid*)pGuidBytes = nsId.ToBigEndian();
         }
         hashing.AppendData(guidBytes);
+        hashing.AppendData(name);
+        return hashing.GetFinalHash();
     }
 
     private unsafe Guid HashToGuid(byte[] hash)
