@@ -16,7 +16,7 @@ partial class GuidGeneratorStateTest
         _ = GuidGenerator.SetStateStorageFile(fileName);
     }
 
-    private ref Exception? CatchStateLoadException()
+    private ref readonly Exception? CatchStateLoadException()
     {
         var catchBox = new StrongBox<Exception?>();
         GuidGenerator.StateStorageException += (sender, e) =>

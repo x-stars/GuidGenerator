@@ -15,8 +15,7 @@ public partial class CustomGuidGeneratorTest
         var timestamp = guidGen.GetCurrentTimestamp();
         var nowTicks = DateTime.UtcNow.Ticks - epoch.Ticks;
         var ticksDiff = Math.Abs(nowTicks - timestamp);
-        var ticksPerSec = TimeSpan.FromSeconds(1).Ticks;
-        Assert.IsTrue(ticksDiff < ticksPerSec);
+        Assert.IsTrue(ticksDiff < TimeSpan.TicksPerSecond);
     }
 
     [TestMethod]
