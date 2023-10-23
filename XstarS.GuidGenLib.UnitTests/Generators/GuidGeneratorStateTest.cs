@@ -11,7 +11,7 @@ public partial class GuidGeneratorStateTest
     public void SetStateStorageFile_NonExistingFile_CatchFileNotFoundException()
     {
         using var tempFile = this.CreateTempFile(out var fileName);
-        ref var exception = ref this.CatchStateLoadException();
+        ref readonly var exception = ref this.CatchStateLoadException();
         File.Delete(fileName);
         var loadResult = GuidGenerator.SetStateStorageFile(fileName);
         Assert.IsFalse(loadResult);
@@ -22,7 +22,7 @@ public partial class GuidGeneratorStateTest
     public void SetStateStorageFile_EmptyFile_CatchEndOfStreamException()
     {
         using var tempFile = this.CreateTempFile(out var fileName);
-        ref var exception = ref this.CatchStateLoadException();
+        ref readonly var exception = ref this.CatchStateLoadException();
         var loadResult = GuidGenerator.SetStateStorageFile(fileName);
         Assert.IsFalse(loadResult);
         Assert.IsInstanceOfType(exception, typeof(EndOfStreamException));
@@ -32,7 +32,7 @@ public partial class GuidGeneratorStateTest
     public void SetStateStorageFile_LockedFile_CatchIOException()
     {
         using var tempFile = this.CreateTempFile(out var fileName);
-        ref var exception = ref this.CatchStateLoadException();
+        ref readonly var exception = ref this.CatchStateLoadException();
         using var fileLock = new FileStream(fileName,
             FileMode.Create, FileAccess.ReadWrite, FileShare.None);
         var loadResult = GuidGenerator.SetStateStorageFile(fileName);
@@ -44,7 +44,7 @@ public partial class GuidGeneratorStateTest
     public void SetStateStorageFile_UnknownVersionNumber_CatchInvalidDataException()
     {
         using var tempFile = this.CreateTempFile(out var fileName);
-        ref var exception = ref this.CatchStateLoadException();
+        ref readonly var exception = ref this.CatchStateLoadException();
         this.WriteStateFieldsToFile(fileName, version: 1234);
         var loadResult = GuidGenerator.SetStateStorageFile(fileName);
         Assert.IsFalse(loadResult);
@@ -55,7 +55,7 @@ public partial class GuidGeneratorStateTest
     public void SetStateStorageFile_FileWithMaxTimestamp_GetIncrementClockSeq()
     {
         using var tempFile = this.CreateTempFile(out var fileName);
-        ref var exception = ref this.CatchStateLoadException();
+        ref readonly var exception = ref this.CatchStateLoadException();
         var inputClockSeq = 42;
         this.WriteStateFieldsToFile(fileName, version: 4122,
             timestamp: long.MaxValue, clockSeq: inputClockSeq);
@@ -71,7 +71,7 @@ public partial class GuidGeneratorStateTest
     public void SetStateStorageFile_FileWithClockSeqField_GetClockSeqFromFile()
     {
         using var tempFile = this.CreateTempFile(out var fileName);
-        ref var exception = ref this.CatchStateLoadException();
+        ref readonly var exception = ref this.CatchStateLoadException();
         this.WriteStateFieldsToFile(fileName, version: 4122, clockSeq: 42);
         var loadResult = GuidGenerator.SetStateStorageFile(fileName);
         Assert.IsTrue(loadResult);
@@ -85,7 +85,7 @@ public partial class GuidGeneratorStateTest
     public void SetStateStorageFile_FileWithPhysicalClockSeqField_GetClockSeqFromFile()
     {
         using var tempFile = this.CreateTempFile(out var fileName);
-        ref var exception = ref this.CatchStateLoadException();
+        ref readonly var exception = ref this.CatchStateLoadException();
         this.WriteStateFieldsToFile(fileName, version: 4122, phyClkSeq: 42);
         var loadResult = GuidGenerator.SetStateStorageFile(fileName);
         Assert.IsTrue(loadResult);
@@ -99,7 +99,7 @@ public partial class GuidGeneratorStateTest
     public void SetStateStorageFile_FileWithRandomClockSeqField_GetClockSeqFromFile()
     {
         using var tempFile = this.CreateTempFile(out var fileName);
-        ref var exception = ref this.CatchStateLoadException();
+        ref readonly var exception = ref this.CatchStateLoadException();
         this.WriteStateFieldsToFile(fileName, version: 4122, randClkSeq: 42);
         var loadResult = GuidGenerator.SetStateStorageFile(fileName);
         Assert.IsTrue(loadResult);
@@ -117,7 +117,7 @@ public partial class GuidGeneratorStateTest
     public void SetStateStorageFile_FileWithBothClockSeqFields_GetClockSeqFromFile()
     {
         using var tempFile = this.CreateTempFile(out var fileName);
-        ref var exception = ref this.CatchStateLoadException();
+        ref readonly var exception = ref this.CatchStateLoadException();
         this.WriteStateFieldsToFile(fileName, version: 4122, phyClkSeq: 42, randClkSeq: 44);
         var loadResult = GuidGenerator.SetStateStorageFile(fileName);
         Assert.IsTrue(loadResult);
@@ -140,7 +140,7 @@ public partial class GuidGeneratorStateTest
         var guid0 = GuidGenerator.Version1.NewGuid();
         _ = guid0.TryGetClockSequence(out var clockSeq0);
         using var tempFile = this.CreateTempFile(out var fileName);
-        ref var exception = ref this.CatchStateLoadException();
+        ref readonly var exception = ref this.CatchStateLoadException();
         var inputNodeId = new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55 };
         this.WriteStateFieldsToFile(fileName, version: 4122, phyNodeId: inputNodeId);
         var loadResult = GuidGenerator.SetStateStorageFile(fileName);
@@ -156,7 +156,7 @@ public partial class GuidGeneratorStateTest
     public void SetStateStorageFile_FileWithRandomNodeId_GetNodeIdFromFile()
     {
         using var tempFile = this.CreateTempFile(out var fileName);
-        ref var exception = ref this.CatchStateLoadException();
+        ref readonly var exception = ref this.CatchStateLoadException();
         var inputNodeId = new byte[] { 0xFF, 0xEE, 0xDD, 0xCC, 0xBB, 0xAA };
         this.WriteStateFieldsToFile(fileName, version: 4122, randNodeId: inputNodeId);
         var loadResult = GuidGenerator.SetStateStorageFile(fileName);
@@ -172,7 +172,7 @@ public partial class GuidGeneratorStateTest
     public void SetStateStorageFile_FileWithNonFieldFlagSet_NotGetAnyField()
     {
         using var tempFile = this.CreateTempFile(out var fileName);
-        ref var exception = ref this.CatchStateLoadException();
+        ref readonly var exception = ref this.CatchStateLoadException();
         var inputClockSeq = 42;
         var inputNodeId0 = new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55 };
         var inputNodeId1 = new byte[] { 0xFF, 0xEE, 0xDD, 0xCC, 0xBB, 0xAA };

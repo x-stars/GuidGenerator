@@ -1,4 +1,4 @@
-﻿namespace XNetEx.FSharp.Core
+﻿namespace XNetEx.FSharp.Control
 
 open System
 
