@@ -516,6 +516,268 @@ module Guid =
     [<CompiledName("NewVersion8NSha512ByEncoding")>]
     let newV8NSha512Enc (nsId: Guid) (enc: Text.Encoding) (name: string) : Guid =
         Generator.Version8NSha512.NewGuid(nsId, name, enc)
+
+#if NET8_0_OR_GREATER
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance
+    /// of RFC 4122 UUID revision version 8 using the SHA3-256 hash algorithm
+    /// based on the specified namespace ID and name.
+    /// </summary>
+    /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
+    /// <param name="name">The name byte array.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHA3-256 hash algorithm.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.PlatformNotSupportedException">
+    /// This platform does not support the SHA3-256 hash algorithm.</exception>
+    [<CompiledName("NewVersion8NSha3D256")>]
+    let newV8NSha3D256 (nsId: Guid) (name: byte[]) : Guid =
+        Generator.Version8NSha3D256.NewGuid(nsId, name)
+
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance
+    /// of RFC 4122 UUID revision version 8 using the SHA3-256 hash algorithm
+    /// based on the specified namespace ID and name.
+    /// </summary>
+    /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
+    /// <param name="name">The name string.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHA3-256 hash algorithm.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.PlatformNotSupportedException">
+    /// This platform does not support the SHA3-256 hash algorithm.</exception>
+    [<CompiledName("NewVersion8NSha3D256ByString")>]
+    let newV8NSha3D256S (nsId: Guid) (name: string) : Guid =
+        Generator.Version8NSha3D256.NewGuid(nsId, name)
+
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance
+    /// of RFC 4122 UUID revision version 8 using the SHA3-256 hash algorithm
+    /// based on the specified namespace ID and name.
+    /// </summary>
+    /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
+    /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
+    /// <param name="name">The name string.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHA3-256 hash algorithm.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.PlatformNotSupportedException">
+    /// This platform does not support the SHA3-256 hash algorithm.</exception>
+    [<CompiledName("NewVersion8NSha3D256ByEncoding")>]
+    let newV8NSha3D256Enc (nsId: Guid) (enc: Text.Encoding) (name: string) : Guid =
+        Generator.Version8NSha3D256.NewGuid(nsId, name, enc)
+
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance
+    /// of RFC 4122 UUID revision version 8 using the SHA3-384 hash algorithm
+    /// based on the specified namespace ID and name.
+    /// </summary>
+    /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
+    /// <param name="name">The name byte array.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHA3-384 hash algorithm.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.PlatformNotSupportedException">
+    /// This platform does not support the SHA3-384 hash algorithm.</exception>
+    [<CompiledName("NewVersion8NSha3D384")>]
+    let newV8NSha3D384 (nsId: Guid) (name: byte[]) : Guid =
+        Generator.Version8NSha3D384.NewGuid(nsId, name)
+
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance
+    /// of RFC 4122 UUID revision version 8 using the SHA3-384 hash algorithm
+    /// based on the specified namespace ID and name.
+    /// </summary>
+    /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
+    /// <param name="name">The name string.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHA3-384 hash algorithm.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.PlatformNotSupportedException">
+    /// This platform does not support the SHA3-384 hash algorithm.</exception>
+    [<CompiledName("NewVersion8NSha3D384ByString")>]
+    let newV8NSha3D384S (nsId: Guid) (name: string) : Guid =
+        Generator.Version8NSha3D384.NewGuid(nsId, name)
+
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance
+    /// of RFC 4122 UUID revision version 8 using the SHA3-384 hash algorithm
+    /// based on the specified namespace ID and name.
+    /// </summary>
+    /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
+    /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
+    /// <param name="name">The name string.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHA3-384 hash algorithm.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.PlatformNotSupportedException">
+    /// This platform does not support the SHA3-384 hash algorithm.</exception>
+    [<CompiledName("NewVersion8NSha3D384ByEncoding")>]
+    let newV8NSha3D384Enc (nsId: Guid) (enc: Text.Encoding) (name: string) : Guid =
+        Generator.Version8NSha3D384.NewGuid(nsId, name, enc)
+
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance
+    /// of RFC 4122 UUID revision version 8 using the SHA3-512 hash algorithm
+    /// based on the specified namespace ID and name.
+    /// </summary>
+    /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
+    /// <param name="name">The name byte array.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHA3-512 hash algorithm.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.PlatformNotSupportedException">
+    /// This platform does not support the SHA3-512 hash algorithm.</exception>
+    [<CompiledName("NewVersion8NSha3D512")>]
+    let newV8NSha3D512 (nsId: Guid) (name: byte[]) : Guid =
+        Generator.Version8NSha3D512.NewGuid(nsId, name)
+
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance
+    /// of RFC 4122 UUID revision version 8 using the SHA3-512 hash algorithm
+    /// based on the specified namespace ID and name.
+    /// </summary>
+    /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
+    /// <param name="name">The name string.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHA3-512 hash algorithm.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.PlatformNotSupportedException">
+    /// This platform does not support the SHA3-512 hash algorithm.</exception>
+    [<CompiledName("NewVersion8NSha3D512ByString")>]
+    let newV8NSha3D512S (nsId: Guid) (name: string) : Guid =
+        Generator.Version8NSha3D512.NewGuid(nsId, name)
+
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance
+    /// of RFC 4122 UUID revision version 8 using the SHA3-512 hash algorithm
+    /// based on the specified namespace ID and name.
+    /// </summary>
+    /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
+    /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
+    /// <param name="name">The name string.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHA3-512 hash algorithm.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.PlatformNotSupportedException">
+    /// This platform does not support the SHA3-512 hash algorithm.</exception>
+    [<CompiledName("NewVersion8NSha3D512ByEncoding")>]
+    let newV8NSha3D512Enc (nsId: Guid) (enc: Text.Encoding) (name: string) : Guid =
+        Generator.Version8NSha3D512.NewGuid(nsId, name, enc)
+
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance
+    /// of RFC 4122 UUID revision version 8 using the SHAKE128 hash algorithm
+    /// based on the specified namespace ID and name.
+    /// </summary>
+    /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
+    /// <param name="name">The name byte array.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHAKE128 hash algorithm.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.PlatformNotSupportedException">
+    /// This platform does not support the SHAKE128 hash algorithm.</exception>
+    [<CompiledName("NewVersion8NShake128")>]
+    let newV8NShake128 (nsId: Guid) (name: byte[]) : Guid =
+        Generator.Version8NShake128.NewGuid(nsId, name)
+
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance
+    /// of RFC 4122 UUID revision version 8 using the SHAKE128 hash algorithm
+    /// based on the specified namespace ID and name.
+    /// </summary>
+    /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
+    /// <param name="name">The name string.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHAKE128 hash algorithm.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.PlatformNotSupportedException">
+    /// This platform does not support the SHAKE128 hash algorithm.</exception>
+    [<CompiledName("NewVersion8NShake128ByString")>]
+    let newV8NShake128S (nsId: Guid) (name: string) : Guid =
+        Generator.Version8NShake128.NewGuid(nsId, name)
+
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance
+    /// of RFC 4122 UUID revision version 8 using the SHAKE128 hash algorithm
+    /// based on the specified namespace ID and name.
+    /// </summary>
+    /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
+    /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
+    /// <param name="name">The name string.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHAKE128 hash algorithm.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.PlatformNotSupportedException">
+    /// This platform does not support the SHAKE128 hash algorithm.</exception>
+    [<CompiledName("NewVersion8NShake128ByEncoding")>]
+    let newV8NShake128Enc (nsId: Guid) (enc: Text.Encoding) (name: string) : Guid =
+        Generator.Version8NShake128.NewGuid(nsId, name, enc)
+
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance
+    /// of RFC 4122 UUID revision version 8 using the SHAKE256 hash algorithm
+    /// based on the specified namespace ID and name.
+    /// </summary>
+    /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
+    /// <param name="name">The name byte array.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHAKE256 hash algorithm.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.PlatformNotSupportedException">
+    /// This platform does not support the SHAKE256 hash algorithm.</exception>
+    [<CompiledName("NewVersion8NShake256")>]
+    let newV8NShake256 (nsId: Guid) (name: byte[]) : Guid =
+        Generator.Version8NShake256.NewGuid(nsId, name)
+
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance
+    /// of RFC 4122 UUID revision version 8 using the SHAKE256 hash algorithm
+    /// based on the specified namespace ID and name.
+    /// </summary>
+    /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
+    /// <param name="name">The name string.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHAKE256 hash algorithm.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.PlatformNotSupportedException">
+    /// This platform does not support the SHAKE256 hash algorithm.</exception>
+    [<CompiledName("NewVersion8NShake256ByString")>]
+    let newV8NShake256S (nsId: Guid) (name: string) : Guid =
+        Generator.Version8NShake256.NewGuid(nsId, name)
+
+    /// <summary>
+    /// Generates a new <see cref="T:System.Guid"/> instance
+    /// of RFC 4122 UUID revision version 8 using the SHAKE256 hash algorithm
+    /// based on the specified namespace ID and name.
+    /// </summary>
+    /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
+    /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
+    /// <param name="name">The name string.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHAKE256 hash algorithm.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.PlatformNotSupportedException">
+    /// This platform does not support the SHAKE256 hash algorithm.</exception>
+    [<CompiledName("NewVersion8NShake256ByEncoding")>]
+    let newV8NShake256Enc (nsId: Guid) (enc: Text.Encoding) (name: string) : Guid =
+        Generator.Version8NShake256.NewGuid(nsId, name, enc)
+#endif
 #endif
 
     /// <summary>
@@ -561,6 +823,20 @@ module Guid =
                  (f: byte, g: byte, h: byte, i: byte, j: byte, k: byte) : Guid =
         Guid(a, b, c, d, e, f, g, h, i, j, k)
 
+#if NET7_0_OR_GREATER
+    /// <summary>
+    /// Creates a new <see cref="Guid"/> instance
+    /// by using the specified 128-bit unsigned integer.
+    /// </summary>
+    /// <param name="value">A 128-bit unsigned integer
+    /// containing the value of the GUID.</param>
+    /// <returns>A new <see cref="Guid"/> instance
+    /// of the specified 128-bit unsigned integer.</returns>
+    [<CLSCompliant(false)>]
+    [<CompiledName("OfUInt128")>]
+    let ofUInt128 (value: UInt128) : Guid = Uuid.FromUInt128(value)
+#endif
+
     /// <summary>
     /// Creates a new <see cref="T:System.Guid"/> instance
     /// by using the specified byte array of fields in little-endian order.
@@ -600,6 +876,19 @@ module Guid =
                   struct (byte * byte * byte * byte * byte * byte)) =
         let (a, b, c, d, e, f, g, h, i, j, k) = guid.Deconstruct()
         struct (a, b, c, struct (d, e), struct (f, g, h, i, j, k))
+
+#if NET7_0_OR_GREATER
+    /// <summary>
+    /// Returns a 128-bit unsigned integer
+    /// that contains the value of the <see cref="Guid"/>.
+    /// </summary>
+    /// <param name="guid">The <see cref="Guid"/>.</param>
+    /// <returns>A 128-bit unsigned integer
+    /// that contains the value of the <see cref="Guid"/>.</returns>
+    [<CLSCompliant(false)>]
+    [<CompiledName("ToUInt128")>]
+    let toUInt128 (guid: Guid) : UInt128 = guid.ToUInt128()
+#endif
 
     /// <summary>
     /// Returns a 16-element byte array that contains fields

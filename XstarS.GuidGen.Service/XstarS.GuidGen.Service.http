@@ -1,0 +1,118 @@
+@XstarS_GuidGen_Service_HostAddress = http://localhost:5115
+
+GET {{XstarS_GuidGen_Service_HostAddress}}/
+Accept: application/json
+
+###
+
+GET {{XstarS_GuidGen_Service_HostAddress}}/v1
+Accept: application/json
+
+###
+
+GET {{XstarS_GuidGen_Service_HostAddress}}/v1?count=10
+Accept: application/json
+
+###
+
+GET {{XstarS_GuidGen_Service_HostAddress}}/v1r
+Accept: application/json
+
+###
+
+GET {{XstarS_GuidGen_Service_HostAddress}}/v2/person
+Accept: application/json
+
+###
+
+GET {{XstarS_GuidGen_Service_HostAddress}}/v2/group
+Accept: application/json
+
+###
+
+GET {{XstarS_GuidGen_Service_HostAddress}}/v2/org/42
+Accept: application/json
+
+###
+
+GET {{XstarS_GuidGen_Service_HostAddress}}/v3/dns/github.com
+Accept: application/json
+
+###
+
+POST {{XstarS_GuidGen_Service_HostAddress}}/v3/url
+Accept: application/json
+Content-Type: application/json
+
+#https://github.com/x-stars/GuidGenerator
+"aHR0cHM6Ly9naXRodWIuY29tL3gtc3RhcnMvR3VpZEdlbmVyYXRvcg=="
+
+###
+
+GET {{XstarS_GuidGen_Service_HostAddress}}/v4
+Accept: application/json
+
+###
+
+GET {{XstarS_GuidGen_Service_HostAddress}}/v4?count=10
+Accept: application/json
+
+###
+
+GET {{XstarS_GuidGen_Service_HostAddress}}/v5/dns/github.com
+Accept: application/json
+
+###
+
+POST {{XstarS_GuidGen_Service_HostAddress}}/v5/url
+Accept: application/json
+Content-Type: application/json
+
+#https://github.com/x-stars/GuidGenerator
+"aHR0cHM6Ly9naXRodWIuY29tL3gtc3RhcnMvR3VpZEdlbmVyYXRvcg=="
+
+###
+
+GET {{XstarS_GuidGen_Service_HostAddress}}/v6
+Accept: application/json
+
+###
+
+GET {{XstarS_GuidGen_Service_HostAddress}}/v6?count=10
+Accept: application/json
+
+###
+
+GET {{XstarS_GuidGen_Service_HostAddress}}/v6p
+Accept: application/json
+
+###
+
+GET {{XstarS_GuidGen_Service_HostAddress}}/v6r
+Accept: application/json
+
+###
+
+GET {{XstarS_GuidGen_Service_HostAddress}}/v7
+Accept: application/json
+
+###
+
+GET {{XstarS_GuidGen_Service_HostAddress}}/v8
+Accept: application/json
+
+###
+
+GET {{XstarS_GuidGen_Service_HostAddress}}/v8n/sha256/dns/github.com
+Accept: application/json
+
+###
+
+POST {{XstarS_GuidGen_Service_HostAddress}}/v8n/sha256/url
+Accept: application/json
+Content-Type: application/json
+
+#https://github.com/x-stars/GuidGenerator
+"aHR0cHM6Ly9naXRodWIuY29tL3gtc3RhcnMvR3VpZEdlbmVyYXRvcg=="
+
+###
