@@ -97,7 +97,7 @@ internal abstract class LocalIdProvider
             if (sid is null) { return 0; }
             var sidBytes = new byte[sid.BinaryLength];
             sid.GetBinaryForm(sidBytes, 0);
-#if NETCOREAPP3_0_OR_GREATER
+#if UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER
             return Unsafe.ReadUnaligned<int>(ref sidBytes[^4]);
 #elif NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
             return MemoryMarshal.Read<int>(

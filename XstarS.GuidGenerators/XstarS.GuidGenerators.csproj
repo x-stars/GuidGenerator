@@ -33,6 +33,8 @@
     <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
+  <Import Project="..\BuildItems\RefUnsafe.Build.props" />
+
   <ItemGroup Condition="'$(TargetFramework.Split(`-`)[0])'=='net5.0' Or
                         '$(TargetFramework.TrimEnd(`.0123456789`))'=='netcoreapp' Or
                         '$(TargetFramework.TrimEnd(`.0123456789`))'=='netstandard'">
