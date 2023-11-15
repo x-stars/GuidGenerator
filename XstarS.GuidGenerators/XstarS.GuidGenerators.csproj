@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;net472;netcoreapp3.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>net461;net472;net6.0;net8.0</TargetFrameworks>
     <TargetFrameworks>$(TargetFrameworks);netstandard2.0;netstandard2.1</TargetFrameworks>
     <RootNamespace>XNetEx.Guids</RootNamespace>
     <LangVersion>latest</LangVersion>
@@ -32,6 +32,8 @@
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
+
+  <Import Project="..\BuildItems\RefUnsafe.Build.props" />
 
   <ItemGroup Condition="'$(TargetFramework.Split(`-`)[0])'=='net5.0' Or
                         '$(TargetFramework.TrimEnd(`.0123456789`))'=='netcoreapp' Or

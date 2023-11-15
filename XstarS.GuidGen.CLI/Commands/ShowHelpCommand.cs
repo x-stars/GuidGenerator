@@ -73,7 +73,13 @@ internal sealed class ShowHelpCommand : ProgramCommand
             yield return "            or empty to read from standard input.";
 #if !UUIDREV_DISABLE
             yield return "    Hash    specify a well-known hash algorithm,";
+#if NET8_0_OR_GREATER
+            yield return "            which can be SHA256, SHA384, SHA512,";
+            yield return "                SHA3-256, SHA3-384, SHA3-512,";
+            yield return "                SHAKE128 or SHAKE256.";
+#else
             yield return "            which can be SHA256, SHA384 or SHA512.";
+#endif
 #endif
             yield return "    -?|-H|-Help";
             yield return "            show the current help message.";

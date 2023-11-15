@@ -30,6 +30,58 @@ partial class GuidGenerator
     /// using the SHA-512 hash algorithm.</returns>
     public static INameBasedGuidGenerator Version8NSha512 => NameBasedGuidGenerator.CustomHashing.InstanceSha512;
 
+#if NET8_0_OR_GREATER
+    /// <summary>
+    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHA3-256 hash algorithm.
+    /// </summary>
+    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHA3-256 hash algorithm.</returns>
+    /// <exception cref="PlatformNotSupportedException">
+    /// This platform does not support the SHA3-256 hash algorithm.</exception>
+    public static INameBasedGuidGenerator Version8NSha3D256 => NameBasedGuidGenerator.CustomHashing.InstanceSha3D256;
+
+    /// <summary>
+    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHA3-384 hash algorithm.
+    /// </summary>
+    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHA3-384 hash algorithm.</returns>
+    /// <exception cref="PlatformNotSupportedException">
+    /// This platform does not support the SHA3-384 hash algorithm.</exception>
+    public static INameBasedGuidGenerator Version8NSha3D384 => NameBasedGuidGenerator.CustomHashing.InstanceSha3D384;
+
+    /// <summary>
+    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHA3-512 hash algorithm.
+    /// </summary>
+    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHA3-512 hash algorithm.</returns>
+    /// <exception cref="PlatformNotSupportedException">
+    /// This platform does not support the SHA3-512 hash algorithm.</exception>
+    public static INameBasedGuidGenerator Version8NSha3D512 => NameBasedGuidGenerator.CustomHashing.InstanceSha3D512;
+
+    /// <summary>
+    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHAKE128 hash algorithm.
+    /// </summary>
+    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHAKE128 hash algorithm.</returns>
+    /// <exception cref="PlatformNotSupportedException">
+    /// This platform does not support the SHAKE128 hash algorithm.</exception>
+    public static INameBasedGuidGenerator Version8NShake128 => NameBasedGuidGenerator.CustomHashing.InstanceShake128;
+
+    /// <summary>
+    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHAKE256 hash algorithm.
+    /// </summary>
+    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// using the SHAKE256 hash algorithm.</returns>
+    /// <exception cref="PlatformNotSupportedException">
+    /// This platform does not support the SHAKE256 hash algorithm.</exception>
+    public static INameBasedGuidGenerator Version8NShake256 => NameBasedGuidGenerator.CustomHashing.InstanceShake256;
+#endif
+
     /// <summary>
     /// Creates a new <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
     /// using the specified hash algorithm with a synchronization lock.
@@ -69,13 +121,22 @@ partial class GuidGenerator
     /// <paramref name="hashingName"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="hashingName"/> does not represent a supported hash algorithm.</exception>
+    /// <exception cref="PlatformNotSupportedException">
+    /// This platform does not support the specified hash algorithm.</exception>
     public static INameBasedGuidGenerator OfHashAlgorithm(string hashingName) => hashingName switch
     {
-        nameof(HashAlgorithmName.MD5) => NameBasedGuidGenerator.MD5Hashing.Instance,
-        nameof(HashAlgorithmName.SHA1) => NameBasedGuidGenerator.SHA1Hashing.Instance,
-        nameof(HashAlgorithmName.SHA256) => NameBasedGuidGenerator.CustomHashing.InstanceSha256,
-        nameof(HashAlgorithmName.SHA384) => NameBasedGuidGenerator.CustomHashing.InstanceSha384,
-        nameof(HashAlgorithmName.SHA512) => NameBasedGuidGenerator.CustomHashing.InstanceSha512,
+        HashAlgorithmNames.MD5 => NameBasedGuidGenerator.MD5Hashing.Instance,
+        HashAlgorithmNames.SHA1 => NameBasedGuidGenerator.SHA1Hashing.Instance,
+        HashAlgorithmNames.SHA256 => NameBasedGuidGenerator.CustomHashing.InstanceSha256,
+        HashAlgorithmNames.SHA384 => NameBasedGuidGenerator.CustomHashing.InstanceSha384,
+        HashAlgorithmNames.SHA512 => NameBasedGuidGenerator.CustomHashing.InstanceSha512,
+#if NET8_0_OR_GREATER
+        HashAlgorithmNames.SHA3_256 => NameBasedGuidGenerator.CustomHashing.InstanceSha3D256,
+        HashAlgorithmNames.SHA3_384 => NameBasedGuidGenerator.CustomHashing.InstanceSha3D384,
+        HashAlgorithmNames.SHA3_512 => NameBasedGuidGenerator.CustomHashing.InstanceSha3D512,
+        HashAlgorithmNames.SHAKE128 => NameBasedGuidGenerator.CustomHashing.InstanceShake128,
+        HashAlgorithmNames.SHAKE256 => NameBasedGuidGenerator.CustomHashing.InstanceShake256,
+#endif
         null => throw new ArgumentNullException(nameof(hashingName)),
         _ => throw new ArgumentOutOfRangeException(nameof(hashingName)),
     };
@@ -87,6 +148,8 @@ partial class GuidGenerator
     /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of <paramref name="hashingName"/>.</returns>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="hashingName"/> does not represent a supported hash algorithm.</exception>
+    /// <exception cref="PlatformNotSupportedException">
+    /// This platform does not support the specified hash algorithm.</exception>
     public static INameBasedGuidGenerator OfHashAlgorithm(HashAlgorithmName hashingName)
     {
         return GuidGenerator.OfHashAlgorithm(hashingName.Name ?? string.Empty);
