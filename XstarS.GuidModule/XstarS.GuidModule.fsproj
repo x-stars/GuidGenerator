@@ -17,7 +17,6 @@
   <PropertyGroup>
     <PackageTags>fsharp guid guid-generator rfc4122 uuid</PackageTags>
     <Description>Provides RFC 4122 UUID compliant GUID operations for F#.</Description>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <Import Project="..\BuildItems\Trimming.Build.props" />
@@ -27,7 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
     <Compile Include="TryResult.fs" />
     <Compile Include="GuidModule.fs" />
   </ItemGroup>

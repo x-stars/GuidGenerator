@@ -52,7 +52,6 @@ internal sealed class BoundedCollection<T>
         return false;
     }
 
-
 #if NETCOREAPP3_0_OR_GREATER
     public bool TryTake([MaybeNullWhen(false)] out T item)
 #else
