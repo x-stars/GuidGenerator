@@ -267,35 +267,35 @@ e129f27c-5103-5c5c-844b-cdf0a15e160d
 ## 性能基准测试
 
 ``` PlainText
-BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22621
+BenchmarkDotNet v0.13.10, Windows 11 (10.0.22631.2787/23H2/2023Update/SunValley3)
 AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
-.NET SDK=7.0.203
-  [Host]     : .NET 6.0.16 (6.0.1623.17311), X64 RyuJIT
-  DefaultJob : .NET 6.0.16 (6.0.1623.17311), X64 RyuJIT
+.NET SDK 8.0.100
+  [Host]     : .NET 8.0.0 (8.0.23.53103), X64 RyuJIT AVX2
+  DefaultJob : .NET 8.0.0 (8.0.23.53103), X64 RyuJIT AVX2
 ```
 
-|             Method | GuidCount |           Mean |        StdDev | Ratio | Allocated |
-|------------------- |----------:|---------------:|--------------:|------:|----------:|
-|      `GuidNewGuid` |         1 |      50.930 ns |     0.8717 ns |  1.00 |         - |
-|    `EmptyGenerate` |         1 |       3.637 ns |     0.2156 ns |  0.07 |         - |
-|   `GuidV1Generate` |         1 |     103.763 ns |     1.4919 ns |  2.04 |         - |
-|   `GuidV2Generate` |         1 |     103.515 ns |     1.5682 ns |  2.03 |         - |
-|   `GuidV3Generate` |         1 |     200.474 ns |     4.8432 ns |  3.93 |         - |
-|   `GuidV4Generate` |         1 |      52.946 ns |     1.5133 ns |  1.03 |         - |
-|   `GuidV5Generate` |         1 |     197.465 ns |     6.1259 ns |  3.89 |         - |
-|   `GuidV6Generate` |         1 |     118.069 ns |     1.2088 ns |  2.32 |         - |
-|   `GuidV7Generate` |         1 |     101.517 ns |     1.6173 ns |  1.99 |         - |
-|   `GuidV8Generate` |         1 |      88.968 ns |     2.0039 ns |  1.75 |         - |
-| `MaxValueGenerate` |         1 |       3.827 ns |     0.1795 ns |  0.08 |         - |
-|                    |           |                |               |       |           |
-|      `GuidNewGuid` |      1000 |  49,159.827 ns |   344.4287 ns |  1.00 |         - |
-|    `EmptyGenerate` |      1000 |   1,289.350 ns |    17.2862 ns |  0.03 |         - |
-|   `GuidV1Generate` |      1000 | 101,202.434 ns |   542.1528 ns |  2.06 |       2 B |
-|   `GuidV2Generate` |      1000 | 101,747.558 ns |   795.9027 ns |  2.07 |       5 B |
-|   `GuidV3Generate` |      1000 | 193,502.769 ns | 3,048.0942 ns |  3.93 |         - |
-|   `GuidV4Generate` |      1000 |  49,262.432 ns |   468.0596 ns |  1.00 |         - |
-|   `GuidV5Generate` |      1000 | 189,286.804 ns | 2,916.9660 ns |  3.85 |         - |
-|   `GuidV6Generate` |      1000 | 117,344.705 ns |   694.3620 ns |  2.39 |         - |
-|   `GuidV7Generate` |      1000 |  97,508.760 ns | 1,155.9623 ns |  1.98 |         - |
-|   `GuidV8Generate` |      1000 |  85,158.967 ns | 1,112.3969 ns |  1.73 |         - |
-| `MaxValueGenerate` |      1000 |   1,323.650 ns |    50.9400 ns |  0.03 |         - |
+|             Method | GuidCount | Mean            | StdDev        | Ratio | Allocated |
+|------------------- |----------:|----------------:|--------------:|------:|----------:|
+|      `GuidNewGuid` |         1 |      44.2642 ns |     0.9311 ns |  1.00 |         - |
+|    `EmptyGenerate` |         1 |       1.0135 ns |     0.0577 ns |  0.02 |         - |
+|   `GuidV1Generate` |         1 |     105.3974 ns |     0.9108 ns |  2.38 |         - |
+|   `GuidV2Generate` |         1 |     100.1791 ns |     0.0363 ns |  2.26 |         - |
+|   `GuidV3Generate` |         1 |     188.8818 ns |     2.8465 ns |  4.27 |         - |
+|   `GuidV4Generate` |         1 |      44.2476 ns |     0.5396 ns |  1.00 |         - |
+|   `GuidV5Generate` |         1 |     179.7746 ns |     2.6377 ns |  4.07 |         - |
+|   `GuidV6Generate` |         1 |     111.3801 ns |     0.5054 ns |  2.52 |         - |
+|   `GuidV7Generate` |         1 |      93.2699 ns |     2.3796 ns |  2.12 |         - |
+|   `GuidV8Generate` |         1 |      79.4371 ns |     1.5967 ns |  1.80 |         - |
+| `MaxValueGenerate` |         1 |       0.9690 ns |     0.0385 ns |  0.02 |         - |
+|                    |           |                 |               |       |           |
+|      `GuidNewGuid` |      1000 |  40,615.7146 ns |   873.9581 ns | 1.000 |         - |
+|    `EmptyGenerate` |      1000 |     235.3933 ns |     3.1243 ns | 0.006 |         - |
+|   `GuidV1Generate` |      1000 | 101,453.6940 ns | 1,077.6102 ns | 2.496 |       3 B |
+|   `GuidV2Generate` |      1000 | 102,866.1385 ns | 1,349.0252 ns | 2.528 |       3 B |
+|   `GuidV3Generate` |      1000 | 181,153.2007 ns | 4,158.4657 ns | 4.468 |         - |
+|   `GuidV4Generate` |      1000 |  41,099.3998 ns |   942.3362 ns | 1.014 |         - |
+|   `GuidV5Generate` |      1000 | 182,166.1255 ns | 2,368.8430 ns | 4.474 |         - |
+|   `GuidV6Generate` |      1000 | 113,115.9842 ns |   403.2097 ns | 2.779 |         - |
+|   `GuidV7Generate` |      1000 |  91,826.8184 ns | 1,367.1235 ns | 2.257 |         - |
+|   `GuidV8Generate` |      1000 |  73,500.0278 ns | 1,501.2375 ns | 1.809 |         - |
+| `MaxValueGenerate` |      1000 |     235.7326 ns |     4.4524 ns | 0.006 |         - |
