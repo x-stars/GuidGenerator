@@ -27,6 +27,7 @@
     <Compile Include="GuidComponentTest.fs" />
     <Compile Include="GuidGeneratorTest.fs" />
     <Compile Include="GuidGeneratorV8Test.fs" />
+    <Compile Include="GuidGeneratorV8NSha3Test.fs" />
     <Compile Include="GuidGeneratorStateTest.fs" />
     <Compile Include="GuidVersionInfoTest.fs" />
   </ItemGroup>
