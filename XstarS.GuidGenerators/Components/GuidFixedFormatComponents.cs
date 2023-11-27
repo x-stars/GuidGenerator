@@ -60,4 +60,50 @@ internal sealed class GuidFixedFormatComponents : GuidComponents,
     {
         guid.TimeLow() = (uint)localId;
     }
+
+    public override byte[] GetHashData(ref Guid guid, out byte[] bitmask)
+    {
+        return this.GetRawData(ref guid, out bitmask);
+    }
+
+    public override void SetHashData(ref Guid guid, byte[] hashData)
+    {
+        this.SetRawData(ref guid, hashData);
+    }
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    public override void WriteHashData(ref Guid guid, Span<byte> destination, Span<byte> bitmask)
+    {
+        this.WriteRawData(ref guid, destination, bitmask);
+    }
+
+    public override void SetHashData(ref Guid guid, ReadOnlySpan<byte> hashData)
+    {
+        this.SetRawData(ref guid, hashData);
+    }
+#endif
+
+#if !UUIDREV_DISABLE
+    public override byte[] GetCustomData(ref Guid guid, out byte[] bitmask)
+    {
+        return this.GetRawData(ref guid, out bitmask);
+    }
+
+    public override void SetCustomData(ref Guid guid, byte[] customData)
+    {
+        this.SetRawData(ref guid, customData);
+    }
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    public override void WriteCustomData(ref Guid guid, Span<byte> destination, Span<byte> bitmask)
+    {
+        this.WriteCustomData(ref guid, destination, bitmask);
+    }
+
+    public override void SetCustomData(ref Guid guid, ReadOnlySpan<byte> customData)
+    {
+        this.SetRawData(ref guid, customData);
+    }
+#endif
+#endif
 }

@@ -14,18 +14,18 @@ partial class GuidComponents
 
     public static IDceSecurityGuidComponents Version2 => DceSecurityGuidComponents.Version2.Instance;
 
-    public static IGuidCommonComponents Version3 => GuidComponents.Instance;
+    public static INameBasedGuidComponents Version3 => NameBasedGuidComponents.Version3.Instance;
 
-    public static IGuidCommonComponents Version4 => GuidComponents.Instance;
+    public static IRandomizedGuidComponents Version4 => RandomizedGuidComponents.Version4.Instance;
 
-    public static IGuidCommonComponents Version5 => GuidComponents.Instance;
+    public static INameBasedGuidComponents Version5 => NameBasedGuidComponents.Version5.Instance;
 
 #if !UUIDREV_DISABLE
     public static ITimeNodeBasedGuidComponents Version6 => TimeNodeBasedGuidComponents.Version6.Instance;
 
-    public static ITimeBasedGuidComponents Version7 => TimeBasedGuidComponents.Version7.Instance;
+    public static ITimeRandomBasedGuidComponents Version7 => TimeBasedGuidComponents.Version7.Instance;
 
-    public static IGuidCommonComponents Version8 => GuidComponents.Instance;
+    public static ICustomizedGuidComponents Version8 => CustomizedGuidComponents.Version8.Instance;
 
     public static IGuidCommonComponents MaxValue => GuidComponents.Instance;
 #endif
@@ -35,13 +35,13 @@ partial class GuidComponents
         GuidVersion.Empty => GuidComponents.Instance,
         GuidVersion.Version1 => TimeNodeBasedGuidComponents.Version1.Instance,
         GuidVersion.Version2 => DceSecurityGuidComponents.Version2.Instance,
-        GuidVersion.Version3 => GuidComponents.Instance,
-        GuidVersion.Version4 => GuidComponents.Instance,
-        GuidVersion.Version5 => GuidComponents.Instance,
+        GuidVersion.Version3 => NameBasedGuidComponents.Version3.Instance,
+        GuidVersion.Version4 => RandomizedGuidComponents.Version4.Instance,
+        GuidVersion.Version5 => NameBasedGuidComponents.Version5.Instance,
 #if !UUIDREV_DISABLE
         GuidVersion.Version6 => TimeNodeBasedGuidComponents.Version6.Instance,
         GuidVersion.Version7 => TimeBasedGuidComponents.Version7.Instance,
-        GuidVersion.Version8 => GuidComponents.Instance,
+        GuidVersion.Version8 => CustomizedGuidComponents.Version8.Instance,
         GuidVersion.MaxValue => GuidComponents.Instance,
 #endif
         _ => GuidComponents.Instance,
