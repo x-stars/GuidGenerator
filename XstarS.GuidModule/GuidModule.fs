@@ -1147,6 +1147,41 @@ module Guid =
         guid.TryGetNodeId() |> TryResult.toValueOption
 
     /// <summary>
+    /// Tries to get the hash data represented by the <see cref="T:System.Guid"/>.
+    /// Returns <c>ValueNone</c> if the <see cref="T:System.Guid"/> is name-based.
+    /// </summary>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>The hash data and its bitmask represented by the <see cref="T:System.Guid"/>,
+    /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not name-based.</returns>
+    [<CompiledName("TryGetHashData")>]
+    let tryGetHashData (guid: Guid) : struct (byte[] * byte[]) voption =
+        guid.TryGetHashData() |> TryResult.toValueOption2
+
+    /// <summary>
+    /// Tries to get the random data represented by the <see cref="T:System.Guid"/>.
+    /// Returns <c>ValueNone</c> if the <see cref="T:System.Guid"/> is generated randomly.
+    /// </summary>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>The random data and its bitmask represented by the <see cref="T:System.Guid"/>,
+    /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not generated randomly.</returns>
+    [<CompiledName("TryGetRandomData")>]
+    let tryGetRandomData (guid: Guid) : struct (byte[] * byte[]) voption =
+        guid.TryGetRandomData() |> TryResult.toValueOption2
+
+#if !UUIDREV_DISABLE
+    /// <summary>
+    /// Tries to get the custom data represented by the <see cref="T:System.Guid"/>.
+    /// Returns <c>ValueNone</c> if the <see cref="T:System.Guid"/> contains custom data.
+    /// </summary>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>The custom data and its bitmask represented by the <see cref="T:System.Guid"/>,
+    /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> does not contain custom data.</returns>
+    [<CompiledName("TryGetCustomData")>]
+    let tryGetCustomData (guid: Guid) : struct (byte[] * byte[]) voption =
+        guid.TryGetCustomData() |> TryResult.toValueOption2
+#endif
+
+    /// <summary>
     /// Replaces the version of the current <see cref="T:System.Guid"/>
     /// with the specified <see cref="T:XNetEx.FSharp.Core.Guid.Variant"/>.
     /// </summary>
@@ -1261,3 +1296,59 @@ module Guid =
     [<CompiledName("ReplaceNodeId")>]
     let replaceNodeId (nodeId: byte[]) (guid: Guid) : Guid =
         guid.ReplaceNodeId(nodeId)
+
+    /// <summary>
+    /// Replaces the hash data of the current <see cref="T:System.Guid"/> with the specified
+    /// byte array if the <see cref="T:System.Guid"/> is name-based.
+    /// </summary>
+    /// <param name="hashData">The hash data to use as replacement.</param>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance that is
+    /// equivalent to the <see cref="T:System.Guid"/> except that
+    /// the hash data replaced with <paramref name="hashData"/>, or the original value
+    /// if the <see cref="T:System.Guid"/> is not name-based.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="hashData"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.ArgumentException">
+    /// <paramref name="hashData"/> is not 16 bytes long.</exception>
+    [<CompiledName("ReplaceHashData")>]
+    let replaceHashData (hashData: byte[]) (guid: Guid) : Guid =
+        guid.ReplaceHashData(hashData)
+
+    /// <summary>
+    /// Replaces the random data of the current <see cref="T:System.Guid"/> with the specified
+    /// byte array if the <see cref="T:System.Guid"/> is generated randomly.
+    /// </summary>
+    /// <param name="randomData">The random data to use as replacement.</param>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance that is
+    /// equivalent to the <see cref="T:System.Guid"/> except that
+    /// the random data replaced with <paramref name="randomData"/>, or the original value
+    /// if the <see cref="T:System.Guid"/> is not generated randomly.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="randomData"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.ArgumentException">
+    /// <paramref name="randomData"/> is not 16 bytes long.</exception>
+    [<CompiledName("ReplaceRandomData")>]
+    let replaceRandomData (randomData: byte[]) (guid: Guid) : Guid =
+        guid.ReplaceRandomData(randomData)
+
+#if !UUIDREV_DISABLE
+    /// <summary>
+    /// Replaces the custom data of the current <see cref="T:System.Guid"/> with the specified
+    /// byte array if the <see cref="T:System.Guid"/> contains custom data.
+    /// </summary>
+    /// <param name="customData">The custom data to use as replacement.</param>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance that is
+    /// equivalent to the <see cref="T:System.Guid"/> except that
+    /// the custom data replaced with <paramref name="customData"/>, or the original value
+    /// if the <see cref="T:System.Guid"/> does not contains custom data.</returns>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// <paramref name="customData"/> is <see langword="null"/>.</exception>
+    /// <exception cref="T:System.ArgumentException">
+    /// <paramref name="customData"/> is not 16 bytes long.</exception>
+    [<CompiledName("ReplaceCustomData")>]
+    let replaceCustomData (customData: byte[]) (guid: Guid) : Guid =
+        guid.ReplaceCustomData(customData)
+#endif

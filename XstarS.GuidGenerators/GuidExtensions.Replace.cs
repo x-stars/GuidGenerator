@@ -167,7 +167,6 @@ static partial class GuidExtensions
                 "Node ID for Guid must be exactly 6 bytes long.",
                 nameof(nodeId));
         }
-
         if (!guid.IsRfc4122Uuid() ||
             !guid.GetVersion().ContainsNodeId())
         {
@@ -201,7 +200,6 @@ static partial class GuidExtensions
                 "Node ID for Guid must be exactly 6 bytes long.",
                 nameof(nodeId));
         }
-
         if (!guid.IsRfc4122Uuid() ||
             !guid.GetVersion().ContainsNodeId())
         {

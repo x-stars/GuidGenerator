@@ -104,6 +104,17 @@ public static class GuidVersionInfo
 
     /// <summary>
     /// Gets a value that indicates whether a <see cref="Guid"/> of
+    /// the <see cref="GuidVersion"/> is generated based on custom data.
+    /// </summary>
+    /// <param name="version">The <see cref="GuidVersion"/>.</param>
+    /// <returns><see langword="true"/> if a <see cref="Guid"/> of
+    /// <paramref name="version"/> is generated based on custom data;
+    /// otherwise, <see langword="false"/>.</returns>
+    public static bool IsCustomized(this GuidVersion version) =>
+        version == GuidVersion.Version8;
+
+    /// <summary>
+    /// Gets a value that indicates whether a <see cref="Guid"/> of
     /// the <see cref="GuidVersion"/> contains a clock sequence.
     /// </summary>
     /// <param name="version">The <see cref="GuidVersion"/>.</param>
