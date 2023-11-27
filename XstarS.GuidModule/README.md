@@ -1,6 +1,7 @@
-﻿# .NET GUID Generator
+﻿# F# GUID Module
 
-Provides RFC 4122 UUID compliant GUID generators for .NET platform.
+Provides RFC 4122 UUID compliant GUID operations for F#.
+The orders of input parameters are adjusted to match F# pipeline patterns.
 
 ## RFC 4122 UUID Standard
 
@@ -20,9 +21,6 @@ There is also a special Nil UUID whose bytes are all `0x00`s, which is equivalen
 ## F# GUID Module Usage
 
 Core module: `XNetEx.FSharp.Core.Guid`.
-
-Provides RFC 4122 UUID and RFC4122bis UUIDREV (draft) compliant GUID operations for F#.
-The orders of input parameters are adjusted to match F# pipeline patterns.
 
 ### RFC 4122 GUID Generation
 

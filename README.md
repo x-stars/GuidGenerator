@@ -99,7 +99,7 @@ The F# GUID Module project is located at [XstarS.GuidModule](XstarS.GuidModule).
 
 Core module: `XNetEx.FSharp.Core.Guid`.
 
-Provides RFC 4122 UUID and RFC4122bis UUIDREV (draft) compliant GUID operations for F#.
+Provides RFC 4122 UUID compliant GUID operations for F#.
 The orders of input parameters are adjusted to match F# pipeline patterns.
 
 ### RFC 4122 GUID Generation

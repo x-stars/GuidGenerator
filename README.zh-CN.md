@@ -99,7 +99,7 @@ F# GUID 模块工程位于 [XstarS.GuidModule](XstarS.GuidModule)。
 
 核心模块：`XNetEx.FSharp.Core.Guid`。
 
-提供一套符合 RFC 4122 标准以及 RFC4122bis UUIDREV 草稿的 GUID 相关操作，并根据 F# 管道模式对输入参数顺序进行了适当调整。
+提供一套符合 RFC 4122 标准的 GUID 相关操作，并根据 F# 管道模式对输入参数顺序进行了适当调整。
 
 ### RFC 4122 GUID 生成
 
