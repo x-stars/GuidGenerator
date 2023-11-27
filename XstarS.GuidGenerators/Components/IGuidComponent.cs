@@ -187,5 +187,5 @@ internal interface IGuidCustomDataComponent
     void SetCustomData(ref Guid guid, ReadOnlySpan<byte> customData);
 #endif
 #endif
-#endif
 }
+#endif

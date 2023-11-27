@@ -102,6 +102,7 @@ public static class GuidVersionInfo
         false;
 #endif
 
+#if !UUIDREV_DISABLE
     /// <summary>
     /// Gets a value that indicates whether a <see cref="Guid"/> of
     /// the <see cref="GuidVersion"/> is generated based on custom data.
@@ -112,6 +113,7 @@ public static class GuidVersionInfo
     /// otherwise, <see langword="false"/>.</returns>
     public static bool IsCustomized(this GuidVersion version) =>
         version == GuidVersion.Version8;
+#endif
 
     /// <summary>
     /// Gets a value that indicates whether a <see cref="Guid"/> of

@@ -10,7 +10,7 @@ open XNetEx.FSharp.Core
 module GuidPatterns =
 
     /// <summary>
-    /// Matches <see cref="T:System.Guid"/> values that is generated based on the current time.
+    /// Matches <see cref="T:System.Guid"/> values that is time-based.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>An option of the timestamp.</returns>
@@ -19,7 +19,7 @@ module GuidPatterns =
         Guid.tryGetTime guid |> ValueOption.toOption
 
     /// <summary>
-    /// Matches <see cref="T:System.Guid"/> values that is generated based on the input name.
+    /// Matches <see cref="T:System.Guid"/> values that is name-based.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>An option of the hash data and its bitmask.</returns>

@@ -114,15 +114,15 @@ static partial class GuidExtensions
 
 #if !UUIDREV_DISABLE
     /// <summary>
-    /// Tries to get the random data represented by the <see cref="Guid"/>.
+    /// Tries to get the custom data represented by the <see cref="Guid"/>.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
     /// <param name="customData">When this method returns <see langword="true"/>,
-    /// contains the random data represented by the <see cref="Guid"/>.</param>
+    /// contains the custom data represented by the <see cref="Guid"/>.</param>
     /// <param name="bitmask">When this method returns <see langword="true"/>,
-    /// contains the bitmask of the random data represented by the <see cref="Guid"/>.</param>
+    /// contains the bitmask of the custom data represented by the <see cref="Guid"/>.</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/>
-    /// contains random data; otherwise, <see langword="false"/>.</returns>
+    /// contains custom data; otherwise, <see langword="false"/>.</returns>
     public static bool TryGetCustomData(this Guid guid,
         [NotNullWhen(true)] out byte[]? customData, [NotNullWhen(true)] out byte[]? bitmask)
     {
@@ -140,15 +140,15 @@ static partial class GuidExtensions
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     /// <summary>
-    /// Tries to write the random data represented by the <see cref="Guid"/> into a span of bytes.
+    /// Tries to write the custom data represented by the <see cref="Guid"/> into a span of bytes.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
     /// <param name="destination">When this method returns <see langword="true"/>,
-    /// contains the random data represented by the <see cref="Guid"/>.</param>
+    /// contains the custom data represented by the <see cref="Guid"/>.</param>
     /// <param name="bitmask">When this method returns <see langword="true"/>,
-    /// contains the bitmask of the random data represented by the <see cref="Guid"/>.</param>
+    /// contains the bitmask of the custom data represented by the <see cref="Guid"/>.</param>
     /// <returns><see langword="true"/> if the <see cref="Guid"/>
-    /// contains random data and the random data is successfully written to the specified span;
+    /// contains custom data and the custom data is successfully written to the specified span;
     /// otherwise, <see langword="false"/>.</returns>
     public static bool TryWriteCustomData(
         this Guid guid, Span<byte> destination, Span<byte> bitmask)
