@@ -1072,6 +1072,19 @@ module Guid =
     let isRandomized (guid: Guid) : bool =
         (isRfc4122 guid) && (version guid).IsRandomized()
 
+#if !UUIDREV_DISABLE
+    /// <summary>
+    /// Gets a value that indicates whether the <see cref="T:System.Guid"/>
+    /// is generated based on custom data.
+    /// </summary>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns><see langword="true"/> if the <see cref="T:System.Guid"/>
+    /// is generated based on custom data; otherwise, <see langword="false"/>.</returns>
+    [<CompiledName("IsCustomized")>]
+    let isCustomized (guid: Guid) : bool =
+        (isRfc4122 guid) && (version guid).IsCustomized()
+#endif
+
     /// <summary>
     /// Gets a value that indicates whether the <see cref="T:System.Guid"/> contains a clock sequence.
     /// </summary>
