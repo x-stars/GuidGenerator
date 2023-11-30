@@ -4,7 +4,8 @@ using System.Runtime.CompilerServices;
 namespace XNetEx.Guids.Components;
 
 internal sealed class GuidFixedFormatComponents : GuidComponents,
-    IGuidNodeIdComponent, IGuidDomainComponent, IGuidLocalIdComponent
+    IGuidNodeIdComponent, IGuidDomainComponent, IGuidLocalIdComponent,
+    IGuidHashDataComponent, IGuidCustomDataComponent
 {
     internal static readonly GuidFixedFormatComponents Instance =
         new GuidFixedFormatComponents();
@@ -97,7 +98,7 @@ internal sealed class GuidFixedFormatComponents : GuidComponents,
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     public override void WriteCustomData(ref Guid guid, Span<byte> destination, Span<byte> bitmask)
     {
-        this.WriteCustomData(ref guid, destination, bitmask);
+        this.WriteRawData(ref guid, destination, bitmask);
     }
 
     public override void SetCustomData(ref Guid guid, ReadOnlySpan<byte> customData)

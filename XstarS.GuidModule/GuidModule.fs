@@ -1148,7 +1148,7 @@ module Guid =
 
     /// <summary>
     /// Tries to get the hash data represented by the <see cref="T:System.Guid"/>.
-    /// Returns <c>ValueNone</c> if the <see cref="T:System.Guid"/> is name-based.
+    /// Returns <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not name-based.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>The hash data and its bitmask represented by the <see cref="T:System.Guid"/>,
@@ -1159,7 +1159,7 @@ module Guid =
 
     /// <summary>
     /// Tries to get the random data represented by the <see cref="T:System.Guid"/>.
-    /// Returns <c>ValueNone</c> if the <see cref="T:System.Guid"/> is generated randomly.
+    /// Returns <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not generated randomly.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>The random data and its bitmask represented by the <see cref="T:System.Guid"/>,
@@ -1171,7 +1171,7 @@ module Guid =
 #if !UUIDREV_DISABLE
     /// <summary>
     /// Tries to get the custom data represented by the <see cref="T:System.Guid"/>.
-    /// Returns <c>ValueNone</c> if the <see cref="T:System.Guid"/> contains custom data.
+    /// Returns <c>ValueNone</c> if the <see cref="T:System.Guid"/> does not contain custom data.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>The custom data and its bitmask represented by the <see cref="T:System.Guid"/>,
@@ -1343,7 +1343,7 @@ module Guid =
     /// <returns>A new <see cref="T:System.Guid"/> instance that is
     /// equivalent to the <see cref="T:System.Guid"/> except that
     /// the custom data replaced with <paramref name="customData"/>, or the original value
-    /// if the <see cref="T:System.Guid"/> does not contains custom data.</returns>
+    /// if the <see cref="T:System.Guid"/> does not contain custom data.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="customData"/> is <see langword="null"/>.</exception>
     /// <exception cref="T:System.ArgumentException">

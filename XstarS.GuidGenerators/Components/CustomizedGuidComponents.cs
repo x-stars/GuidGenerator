@@ -7,23 +7,23 @@ internal abstract class CustomizedGuidComponents : GuidComponents, ICustomizedGu
 {
     protected CustomizedGuidComponents() { }
 
-    public override byte[] GetCustomData(ref Guid guid, out byte[] bitmask)
+    public sealed override byte[] GetCustomData(ref Guid guid, out byte[] bitmask)
     {
         return GuidComponents.FixedFormat.GetCustomData(ref guid, out bitmask);
     }
 
-    public override void SetCustomData(ref Guid guid, byte[] customData)
+    public sealed override void SetCustomData(ref Guid guid, byte[] customData)
     {
         GuidComponents.FixedFormat.SetCustomData(ref guid, customData);
     }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-    public override void WriteCustomData(ref Guid guid, Span<byte> destination, Span<byte> bitmask)
+    public sealed override void WriteCustomData(ref Guid guid, Span<byte> destination, Span<byte> bitmask)
     {
         GuidComponents.FixedFormat.WriteCustomData(ref guid, destination, bitmask);
     }
 
-    public override void SetCustomData(ref Guid guid, ReadOnlySpan<byte> customData)
+    public sealed override void SetCustomData(ref Guid guid, ReadOnlySpan<byte> customData)
     {
         GuidComponents.FixedFormat.SetCustomData(ref guid, customData);
     }

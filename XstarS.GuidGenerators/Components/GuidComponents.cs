@@ -80,7 +80,7 @@ internal partial class GuidComponents : IGuidCommonComponents
         var rawData = masked.ToUuidByteArray();
         var maskId = Uuid.MaxValue;
         this.ClearVarAndVer(ref maskId);
-        bitmask = masked.ToUuidByteArray();
+        bitmask = maskId.ToUuidByteArray();
         return rawData;
     }
 
@@ -102,7 +102,7 @@ internal partial class GuidComponents : IGuidCommonComponents
         Debug.Assert(maskedResult);
         var maskId = Uuid.MaxValue;
         this.ClearVarAndVer(ref maskId);
-        var maskIdResult = masked.TryWriteUuidBytes(bitmask);
+        var maskIdResult = maskId.TryWriteUuidBytes(bitmask);
         Debug.Assert(maskIdResult);
     }
 
@@ -227,6 +227,7 @@ internal partial class GuidComponents : IGuidCommonComponents
     }
 #endif
 
+#if !UUIDREV_DISABLE
     public virtual byte[] GetCustomData(ref Guid guid, out byte[] bitmask)
     {
         throw new NotSupportedException(GuidComponents.NotSupportedMessage);
@@ -249,5 +250,6 @@ internal partial class GuidComponents : IGuidCommonComponents
     {
         this.SetCustomData(ref guid, customData.ToArray());
     }
+#endif
 #endif
 }

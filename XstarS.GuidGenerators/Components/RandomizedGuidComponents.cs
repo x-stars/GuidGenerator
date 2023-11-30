@@ -6,25 +6,25 @@ internal abstract class RandomizedGuidComponents : GuidComponents, IRandomizedGu
 {
     protected RandomizedGuidComponents() { }
 
-    public override byte[] GetRandomData(ref Guid guid, out byte[] bitmask)
+    public sealed override byte[] GetRandomData(ref Guid guid, out byte[] bitmask)
     {
-        return GuidComponents.Common.GetRawData(ref guid, out bitmask);
+        return this.GetRawData(ref guid, out bitmask);
     }
 
-    public override void SetRandomData(ref Guid guid, byte[] randomData)
+    public sealed override void SetRandomData(ref Guid guid, byte[] randomData)
     {
-        GuidComponents.Common.SetRawData(ref guid, randomData);
+        this.SetRawData(ref guid, randomData);
     }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-    public override void WriteRandomData(ref Guid guid, Span<byte> destination, Span<byte> bitmask)
+    public sealed override void WriteRandomData(ref Guid guid, Span<byte> destination, Span<byte> bitmask)
     {
-        GuidComponents.Common.WriteRawData(ref guid, destination, bitmask);
+        this.WriteRawData(ref guid, destination, bitmask);
     }
 
-    public override void SetRandomData(ref Guid guid, ReadOnlySpan<byte> randomData)
+    public sealed override void SetRandomData(ref Guid guid, ReadOnlySpan<byte> randomData)
     {
-        GuidComponents.Common.SetRawData(ref guid, randomData);
+        this.SetRawData(ref guid, randomData);
     }
 #endif
 
