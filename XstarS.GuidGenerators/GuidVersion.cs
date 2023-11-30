@@ -65,13 +65,13 @@ public static class GuidVersionInfo
     /// <paramref name="version"/> is generated based on the current time;
     /// otherwise, <see langword="false"/>.</returns>
     public static bool IsTimeBased(this GuidVersion version) =>
-        version == GuidVersion.Version1 ||
-        version == GuidVersion.Version2 ||
+        version is GuidVersion.Version1
+                or GuidVersion.Version2
 #if !UUIDREV_DISABLE
-        version == GuidVersion.Version6 ||
-        version == GuidVersion.Version7;
+                or GuidVersion.Version6
+                or GuidVersion.Version7;
 #else
-        false;
+                ;
 #endif
 
     /// <summary>
@@ -83,8 +83,8 @@ public static class GuidVersionInfo
     /// <paramref name="version"/> is generated based on the input name;
     /// otherwise, <see langword="false"/>.</returns>
     public static bool IsNameBased(this GuidVersion version) =>
-        version == GuidVersion.Version3 ||
-        version == GuidVersion.Version5;
+        version is GuidVersion.Version3
+                or GuidVersion.Version5;
 
     /// <summary>
     /// Gets a value that indicates whether a <see cref="Guid"/> of
@@ -95,11 +95,11 @@ public static class GuidVersionInfo
     /// <paramref name="version"/> is generated randomly;
     /// otherwise, <see langword="false"/>.</returns>
     public static bool IsRandomized(this GuidVersion version) =>
-        version == GuidVersion.Version4 ||
+        version is GuidVersion.Version4
 #if !UUIDREV_DISABLE
-        version == GuidVersion.Version7;
+                or GuidVersion.Version7;
 #else
-        false;
+                ;
 #endif
 
 #if !UUIDREV_DISABLE
@@ -112,7 +112,7 @@ public static class GuidVersionInfo
     /// <paramref name="version"/> is generated based on custom data;
     /// otherwise, <see langword="false"/>.</returns>
     public static bool IsCustomized(this GuidVersion version) =>
-        version == GuidVersion.Version8;
+        version is GuidVersion.Version8;
 #endif
 
     /// <summary>
@@ -124,12 +124,12 @@ public static class GuidVersionInfo
     /// <paramref name="version"/> contains a clock sequence;
     /// otherwise, <see langword="false"/>.</returns>
     public static bool ContainsClockSequence(this GuidVersion version) =>
-        version == GuidVersion.Version1 ||
-        version == GuidVersion.Version2 ||
+        version is GuidVersion.Version1
+                or GuidVersion.Version2
 #if !UUIDREV_DISABLE
-        version == GuidVersion.Version6;
+                or GuidVersion.Version6;
 #else
-        false;
+                ;
 #endif
 
     /// <summary>
@@ -141,12 +141,12 @@ public static class GuidVersionInfo
     /// <paramref name="version"/> contains node ID data;
     /// otherwise, <see langword="false"/>.</returns>
     public static bool ContainsNodeId(this GuidVersion version) =>
-        version == GuidVersion.Version1 ||
-        version == GuidVersion.Version2 ||
+        version is GuidVersion.Version1
+                or GuidVersion.Version2
 #if !UUIDREV_DISABLE
-        version == GuidVersion.Version6;
+                or GuidVersion.Version6;
 #else
-        false;
+                ;
 #endif
 
     /// <summary>
@@ -158,5 +158,5 @@ public static class GuidVersionInfo
     /// <paramref name="version"/> contains local ID data;
     /// otherwise, <see langword="false"/>.</returns>
     public static bool ContainsLocalId(this GuidVersion version) =>
-        version == GuidVersion.Version2;
+        version is GuidVersion.Version2;
 }
