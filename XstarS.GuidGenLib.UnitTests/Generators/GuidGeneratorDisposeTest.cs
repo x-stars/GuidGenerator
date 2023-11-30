@@ -29,7 +29,22 @@ public class GuidGeneratorDisposeTest
             (GuidGenerator)GuidGenerator.Version8NSha256,
             (GuidGenerator)GuidGenerator.Version8NSha384,
             (GuidGenerator)GuidGenerator.Version8NSha512,
-        })
+        }
+#if NET8_0_OR_GREATER
+        .Concat(
+            !(SHA3_256.IsSupported && SHA3_384.IsSupported && SHA3_512.IsSupported &&
+              Shake128.IsSupported && Shake256.IsSupported) ?
+            Array.Empty<GuidGenerator>() :
+            new[]
+            {
+                (GuidGenerator)GuidGenerator.Version8NSha3D256,
+                (GuidGenerator)GuidGenerator.Version8NSha3D384,
+                (GuidGenerator)GuidGenerator.Version8NSha3D512,
+                (GuidGenerator)GuidGenerator.Version8NShake128,
+                (GuidGenerator)GuidGenerator.Version8NShake256,
+            })
+#endif
+        )
         {
             var guid0 = guidGen.NewGuid();
             guidGen.Dispose();
@@ -55,7 +70,7 @@ public class GuidGeneratorDisposeTest
     }
 
     [TestMethod]
-    public void NewGuid_GeneratorOfHashAlogorithm_KeepUsableAfterDisposed()
+    public void NewGuid_GeneratorOfHashAlgorithm_KeepUsableAfterDisposed()
     {
         foreach (var hashingName in new[]
         {
