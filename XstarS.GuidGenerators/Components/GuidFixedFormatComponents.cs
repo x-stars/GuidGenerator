@@ -5,7 +5,11 @@ namespace XNetEx.Guids.Components;
 
 internal sealed class GuidFixedFormatComponents : GuidComponents,
     IGuidNodeIdComponent, IGuidDomainComponent, IGuidLocalIdComponent,
+#if !UUIDREV_DISABLE
     IGuidHashDataComponent, IGuidCustomDataComponent
+#else
+    IGuidHashDataComponent
+#endif
 {
     internal static readonly GuidFixedFormatComponents Instance =
         new GuidFixedFormatComponents();
