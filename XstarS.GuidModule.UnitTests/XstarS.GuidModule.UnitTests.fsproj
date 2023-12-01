@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net461;net472;net6.0;net8.0</TargetFrameworks>
@@ -30,7 +30,9 @@
     <Compile Include="GuidGeneratorV8Test.fs" />
     <Compile Include="GuidGeneratorV8NSha3Test.fs" />
     <Compile Include="GuidGeneratorStateTest.fs" />
+    <Compile Include="GuidPatternsTest.fs" />
     <Compile Include="GuidVersionInfoTest.fs" />
+    <Compile Include="GuidVersionPatternsTest.fs" />
   </ItemGroup>
 
   <ItemGroup>
