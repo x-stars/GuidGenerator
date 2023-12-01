@@ -19,7 +19,7 @@ static partial class GuidExtensions
     public static bool TryGetHashData(this Guid guid,
         [NotNullWhen(true)] out byte[]? hashData, [NotNullWhen(true)] out byte[]? bitmask)
     {
-        if (!guid.IsRfc4122Uuid() || !guid.GetVersion().IsNameBased())
+        if (!guid.GetRfc4122Version().IsNameBased())
         {
             hashData = null;
             bitmask = null;
@@ -47,7 +47,7 @@ static partial class GuidExtensions
         this Guid guid, Span<byte> destination, Span<byte> bitmask)
     {
         if (destination.Length < 16) { return false; }
-        if (!guid.IsRfc4122Uuid() || !guid.GetVersion().IsNameBased())
+        if (!guid.GetRfc4122Version().IsNameBased())
         {
             return false;
         }
@@ -71,7 +71,7 @@ static partial class GuidExtensions
     public static bool TryGetRandomData(this Guid guid,
         [NotNullWhen(true)] out byte[]? randomData, [NotNullWhen(true)] out byte[]? bitmask)
     {
-        if (!guid.IsRfc4122Uuid() || !guid.GetVersion().IsRandomized())
+        if (!guid.GetRfc4122Version().IsRandomized())
         {
             randomData = null;
             bitmask = null;
@@ -100,7 +100,7 @@ static partial class GuidExtensions
         this Guid guid, Span<byte> destination, Span<byte> bitmask)
     {
         if (destination.Length < 16) { return false; }
-        if (!guid.IsRfc4122Uuid() || !guid.GetVersion().IsRandomized())
+        if (!guid.GetRfc4122Version().IsRandomized())
         {
             return false;
         }
@@ -126,7 +126,7 @@ static partial class GuidExtensions
     public static bool TryGetCustomData(this Guid guid,
         [NotNullWhen(true)] out byte[]? customData, [NotNullWhen(true)] out byte[]? bitmask)
     {
-        if (!guid.IsRfc4122Uuid() || !guid.GetVersion().IsCustomized())
+        if (!guid.GetRfc4122Version().IsCustomized())
         {
             customData = null;
             bitmask = null;
@@ -154,7 +154,7 @@ static partial class GuidExtensions
         this Guid guid, Span<byte> destination, Span<byte> bitmask)
     {
         if (destination.Length < 16) { return false; }
-        if (!guid.IsRfc4122Uuid() || !guid.GetVersion().IsCustomized())
+        if (!guid.GetRfc4122Version().IsCustomized())
         {
             return false;
         }

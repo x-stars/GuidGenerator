@@ -34,7 +34,7 @@ static partial class GuidExtensions
                 "Hash data for Guid must be exactly 16 bytes long.",
                 nameof(hashData));
         }
-        if (!guid.IsRfc4122Uuid() || !guid.GetVersion().IsNameBased())
+        if (!guid.GetRfc4122Version().IsNameBased())
         {
             return guid;
         }
@@ -66,7 +66,7 @@ static partial class GuidExtensions
                 "Hash data for Guid must be exactly 16 bytes long.",
                 nameof(hashData));
         }
-        if (!guid.IsRfc4122Uuid() || !guid.GetVersion().IsNameBased())
+        if (!guid.GetRfc4122Version().IsNameBased())
         {
             return guid;
         }
@@ -107,7 +107,7 @@ static partial class GuidExtensions
                 "Random data for Guid must be exactly 16 bytes long.",
                 nameof(randomData));
         }
-        if (!guid.IsRfc4122Uuid() || !guid.GetVersion().IsRandomized())
+        if (!guid.GetRfc4122Version().IsRandomized())
         {
             return guid;
         }
@@ -140,7 +140,7 @@ static partial class GuidExtensions
                 "Random data for Guid must be exactly 16 bytes long.",
                 nameof(randomData));
         }
-        if (!guid.IsRfc4122Uuid() || !guid.GetVersion().IsRandomized())
+        if (!guid.GetRfc4122Version().IsRandomized())
         {
             return guid;
         }
@@ -183,7 +183,7 @@ static partial class GuidExtensions
                 "Custom Data for Guid must be exactly 16 bytes long.",
                 nameof(customData));
         }
-        if (!guid.IsRfc4122Uuid() || !guid.GetVersion().IsCustomized())
+        if (!guid.GetRfc4122Version().IsCustomized())
         {
             return guid;
         }
@@ -215,7 +215,7 @@ static partial class GuidExtensions
                 "Custom Data for Guid must be exactly 16 bytes long.",
                 nameof(customData));
         }
-        if (!guid.IsRfc4122Uuid() || !guid.GetVersion().IsCustomized())
+        if (!guid.GetRfc4122Version().IsCustomized())
         {
             return guid;
         }
