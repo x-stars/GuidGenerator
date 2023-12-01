@@ -45,6 +45,11 @@ module Guid =
     /// </summary>
     type Generator = GuidGenerator
 
+    /// <summary>
+    /// A byte array value pair type abbreviation that represents GUID data and its bitmask.
+    /// </summary>
+    type DataAndMask = (struct (byte[] * byte[]))
+
     type IGuidGenerator with
 
         /// <summary>
@@ -1167,7 +1172,7 @@ module Guid =
     /// <returns>The hash data and its bitmask represented by the <see cref="T:System.Guid"/>,
     /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not name-based.</returns>
     [<CompiledName("TryGetHashData")>]
-    let tryGetHashData (guid: Guid) : struct (byte[] * byte[]) voption =
+    let tryGetHashData (guid: Guid) : DataAndMask voption =
         guid.TryGetHashData() |> TryResult.toValueOption2
 
     /// <summary>
@@ -1178,7 +1183,7 @@ module Guid =
     /// <returns>The random data and its bitmask represented by the <see cref="T:System.Guid"/>,
     /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> is not generated randomly.</returns>
     [<CompiledName("TryGetRandomData")>]
-    let tryGetRandomData (guid: Guid) : struct (byte[] * byte[]) voption =
+    let tryGetRandomData (guid: Guid) : DataAndMask voption =
         guid.TryGetRandomData() |> TryResult.toValueOption2
 
 #if !UUIDREV_DISABLE
@@ -1190,7 +1195,7 @@ module Guid =
     /// <returns>The custom data and its bitmask represented by the <see cref="T:System.Guid"/>,
     /// or <c>ValueNone</c> if the <see cref="T:System.Guid"/> does not contain custom data.</returns>
     [<CompiledName("TryGetCustomData")>]
-    let tryGetCustomData (guid: Guid) : struct (byte[] * byte[]) voption =
+    let tryGetCustomData (guid: Guid) : DataAndMask voption =
         guid.TryGetCustomData() |> TryResult.toValueOption2
 #endif
 

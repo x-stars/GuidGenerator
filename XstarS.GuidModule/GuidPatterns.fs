@@ -24,7 +24,7 @@ module GuidPatterns =
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>An option of the hash data and its bitmask.</returns>
     [<CompiledName("NameBasedGuidPattern")>]
-    let (|NameBasedGuid|_|) (guid: Guid) : struct (byte[] * byte[]) option =
+    let (|NameBasedGuid|_|) (guid: Guid) : Guid.DataAndMask option =
         Guid.tryGetHashData guid |> ValueOption.toOption
 
     /// <summary>
@@ -33,7 +33,7 @@ module GuidPatterns =
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>An option of the random data and its bitmask.</returns>
     [<CompiledName("RandomizedGuidPattern")>]
-    let (|RandomizedGuid|_|) (guid: Guid) : struct (byte[] * byte[]) option =
+    let (|RandomizedGuid|_|) (guid: Guid) : Guid.DataAndMask option =
         Guid.tryGetRandomData guid |> ValueOption.toOption
 
 #if !UUIDREV_DISABLE
@@ -43,7 +43,7 @@ module GuidPatterns =
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>An option of the custom data and its bitmask.</returns>
     [<CompiledName("CustomizedGuidPattern")>]
-    let (|CustomizedGuid|_|) (guid: Guid) : struct (byte[] * byte[]) option =
+    let (|CustomizedGuid|_|) (guid: Guid) : Guid.DataAndMask option =
         Guid.tryGetCustomData guid |> ValueOption.toOption
 #endif
 
@@ -120,7 +120,7 @@ module GuidPatterns =
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>An option of the hash data and its bitmask.</returns>
     [<CompiledName("GuidVersion3Pattern")>]
-    let (|GuidVersion3|_|) (guid: Guid) : struct (byte[] * byte[]) option =
+    let (|GuidVersion3|_|) (guid: Guid) : Guid.DataAndMask option =
         match Guid.isRfc4122 guid, Guid.version guid with
         | true, Guid.Version.Version3 -> Some (
             Guid.tryGetHashData guid |> ValueOption.get)
@@ -132,7 +132,7 @@ module GuidPatterns =
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>An option of the random data and its bitmask.</returns>
     [<CompiledName("GuidVersion4Pattern")>]
-    let (|GuidVersion4|_|) (guid: Guid) : struct (byte[] * byte[]) option =
+    let (|GuidVersion4|_|) (guid: Guid) : Guid.DataAndMask option =
         match Guid.isRfc4122 guid, Guid.version guid with
         | true, Guid.Version.Version4 -> Some (
             Guid.tryGetRandomData guid |> ValueOption.get)
@@ -144,7 +144,7 @@ module GuidPatterns =
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>An option of the hash data and its bitmask.</returns>
     [<CompiledName("GuidVersion5Pattern")>]
-    let (|GuidVersion5|_|) (guid: Guid) : struct (byte[] * byte[]) option =
+    let (|GuidVersion5|_|) (guid: Guid) : Guid.DataAndMask option =
         match Guid.isRfc4122 guid, Guid.version guid with
         | true, Guid.Version.Version5 -> Some (
             Guid.tryGetHashData guid |> ValueOption.get)
@@ -171,7 +171,7 @@ module GuidPatterns =
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>An option of the timestamp and random data and its bitmask.</returns>
     [<CompiledName("GuidVersion7Pattern")>]
-    let (|GuidVersion7|_|) (guid: Guid) : struct (DateTime * struct (byte[] * byte[])) option =
+    let (|GuidVersion7|_|) (guid: Guid) : struct (DateTime * Guid.DataAndMask) option =
         match Guid.isRfc4122 guid, Guid.version guid with
         | true, Guid.Version.Version7 -> Some struct (
             Guid.tryGetTime guid |> ValueOption.get,
@@ -184,7 +184,7 @@ module GuidPatterns =
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>An option of the custom data and its bitmask.</returns>
     [<CompiledName("GuidVersion8Pattern")>]
-    let (|GuidVersion8|_|) (guid: Guid) : struct (byte[] * byte[]) option =
+    let (|GuidVersion8|_|) (guid: Guid) : Guid.DataAndMask option =
         match Guid.isRfc4122 guid, Guid.version guid with
         | true, Guid.Version.Version8 -> Some (
             Guid.tryGetCustomData guid |> ValueOption.get)
