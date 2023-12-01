@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net461;net472;net6.0;net8.0</TargetFrameworks>
@@ -25,6 +25,7 @@
     <Compile Include="TestHelpers\*.fs" />
     <Compile Include="GuidModuleTest.fs" />
     <Compile Include="GuidComponentTest.fs" />
+    <Compile Include="GuidDataComponentTest.fs" />
     <Compile Include="GuidGeneratorTest.fs" />
     <Compile Include="GuidGeneratorV8Test.fs" />
     <Compile Include="GuidGeneratorV8NSha3Test.fs" />
