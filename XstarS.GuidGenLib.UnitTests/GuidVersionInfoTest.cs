@@ -12,6 +12,9 @@ public class GuidVersionInfoTest
         Assert.IsFalse(version.IsTimeBased());
         Assert.IsFalse(version.IsNameBased());
         Assert.IsFalse(version.IsRandomized());
+#if !UUIDREV_DISABLE
+        Assert.IsFalse(version.IsCustomized());
+#endif
         Assert.IsFalse(version.ContainsClockSequence());
         Assert.IsFalse(version.ContainsNodeId());
         Assert.IsFalse(version.ContainsLocalId());
@@ -24,6 +27,9 @@ public class GuidVersionInfoTest
         Assert.IsTrue(version.IsTimeBased());
         Assert.IsFalse(version.IsNameBased());
         Assert.IsFalse(version.IsRandomized());
+#if !UUIDREV_DISABLE
+        Assert.IsFalse(version.IsCustomized());
+#endif
         Assert.IsTrue(version.ContainsClockSequence());
         Assert.IsTrue(version.ContainsNodeId());
         Assert.IsFalse(version.ContainsLocalId());
@@ -36,6 +42,9 @@ public class GuidVersionInfoTest
         Assert.IsTrue(version.IsTimeBased());
         Assert.IsFalse(version.IsNameBased());
         Assert.IsFalse(version.IsRandomized());
+#if !UUIDREV_DISABLE
+        Assert.IsFalse(version.IsCustomized());
+#endif
         Assert.IsTrue(version.ContainsClockSequence());
         Assert.IsTrue(version.ContainsNodeId());
         Assert.IsTrue(version.ContainsLocalId());
@@ -48,6 +57,9 @@ public class GuidVersionInfoTest
         Assert.IsFalse(version.IsTimeBased());
         Assert.IsTrue(version.IsNameBased());
         Assert.IsFalse(version.IsRandomized());
+#if !UUIDREV_DISABLE
+        Assert.IsFalse(version.IsCustomized());
+#endif
         Assert.IsFalse(version.ContainsClockSequence());
         Assert.IsFalse(version.ContainsNodeId());
         Assert.IsFalse(version.ContainsLocalId());
@@ -60,6 +72,9 @@ public class GuidVersionInfoTest
         Assert.IsFalse(version.IsTimeBased());
         Assert.IsFalse(version.IsNameBased());
         Assert.IsTrue(version.IsRandomized());
+#if !UUIDREV_DISABLE
+        Assert.IsFalse(version.IsCustomized());
+#endif
         Assert.IsFalse(version.ContainsClockSequence());
         Assert.IsFalse(version.ContainsNodeId());
         Assert.IsFalse(version.ContainsLocalId());
@@ -72,6 +87,9 @@ public class GuidVersionInfoTest
         Assert.IsFalse(version.IsTimeBased());
         Assert.IsTrue(version.IsNameBased());
         Assert.IsFalse(version.IsRandomized());
+#if !UUIDREV_DISABLE
+        Assert.IsFalse(version.IsCustomized());
+#endif
         Assert.IsFalse(version.ContainsClockSequence());
         Assert.IsFalse(version.ContainsNodeId());
         Assert.IsFalse(version.ContainsLocalId());
@@ -85,6 +103,7 @@ public class GuidVersionInfoTest
         Assert.IsTrue(version.IsTimeBased());
         Assert.IsFalse(version.IsNameBased());
         Assert.IsFalse(version.IsRandomized());
+        Assert.IsFalse(version.IsCustomized());
         Assert.IsTrue(version.ContainsClockSequence());
         Assert.IsTrue(version.ContainsNodeId());
         Assert.IsFalse(version.ContainsLocalId());
@@ -97,6 +116,7 @@ public class GuidVersionInfoTest
         Assert.IsTrue(version.IsTimeBased());
         Assert.IsFalse(version.IsNameBased());
         Assert.IsTrue(version.IsRandomized());
+        Assert.IsFalse(version.IsCustomized());
         Assert.IsFalse(version.ContainsClockSequence());
         Assert.IsFalse(version.ContainsNodeId());
         Assert.IsFalse(version.ContainsLocalId());
@@ -109,6 +129,7 @@ public class GuidVersionInfoTest
         Assert.IsFalse(version.IsTimeBased());
         Assert.IsFalse(version.IsNameBased());
         Assert.IsFalse(version.IsRandomized());
+        Assert.IsTrue(version.IsCustomized());
         Assert.IsFalse(version.ContainsClockSequence());
         Assert.IsFalse(version.ContainsNodeId());
         Assert.IsFalse(version.ContainsLocalId());
@@ -121,6 +142,7 @@ public class GuidVersionInfoTest
         Assert.IsFalse(version.IsTimeBased());
         Assert.IsFalse(version.IsNameBased());
         Assert.IsFalse(version.IsRandomized());
+        Assert.IsFalse(version.IsCustomized());
         Assert.IsFalse(version.ContainsClockSequence());
         Assert.IsFalse(version.ContainsNodeId());
         Assert.IsFalse(version.ContainsLocalId());

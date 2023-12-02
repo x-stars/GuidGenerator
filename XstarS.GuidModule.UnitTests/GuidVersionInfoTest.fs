@@ -12,6 +12,9 @@ type GuidVersionInfoTest() =
         |- (Assert.false' << Guid.isTimeBased)
         |- (Assert.false' << Guid.isNameBased)
         |- (Assert.false' << Guid.isRandomized)
+#if !UUIDREV_DISABLE
+        |- (Assert.false' << Guid.isCustomized)
+#endif
         |- (Assert.false' << Guid.hasClockSeq)
         |- (Assert.false' << Guid.hasNodeId)
         |- (Assert.false' << Guid.hasLocalId)
@@ -23,6 +26,9 @@ type GuidVersionInfoTest() =
         |- (Assert.true'  << Guid.isTimeBased)
         |- (Assert.false' << Guid.isNameBased)
         |- (Assert.false' << Guid.isRandomized)
+#if !UUIDREV_DISABLE
+        |- (Assert.false' << Guid.isCustomized)
+#endif
         |- (Assert.true'  << Guid.hasClockSeq)
         |- (Assert.true'  << Guid.hasNodeId)
         |- (Assert.false' << Guid.hasLocalId)
@@ -34,6 +40,9 @@ type GuidVersionInfoTest() =
         |- (Assert.true'  << Guid.isTimeBased)
         |- (Assert.false' << Guid.isNameBased)
         |- (Assert.false' << Guid.isRandomized)
+#if !UUIDREV_DISABLE
+        |- (Assert.false' << Guid.isCustomized)
+#endif
         |- (Assert.true'  << Guid.hasClockSeq)
         |- (Assert.true'  << Guid.hasNodeId)
         |- (Assert.true'  << Guid.hasLocalId)
@@ -45,6 +54,9 @@ type GuidVersionInfoTest() =
         |- (Assert.false' << Guid.isTimeBased)
         |- (Assert.true'  << Guid.isNameBased)
         |- (Assert.false' << Guid.isRandomized)
+#if !UUIDREV_DISABLE
+        |- (Assert.false' << Guid.isCustomized)
+#endif
         |- (Assert.false' << Guid.hasClockSeq)
         |- (Assert.false' << Guid.hasNodeId)
         |- (Assert.false' << Guid.hasLocalId)
@@ -56,6 +68,9 @@ type GuidVersionInfoTest() =
         |- (Assert.false' << Guid.isTimeBased)
         |- (Assert.false' << Guid.isNameBased)
         |- (Assert.true'  << Guid.isRandomized)
+#if !UUIDREV_DISABLE
+        |- (Assert.false' << Guid.isCustomized)
+#endif
         |- (Assert.false' << Guid.hasClockSeq)
         |- (Assert.false' << Guid.hasNodeId)
         |- (Assert.false' << Guid.hasLocalId)
@@ -67,6 +82,9 @@ type GuidVersionInfoTest() =
         |- (Assert.false' << Guid.isTimeBased)
         |- (Assert.true'  << Guid.isNameBased)
         |- (Assert.false' << Guid.isRandomized)
+#if !UUIDREV_DISABLE
+        |- (Assert.false' << Guid.isCustomized)
+#endif
         |- (Assert.false' << Guid.hasClockSeq)
         |- (Assert.false' << Guid.hasNodeId)
         |- (Assert.false' << Guid.hasLocalId)
@@ -79,6 +97,7 @@ type GuidVersionInfoTest() =
         |- (Assert.true'  << Guid.isTimeBased)
         |- (Assert.false' << Guid.isNameBased)
         |- (Assert.false' << Guid.isRandomized)
+        |- (Assert.false' << Guid.isCustomized)
         |- (Assert.true'  << Guid.hasClockSeq)
         |- (Assert.true'  << Guid.hasNodeId)
         |- (Assert.false' << Guid.hasLocalId)
@@ -90,6 +109,7 @@ type GuidVersionInfoTest() =
         |- (Assert.true'  << Guid.isTimeBased)
         |- (Assert.false' << Guid.isNameBased)
         |- (Assert.true'  << Guid.isRandomized)
+        |- (Assert.false' << Guid.isCustomized)
         |- (Assert.false' << Guid.hasClockSeq)
         |- (Assert.false' << Guid.hasNodeId)
         |- (Assert.false' << Guid.hasLocalId)
@@ -101,6 +121,7 @@ type GuidVersionInfoTest() =
         |- (Assert.false' << Guid.isTimeBased)
         |- (Assert.false' << Guid.isNameBased)
         |- (Assert.false' << Guid.isRandomized)
+        |- (Assert.true'  << Guid.isCustomized)
         |- (Assert.false' << Guid.hasClockSeq)
         |- (Assert.false' << Guid.hasNodeId)
         |- (Assert.false' << Guid.hasLocalId)
@@ -112,6 +133,7 @@ type GuidVersionInfoTest() =
         |- (Assert.false' << Guid.isTimeBased)
         |- (Assert.false' << Guid.isNameBased)
         |- (Assert.false' << Guid.isRandomized)
+        |- (Assert.false' << Guid.isCustomized)
         |- (Assert.false' << Guid.hasClockSeq)
         |- (Assert.false' << Guid.hasNodeId)
         |- (Assert.false' << Guid.hasLocalId)

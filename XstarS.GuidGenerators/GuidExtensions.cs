@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using XNetEx.Guids.Components;
 
 namespace XNetEx.Guids;
@@ -92,6 +93,20 @@ public static partial class GuidExtensions
     }
 
     /// <summary>
+    /// Gets the version of the <see cref="Guid"/>
+    /// if the <see cref="Guid"/> is of the RFC 4122 variant.
+    /// </summary>
+    /// <param name="guid">The <see cref="Guid"/>.</param>
+    /// <returns>The version of the <see cref="Guid"/>
+    /// if the <see cref="Guid"/> is of the RFC 4122 variant;
+    /// otherwise, an invalid <see cref="GuidVersion"/> value.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static GuidVersion GetRfc4122Version(this Guid guid)
+    {
+        return guid.IsRfc4122Uuid() ? guid.GetVersion() : (GuidVersion)16;
+    }
+
+    /// <summary>
     /// Tries to get the timestamp represented by the <see cref="Guid"/>.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/>.</param>
@@ -101,8 +116,7 @@ public static partial class GuidExtensions
     /// is time-based; otherwise, <see langword="false"/>.</returns>
     public static bool TryGetTimestamp(this Guid guid, out DateTime timestamp)
     {
-        if (!guid.IsRfc4122Uuid() ||
-            !guid.GetVersion().IsTimeBased())
+        if (!guid.GetRfc4122Version().IsTimeBased())
         {
             timestamp = default(DateTime);
             return false;
@@ -136,8 +150,7 @@ public static partial class GuidExtensions
     /// contains a clock sequence; otherwise, <see langword="false"/>.</returns>
     public static bool TryGetClockSequence(this Guid guid, out short clockSeq)
     {
-        if (!guid.IsRfc4122Uuid() ||
-            !guid.GetVersion().ContainsClockSequence())
+        if (!guid.GetRfc4122Version().ContainsClockSequence())
         {
             clockSeq = default(int);
             return false;
@@ -162,8 +175,7 @@ public static partial class GuidExtensions
     public static bool TryGetDomainAndLocalId(
         this Guid guid, out DceSecurityDomain domain, out int localId)
     {
-        if (!guid.IsRfc4122Uuid() ||
-            !guid.GetVersion().ContainsLocalId())
+        if (!guid.GetRfc4122Version().ContainsLocalId())
         {
             domain = default(DceSecurityDomain);
             localId = default(int);
@@ -187,8 +199,7 @@ public static partial class GuidExtensions
     public static bool TryGetNodeId(
         this Guid guid, [NotNullWhen(true)] out byte[]? nodeId)
     {
-        if (!guid.IsRfc4122Uuid() ||
-            !guid.GetVersion().ContainsNodeId())
+        if (!guid.GetRfc4122Version().ContainsNodeId())
         {
             nodeId = null;
             return false;
@@ -212,8 +223,7 @@ public static partial class GuidExtensions
     public static bool TryWriteNodeId(this Guid guid, Span<byte> destination)
     {
         if (destination.Length < 6) { return false; }
-        if (!guid.IsRfc4122Uuid() ||
-            !guid.GetVersion().ContainsNodeId())
+        if (!guid.GetRfc4122Version().ContainsNodeId())
         {
             return false;
         }
