@@ -1,7 +1,7 @@
 ﻿namespace XNetEx.Guids.Components;
 
 internal interface IGuidCommonComponents
-    : IGuidVariantComponent, IGuidVersionComponent
+    : IGuidVariantComponent, IGuidVersionComponent, IGuidRawDataComponent
 {
 }
 
@@ -19,3 +19,25 @@ internal interface IDceSecurityGuidComponents
     : ITimeNodeBasedGuidComponents, IGuidDomainComponent, IGuidLocalIdComponent
 {
 }
+
+internal interface INameBasedGuidComponents
+    : IGuidCommonComponents, IGuidHashDataComponent
+{
+}
+
+internal interface IRandomizedGuidComponents
+    : IGuidCommonComponents, IGuidRandomDataComponent
+{
+}
+
+internal interface ITimeRandomBasedGuidComponents
+    : ITimeBasedGuidComponents, IRandomizedGuidComponents
+{
+}
+
+#if !UUIDREV_DISABLE
+internal interface ICustomizedGuidComponents
+    : IGuidCommonComponents, IGuidCustomDataComponent
+{
+}
+#endif

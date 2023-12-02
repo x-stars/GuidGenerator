@@ -81,6 +81,22 @@ public partial class GuidGeneratorTest
                        GuidGenerator.OfHashAlgorithm(nameof(SHA384)));
         Assert.AreSame(GuidGenerator.Version8NSha512,
                        GuidGenerator.OfHashAlgorithm(nameof(SHA512)));
+#if NET8_0_OR_GREATER
+        if (SHA3_256.IsSupported && SHA3_384.IsSupported && SHA3_512.IsSupported &&
+            Shake128.IsSupported && Shake256.IsSupported)
+        {
+            Assert.AreSame(GuidGenerator.Version8NSha3D256,
+                           GuidGenerator.OfHashAlgorithm("SHA3-256"));
+            Assert.AreSame(GuidGenerator.Version8NSha3D384,
+                           GuidGenerator.OfHashAlgorithm("SHA3-384"));
+            Assert.AreSame(GuidGenerator.Version8NSha3D512,
+                           GuidGenerator.OfHashAlgorithm("SHA3-512"));
+            Assert.AreSame(GuidGenerator.Version8NShake128,
+                           GuidGenerator.OfHashAlgorithm("SHAKE128"));
+            Assert.AreSame(GuidGenerator.Version8NShake256,
+                           GuidGenerator.OfHashAlgorithm("SHAKE256"));
+        }
+#endif
     }
 
     [TestMethod]
@@ -96,6 +112,22 @@ public partial class GuidGeneratorTest
                        GuidGenerator.OfHashAlgorithm(HashAlgorithmName.SHA384));
         Assert.AreSame(GuidGenerator.Version8NSha512,
                        GuidGenerator.OfHashAlgorithm(HashAlgorithmName.SHA512));
+#if NET8_0_OR_GREATER
+        if (SHA3_256.IsSupported && SHA3_384.IsSupported && SHA3_512.IsSupported &&
+            Shake128.IsSupported && Shake256.IsSupported)
+        {
+            Assert.AreSame(GuidGenerator.Version8NSha3D256,
+                           GuidGenerator.OfHashAlgorithm(HashAlgorithmName.SHA3_256));
+            Assert.AreSame(GuidGenerator.Version8NSha3D384,
+                           GuidGenerator.OfHashAlgorithm(HashAlgorithmName.SHA3_384));
+            Assert.AreSame(GuidGenerator.Version8NSha3D512,
+                           GuidGenerator.OfHashAlgorithm(HashAlgorithmName.SHA3_512));
+            Assert.AreSame(GuidGenerator.Version8NShake128,
+                           GuidGenerator.OfHashAlgorithm(new HashAlgorithmName("SHAKE128")));
+            Assert.AreSame(GuidGenerator.Version8NShake256,
+                           GuidGenerator.OfHashAlgorithm(new HashAlgorithmName("SHAKE256")));
+        }
+#endif
     }
 
     [TestMethod]
@@ -149,4 +181,4 @@ public partial class GuidGeneratorTest
             () => GuidGenerator.CreatePooled(GuidGenerator.CreateVersion1R, int.MinValue));
     }
 #endif
-}
+    }

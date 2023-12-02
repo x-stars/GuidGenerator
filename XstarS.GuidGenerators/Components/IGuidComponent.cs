@@ -16,6 +16,35 @@ internal interface IGuidVersionComponent
     void SetVersion(ref Guid guid, GuidVersion version);
 }
 
+internal interface IGuidRawDataComponent
+{
+    byte[] GetRawData(ref Guid guid, out byte[] bitmask);
+
+    void SetRawData(ref Guid guid, byte[] rawData);
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    void WriteRawData(ref Guid guid, Span<byte> destination, Span<byte> bitmask)
+    {
+        var rawData = this.GetRawData(ref guid, out var bitmaskData);
+        ((ReadOnlySpan<byte>)rawData).CopyTo(destination);
+        ((ReadOnlySpan<byte>)bitmaskData).CopyTo(bitmask);
+    }
+#else
+    void WriteRawData(ref Guid guid, Span<byte> destination, Span<byte> bitmask);
+#endif
+
+#if NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    void SetRawData(ref Guid guid, ReadOnlySpan<byte> rawData)
+    {
+        this.SetRawData(ref guid, rawData.ToArray());
+    }
+#else
+    void SetRawData(ref Guid guid, ReadOnlySpan<byte> rawData);
+#endif
+#endif
+}
+
 internal interface IGuidTimestampComponent
 {
     long GetTimestamp(ref Guid guid);
@@ -71,3 +100,92 @@ internal interface IGuidLocalIdComponent
 
     void SetLocalId(ref Guid guid, int localId);
 }
+
+internal interface IGuidHashDataComponent
+{
+    byte[] GetHashData(ref Guid guid, out byte[] bitmask);
+
+    void SetHashData(ref Guid guid, byte[] hashData);
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    void WriteHashData(ref Guid guid, Span<byte> destination, Span<byte> bitmask)
+    {
+        var hashData = this.GetHashData(ref guid, out var bitmaskData);
+        ((ReadOnlySpan<byte>)hashData).CopyTo(destination);
+        ((ReadOnlySpan<byte>)bitmaskData).CopyTo(bitmask);
+    }
+#else
+    void WriteHashData(ref Guid guid, Span<byte> destination, Span<byte> bitmask);
+#endif
+
+#if NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    void SetHashData(ref Guid guid, ReadOnlySpan<byte> hashData)
+    {
+        this.SetHashData(ref guid, hashData.ToArray());
+    }
+#else
+    void SetHashData(ref Guid guid, ReadOnlySpan<byte> hashData);
+#endif
+#endif
+}
+
+internal interface IGuidRandomDataComponent
+{
+    byte[] GetRandomData(ref Guid guid, out byte[] bitmask);
+
+    void SetRandomData(ref Guid guid, byte[] randomData);
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    void WriteRandomData(ref Guid guid, Span<byte> destination, Span<byte> bitmask)
+    {
+        var randomData = this.GetRandomData(ref guid, out var bitmaskData);
+        ((ReadOnlySpan<byte>)randomData).CopyTo(destination);
+        ((ReadOnlySpan<byte>)bitmaskData).CopyTo(bitmask);
+    }
+#else
+    void WriteRandomData(ref Guid guid, Span<byte> destination, Span<byte> bitmask);
+#endif
+
+#if NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    void SetRandomData(ref Guid guid, ReadOnlySpan<byte> randomData)
+    {
+        this.SetRandomData(ref guid, randomData.ToArray());
+    }
+#else
+    void SetRandomData(ref Guid guid, ReadOnlySpan<byte> randomData);
+#endif
+#endif
+}
+
+#if !UUIDREV_DISABLE
+internal interface IGuidCustomDataComponent
+{
+    byte[] GetCustomData(ref Guid guid, out byte[] bitmask);
+
+    void SetCustomData(ref Guid guid, byte[] customData);
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    void WriteCustomData(ref Guid guid, Span<byte> destination, Span<byte> bitmask)
+    {
+        var customData = this.GetCustomData(ref guid, out var bitmaskData);
+        ((ReadOnlySpan<byte>)customData).CopyTo(destination);
+        ((ReadOnlySpan<byte>)bitmaskData).CopyTo(bitmask);
+    }
+#else
+    void WriteCustomData(ref Guid guid, Span<byte> destination, Span<byte> bitmask);
+#endif
+
+#if NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    void SetCustomData(ref Guid guid, ReadOnlySpan<byte> customData)
+    {
+        this.SetCustomData(ref guid, customData.ToArray());
+    }
+#else
+    void SetCustomData(ref Guid guid, ReadOnlySpan<byte> customData);
+#endif
+#endif
+}
+#endif

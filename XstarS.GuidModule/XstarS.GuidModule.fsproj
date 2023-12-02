@@ -26,8 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="OptionConvert.fs" />
     <Compile Include="TryResult.fs" />
     <Compile Include="GuidModule.fs" />
+    <Compile Include="GuidPatterns.fs" />
   </ItemGroup>
 
   <ItemGroup>

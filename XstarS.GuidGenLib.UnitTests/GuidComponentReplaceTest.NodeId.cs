@@ -77,7 +77,7 @@ partial class GuidComponentReplaceTest
 #endif
 
     [TestMethod]
-    public void ReplaceNodeId_OtherVersionGuids_GetAllFalseResults()
+    public void ReplaceNodeId_OtherVersionGuids_GetOriginalGuidValues()
     {
         var nodeId = new byte[] { 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8 };
         foreach (var guidText in new[]
@@ -101,7 +101,7 @@ partial class GuidComponentReplaceTest
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     [TestMethod]
-    public void TryWriteNodeId_OtherVersionGuids_GetAllFalseResults()
+    public void TryWriteNodeId_OtherVersionGuids_GetOriginalGuidValues()
     {
         var nodeId = (stackalloc byte[] { 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8 });
         foreach (var guidText in new[]
