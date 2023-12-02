@@ -45,8 +45,8 @@ internal static class NodeIdSourceInfo
     /// the <see cref="NodeIdSource"/> should be stored in a non-volatile storage;
     /// otherwise, <see langword="false"/>.</returns>
     public static bool IsNonVolatile(this NodeIdSource source) =>
-        source == NodeIdSource.PhysicalAddress ||
-        source == NodeIdSource.NonVolatileRandom;
+        source is NodeIdSource.PhysicalAddress
+               or NodeIdSource.NonVolatileRandom;
 
     /// <summary>
     /// Gets a value that indicates whether a node ID from
@@ -57,6 +57,6 @@ internal static class NodeIdSourceInfo
     /// the <see cref="NodeIdSource"/> is generated from a random number;
     /// otherwise, <see langword="false"/>.</returns>
     public static bool IsRandomValue(this NodeIdSource source) =>
-        source == NodeIdSource.VolatileRandom ||
-        source == NodeIdSource.NonVolatileRandom;
+        source is NodeIdSource.VolatileRandom
+               or NodeIdSource.NonVolatileRandom;
 }
