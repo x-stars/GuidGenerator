@@ -156,7 +156,7 @@ static partial class GuidExtensions
         }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        return guid.ReplaceNodeId((Span<byte>)nodeId);
+        return guid.ReplaceNodeId((ReadOnlySpan<byte>)nodeId);
 #else
         if (nodeId.Length != 6)
         {
