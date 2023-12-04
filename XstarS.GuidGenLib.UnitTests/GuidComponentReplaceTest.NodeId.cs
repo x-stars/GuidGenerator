@@ -55,7 +55,7 @@ partial class GuidComponentReplaceTest
     [TestMethod]
     public void ReplaceNodeId_Version6Guid_GetInputBytes()
     {
-        var nodeId = new byte[] { 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8 };
+        var nodeId = new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
         var original = Guid.Parse("1d19dad6-ba7b-6810-80b4-000000000000");
         var guid = original.ReplaceNodeId(nodeId);
         _ = guid.TryGetNodeId(out var guidNodeId);
@@ -79,7 +79,7 @@ partial class GuidComponentReplaceTest
     [TestMethod]
     public void ReplaceNodeId_OtherVersionGuids_GetOriginalGuidValues()
     {
-        var nodeId = new byte[] { 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8 };
+        var nodeId = new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
         foreach (var guidText in new[]
         {
             "00000000-0000-0000-0000-000000000000",
@@ -103,7 +103,7 @@ partial class GuidComponentReplaceTest
     [TestMethod]
     public void TryWriteNodeId_OtherVersionGuids_GetOriginalGuidValues()
     {
-        var nodeId = (stackalloc byte[] { 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8 });
+        var nodeId = (stackalloc byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
         foreach (var guidText in new[]
         {
             "00000000-0000-0000-0000-000000000000",
@@ -123,4 +123,29 @@ partial class GuidComponentReplaceTest
         }
     }
 #endif
+
+    [TestMethod]
+    public void ReplaceNodeId_OtherVariantGuids_GetOriginalGuidValues()
+    {
+        var nodeId = new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };
+        foreach (var guidText in new[]
+        {
+            "6ba7b810-9dad-11d1-00b4-00c04fd430c8",
+            "6ba7b810-9dad-11d1-c0b4-00c04fd430c8",
+            "6ba7b810-9dad-11d1-e0b4-00c04fd430c8",
+            "6ba7b810-9dad-21d1-00b4-00c04fd430c8",
+            "6ba7b810-9dad-21d1-c0b4-00c04fd430c8",
+            "6ba7b810-9dad-21d1-e0b4-00c04fd430c8",
+#if !UUIDREV_DISABLE
+            "1d19dad6-ba7b-6810-00b4-00c04fd430c8",
+            "1d19dad6-ba7b-6810-c0b4-00c04fd430c8",
+            "1d19dad6-ba7b-6810-e0b4-00c04fd430c8",
+#endif
+        })
+        {
+            var original = Guid.Parse(guidText);
+            var guid = original.ReplaceNodeId(nodeId);
+            Assert.AreEqual(original, guid);
+        }
+    }
 }

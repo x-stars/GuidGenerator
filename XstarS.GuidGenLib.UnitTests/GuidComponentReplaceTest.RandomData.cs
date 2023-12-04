@@ -74,7 +74,11 @@ partial class GuidComponentReplaceTest
     [TestMethod]
     public void ReplaceRandomData_OtherVersionGuids_GetOriginalGuidValues()
     {
-        var randomData = new byte[16];
+        var randomData = new byte[16]
+        {
+            0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+            0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
+        };
         foreach (var guidText in new[]
         {
             "00000000-0000-0000-0000-000000000000",
@@ -99,7 +103,11 @@ partial class GuidComponentReplaceTest
     [TestMethod]
     public void TryWriteRandomData_OtherVersionGuids_GetOriginalGuidValues()
     {
-        var randomData = (stackalloc byte[16]);
+        var randomData = (stackalloc byte[16]
+        {
+            0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+            0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
+        });
         foreach (var guidText in new[]
         {
             "00000000-0000-0000-0000-000000000000",
@@ -120,4 +128,30 @@ partial class GuidComponentReplaceTest
         }
     }
 #endif
+
+    [TestMethod]
+    public void ReplaceRandomData_OtherVariantGuids_GetOriginalGuidValues()
+    {
+        var randomData = new byte[16]
+        {
+            0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+            0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
+        };
+        foreach (var guidText in new[]
+        {
+            "2502f1d5-c2a9-47d3-36d8-d7670094ace2",
+            "2502f1d5-c2a9-47d3-d6d8-d7670094ace2",
+            "2502f1d5-c2a9-47d3-f6d8-d7670094ace2",
+#if !UUIDREV_DISABLE
+            "017f22e2-79b0-7cc3-18c4-dc0c0c07398f",
+            "017f22e2-79b0-7cc3-d8c4-dc0c0c07398f",
+            "017f22e2-79b0-7cc3-f8c4-dc0c0c07398f",
+#endif
+        })
+        {
+            var original = Guid.Parse(guidText);
+            var guid = original.ReplaceRandomData(randomData);
+            Assert.AreEqual(original, guid);
+        }
+    }
 }

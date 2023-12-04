@@ -121,5 +121,30 @@ partial class GuidComponentTest
             Assert.IsFalse(result);
         }
     }
+
+    [TestMethod]
+    public void TryWriteNodeId_OtherVariantGuids_GetAllFalseResults()
+    {
+        var nodeId = (stackalloc byte[6]);
+        foreach (var guidText in new[]
+        {
+            "6ba7b810-9dad-11d1-00b4-00c04fd430c8",
+            "6ba7b810-9dad-11d1-c0b4-00c04fd430c8",
+            "6ba7b810-9dad-11d1-e0b4-00c04fd430c8",
+            "6ba7b810-9dad-21d1-00b4-00c04fd430c8",
+            "6ba7b810-9dad-21d1-c0b4-00c04fd430c8",
+            "6ba7b810-9dad-21d1-e0b4-00c04fd430c8",
+#if !UUIDREV_DISABLE
+            "1d19dad6-ba7b-6810-00b4-00c04fd430c8",
+            "1d19dad6-ba7b-6810-c0b4-00c04fd430c8",
+            "1d19dad6-ba7b-6810-e0b4-00c04fd430c8",
+#endif
+        })
+        {
+            var guid = Guid.Parse(guidText);
+            var result = guid.TryWriteNodeId(nodeId);
+            Assert.IsFalse(result);
+        }
+    }
 #endif
 }

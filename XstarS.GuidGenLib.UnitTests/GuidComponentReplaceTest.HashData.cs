@@ -72,7 +72,11 @@ partial class GuidComponentReplaceTest
     [TestMethod]
     public void ReplaceHashData_OtherVersionGuids_GetOriginalGuidValues()
     {
-        var hashData = new byte[16];
+        var hashData = new byte[16]
+        {
+            0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+            0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
+        };
         foreach (var guidText in new[]
         {
             "00000000-0000-0000-0000-000000000000",
@@ -97,7 +101,11 @@ partial class GuidComponentReplaceTest
     [TestMethod]
     public void TryWriteHashData_OtherVersionGuids_GetOriginalGuidValues()
     {
-        var hashData = (stackalloc byte[16]);
+        var hashData = (stackalloc byte[16]
+        {
+            0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+            0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
+        });
         foreach (var guidText in new[]
         {
             "00000000-0000-0000-0000-000000000000",
@@ -118,4 +126,28 @@ partial class GuidComponentReplaceTest
         }
     }
 #endif
+
+    [TestMethod]
+    public void ReplaceHashData_OtherVariantGuids_GetOriginalGuidValues()
+    {
+        var hashData = new byte[16]
+        {
+            0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+            0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
+        };
+        foreach (var guidText in new[]
+        {
+            "a9ec4420-7252-3c11-2b70-512e10273537",
+            "a9ec4420-7252-3c11-cb70-512e10273537",
+            "a9ec4420-7252-3c11-eb70-512e10273537",
+            "768a7b1b-ae51-5c0a-3c9d-a85a343f2c24",
+            "768a7b1b-ae51-5c0a-dc9d-a85a343f2c24",
+            "768a7b1b-ae51-5c0a-fc9d-a85a343f2c24",
+        })
+        {
+            var original = Guid.Parse(guidText);
+            var guid = original.ReplaceHashData(hashData);
+            Assert.AreEqual(original, guid);
+        }
+    }
 }
