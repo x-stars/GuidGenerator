@@ -87,7 +87,7 @@ internal sealed class ShowHelpCommand : ProgramCommand
 
         foreach (var helpLine in GetHelpMessage())
         {
-            Console.WriteLine(helpLine);
+            Console.Out.WriteLine(helpLine);
         }
         return true;
     }
