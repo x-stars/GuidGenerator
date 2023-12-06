@@ -61,14 +61,8 @@ internal abstract class ProgramCommand
     {
         var cmdPath = Environment.GetCommandLineArgs()[0];
         var cmdName = Path.GetFileNameWithoutExtension(cmdPath);
-        if (this.SupportsPathExt)
-        {
-            var cmdExt = Path.GetExtension(cmdPath);
-            if (cmdExt.Length > 0)
-            {
-                cmdName += $"[{cmdExt}]";
-            }
-        }
-        return cmdName;
+        var cmdExt = Path.GetExtension(cmdPath);
+        return (this.SupportsPathExt && (cmdExt.Length > 0)) ?
+            $"{cmdName}[{cmdExt}]" : Path.GetFileName(cmdPath);
     }
 }

@@ -91,22 +91,21 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
             return false;
         }
 
-        var stdout = Console.Out;
         var guidGen = this.GetGuidGenerator();
         if (readInput)
         {
             var name = default(string);
-            while ((name = Console.ReadLine()) != null)
+            while ((name = Console.In.ReadLine()) != null)
             {
                 var guid = guidGen.NewGuid(nsId, name);
-                stdout.WriteLine(in guid);
+                Console.Out.WriteLine(in guid);
             }
         }
         else
         {
             var name = args[hashArgCount + 2];
             var guid = guidGen.NewGuid(nsId, name);
-            stdout.WriteLine(in guid);
+            Console.Out.WriteLine(in guid);
         }
         return true;
     }

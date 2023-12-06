@@ -16,6 +16,28 @@ public class GuidUuidBytesTest
             Assert.AreEqual(byte.MaxValue, item);
         }
     }
+
+#if NET7_0_OR_GREATER
+    [TestMethod]
+    public void GuidMaxValue_ToUInt128_GetUInt128MaxValue()
+    {
+        var guid = Uuid.MaxValue;
+        Assert.AreEqual(UInt128.MaxValue, guid.ToUInt128());
+    }
+#endif
+#endif
+
+#if NET7_0_OR_GREATER
+    [TestMethod]
+    public void FromUInt128_ToUInt128_GetInputUInt128Value()
+    {
+        var value = new UInt128(
+            (ulong)Random.Shared.NextInt64(),
+            (ulong)Random.Shared.NextInt64());
+        var guid = Uuid.FromUInt128(value);
+        var guidValue = guid.ToUInt128();
+        Assert.AreEqual(value, guidValue);
+    }
 #endif
 
     [TestMethod]

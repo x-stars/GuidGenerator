@@ -30,6 +30,14 @@ type GuidModuleTest() =
         |> Assert.equalTo (0x00112233, 0x4455s, 0x6677s, (0x88uy, 0x99uy),
                            (0xAAuy, 0xBBuy, 0xCCuy, 0xDDuy, 0xEEuy, 0xFFuy))
 
+#if NET7_0_OR_GREATER
+    [<TestMethod>]
+    member _.CreateByUInt128_ConvertToUInt128_GetOriginalValue() =
+        Guid.ofUInt128 (System.UInt128(0x0011223344556677uL, 0x8899AABBCCDDEEFFuL))
+        |> Guid.toUInt128
+        |> Assert.equalTo (System.UInt128(0x0011223344556677uL, 0x8899AABBCCDDEEFFuL))
+#endif
+
     [<TestMethod>]
     member _.CreateByByteArray_ConvertToUuidByteArray_GetReversedByteOrder() =
         Array.map byte

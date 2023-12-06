@@ -26,7 +26,7 @@ static partial class GuidExtensions
         }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        return guid.ReplaceHashData((Span<byte>)hashData);
+        return guid.ReplaceHashData((ReadOnlySpan<byte>)hashData);
 #else
         if (hashData.Length != 16)
         {
@@ -99,7 +99,7 @@ static partial class GuidExtensions
         }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        return guid.ReplaceRandomData((Span<byte>)randomData);
+        return guid.ReplaceRandomData((ReadOnlySpan<byte>)randomData);
 #else
         if (randomData.Length != 16)
         {
@@ -175,7 +175,7 @@ static partial class GuidExtensions
         }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        return guid.ReplaceCustomData((Span<byte>)customData);
+        return guid.ReplaceCustomData((ReadOnlySpan<byte>)customData);
 #else
         if (customData.Length != 16)
         {

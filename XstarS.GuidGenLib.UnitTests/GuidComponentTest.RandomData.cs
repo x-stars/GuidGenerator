@@ -143,5 +143,28 @@ partial class GuidComponentTest
             Assert.IsFalse(result);
         }
     }
+
+    [TestMethod]
+    public void TryWriteRandomData_OtherVariantGuids_GetAllFalseResults()
+    {
+        var randomData = (stackalloc byte[16]);
+        var bitmask = (stackalloc byte[16]);
+        foreach (var guidText in new[]
+        {
+            "2502f1d5-c2a9-47d3-36d8-d7670094ace2",
+            "2502f1d5-c2a9-47d3-d6d8-d7670094ace2",
+            "2502f1d5-c2a9-47d3-f6d8-d7670094ace2",
+#if !UUIDREV_DISABLE
+            "017f22e2-79b0-7cc3-18c4-dc0c0c07398f",
+            "017f22e2-79b0-7cc3-d8c4-dc0c0c07398f",
+            "017f22e2-79b0-7cc3-f8c4-dc0c0c07398f",
+#endif
+        })
+        {
+            var guid = Guid.Parse(guidText);
+            var result = guid.TryWriteRandomData(randomData, bitmask);
+            Assert.IsFalse(result);
+        }
+    }
 #endif
 }

@@ -181,4 +181,4 @@ public partial class GuidGeneratorTest
             () => GuidGenerator.CreatePooled(GuidGenerator.CreateVersion1R, int.MinValue));
     }
 #endif
-    }
+}

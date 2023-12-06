@@ -41,7 +41,11 @@ partial class GuidComponentReplaceTest
     [TestMethod]
     public void ReplaceCustomData_OtherVersionGuids_GetOriginalGuidValues()
     {
-        var customData = new byte[16];
+        var customData = new byte[16]
+        {
+            0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+            0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
+        };
         foreach (var guidText in new[]
         {
             "00000000-0000-0000-0000-000000000000",
@@ -50,11 +54,9 @@ partial class GuidComponentReplaceTest
             "a9ec4420-7252-3c11-ab70-512e10273537",
             "2502f1d5-c2a9-47d3-b6d8-d7670094ace2",
             "768a7b1b-ae51-5c0a-bc9d-a85a343f2c24",
-#if !UUIDREV_DISABLE
             "1d19dad6-ba7b-6810-80b4-00c04fd430c8",
             "017f22e2-79b0-7cc3-98c4-dc0c0c07398f",
             "ffffffff-ffff-ffff-ffff-ffffffffffff",
-#endif
         })
         {
             var original = Guid.Parse(guidText);
@@ -67,7 +69,11 @@ partial class GuidComponentReplaceTest
     [TestMethod]
     public void TryWriteCustomData_OtherVersionGuids_GetOriginalGuidValues()
     {
-        var customData = (stackalloc byte[16]);
+        var customData = (stackalloc byte[16]
+        {
+            0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+            0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
+        });
         foreach (var guidText in new[]
         {
             "00000000-0000-0000-0000-000000000000",
@@ -76,11 +82,9 @@ partial class GuidComponentReplaceTest
             "a9ec4420-7252-3c11-ab70-512e10273537",
             "2502f1d5-c2a9-47d3-b6d8-d7670094ace2",
             "768a7b1b-ae51-5c0a-bc9d-a85a343f2c24",
-#if !UUIDREV_DISABLE
             "1d19dad6-ba7b-6810-80b4-00c04fd430c8",
             "017f22e2-79b0-7cc3-98c4-dc0c0c07398f",
             "ffffffff-ffff-ffff-ffff-ffffffffffff",
-#endif
         })
         {
             var original = Guid.Parse(guidText);
@@ -89,5 +93,26 @@ partial class GuidComponentReplaceTest
         }
     }
 #endif
+
+    [TestMethod]
+    public void ReplaceCustomData_OtherVariantGuids_GetOriginalGuidValues()
+    {
+        var customData = new byte[16]
+        {
+            0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+            0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
+        };
+        foreach (var guidText in new[]
+        {
+            "05db6c94-bba6-8702-08aa-548f4d6cd700",
+            "05db6c94-bba6-8702-c8aa-548f4d6cd700",
+            "05db6c94-bba6-8702-e8aa-548f4d6cd700",
+        })
+        {
+            var original = Guid.Parse(guidText);
+            var guid = original.ReplaceCustomData(customData);
+            Assert.AreEqual(original, guid);
+        }
+    }
 }
 #endif
