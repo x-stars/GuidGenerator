@@ -216,34 +216,36 @@ Usage:  GuidGen[.exe] [-V1|-V4|-V1R] [-Cn]
         GuidGen[.exe] -V8N Hash :NS|GuidNS [Name]
         GuidGen[.exe] -?|-H|-Help
 Parameters:
-    -V1     generate time-based GUID.
-    -V2     generate DCE Security GUID.
-    -V3     generate name-based GUID by MD5 hashing.
-    -V4     generate pseudo-random GUID (default).
-    -V5     generate name-based GUID by SHA1 hashing.
-    -V6     generate reordered time-based GUID.
-    -V7     generate Unix Epoch time-based GUID.
-    -V8     generate custom GUID (example impl).
-    -V1R    generate time-based GUID (random node ID).
-    -V6P    generate reordered time-based GUID
+    -V1     Generate time-based GUID.
+    -V2     Generate DCE Security GUID.
+    -V3     Generate name-based GUID by MD5 hashing.
+    -V4     Generate pseudo-random GUID (default).
+    -V5     Generate name-based GUID by SHA1 hashing.
+    -V6     Generate reordered time-based GUID.
+    -V7     Generate Unix Epoch time-based GUID.
+    -V8     Generate custom GUID (example impl).
+    -V1R    Generate time-based GUID (random node ID).
+    -V6P    Generate reordered time-based GUID
             (IEEE 802 MAC address node ID).
-    -V6R    generate reordered time-based GUID
+    -V6R    Generate reordered time-based GUID
             (non-volatile random node ID).
-    -V8N    generate custom GUID (name-based).
-    -Cn     generate n GUIDs of the current version.
-    Domain  specify a DCE Security domain,
+    -V8N    Generate custom GUID (name-based).
+    -Cn     Generate n GUIDs of the current version.
+    Domain  Specify a DCE Security domain,
             which can be Person, Group or Org.
-    SiteID  specify a user-defined local ID
+    SiteID  Specify a user-defined local ID
             for DCE Security domain Org (required).
-    :NS     specify a well-known GUID namespace,
+    :NS     Specify a well-known GUID namespace,
             which can be :DNS, :URL, :OID or :X500.
-    GuidNS  specify a user-defined GUID namespace.
-    Name    specify the name to generate GUID,
+    GuidNS  Specify a user-defined GUID namespace.
+    Name    Specify the name to generate GUID,
             or empty to read from standard input.
-    Hash    specify a well-known hash algorithm,
-            which can be SHA256, SHA384 or SHA512.
+    Hash    Specify a well-known hash algorithm,
+            which can be SHA256, SHA384, SHA512,
+                SHA3-256, SHA3-384, SHA3-512,
+                SHAKE128 or SHAKE256.
     -?|-H|-Help
-            show the current help message.
+            Show the current help message.
 ```
 
 ### Command Line Tool Usage Examples
