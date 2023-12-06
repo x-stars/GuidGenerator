@@ -180,24 +180,24 @@ Usage:  GuidGen[.exe] [-V1|-V4|-V1R] [-Cn]
         GuidGen[.exe] -V3|-V5 :NS|GuidNS [Name]
         GuidGen[.exe] -?|-H|-Help
 Parameters:
-    -V1     generate time-based GUID.
-    -V2     generate DCE Security GUID.
-    -V3     generate name-based GUID by MD5 hashing.
-    -V4     generate pseudo-random GUID (default).
-    -V5     generate name-based GUID by SHA1 hashing.
-    -V1R    generate time-based GUID (random node ID).
-    -Cn     generate n GUIDs of the current version.
-    Domain  specify a DCE Security domain,
+    -V1     Generate time-based GUID.
+    -V2     Generate DCE Security GUID.
+    -V3     Generate name-based GUID by MD5 hashing.
+    -V4     Generate pseudo-random GUID (default).
+    -V5     Generate name-based GUID by SHA1 hashing.
+    -V1R    Generate time-based GUID (random node ID).
+    -Cn     Generate n GUIDs of the current version.
+    Domain  Specify a DCE Security domain,
             which can be Person, Group or Org.
-    SiteID  specify a user-defined local ID
+    SiteID  Specify a user-defined local ID
             for DCE Security domain Org (required).
-    :NS     specify a well-known GUID namespace,
+    :NS     Specify a well-known GUID namespace,
             which can be :DNS, :URL, :OID or :X500.
-    GuidNS  specify a user-defined GUID namespace.
-    Name    specify the name to generate GUID,
+    GuidNS  Specify a user-defined GUID namespace.
+    Name    Specify the name to generate GUID,
             or empty to read from standard input.
     -?|-H|-Help
-            show the current help message.
+            Show the current help message.
 ```
 
 ### Command Line Tool Usage Examples
