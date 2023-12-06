@@ -77,12 +77,11 @@ internal class NewNoInputGuidCommand : ProgramCommand
             if (!cParsed || (count < 0)) { return false; }
         }
 
-        var stdout = Console.Out;
         var guidGen = this.GetGuidGenerator();
         foreach (var current in ..count)
         {
             var guid = guidGen.NewGuid();
-            stdout.WriteLine(in guid);
+            Console.Out.WriteLine(in guid);
         }
         return true;
     }

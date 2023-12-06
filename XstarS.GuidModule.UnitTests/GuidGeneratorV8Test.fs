@@ -78,6 +78,13 @@ type GuidGeneratorV8Test() =
         |> Assert.equalTo (Guid.parse "3df00ae4-42a7-8066-88ad-1f925b8b8e54")
 
     [<TestMethod>]
+    member _.NewVersion8NSha384ByEncoding_ExampleDns_GetExpectedGuid() =
+        Guid.newV8NSha384Enc Guid.nsDns Text.Encoding.Unicode "www.example.com"
+        |> tee (Guid.version
+                >> Assert.equalTo Guid.Version.Version8)
+        |> Assert.equalTo (Guid.parse "0182ea89-1b13-8e4d-a149-10b6da1e5d5d")
+
+    [<TestMethod>]
     member _.NewVersion8NSha512_EmptyName_GetExpectedGuid() =
         Guid.newV8NSha512 Guid.empty Array.empty
         |> tee (Guid.version
@@ -90,4 +97,11 @@ type GuidGeneratorV8Test() =
         |> tee (Guid.version
                 >> Assert.equalTo Guid.Version.Version8)
         |> Assert.equalTo (Guid.parse "94ee4ddb-9f36-8018-9ccf-86a4441691e0")
+
+    [<TestMethod>]
+    member _.NewVersion8NSha512ByEncoding_ExampleDns_GetExpectedGuid() =
+        Guid.newV8NSha512Enc Guid.nsDns Text.Encoding.Unicode "www.example.com"
+        |> tee (Guid.version
+                >> Assert.equalTo Guid.Version.Version8)
+        |> Assert.equalTo (Guid.parse "8265be30-401a-8130-9f17-ca2a51aa32b2")
 #endif
