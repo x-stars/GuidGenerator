@@ -13,6 +13,15 @@ module internal OptionConvert =
     module Option =
 
         /// <summary>
+        /// Convert a Boolean value to a unit option.
+        /// </summary>
+        /// <param name="value">The input Boolean value.</param>
+        /// <returns>The result option.</returns>
+        [<CompiledName("OfBoolean")>]
+        let inline ofBool (value: bool) : unit option =
+            if value then Some () else None
+
+        /// <summary>
         /// Convert a value option to an option.
         /// </summary>
         /// <param name="voption">The input value option.</param>
@@ -39,6 +48,15 @@ module internal OptionConvert =
     /// </summary>
     [<RequireQualifiedAccess>]
     module ValueOption =
+
+        /// <summary>
+        /// Convert a Boolean value to a unit value option.
+        /// </summary>
+        /// <param name="value">The input Boolean value.</param>
+        /// <returns>The result value option.</returns>
+        [<CompiledName("OfBoolean")>]
+        let inline ofBool (value: bool) : unit voption =
+            if value then ValueSome () else ValueNone
 
         /// <summary>
         /// Convert an option to a value option.
