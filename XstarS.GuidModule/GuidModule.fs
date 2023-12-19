@@ -874,7 +874,8 @@ module Guid =
     /// Returns fields of integers and bytes of the <see cref="T:System.Guid"/>.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
-    /// <returns>An 11-element tuple that contains fields of the <see cref="T:System.Guid"/>.</returns>
+    /// <returns>An 11-element value tuple
+    /// that contains fields of the <see cref="T:System.Guid"/>.</returns>
     [<CompiledName("ToFields")>]
     let toFields (guid: Guid)
         : struct (int * int16 * int16 * struct (byte * byte) *

@@ -10,6 +10,17 @@ open XNetEx.FSharp.Core
 module GuidPatterns =
 
     /// <summary>
+    /// Matches fields of <see cref="T:System.Guid"/> values.
+    /// </summary>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>The fields of the <see cref="T:System.Guid"/>.</returns>
+    [<CompiledName("GuidFieldsPattern")>]
+    let (|GuidFields|) (guid: Guid)
+        : struct (int * int16 * int16 * struct (byte * byte) *
+                  struct (byte * byte * byte * byte * byte * byte)) =
+        Guid.toFields guid
+
+    /// <summary>
     /// Matches variants of <see cref="T:System.Guid"/> values.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
