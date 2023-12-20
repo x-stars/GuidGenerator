@@ -10,6 +10,35 @@ open XNetEx.FSharp.Core
 module GuidPatterns =
 
     /// <summary>
+    /// Matches fields of <see cref="T:System.Guid"/> values.
+    /// </summary>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>The fields of the <see cref="T:System.Guid"/>.</returns>
+    [<CompiledName("GuidFieldsPattern")>]
+    let (|GuidFields|) (guid: Guid)
+        : struct (int * int16 * int16 * struct (byte * byte) *
+                  struct (byte * byte * byte * byte * byte * byte)) =
+        Guid.toFields guid
+
+    /// <summary>
+    /// Matches variants of <see cref="T:System.Guid"/> values.
+    /// </summary>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>The variant of the <see cref="T:System.Guid"/>.</returns>
+    [<CompiledName("GuidVariantPattern")>]
+    let (|GuidVariant|) (guid: Guid) : Guid.Variant =
+        Guid.variant guid
+
+    /// <summary>
+    /// Matches versions of <see cref="T:System.Guid"/> values.
+    /// </summary>
+    /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
+    /// <returns>The version of the <see cref="T:System.Guid"/>.</returns>
+    [<CompiledName("GuidVersionPattern")>]
+    let (|GuidVersion|) (guid: Guid) : Guid.Version =
+        Guid.version guid
+
+    /// <summary>
     /// Matches <see cref="T:System.Guid"/> values that is time-based.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>

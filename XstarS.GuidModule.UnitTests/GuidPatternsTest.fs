@@ -7,6 +7,22 @@ open XNetEx.FSharp.UnitTesting.MSTest
 [<TestClass>]
 type GuidPatternsTest() =
 
+    [<TestMethod>]
+    member _.GuidFieldsPattern_EmptyGuid_GetAllFieldsZero() =
+        let (GuidFields (a, b, c, (d, e), (f, g, h, i, j, k))) = Guid.empty
+        (a, b, c, (d, e), (f, g, h, i, j, k)) |> Assert.equalTo
+            (0, 0s, 0s, (0uy, 0uy), (0uy, 0uy, 0uy, 0uy, 0uy, 0uy))
+
+    [<TestMethod>]
+    member _.GuidVariantPattern_Version1Guid_GetRfc4122Variant() =
+        let (GuidVariant variant) = Guid.parse "6ba7b811-9dad-11d1-80b4-00c04fd430c8"
+        Assert.equalTo Guid.Variant.Rfc4122 variant
+
+    [<TestMethod>]
+    member _.GuidVersionPattern_Version4Guid_GetGuidVersion4() =
+        let (GuidVersion version) = Guid.parse "2502f1d5-c2a9-47d3-b6d8-d7670094ace2"
+        Assert.equalTo Guid.Version.Version4 version
+
 #if !UUIDREV_DISABLE
     [<TestMethod>]
     member _.TimeBasedGuidPattern_Version6Guid_GetExpectedTimestamp() =
