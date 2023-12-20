@@ -14,6 +14,7 @@ partial class GuidGeneratorStateTest
         using var tempFile = this.CreateTempFile(out var fileName);
         this.WriteStateFieldsToFile(fileName, version: 4122);
         _ = GuidGenerator.SetStateStorageFile(fileName);
+        _ = GuidGenerator.SetStateStorageFile(null);
     }
 
     private ref readonly Exception? CatchStateLoadException()

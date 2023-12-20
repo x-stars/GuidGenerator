@@ -81,3 +81,4 @@ type GuidGeneratorStateTest() =
             writer.Write(emptyNodeId, 0, 6)
             writer.Write(emptyNodeId, 0, 6)
         Guid.loadState fileName |> ignore
+        Guid.loadState null |> ignore
