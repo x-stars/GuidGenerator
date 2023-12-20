@@ -13,7 +13,7 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
     protected NameBasedGuidGenerator()
     {
         this.LocalHashing = new ThreadLocal<HashAlgorithm?>(
-            this.CreateHashing, trackAllValues: true);
+            this.CreateHashing, this.TrackHashing);
     }
 
     protected virtual bool TrackHashing => false;
@@ -72,6 +72,7 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 #if !UUIDREV_DISABLE
     protected void DisposeHashings()
     {
+        Debug.Assert(this.TrackHashing);
         var hashings = this.LocalHashing.Values;
         foreach (var hashing in hashings)
         {
