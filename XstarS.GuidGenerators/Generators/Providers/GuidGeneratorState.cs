@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace XNetEx.Guids.Generators;
@@ -68,9 +69,8 @@ internal sealed partial class GuidGeneratorState
         static bool NodeIdEquals(byte[] nodeId, byte[] lastNode)
         {
             return (nodeId == lastNode) ||
-                (nodeId[0] == lastNode[0]) && (nodeId[1] == lastNode[1]) &&
-                (nodeId[2] == lastNode[2]) && (nodeId[3] == lastNode[3]) &&
-                (nodeId[4] == lastNode[4]) && (nodeId[5] == lastNode[5]);
+                NodeIdEqualityHelper.OfBytes(nodeId).Equals(
+                    in NodeIdEqualityHelper.OfBytes(lastNode));
         }
 
         var nodeIdSource = this.NodeIdSource;
@@ -117,5 +117,32 @@ internal sealed partial class GuidGeneratorState
     {
         var newGuid = Guid.NewGuid();
         return (int)newGuid.TimeLow();
+    }
+
+    [StructLayout(LayoutKind.Sequential, Size = 6)]
+    private struct NodeIdEqualityHelper
+    {
+        public uint Bytes0123;
+        public ushort Bytes45;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public readonly bool Equals(in NodeIdEqualityHelper other)
+        {
+            return (this.Bytes0123 == other.Bytes0123) &&
+                   (this.Bytes45 == other.Bytes45);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe ref NodeIdEqualityHelper OfBytes(byte[] bytes)
+        {
+#if UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER
+            return ref Unsafe.As<byte, NodeIdEqualityHelper>(ref bytes[0]);
+#else
+            fixed (byte* pBytes = &bytes[0])
+            {
+                return ref *(NodeIdEqualityHelper*)pBytes;
+            }
+#endif
+        }
     }
 }
