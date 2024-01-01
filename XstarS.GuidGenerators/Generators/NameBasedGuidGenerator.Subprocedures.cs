@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Diagnostics;
 #elif UNSAFE_HELPERS
@@ -12,36 +13,37 @@ partial class NameBasedGuidGenerator
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     private Guid ComputeHashToGuid(Guid nsId, ReadOnlySpan<byte> name)
     {
-        const int guidSize = 16;
-        var inputLength = guidSize + name.Length;
-        var input = (name.Length <= 1024) ?
-            (stackalloc byte[inputLength]) : (new byte[inputLength]);
-        var nsIdResult = nsId.TryWriteUuidBytes(input);
-        Debug.Assert(nsIdResult);
-        name.CopyTo(input[guidSize..]);
-        return this.ComputeHashToGuid(input);
-    }
-
-    private Guid ComputeHashToGuid(ReadOnlySpan<byte> input)
-    {
         var hashing = this.GetHashing();
-        var hashSize = hashing.HashSize / 8;
-        var hash = (stackalloc byte[hashSize]);
         try
         {
-            var hashResult = hashing.TryComputeHash(
-                input, hash, out var bytesWritten);
-            if (!hashResult || (bytesWritten != hashSize))
+            var hashSize = hashing.HashSize / 8;
+            var hash = (stackalloc byte[hashSize]);
+            var result = this.TryComputeHash(
+                hashing, nsId, name, hash, out var bytesWritten);
+            if (!result || (bytesWritten != hashSize))
             {
                 throw new InvalidOperationException(
                     "The algorithm's implementation is incorrect.");
             }
+            return this.HashToGuid(hash);
         }
         finally
         {
             this.ReturnHashing(hashing);
         }
-        return this.HashToGuid(hash);
+    }
+
+    private bool TryComputeHash(
+        HashAlgorithm hashing, Guid nsId, ReadOnlySpan<byte> name,
+        Span<byte> destination, out int bytesWritten)
+    {
+        hashing.Initialize();
+        var guidBytes = (stackalloc byte[16]);
+        var nsIdResult = nsId.TryWriteUuidBytes(guidBytes);
+        Debug.Assert(nsIdResult);
+        hashing.AppendData(guidBytes);
+        hashing.AppendData(name);
+        return hashing.TryGetFinalHash(destination, out bytesWritten);
     }
 
     private Guid HashToGuid(ReadOnlySpan<byte> hash)
@@ -60,30 +62,40 @@ partial class NameBasedGuidGenerator
         return guid;
     }
 #else
-    private unsafe byte[] CreateInput(Guid nsId, byte[] name)
+    private static class LocalBuffers
     {
-        const int guidSize = 16;
-        var inputLength = guidSize + name.Length;
-        var input = new byte[inputLength];
-        fixed (byte* pInput = &input[0])
-        {
-            *(Guid*)pInput = nsId.ToBigEndian();
-        }
-        Buffer.BlockCopy(name, 0, input, guidSize, name.Length);
-        return input;
+        [ThreadStatic] private static byte[]? GuidBytesValue;
+
+        internal static byte[] GuidBytes =>
+            LocalBuffers.GuidBytesValue ??= new byte[16];
     }
 
-    private byte[] ComputeHash(byte[] input)
+    private Guid ComputeHashToGuid(Guid nsId, byte[] name)
     {
         var hashing = this.GetHashing();
         try
         {
-            return hashing.ComputeHash(input);
+            var hash = this.ComputeHash(hashing, nsId, name);
+            return this.HashToGuid(hash);
         }
         finally
         {
             this.ReturnHashing(hashing);
         }
+    }
+
+    private unsafe byte[] ComputeHash(
+        HashAlgorithm hashing, Guid nsId, byte[] name)
+    {
+        hashing.Initialize();
+        var guidBytes = LocalBuffers.GuidBytes;
+        fixed (byte* pGuidBytes = &guidBytes[0])
+        {
+            *(Guid*)pGuidBytes = nsId.ToBigEndian();
+        }
+        hashing.AppendData(guidBytes);
+        hashing.AppendData(name);
+        return hashing.GetFinalHash();
     }
 
     private unsafe Guid HashToGuid(byte[] hash)
