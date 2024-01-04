@@ -220,27 +220,27 @@ e129f27c-5103-5c5c-844b-cdf0a15e160d
 ## Performance Benchmark
 
 ``` PlainText
-BenchmarkDotNet v0.13.10, Windows 11 (10.0.22631.2787/23H2/2023Update/SunValley3)
+BenchmarkDotNet v0.13.10, Windows 11 (10.0.22631.2861/23H2/2023Update/SunValley3)
 AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
 .NET SDK 8.0.100
   [Host]     : .NET 8.0.0 (8.0.23.53103), X64 RyuJIT AVX2
   DefaultJob : .NET 8.0.0 (8.0.23.53103), X64 RyuJIT AVX2
 ```
 
-|             Method | GuidCount | Mean            | StdDev        | Ratio | Allocated |
-|------------------- |----------:|----------------:|--------------:|------:|----------:|
-|      `GuidNewGuid` |         1 |      44.2642 ns |     0.9311 ns |  1.00 |         - |
-|    `EmptyGenerate` |         1 |       1.0135 ns |     0.0577 ns |  0.02 |         - |
-|   `GuidV1Generate` |         1 |     105.3974 ns |     0.9108 ns |  2.38 |         - |
-|   `GuidV2Generate` |         1 |     100.1791 ns |     0.0363 ns |  2.26 |         - |
-|   `GuidV3Generate` |         1 |     188.8818 ns |     2.8465 ns |  4.27 |         - |
-|   `GuidV4Generate` |         1 |      44.2476 ns |     0.5396 ns |  1.00 |         - |
-|   `GuidV5Generate` |         1 |     179.7746 ns |     2.6377 ns |  4.07 |         - |
-|                    |           |                 |               |       |           |
-|      `GuidNewGuid` |      1000 |  40,615.7146 ns |   873.9581 ns | 1.000 |         - |
-|    `EmptyGenerate` |      1000 |     235.3933 ns |     3.1243 ns | 0.006 |         - |
-|   `GuidV1Generate` |      1000 | 101,453.6940 ns | 1,077.6102 ns | 2.496 |       3 B |
-|   `GuidV2Generate` |      1000 | 102,866.1385 ns | 1,349.0252 ns | 2.528 |       3 B |
-|   `GuidV3Generate` |      1000 | 181,153.2007 ns | 4,158.4657 ns | 4.468 |         - |
-|   `GuidV4Generate` |      1000 |  41,099.3998 ns |   942.3362 ns | 1.014 |         - |
-|   `GuidV5Generate` |      1000 | 182,166.1255 ns | 2,368.8430 ns | 4.474 |         - |
+|             Method | GuidCount | Mean            | StdDev        | Ratio |Allocated |
+|------------------- |----------:|----------------:|--------------:|------:|---------:|
+|      `GuidNewGuid` |         1 |      39.4991 ns |     0.6056 ns |  1.00 |        - |
+|    `EmptyGenerate` |         1 |       0.9068 ns |     0.0223 ns |  0.02 |        - |
+|   `GuidV1Generate` |         1 |     105.6470 ns |     0.4313 ns |  2.68 |        - |
+|   `GuidV2Generate` |         1 |     100.1834 ns |     0.0721 ns |  2.53 |        - |
+|   `GuidV3Generate` |         1 |     185.6253 ns |     1.6967 ns |  4.70 |        - |
+|   `GuidV4Generate` |         1 |      40.4183 ns |     0.4285 ns |  1.02 |        - |
+|   `GuidV5Generate` |         1 |     175.3653 ns |     2.4101 ns |  4.44 |        - |
+|                    |           |                 |               |       |          |
+|      `GuidNewGuid` |      1000 |  37,335.7751 ns |   399.4522 ns | 1.000 |        - |
+|    `EmptyGenerate` |      1000 |     232.4035 ns |     1.6808 ns | 0.006 |        - |
+|   `GuidV1Generate` |      1000 | 105,798.8867 ns |   683.9275 ns | 2.834 |      2 B |
+|   `GuidV2Generate` |      1000 | 106,502.6782 ns |   966.0136 ns | 2.853 |      3 B |
+|   `GuidV3Generate` |      1000 | 179,090.1237 ns |   993.3070 ns | 4.797 |        - |
+|   `GuidV4Generate` |      1000 |  37,113.4318 ns |   231.3545 ns | 0.994 |        - |
+|   `GuidV5Generate` |      1000 | 174,083.2118 ns | 1,143.8121 ns | 4.665 |        - |
