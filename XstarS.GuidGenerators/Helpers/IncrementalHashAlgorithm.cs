@@ -31,7 +31,7 @@ namespace System.Security.Cryptography
         /// or <paramref name="buffer"/> is <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if DYNAMIC_DEPENDENCY_ATTRIBUTES || NET5_0_OR_GREATER
+#if IS_TRIMMABLE || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.AppendData) +
             "(System.Byte[],System.Int32,System.Int32)", typeof(MethodBridge))]
@@ -58,7 +58,7 @@ namespace System.Security.Cryptography
         /// and <paramref name="count"/> is larger than the length of <paramref name="buffer"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if DYNAMIC_DEPENDENCY_ATTRIBUTES || NET5_0_OR_GREATER
+#if IS_TRIMMABLE || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.AppendData) +
             "(System.Byte[],System.Int32,System.Int32)", typeof(MethodBridge))]
@@ -70,7 +70,7 @@ namespace System.Security.Cryptography
             hashing.AsBridge().AppendData(buffer, offset, count);
         }
 
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         /// <summary>
         /// Appends the specified data into the hash algorithm for computing the hash.
         /// </summary>
@@ -80,7 +80,7 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if DYNAMIC_DEPENDENCY_ATTRIBUTES || NET5_0_OR_GREATER
+#if IS_TRIMMABLE || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.AppendData) +
             "(System.ReadOnlySpan{System.Byte})", typeof(MethodBridge))]
@@ -101,7 +101,7 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if DYNAMIC_DEPENDENCY_ATTRIBUTES || NET5_0_OR_GREATER
+#if IS_TRIMMABLE || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.GetFinalHash) + "()", typeof(MethodBridge))]
 #endif
@@ -111,7 +111,7 @@ namespace System.Security.Cryptography
             return hashing.AsBridge().GetFinalHash();
         }
 
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         /// <summary>
         /// Finalizes the hash computation and attempts to retrieve the hash value.
         /// </summary>
@@ -125,7 +125,7 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if DYNAMIC_DEPENDENCY_ATTRIBUTES || NET5_0_OR_GREATER
+#if IS_TRIMMABLE || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.TryGetFinalHash) +
             "(System.Span{System.Byte},System.Int32@)", typeof(MethodBridge))]
@@ -178,13 +178,13 @@ namespace System.Security.Cryptography
             {
                 this.CheckDisposed();
                 this.ValidateInput(buffer, offset, count);
-#if NETFRAMEWORK || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER
+#if NETFRAMEWORK || NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER
                 this.State = 1;
 #endif
                 this.HashCore(buffer, offset, count);
             }
 
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
             public void AppendData(ReadOnlySpan<byte> source)
             {
                 this.CheckDisposed();
@@ -197,14 +197,14 @@ namespace System.Security.Cryptography
             {
                 this.CheckDisposed();
                 var hash = this.HashFinal();
-#if NETFRAMEWORK || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER
+#if NETFRAMEWORK || NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER
                 this.HashValue = hash;
                 this.State = 0;
 #endif
                 return (byte[])hash.Clone();
             }
 
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
             public bool TryGetFinalHash(Span<byte> destination, out int bytesWritten)
             {
                 this.CheckDisposed();
