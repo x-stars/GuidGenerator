@@ -4,14 +4,14 @@
 
 #pragma warning disable
 #nullable enable
-#define CHECK_DISPOSED
+#define INCRHASH_CHECK_DISPOSED
 
 namespace System.Security.Cryptography
 {
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.CompilerServices;
-#if !NETCOREAPP3_0_OR_GREATER
+#if !(UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER)
     using System.Runtime.InteropServices;
 #endif
 
@@ -31,7 +31,7 @@ namespace System.Security.Cryptography
         /// or <paramref name="buffer"/> is <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if IS_TRIMMABLE || NET5_0_OR_GREATER
+#if DYNAMIC_DEPENDENCY_ATTRIBUTES || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.AppendData) +
             "(System.Byte[],System.Int32,System.Int32)", typeof(MethodBridge))]
@@ -58,7 +58,7 @@ namespace System.Security.Cryptography
         /// and <paramref name="count"/> is larger than the length of <paramref name="buffer"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if IS_TRIMMABLE || NET5_0_OR_GREATER
+#if DYNAMIC_DEPENDENCY_ATTRIBUTES || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.AppendData) +
             "(System.Byte[],System.Int32,System.Int32)", typeof(MethodBridge))]
@@ -80,7 +80,7 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if IS_TRIMMABLE || NET5_0_OR_GREATER
+#if DYNAMIC_DEPENDENCY_ATTRIBUTES || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.AppendData) +
             "(System.ReadOnlySpan{System.Byte})", typeof(MethodBridge))]
@@ -101,7 +101,7 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if IS_TRIMMABLE || NET5_0_OR_GREATER
+#if DYNAMIC_DEPENDENCY_ATTRIBUTES || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.GetFinalHash) + "()", typeof(MethodBridge))]
 #endif
@@ -125,7 +125,7 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if IS_TRIMMABLE || NET5_0_OR_GREATER
+#if DYNAMIC_DEPENDENCY_ATTRIBUTES || NET5_0_OR_GREATER
         [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
         [DynamicDependency(nameof(MethodBridge.TryGetFinalHash) +
             "(System.Span{System.Byte},System.Int32@)", typeof(MethodBridge))]
@@ -151,14 +151,14 @@ namespace System.Security.Cryptography
 #endif
         private static MethodBridge AsBridge(this HashAlgorithm hashing)
         {
-#if NETCOREAPP3_0_OR_GREATER
+#if UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER
             return Unsafe.As<MethodBridge>(hashing);
 #else
             return new UncheckedCasting() { Source = hashing }.Target!;
 #endif
         }
 
-#if !NETCOREAPP3_0_OR_GREATER
+#if !(UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER)
         [DebuggerNonUserCode, ExcludeFromCodeCoverage]
         [StructLayout(LayoutKind.Explicit)]
         private struct UncheckedCasting
@@ -218,10 +218,10 @@ namespace System.Security.Cryptography
             }
 #endif
 
-            [Conditional("CHECK_DISPOSED")]
+            [Conditional("INCRHASH_CHECK_DISPOSED")]
             private void CheckDisposed()
             {
-#if CHECK_DISPOSED
+#if INCRHASH_CHECK_DISPOSED
                 if (NonPublicMembers.GetDisposedField(this))
                 {
                     throw new ObjectDisposedException(nameof(HashAlgorithm));
@@ -248,7 +248,7 @@ namespace System.Security.Cryptography
             [DebuggerNonUserCode, ExcludeFromCodeCoverage]
             private sealed class NonPublicMembers : MethodBridge
             {
-#if CHECK_DISPOSED
+#if INCRHASH_CHECK_DISPOSED
                 private static readonly int DisposedFieldOffset =
                     NonPublicMembers.GetDisposedFieldOffset();
 
@@ -260,7 +260,7 @@ namespace System.Security.Cryptography
                 public static unsafe bool GetDisposedField(MethodBridge instance)
                 {
                     if (NonPublicMembers.DisposedFieldOffset < 0) { return false; }
-#if NETCOREAPP3_0_OR_GREATER
+#if UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER
                     var instField0 = Unsafe.As<StrongBox<bool>>(instance);
                     return Unsafe.AddByteOffset(
                         ref instField0.Value, (nint)NonPublicMembers.DisposedFieldOffset);
@@ -276,7 +276,7 @@ namespace System.Security.Cryptography
                 private static unsafe int GetDisposedFieldOffset()
                 {
                     var instance = new NonPublicMembers();
-#if NETCOREAPP3_0_OR_GREATER
+#if UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER
                     var instField0 = Unsafe.As<StrongBox<bool>>(instance);
 #else
                     var instField0 = new UncheckedCasting() { Target = instance }.Fields!;
