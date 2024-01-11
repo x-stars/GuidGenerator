@@ -4,7 +4,7 @@
 #pragma warning disable
 #nullable enable
 
-#if !(NULLABLE_ATTRIBUTES || NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
+#if !(NULLABLE_ATTRIBUTES_EXTERNAL || NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
 namespace System.Diagnostics.CodeAnalysis
 {
     /// <summary>
@@ -202,7 +202,7 @@ namespace System.Diagnostics.CodeAnalysis
 }
 #endif
 
-#if !(NULLABLE_ATTRIBUTES || NET5_0_OR_GREATER)
+#if !(NULLABLE_ATTRIBUTES_EXTERNAL || NET5_0_OR_GREATER)
 namespace System.Diagnostics.CodeAnalysis
 {
     /// <summary>
@@ -299,7 +299,7 @@ namespace System.Diagnostics.CodeAnalysis
 }
 #endif
 
-#if !(EXCLUDE_FROM_CODE_COVERAGE_ATTRIBUTE || NETCOREAPP3_0_OR_GREATER)
+#if !(EXCLUDE_FROM_CODE_COVERAGE_ATTRIBUTE_EXTERNAL || NETCOREAPP3_0_OR_GREATER)
 #if !(NET40_OR_GREATER || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER)
 namespace System.Diagnostics.CodeAnalysis
 {

@@ -4,7 +4,7 @@
 #pragma warning disable
 #nullable enable
 
-#if !(DYNAMIC_DEPENDENCY_ATTRIBUTES || NET5_0_OR_GREATER)
+#if !(DYNAMIC_DEPENDENCY_ATTRIBUTES_EXTERNAL || NET5_0_OR_GREATER)
 namespace System.Diagnostics.CodeAnalysis
 {
     /// <summary>
@@ -215,7 +215,7 @@ namespace System.Diagnostics.CodeAnalysis
 }
 #endif
 
-#if !(EXCLUDE_FROM_CODE_COVERAGE_ATTRIBUTE || NETCOREAPP3_0_OR_GREATER)
+#if !(EXCLUDE_FROM_CODE_COVERAGE_ATTRIBUTE_EXTERNAL || NETCOREAPP3_0_OR_GREATER)
 #if !(NET40_OR_GREATER || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER)
 namespace System.Diagnostics.CodeAnalysis
 {

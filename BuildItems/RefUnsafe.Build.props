@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.1'">
-    <DefineConstants>$(DefineConstants);UNSAFE_HELPERS</DefineConstants>
+    <DefineConstants>$(DefineConstants);UNSAFE_HELPERS;UNSAFE_HELPERS_EXTERNAL</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.1'">

@@ -4,7 +4,7 @@
 #pragma warning disable
 #nullable enable
 
-#if !(COMPILER_FEATURE_REQUIRED_ATTRIBUTE || NET7_0_OR_GREATER)
+#if !(COMPILER_FEATURE_REQUIRED_ATTRIBUTE_EXTERNAL || NET7_0_OR_GREATER)
 namespace System.Runtime.CompilerServices
 {
     using System.Diagnostics;
@@ -57,7 +57,7 @@ namespace System.Runtime.CompilerServices
 }
 #endif
 
-#if !(EXCLUDE_FROM_CODE_COVERAGE_ATTRIBUTE || NETCOREAPP3_0_OR_GREATER)
+#if !(EXCLUDE_FROM_CODE_COVERAGE_ATTRIBUTE_EXTERNAL || NETCOREAPP3_0_OR_GREATER)
 #if !(NET40_OR_GREATER || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER)
 namespace System.Diagnostics.CodeAnalysis
 {
