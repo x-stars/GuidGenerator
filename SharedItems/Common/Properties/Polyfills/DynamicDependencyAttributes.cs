@@ -4,7 +4,7 @@
 #pragma warning disable
 #nullable enable
 
-#if !(DYNAMIC_DEPENDENCY_ATTRIBUTES || NET5_0_OR_GREATER)
+#if !(DYNAMIC_DEPENDENCY_ATTRIBUTES_EXTERNAL || NET5_0_OR_GREATER)
 namespace System.Diagnostics.CodeAnalysis
 {
     /// <summary>

@@ -4,14 +4,14 @@
 
 #pragma warning disable
 #nullable enable
-#define CHECK_DISPOSED
+#define INCRHASH_CHECK_DISPOSED
 
 namespace System.Security.Cryptography
 {
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.CompilerServices;
-#if !NETCOREAPP3_0_OR_GREATER
+#if !(UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER)
     using System.Runtime.InteropServices;
 #endif
 
@@ -70,7 +70,7 @@ namespace System.Security.Cryptography
             hashing.AsBridge().AppendData(buffer, offset, count);
         }
 
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         /// <summary>
         /// Appends the specified data into the hash algorithm for computing the hash.
         /// </summary>
@@ -111,7 +111,7 @@ namespace System.Security.Cryptography
             return hashing.AsBridge().GetFinalHash();
         }
 
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         /// <summary>
         /// Finalizes the hash computation and attempts to retrieve the hash value.
         /// </summary>
@@ -151,14 +151,14 @@ namespace System.Security.Cryptography
 #endif
         private static MethodBridge AsBridge(this HashAlgorithm hashing)
         {
-#if NETCOREAPP3_0_OR_GREATER
+#if UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER
             return Unsafe.As<MethodBridge>(hashing);
 #else
             return new UncheckedCasting() { Source = hashing }.Target!;
 #endif
         }
 
-#if !NETCOREAPP3_0_OR_GREATER
+#if !(UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER)
         [DebuggerNonUserCode, ExcludeFromCodeCoverage]
         [StructLayout(LayoutKind.Explicit)]
         private struct UncheckedCasting
@@ -178,13 +178,13 @@ namespace System.Security.Cryptography
             {
                 this.CheckDisposed();
                 this.ValidateInput(buffer, offset, count);
-#if NETFRAMEWORK || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER
+#if NETFRAMEWORK || NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER
                 this.State = 1;
 #endif
                 this.HashCore(buffer, offset, count);
             }
 
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
             public void AppendData(ReadOnlySpan<byte> source)
             {
                 this.CheckDisposed();
@@ -197,14 +197,14 @@ namespace System.Security.Cryptography
             {
                 this.CheckDisposed();
                 var hash = this.HashFinal();
-#if NETFRAMEWORK || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER
+#if NETFRAMEWORK || NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER
                 this.HashValue = hash;
                 this.State = 0;
 #endif
                 return (byte[])hash.Clone();
             }
 
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
             public bool TryGetFinalHash(Span<byte> destination, out int bytesWritten)
             {
                 this.CheckDisposed();
@@ -218,10 +218,10 @@ namespace System.Security.Cryptography
             }
 #endif
 
-            [Conditional("CHECK_DISPOSED")]
+            [Conditional("INCRHASH_CHECK_DISPOSED")]
             private void CheckDisposed()
             {
-#if CHECK_DISPOSED
+#if INCRHASH_CHECK_DISPOSED
                 if (NonPublicMembers.GetDisposedField(this))
                 {
                     throw new ObjectDisposedException(nameof(HashAlgorithm));
@@ -248,7 +248,7 @@ namespace System.Security.Cryptography
             [DebuggerNonUserCode, ExcludeFromCodeCoverage]
             private sealed class NonPublicMembers : MethodBridge
             {
-#if CHECK_DISPOSED
+#if INCRHASH_CHECK_DISPOSED
                 private static readonly int DisposedFieldOffset =
                     NonPublicMembers.GetDisposedFieldOffset();
 
@@ -260,7 +260,7 @@ namespace System.Security.Cryptography
                 public static unsafe bool GetDisposedField(MethodBridge instance)
                 {
                     if (NonPublicMembers.DisposedFieldOffset < 0) { return false; }
-#if NETCOREAPP3_0_OR_GREATER
+#if UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER
                     var instField0 = Unsafe.As<StrongBox<bool>>(instance);
                     return Unsafe.AddByteOffset(
                         ref instField0.Value, (nint)NonPublicMembers.DisposedFieldOffset);
@@ -276,7 +276,7 @@ namespace System.Security.Cryptography
                 private static unsafe int GetDisposedFieldOffset()
                 {
                     var instance = new NonPublicMembers();
-#if NETCOREAPP3_0_OR_GREATER
+#if UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER
                     var instField0 = Unsafe.As<StrongBox<bool>>(instance);
 #else
                     var instField0 = new UncheckedCasting() { Target = instance }.Fields!;

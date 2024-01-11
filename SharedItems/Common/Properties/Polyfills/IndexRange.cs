@@ -4,7 +4,7 @@
 #pragma warning disable
 #nullable enable
 
-#if !(INDEX_RANGE || NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
+#if !(INDEX_RANGE_EXTERNAL || NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
 namespace System
 {
     using System.Diagnostics;

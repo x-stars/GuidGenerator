@@ -4,7 +4,7 @@
 #pragma warning disable
 #nullable enable
 
-#if !(MODULE_INITIALIZER_ATTRIBUTE || NET5_0_OR_GREATER)
+#if !(MODULE_INITIALIZER_ATTRIBUTE_EXTERNAL || NET5_0_OR_GREATER)
 namespace System.Runtime.CompilerServices
 {
     using System.Diagnostics;

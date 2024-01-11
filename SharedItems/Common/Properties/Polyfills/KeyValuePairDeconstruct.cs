@@ -5,7 +5,7 @@
 #pragma warning disable
 #nullable enable
 
-#if !(KEY_VALUE_PAIR_DECONSTRUCT || NETCOREAPP3_0_OR_GREATER)
+#if !(KEY_VALUE_PAIR_DECONSTRUCT_EXTERNAL || NETCOREAPP3_0_OR_GREATER)
 #if !(NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
 using System;
 using System.Collections;
@@ -53,7 +53,7 @@ internal static class __KeyValuePairItems
 #endif
 #endif
 
-#if !(KEY_VALUE_PAIR_CREATE || NETCOREAPP3_0_OR_GREATER)
+#if !(KEY_VALUE_PAIR_CREATE_EXTERNAL || NETCOREAPP3_0_OR_GREATER)
 #if !(NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.

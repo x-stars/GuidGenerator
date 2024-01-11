@@ -4,7 +4,7 @@
 #pragma warning disable
 #nullable enable
 
-#if !(COMPILER_FEATURE_REQUIRED_ATTRIBUTE || NET7_0_OR_GREATER)
+#if !(COMPILER_FEATURE_REQUIRED_ATTRIBUTE_EXTERNAL || NET7_0_OR_GREATER)
 namespace System.Runtime.CompilerServices
 {
     using System.Diagnostics;
@@ -42,7 +42,11 @@ namespace System.Runtime.CompilerServices
         /// to allow access to the location where this attribute is applied
         /// if it does not understand <see cref="FeatureName"/>;
         /// otherwise, <see langword="false"/>.</returns>
+#if IS_EXTERNAL_INIT || NET5_0_OR_GREATER
         public bool IsOptional { get; init; }
+#else
+        public bool IsOptional { get; set; }
+#endif
 
         /// <summary>
         /// The <see cref="FeatureName"/> used for the ref structs C# feature.

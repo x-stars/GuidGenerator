@@ -4,7 +4,7 @@
 #pragma warning disable
 #nullable enable
 
-#if !(UNSCOPED_REF_ATTRIBUTE || NET7_0_OR_GREATER)
+#if !(SCOPED_REF_ATTRIBUTE_EXTERNAL || NET7_0_OR_GREATER)
 namespace System.Diagnostics.CodeAnalysis
 {
     /// <summary>

@@ -4,7 +4,7 @@
 #pragma warning disable
 #nullable enable
 
-#if !(SKIP_LOCALS_INIT_ATTRIBUTE || NET5_0_OR_GREATER)
+#if !(SKIP_LOCALS_INIT_ATTRIBUTE_EXTERNAL || NET5_0_OR_GREATER)
 namespace System.Runtime.CompilerServices
 {
     using System.Diagnostics;

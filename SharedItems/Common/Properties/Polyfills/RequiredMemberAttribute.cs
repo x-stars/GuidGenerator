@@ -4,7 +4,7 @@
 #pragma warning disable
 #nullable enable
 
-#if !(REQUIRED_MEMBER_ATTRIBUTE || NET7_0_OR_GREATER)
+#if !(REQUIRED_MEMBER_ATTRIBUTE_EXTERNAL || NET7_0_OR_GREATER)
 namespace System.Runtime.CompilerServices
 {
     using System.Diagnostics;
