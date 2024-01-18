@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 #if NET7_0_OR_GREATER
 using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
@@ -20,6 +21,7 @@ static partial class GuidExtensions
     /// containing the value of the GUID.</param>
     /// <returns>A new <see cref="Guid"/> instance
     /// of the specified 128-bit unsigned integer.</returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [CLSCompliant(false)]
     public static Guid FromUInt128(UInt128 value)
     {
@@ -50,6 +52,7 @@ static partial class GuidExtensions
     /// <paramref name="bytes"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">
     /// <paramref name="bytes"/> is not 16 bytes long.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static unsafe Guid FromUuidByteArray(byte[] bytes)
     {
         if (bytes is null)
@@ -84,6 +87,7 @@ static partial class GuidExtensions
     /// <returns>A new <see cref="Guid"/> instance of the specified byte span.</returns>
     /// <exception cref="ArgumentException">
     /// <paramref name="bytes"/> is not 16 bytes long.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static Guid FromUuidBytes(ReadOnlySpan<byte> bytes)
     {
 #if NET8_0_OR_GREATER
