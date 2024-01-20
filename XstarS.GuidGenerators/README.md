@@ -31,7 +31,7 @@ var guidV1 = GuidGenerator.Version1.NewGuid();
 
 // name-based GUID generation.
 var guidV5 = GuidGenerator.Version5.NewGuid(GuidNamespaces.Dns, "github.com");
-// 6fca3dd2-d61d-58de-9363-1574b382ea68s
+// 6fca3dd2-d61d-58de-9363-1574b382ea68
 ```
 
 ### Get Generator Instance by the Factory Method
@@ -46,7 +46,7 @@ var guidV1 = GuidGenerator.OfVersion(1).NewGuid();
 
 // generate name-based GUID.
 var guidV5 = GuidGenerator.OfVersion(5).NewGuid(GuidNamespaces.Dns, "github.com");
-// 6fca3dd2-d61d-58de-9363-1574b382ea68s
+// 6fca3dd2-d61d-58de-9363-1574b382ea68
 ```
 
 ### GUID Generator State Storage

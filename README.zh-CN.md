@@ -35,7 +35,7 @@ var guidV1 = GuidGenerator.Version1.NewGuid();
 
 // name-based GUID generation.
 var guidV5 = GuidGenerator.Version5.NewGuid(GuidNamespaces.Dns, "github.com");
-// 6fca3dd2-d61d-58de-9363-1574b382ea68s
+// 6fca3dd2-d61d-58de-9363-1574b382ea68
 ```
 
 ### 工厂方法获取实例后调用
@@ -50,7 +50,7 @@ var guidV1 = GuidGenerator.OfVersion(1).NewGuid();
 
 // generate name-based GUID.
 var guidV5 = GuidGenerator.OfVersion(5).NewGuid(GuidNamespaces.Dns, "github.com");
-// 6fca3dd2-d61d-58de-9363-1574b382ea68s
+// 6fca3dd2-d61d-58de-9363-1574b382ea68
 ```
 
 ### GUID 生成器状态存储
@@ -119,7 +119,7 @@ let guidV4 = Guid.newV4 () // 0658f02d-45a4-4c25-b9d0-8ddbda3c3e08
 let guidV3 = Guid.newV3S Guid.nsDns "github.com"
 // 7f4771a0-1982-373d-928f-d31140a51652
 let guidV5 = "github.com" |> Guid.newV5S Guid.nsDns
-// 6fca3dd2-d61d-58de-9363-1574b382ea68s
+// 6fca3dd2-d61d-58de-9363-1574b382ea68
 
 // build time-based GUID.
 let guid6 = Guid.empty
