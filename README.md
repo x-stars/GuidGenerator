@@ -47,7 +47,7 @@ var guidV1 = GuidGenerator.Version1.NewGuid();
 
 // name-based GUID generation.
 var guidV5 = GuidGenerator.Version5.NewGuid(GuidNamespaces.Dns, "github.com");
-// 6fca3dd2-d61d-58de-9363-1574b382ea68s
+// 6fca3dd2-d61d-58de-9363-1574b382ea68
 
 // Unix time-based GUID generation.
 var guidV7 = GuidGenerator.Version7.NewGuid();
@@ -66,7 +66,7 @@ var guidV1 = GuidGenerator.OfVersion(1).NewGuid();
 
 // generate name-based GUID.
 var guidV5 = GuidGenerator.OfVersion(5).NewGuid(GuidNamespaces.Dns, "github.com");
-// 6fca3dd2-d61d-58de-9363-1574b382ea68s
+// 6fca3dd2-d61d-58de-9363-1574b382ea68
 
 // generate Unix time-based GUID.
 var guidV7 = GuidGenerator.OfVersion(7).NewGuid();
@@ -148,7 +148,7 @@ let guidV7 = Guid.newV7 () // 018640c6-0dc9-7189-a644-31acdba4cabc
 let guidV3 = Guid.newV3S Guid.nsDns "github.com"
 // 7f4771a0-1982-373d-928f-d31140a51652
 let guidV5 = "github.com" |> Guid.newV5S Guid.nsDns
-// 6fca3dd2-d61d-58de-9363-1574b382ea68s
+// 6fca3dd2-d61d-58de-9363-1574b382ea68
 
 // build time-based GUID.
 let guid6 = Guid.empty
