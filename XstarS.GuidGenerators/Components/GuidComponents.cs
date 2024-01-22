@@ -15,7 +15,7 @@ internal partial class GuidComponents : IGuidCommonComponents
     protected GuidComponents() { }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool IsRfc4122Uuid(ref Guid guid)
+    internal bool IsRfc4122Uuid(ref Guid guid)
     {
         var clkSeqHi_Var = guid.ClkSeqHi_Var();
         return (clkSeqHi_Var & 0xC0) == 0x80;
