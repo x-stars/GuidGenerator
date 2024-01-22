@@ -29,19 +29,16 @@ internal sealed class NewDceSecurityGuidCommand : ProgramCommand
         var dParsed = Enum.TryParse<DceSecurityDomain>(
             domainArg, ignoreCase: true, out var domain);
         if (!dParsed) { return false; }
-        if (domain is DceSecurityDomain.Person or DceSecurityDomain.Group)
-        {
-            if (siteIdArg is not null)
-            {
-                return false;
-            }
-        }
-        else
+        if (siteIdArg is not null)
         {
             if (siteIdArg is null) { return false; }
             var iParsed = this.TryParseSiteId(siteIdArg, out var siteId);
             if (!iParsed) { return false; }
             nSiteId = (int)siteId;
+        }
+        else if (domain is not (DceSecurityDomain.Person or DceSecurityDomain.Group))
+        {
+            return false;
         }
 
         var guidGen = GuidGenerator.Version2;
@@ -50,14 +47,14 @@ internal sealed class NewDceSecurityGuidCommand : ProgramCommand
         return true;
     }
 
-    private bool TryParseSiteId(string idText, out uint siteId)
+    private bool TryParseSiteId(string idText, out uint result)
     {
-        var parsed = uint.TryParse(idText, out siteId);
+        var parsed = uint.TryParse(idText, out result);
         if (!parsed)
         {
             try
             {
-                siteId = Convert.ToUInt32(idText, 16);
+                result = Convert.ToUInt32(idText, 16);
                 parsed = true;
             }
             catch (Exception) { }
