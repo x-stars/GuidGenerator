@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -19,7 +18,6 @@ static partial class GuidExtensions
     /// <paramref name="input"/> is <see langword="null"/>.</exception>
     /// <exception cref="FormatException">
     /// <paramref name="input"/> is not in the URN format.</exception>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public static Guid ParseUrn(string input)
     {
         if (input is null)
@@ -51,7 +49,6 @@ static partial class GuidExtensions
     /// <returns>A structure that contains the value that was parsed.</returns>
     /// <exception cref="FormatException">
     /// <paramref name="input"/> is not in the URN format.</exception>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public static Guid ParseUrn(ReadOnlySpan<char> input)
     {
         var guidUrnString = input.Trim();
@@ -74,7 +71,6 @@ static partial class GuidExtensions
     /// contains the parsed <see cref="Guid"/> value.</param>
     /// <returns><see langword="true"/> if the parse operation was successful;
     /// otherwise, <see langword="false"/>.</returns>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool TryParseUrn(string input, out Guid result)
     {
         if (input is null)
@@ -109,7 +105,6 @@ static partial class GuidExtensions
     /// contains the parsed <see cref="Guid"/> value.</param>
     /// <returns><see langword="true"/> if the parse operation was successful;
     /// otherwise, <see langword="false"/>.</returns>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool TryParseUrn(ReadOnlySpan<char> input, out Guid result)
     {
         var guidUrnString = input.Trim();
