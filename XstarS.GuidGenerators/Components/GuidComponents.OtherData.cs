@@ -9,7 +9,7 @@ namespace XNetEx.Guids.Components;
 partial class GuidComponents
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void ClearVarAndVer(ref Guid guid)
+    internal void ClearVarAndVer(ref Guid guid)
     {
         ref var clkSeqHi_Var = ref guid.ClkSeqHi_Var();
         clkSeqHi_Var = (byte)(clkSeqHi_Var & ~0xC0);
