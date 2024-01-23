@@ -76,7 +76,7 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
             null : args[1].ToUpperInvariant();
         if (hashArg != hashName) { return false; }
         var readInput = (args.Length - hashArgCount) == 2;
-        var nsIdArg = args[hashArgCount + 1].ToUpperInvariant();
+        var nsIdArg = args[hashArgCount + 1];
         var nsId = Guid.Empty;
         if (nsIdArg.StartsWith(":"))
         {
@@ -123,7 +123,7 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
 
     private bool TryParseNamespace(string name, out Guid result)
     {
-        result = name switch
+        result = name.ToUpperInvariant() switch
         {
             "DNS" => GuidNamespaces.Dns,
             "URL" => GuidNamespaces.Url,
