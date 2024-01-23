@@ -31,7 +31,6 @@ internal sealed class NewDceSecurityGuidCommand : ProgramCommand
         if (!dParsed) { return false; }
         if (siteIdArg is not null)
         {
-            if (siteIdArg is null) { return false; }
             var iParsed = this.TryParseSiteId(siteIdArg, out var siteId);
             if (!iParsed) { return false; }
             nSiteId = (int)siteId;
