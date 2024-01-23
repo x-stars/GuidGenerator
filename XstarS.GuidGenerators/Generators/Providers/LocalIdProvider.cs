@@ -72,13 +72,20 @@ internal abstract class LocalIdProvider
     private sealed class Windows : LocalIdProvider
     {
         private static readonly WellKnownSidType[] SidTypes =
-#if NET5_0_OR_GREATER
-            Enum.GetValues<WellKnownSidType>();
-#else
-            (WellKnownSidType[])Enum.GetValues(typeof(WellKnownSidType));
-#endif
+            Windows.CreateSidTypes();
 
         internal Windows() { }
+
+        private static WellKnownSidType[] CreateSidTypes()
+        {
+            const int bound = 256;
+            var sidTypes = new WellKnownSidType[bound];
+            foreach (var value in ..bound)
+            {
+                sidTypes[value] = (WellKnownSidType)value;
+            }
+            return sidTypes;
+        }
 
         protected override int GetLocalUserId()
         {
