@@ -26,8 +26,7 @@ internal sealed class NewDceSecurityGuidCommand : ProgramCommand
         var domainArg = args[1];
         var siteIdArg = (args.Length == 3) ? args[2] : null;
         var nSiteId = default(int?);
-        var dParsed = Enum.TryParse<DceSecurityDomain>(
-            domainArg, ignoreCase: true, out var domain);
+        var dParsed = this.TryParseDomain(domainArg, out var domain);
         if (!dParsed) { return false; }
         if (siteIdArg is not null)
         {
@@ -46,14 +45,27 @@ internal sealed class NewDceSecurityGuidCommand : ProgramCommand
         return true;
     }
 
-    private bool TryParseSiteId(string idText, out uint result)
+    private bool TryParseDomain(string text, out DceSecurityDomain result)
     {
-        var parsed = uint.TryParse(idText, out result);
+        var value = text.ToUpperInvariant() switch
+        {
+            "PERSON" => (int)DceSecurityDomain.Person,
+            "GROUP" => (int)DceSecurityDomain.Group,
+            "ORG" => (int)DceSecurityDomain.Org,
+            _ => byte.TryParse(text, out var number) ? (int)number : -1,
+        };
+        result = (value >= 0) ? (DceSecurityDomain)value : default(DceSecurityDomain);
+        return value >= 0;
+    }
+
+    private bool TryParseSiteId(string text, out uint result)
+    {
+        var parsed = uint.TryParse(text, out result);
         if (!parsed)
         {
             try
             {
-                result = Convert.ToUInt32(idText, 16);
+                result = Convert.ToUInt32(text, 16);
                 parsed = true;
             }
             catch (Exception) { }
