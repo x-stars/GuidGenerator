@@ -31,11 +31,6 @@ namespace System.Security.Cryptography
         /// or <paramref name="buffer"/> is <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if IS_TRIMMABLE || NET5_0_OR_GREATER
-        [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
-        [DynamicDependency(nameof(MethodBridge.AppendData) +
-            "(System.Byte[],System.Int32,System.Int32)", typeof(MethodBridge))]
-#endif
         public static void AppendData(this HashAlgorithm hashing, byte[] buffer)
         {
             IncrementalHashAlgorithm.ThrowIfNull(hashing);
@@ -58,11 +53,6 @@ namespace System.Security.Cryptography
         /// and <paramref name="count"/> is larger than the length of <paramref name="buffer"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if IS_TRIMMABLE || NET5_0_OR_GREATER
-        [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
-        [DynamicDependency(nameof(MethodBridge.AppendData) +
-            "(System.Byte[],System.Int32,System.Int32)", typeof(MethodBridge))]
-#endif
         public static void AppendData(
             this HashAlgorithm hashing, byte[] buffer, int offset, int count)
         {
@@ -80,11 +70,6 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if IS_TRIMMABLE || NET5_0_OR_GREATER
-        [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
-        [DynamicDependency(nameof(MethodBridge.AppendData) +
-            "(System.ReadOnlySpan{System.Byte})", typeof(MethodBridge))]
-#endif
         public static void AppendData(this HashAlgorithm hashing, ReadOnlySpan<byte> source)
         {
             IncrementalHashAlgorithm.ThrowIfNull(hashing);
@@ -101,10 +86,6 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if IS_TRIMMABLE || NET5_0_OR_GREATER
-        [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
-        [DynamicDependency(nameof(MethodBridge.GetFinalHash) + "()", typeof(MethodBridge))]
-#endif
         public static byte[] GetFinalHash(this HashAlgorithm hashing)
         {
             IncrementalHashAlgorithm.ThrowIfNull(hashing);
@@ -125,11 +106,6 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
         /// <exception cref="ObjectDisposedException">
         /// <paramref name="hashing"/> object has already been disposed.</exception>
-#if IS_TRIMMABLE || NET5_0_OR_GREATER
-        [DynamicDependency(nameof(MethodBridge.Instance), typeof(MethodBridge))]
-        [DynamicDependency(nameof(MethodBridge.TryGetFinalHash) +
-            "(System.Span{System.Byte},System.Int32@)", typeof(MethodBridge))]
-#endif
         public static bool TryGetFinalHash(
             this HashAlgorithm hashing, Span<byte> destination, out int bytesWritten)
         {
@@ -144,6 +120,7 @@ namespace System.Security.Cryptography
             {
                 throw new ArgumentNullException(nameof(hashing));
             }
+            _ = MethodBridge.Instance;
         }
 
 #if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
@@ -172,7 +149,21 @@ namespace System.Security.Cryptography
         [DebuggerNonUserCode, ExcludeFromCodeCoverage]
         private abstract class MethodBridge : HashAlgorithm
         {
-            internal static readonly MethodBridge Instance = new NonPublicMembers();
+            internal static readonly MethodBridge Instance = MethodBridge.InitializeInstance();
+
+            private static MethodBridge InitializeInstance()
+            {
+                var instance = new NonPublicMembers();
+                instance.AppendData(Array.Empty<byte>(), 0, 0);
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                instance.AppendData(ReadOnlySpan<byte>.Empty);
+#endif
+                _ = instance.GetFinalHash();
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                _ = instance.TryGetFinalHash(Span<byte>.Empty, out _);
+#endif
+                return instance;
+            }
 
             public void AppendData(byte[] buffer, int offset, int count)
             {
@@ -306,7 +297,16 @@ namespace System.Security.Cryptography
 
                 protected override void HashCore(byte[] array, int ibStart, int cbSize) { }
 
-                protected override byte[] HashFinal() => throw new NotImplementedException();
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                protected override void HashCore(ReadOnlySpan<byte> source) { }
+#endif
+
+                protected override byte[] HashFinal() => Array.Empty<byte>();
+
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                protected override bool TryHashFinal(
+                    Span<byte> destination, out int bytesWritten) => (bytesWritten = 0) == 0;
+#endif
             }
         }
     }
