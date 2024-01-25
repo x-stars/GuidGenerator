@@ -265,27 +265,7 @@ namespace Interop
 
             private fixed byte _address[MAX_ADAPTER_ADDRESS_LENGTH];
             private uint _addressLength;
-            internal byte[] Address
-            {
-                get
-                {
-#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-                    return MemoryMarshal.CreateReadOnlySpan<byte>(ref _address[0], (int)_addressLength).ToArray();
-#else
-                    if (_addressLength == 0)
-                    {
-                        return Array.Empty<byte>();
-                    }
-
-                    byte[] result = new byte[(int)_addressLength];
-                    fixed (byte* pAddress = &_address[0], pResult = &result[0])
-                    {
-                        Buffer.MemoryCopy(pAddress, pResult, (int)_addressLength, (int)_addressLength);
-                    }
-                    return result;
-#endif
-                }
-            }
+            internal byte[] Address => BufferToArray(ref _address[0], (int)_addressLength);
 
             internal AdapterFlags flags;
             internal uint mtu;
@@ -294,22 +274,7 @@ namespace Interop
             internal uint ipv6Index;
 
             private fixed uint _zoneIndices[16];
-            internal uint[] ZoneIndices
-            {
-                get
-                {
-#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-                    return MemoryMarshal.CreateReadOnlySpan<uint>(ref _zoneIndices[0], 16).ToArray();
-#else
-                    uint[] result = new uint[16];
-                    fixed (uint* pZoneIndices = &_zoneIndices[0], pResult = &result[0])
-                    {
-                        Buffer.MemoryCopy(pZoneIndices, pResult, 16 * sizeof(uint), 16 * sizeof(uint));
-                    }
-                    return result;
-#endif
-                }
-            }
+            internal uint[] ZoneIndices => BufferToArray(ref _zoneIndices[0], 16);
 
             internal nint firstPrefix;
 
@@ -333,6 +298,23 @@ namespace Interop
             /* Windows 2008 +
                   PIP_ADAPTER_DNS_SUFFIX             FirstDnsSuffix;
              * */
+
+            private static T[] BufferToArray<T>(ref T buffer, int length)
+                where T : unmanaged
+            {
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                return MemoryMarshal.CreateReadOnlySpan<T>(ref buffer, length).ToArray();
+#else
+                if (length == 0)
+                    return Array.Empty<T>();
+                T[] array = new T[length];
+                fixed (T* pBuffer = &buffer, pArray = &array[0])
+                {
+                    Buffer.MemoryCopy(pBuffer, pArray, length * sizeof(T), length * sizeof(T));
+                }
+                return array;
+#endif
+            }
         }
 
         internal enum InterfaceConnectionType : int
