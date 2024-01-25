@@ -95,7 +95,9 @@ internal abstract class NodeIdProvider
         {
             var validIface = default(NetworkInterface);
             var upValidIface = default(NetworkInterface);
-            var ifaces = NetworkInterface.GetAllNetworkInterfaces();
+            var ifaces = Environment.OSVersion.Platform is PlatformID.Win32NT ?
+                SystemNetworkInterface.GetAllNetworkInterfaces() :
+                NetworkInterface.GetAllNetworkInterfaces();
             foreach (var iface in ifaces)
             {
                 if (this.IsValidNetworkInterface(iface))
