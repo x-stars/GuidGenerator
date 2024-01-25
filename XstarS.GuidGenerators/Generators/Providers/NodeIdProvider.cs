@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using XNetEx.Threading;
 
 namespace XNetEx.Guids.Generators;
@@ -52,7 +51,7 @@ internal abstract class NodeIdProvider
         public override NodeIdSource SourceType => NodeIdSource.None;
     }
 
-    private class PhysicalAddress : NodeIdProvider
+    private sealed class PhysicalAddress : NodeIdProvider
     {
         private static volatile NodeIdProvider.PhysicalAddress? Singleton;
 
@@ -73,30 +72,23 @@ internal abstract class NodeIdProvider
                 static NodeIdProvider.PhysicalAddress Initialize()
                 {
                     return NodeIdProvider.PhysicalAddress.Singleton ??=
-                        NodeIdProvider.PhysicalAddress.Create();
+                        new NodeIdProvider.PhysicalAddress();
                 }
 
                 return NodeIdProvider.PhysicalAddress.Singleton ?? Initialize();
             }
         }
 
-        private static NodeIdProvider.PhysicalAddress Create()
-        {
-            return Environment.OSVersion.Platform is PlatformID.Win32NT ?
-                new NodeIdProvider.PhysicalAddress.Windows() :
-                new NodeIdProvider.PhysicalAddress();
-        }
+        public override byte[] NodeIdBytes => this.NodeIdBytesCache.Value;
 
-        public sealed override byte[] NodeIdBytes => this.NodeIdBytesCache.Value;
+        public override NodeIdSource SourceType => NodeIdSource.PhysicalAddress;
 
-        public sealed override NodeIdSource SourceType => NodeIdSource.PhysicalAddress;
-
-        protected virtual byte[] GetNodeIdBytes()
+        private byte[] GetNodeIdBytes()
         {
             var validIface = this.GetValidNetworkInterface();
-            return (validIface is not null) ?
-                validIface.GetPhysicalAddress().GetAddressBytes() :
-                NodeIdProvider.RandomNumber.Instance.NodeIdBytes;
+            return (validIface is null) ?
+                NodeIdProvider.RandomNumber.Instance.NodeIdBytes :
+                validIface.GetPhysicalAddress().GetAddressBytes();
         }
 
         private NetworkInterface? GetValidNetworkInterface()
@@ -126,32 +118,6 @@ internal abstract class NodeIdProvider
             return (ifaceType != NetworkInterfaceType.Loopback) &&
                    (ifaceType != NetworkInterfaceType.Tunnel) &&
                    (macAddress.GetAddressBytes().Length == 6);
-        }
-
-        private sealed class Windows : PhysicalAddress
-        {
-            [System.Security.SuppressUnmanagedCodeSecurity]
-            private static class SafeNativeMethods
-            {
-                [DllImport("rpcrt4.dll", ExactSpelling = true)]
-                internal static extern int UuidCreateSequential(out Guid uuid);
-            }
-
-            internal Windows() { }
-
-            protected override byte[] GetNodeIdBytes()
-            {
-                var status = SafeNativeMethods.UuidCreateSequential(out var uuid);
-                if (status == 0)
-                {
-                    var nodeId = uuid.NodeIdToArray();
-                    if ((nodeId[0] & 0x01) != 0x01)
-                    {
-                        return nodeId;
-                    }
-                }
-                return base.GetNodeIdBytes();
-            }
         }
     }
 
@@ -192,10 +158,19 @@ internal abstract class NodeIdProvider
             return new NodeIdProvider.RandomNumber();
         }
 
-        private static byte[] CreateNodeIdBytes()
+        private static unsafe byte[] CreateNodeIdBytes()
         {
+            const int nodeIdSize = 6;
             var newGuid = Guid.NewGuid();
-            var nodeId = newGuid.NodeIdToArray();
+            var nodeId = new byte[nodeIdSize];
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            newGuid.NodeId().CopyTo((Span<byte>)nodeId);
+#else
+            fixed (byte* pGuidNodeId = &newGuid.NodeId(0), pNodeId = &nodeId[0])
+            {
+                Buffer.MemoryCopy(pGuidNodeId, pNodeId, nodeIdSize, nodeIdSize);
+            }
+#endif
             nodeId[0] |= 0x01;
             return nodeId;
         }
