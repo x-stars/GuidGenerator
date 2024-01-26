@@ -95,7 +95,9 @@ internal abstract class NodeIdProvider
         {
             var validIface = default(NetworkInterface);
             var upValidIface = default(NetworkInterface);
-            var ifaces = NetworkInterface.GetAllNetworkInterfaces();
+            var ifaces = Environment.OSVersion.Platform is PlatformID.Win32NT ?
+                SystemNetworkInterface.GetAllNetworkInterfaces() :
+                NetworkInterface.GetAllNetworkInterfaces();
             foreach (var iface in ifaces)
             {
                 if (this.IsValidNetworkInterface(iface))
@@ -158,19 +160,10 @@ internal abstract class NodeIdProvider
             return new NodeIdProvider.RandomNumber();
         }
 
-        private static unsafe byte[] CreateNodeIdBytes()
+        private static byte[] CreateNodeIdBytes()
         {
-            const int nodeIdSize = 6;
             var newGuid = Guid.NewGuid();
-            var nodeId = new byte[nodeIdSize];
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-            newGuid.NodeId().CopyTo((Span<byte>)nodeId);
-#else
-            fixed (byte* pGuidNodeId = &newGuid.NodeId(0), pNodeId = &nodeId[0])
-            {
-                Buffer.MemoryCopy(pGuidNodeId, pNodeId, nodeIdSize, nodeIdSize);
-            }
-#endif
+            var nodeId = newGuid.NodeIdToArray();
             nodeId[0] |= 0x01;
             return nodeId;
         }

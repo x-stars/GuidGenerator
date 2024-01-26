@@ -42,11 +42,7 @@ namespace System.Runtime.CompilerServices
         /// to allow access to the location where this attribute is applied
         /// if it does not understand <see cref="FeatureName"/>;
         /// otherwise, <see langword="false"/>.</returns>
-#if IS_EXTERNAL_INIT || NET5_0_OR_GREATER
-        public bool IsOptional { get; init; }
-#else
-        public bool IsOptional { get; set; }
-#endif
+        public bool IsOptional { get; /*init*/set; }
 
         /// <summary>
         /// The <see cref="FeatureName"/> used for the ref structs C# feature.

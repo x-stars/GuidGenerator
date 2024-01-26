@@ -11,10 +11,11 @@ public static class Uuid
     /// A read-only instance of the <see cref="Guid"/> structure whose value is all ones.
     /// </summary>
 #if !UUIDREV_DISABLE
-    public static readonly Guid MaxValue = new Guid(
+    public
 #else
-    internal static readonly Guid MaxValue = new Guid(
+    internal
 #endif
+    static readonly Guid MaxValue = new Guid(
         // ffffffff-ffff-ffff-ffff-ffffffffffff
         0xffffffff, 0xffff, 0xffff,
         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);

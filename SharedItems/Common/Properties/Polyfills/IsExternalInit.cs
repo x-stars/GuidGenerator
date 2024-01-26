@@ -4,7 +4,7 @@
 #pragma warning disable
 #nullable enable
 
-#if !(IS_EXTERNAL_INIT_EXTERNAL || NET5_0_OR_GREATER)
+#if !(IS_EXTERNAL_INIT_MODIFIER_EXTERNAL || NET5_0_OR_GREATER)
 namespace System.Runtime.CompilerServices
 {
     using System.ComponentModel;
