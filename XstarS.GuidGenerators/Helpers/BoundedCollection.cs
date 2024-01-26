@@ -52,11 +52,11 @@ internal sealed class BoundedCollection<T>
         return false;
     }
 
+    public bool TryTake(
 #if NETCOREAPP3_0_OR_GREATER
-    public bool TryTake([MaybeNullWhen(false)] out T item)
-#else
-    public bool TryTake(out T item)
+        [MaybeNullWhen(false)]
 #endif
+        out T item)
     {
         if (this.Items.TryDequeue(out item))
         {

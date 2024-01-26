@@ -69,10 +69,9 @@ public static class GuidVersionInfo
                 or GuidVersion.Version2
 #if !UUIDREV_DISABLE
                 or GuidVersion.Version6
-                or GuidVersion.Version7;
-#else
-                ;
+                or GuidVersion.Version7
 #endif
+                ;
 
     /// <summary>
     /// Gets a value that indicates whether a <see cref="Guid"/> of
@@ -97,10 +96,9 @@ public static class GuidVersionInfo
     public static bool IsRandomized(this GuidVersion version) =>
         version is GuidVersion.Version4
 #if !UUIDREV_DISABLE
-                or GuidVersion.Version7;
-#else
-                ;
+                or GuidVersion.Version7
 #endif
+                ;
 
 #if !UUIDREV_DISABLE
     /// <summary>
@@ -127,10 +125,9 @@ public static class GuidVersionInfo
         version is GuidVersion.Version1
                 or GuidVersion.Version2
 #if !UUIDREV_DISABLE
-                or GuidVersion.Version6;
-#else
-                ;
+                or GuidVersion.Version6
 #endif
+                ;
 
     /// <summary>
     /// Gets a value that indicates whether a <see cref="Guid"/> of
@@ -144,10 +141,9 @@ public static class GuidVersionInfo
         version is GuidVersion.Version1
                 or GuidVersion.Version2
 #if !UUIDREV_DISABLE
-                or GuidVersion.Version6;
-#else
-                ;
+                or GuidVersion.Version6
 #endif
+                ;
 
     /// <summary>
     /// Gets a value that indicates whether a <see cref="Guid"/> of
