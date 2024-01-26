@@ -25,11 +25,7 @@
 
   <Import Project="..\BuildItems\Trimming.Build.props" />
   <Import Project="..\BuildItems\NativeAOT.Build.props" />
-
-  <PropertyGroup Condition="'$(PublishAot)'=='true'">
-    <IlcDisableReflection>true</IlcDisableReflection>
-    <DefineConstants>$(DefineConstants);ILC_DISABLE_REFLECTION</DefineConstants>
-  </PropertyGroup>
+  <Import Project="..\BuildItems\NoReflection.Build.props" />
 
   <ItemGroup>
     <Compile Include="..\SharedItems\Common\**\*.cs" />

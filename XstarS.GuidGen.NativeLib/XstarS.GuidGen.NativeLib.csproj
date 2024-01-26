@@ -20,6 +20,7 @@
 
   <Import Project="..\BuildItems\Trimming.Build.props" />
   <Import Project="..\BuildItems\NativeAOT.Build.props" />
+  <Import Project="..\BuildItems\NoReflection.Build.props" />
 
   <ItemGroup>
     <Compile Include="..\SharedItems\Common\**\*.cs" />
