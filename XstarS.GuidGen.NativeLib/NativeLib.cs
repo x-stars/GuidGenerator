@@ -11,7 +11,7 @@ namespace XstarS.GuidGen;
 
 internal static unsafe class NativeLib
 {
-    static NativeLib() { ConfigureStateStorage(); }
+    static NativeLib() { NativeLib.ConfigureStateStorage(); }
 
     [UnmanagedCallersOnly(EntryPoint = nameof(GuidCreateV1))]
     internal static HResult GuidCreateV1([Out] Guid* guid)
@@ -214,11 +214,35 @@ internal static unsafe class NativeLib
                 Trace.WriteLine(e.Exception);
             }
         };
-        var storageDir = Environment.GetFolderPath(
-            Environment.SpecialFolder.LocalApplicationData,
-            Environment.SpecialFolderOption.Create);
+        var storageDir = NativeLib.GetStateStorageDirectory();
         var storageFile = "768a7b1b-ae51-5c0a-bc9d-a85a343f2c24.state.bin";
         var storagePath = Path.Combine(storageDir, storageFile);
         _ = GuidGenerator.SetStateStorageFile(storagePath);
+    }
+
+    private static string GetStateStorageDirectory()
+    {
+#if ILC_DISABLE_REFLECTION
+        static string GetEnvPathOrThrowNotFound(string name) =>
+            Environment.GetEnvironmentVariable(name) ??
+            throw new DirectoryNotFoundException($"Environment directory not found: {name}");
+        var storageDir = 0 switch
+        {
+            _ when OperatingSystem.IsWindows() =>
+                GetEnvPathOrThrowNotFound("LOCALAPPDATA"),
+            _ when OperatingSystem.IsLinux() =>
+                Environment.GetEnvironmentVariable("XDG_DATA_HOME") ??
+                Path.Combine(GetEnvPathOrThrowNotFound("HOME"), ".local", "share"),
+            _ when OperatingSystem.IsMacOS() =>
+                Path.Combine(GetEnvPathOrThrowNotFound("HOME"), "Library", "Application Support"),
+            _ => throw new PlatformNotSupportedException(
+                "Unable to get the environment directory on an unknown operating system."),
+        };
+        return Directory.CreateDirectory(storageDir).FullName;
+#else
+        return Environment.GetFolderPath(
+            Environment.SpecialFolder.LocalApplicationData,
+            Environment.SpecialFolderOption.Create);
+#endif
     }
 }

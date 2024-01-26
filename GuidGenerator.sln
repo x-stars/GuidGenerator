@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildItems", "BuildItems", 
 	ProjectSection(SolutionItems) = preProject
 		BuildItems\AssemblyInfo.Build.props = BuildItems\AssemblyInfo.Build.props
 		BuildItems\NativeAOT.Build.props = BuildItems\NativeAOT.Build.props
+		BuildItems\NoReflection.Build.props = BuildItems\NoReflection.Build.props
 		BuildItems\NuGetPack.Build.props = BuildItems\NuGetPack.Build.props
 		BuildItems\RefUnsafe.Build.props = BuildItems\RefUnsafe.Build.props
 		BuildItems\Trimming.Build.props = BuildItems\Trimming.Build.props

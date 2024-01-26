@@ -123,7 +123,8 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
 
     private bool TryParseNamespace(string name, out Guid result)
     {
-        result = name.ToUpperInvariant() switch
+        var nameUpper = name.ToUpperInvariant();
+        result = nameUpper switch
         {
             "DNS" => GuidNamespaces.Dns,
             "URL" => GuidNamespaces.Url,
@@ -134,6 +135,6 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
 #endif
             "NIL" or _ => Guid.Empty,
         };
-        return (result != Guid.Empty) || (name == "NIL");
+        return (result != Guid.Empty) || (nameUpper == "NIL");
     }
 }

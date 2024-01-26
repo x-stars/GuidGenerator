@@ -28,6 +28,8 @@ var storageDir = Environment.GetFolderPath(
 var storagePath = Path.Combine(storageDir, "768a7b1b-ae51-5c0a-bc9d-a85a343f2c24.state.bin");
 _ = GuidGenerator.SetStateStorageFile(storagePath);
 
+// The below callings will use the interceptor feature instead of reflection in .NET 8.0 or greater.
+#pragma warning disable IL2026  // Members attributed with RequiresUnreferencedCode may break when trimming
 app.MapGet("/", (int? count) => NewGuidCount(GuidGenerator.Version4, count));
 
 app.MapGet("/v1", (int? count) => NewGuidCount(GuidGenerator.Version1, count));
@@ -65,6 +67,7 @@ app.MapGet("/v8n/{hash}/{ns}/{name}", (string hash, string ns, string name) =>
 app.MapPost("/v8n/{hash}/{ns}", (string hash, string ns, [FromBody] string name) =>
     ParseHashName(hash).NewGuid(ParseGuidNs(ns), ParseBase64(name)));
 #endif
+#pragma warning restore IL2026  // Members attributed with RequiresUnreferencedCode may break when trimming
 
 app.Run();
 
