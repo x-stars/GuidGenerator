@@ -76,16 +76,16 @@ static object NewGuidCount(IGuidGenerator guidGen, int? count) => (count is null
 
 static Guid ParseGuidNs(string nsNameOrId)
 {
-    return nsNameOrId.ToUpperInvariant() switch
+    return nsNameOrId.ToLowerInvariant() switch
     {
-        "DNS" => GuidNamespaces.Dns,
-        "URL" => GuidNamespaces.Url,
-        "OID" => GuidNamespaces.Oid,
-        "X500" => GuidNamespaces.X500,
+        "@dns" => GuidNamespaces.Dns,
+        "@url" => GuidNamespaces.Url,
+        "@oid" => GuidNamespaces.Oid,
+        "@x500" => GuidNamespaces.X500,
 #if !UUIDREV_DISABLE
-        "MAX" => Uuid.MaxValue,
+        "@max" => Uuid.MaxValue,
 #endif
-        "NIL" => Guid.Empty,
+        "@nil" => Guid.Empty,
         _ => Guid.ParseExact(nsNameOrId, "D"),
     };
 }
