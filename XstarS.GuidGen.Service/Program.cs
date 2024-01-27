@@ -28,8 +28,8 @@ var storageDir = Environment.GetFolderPath(
 var storagePath = Path.Combine(storageDir, "768a7b1b-ae51-5c0a-bc9d-a85a343f2c24.state.bin");
 _ = GuidGenerator.SetStateStorageFile(storagePath);
 
-// The below callings will use the interceptor feature instead of reflection in .NET 8.0 or greater.
-#pragma warning disable IL2026  // Members attributed with RequiresUnreferencedCode may break when trimming
+// The below `Map*` callings will use the interceptor feature instead of reflection in .NET 8.0 or greater.
+#pragma warning disable IL2026, IL3050  // Trimming: RequiresUnreferencedCode, AOT: RequiresDynamicCode
 app.MapGet("/", (int? count) => NewGuidCount(GuidGenerator.Version4, count));
 
 app.MapGet("/v1", (int? count) => NewGuidCount(GuidGenerator.Version1, count));
@@ -67,22 +67,28 @@ app.MapGet("/v8n/{hash}/{ns}/{name}", (string hash, string ns, string name) =>
 app.MapPost("/v8n/{hash}/{ns}", (string hash, string ns, [FromBody] string name) =>
     ParseHashName(hash).NewGuid(ParseGuidNs(ns), ParseBase64(name)));
 #endif
-#pragma warning restore IL2026  // Members attributed with RequiresUnreferencedCode may break when trimming
+#pragma warning restore IL2026, IL3050  // Trimming: RequiresUnreferencedCode, AOT: RequiresDynamicCode
 
 app.Run();
 
 static object NewGuidCount(IGuidGenerator guidGen, int? count) => (count is null) ?
     (object)guidGen.NewGuid() : Enumerable.Range(0, (int)count).Select(index => guidGen.NewGuid());
 
-static Guid ParseGuidNs(string nsNameOrId) => nsNameOrId.ToUpperInvariant() switch
+static Guid ParseGuidNs(string nsNameOrId)
 {
-    "DNS" => GuidNamespaces.Dns, "URL" => GuidNamespaces.Url,
-    "OID" => GuidNamespaces.Oid, "X500" => GuidNamespaces.X500,
+    return nsNameOrId.ToUpperInvariant() switch
+    {
+        "DNS" => GuidNamespaces.Dns,
+        "URL" => GuidNamespaces.Url,
+        "OID" => GuidNamespaces.Oid,
+        "X500" => GuidNamespaces.X500,
 #if !UUIDREV_DISABLE
-    "MAX" => Uuid.MaxValue,
+        "MAX" => Uuid.MaxValue,
 #endif
-    "NIL" => Guid.Empty, _ => Guid.ParseExact(nsNameOrId, "D"),
-};
+        "NIL" => Guid.Empty,
+        _ => Guid.ParseExact(nsNameOrId, "D"),
+    };
+}
 
 static byte[] ParseBase64(string base64) =>
     Convert.FromBase64String(base64.Replace('-', '+').Replace('_', '/') + new string('=', base64.Length % 4));
