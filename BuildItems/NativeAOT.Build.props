@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <PublishAot Condition="
-      '$(TargetFramework.Split(`-`)[0].TrimEnd(`.0123456789`))'=='net' And
-      '$(TargetFramework.Split(`-`)[0].CompareTo(`net7.0`))'&gt;='0'
+      $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)','net7.0'))
     ">true</PublishAot>
   </PropertyGroup>
 
