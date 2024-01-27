@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
+using static System.Web.HttpUtility;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 builder.Services.ConfigureHttpJsonOptions(options =>
@@ -28,8 +29,8 @@ var storageDir = Environment.GetFolderPath(
 var storagePath = Path.Combine(storageDir, "768a7b1b-ae51-5c0a-bc9d-a85a343f2c24.state.bin");
 _ = GuidGenerator.SetStateStorageFile(storagePath);
 
-// The below callings will use the interceptor feature instead of reflection in .NET 8.0 or greater.
-#pragma warning disable IL2026  // Members attributed with RequiresUnreferencedCode may break when trimming
+// The below `Map*` callings will use the interceptor feature instead of reflection in .NET 8.0 or greater.
+#pragma warning disable IL2026, IL3050  // Trimming: RequiresUnreferencedCode, AOT: RequiresDynamicCode
 app.MapGet("/", (int? count) => NewGuidCount(GuidGenerator.Version4, count));
 
 app.MapGet("/v1", (int? count) => NewGuidCount(GuidGenerator.Version1, count));
@@ -43,14 +44,14 @@ app.MapGet("/v2/{domain}/{localId}", (byte domain, uint localId) =>
     GuidGenerator.Version2.NewGuid((DceSecurityDomain)domain, (int)localId));
 
 app.MapGet("/v3/{ns}/{name}", (string ns, string name) =>
-    GuidGenerator.Version3.NewGuid(ParseGuidNs(ns), name));
+    GuidGenerator.Version3.NewGuid(ParseGuidNs(ns), UrlDecodeToBytes(name)));
 app.MapPost("/v3/{ns}", (string ns, [FromBody] string name) =>
     GuidGenerator.Version3.NewGuid(ParseGuidNs(ns), ParseBase64(name)));
 
 app.MapGet("/v4", (int? count) => NewGuidCount(GuidGenerator.Version4, count));
 
 app.MapGet("/v5/{ns}/{name}", (string ns, string name) =>
-    GuidGenerator.Version5.NewGuid(ParseGuidNs(ns), name));
+    GuidGenerator.Version5.NewGuid(ParseGuidNs(ns), UrlDecodeToBytes(name)));
 app.MapPost("/v5/{ns}", (string ns, [FromBody] string name) =>
     GuidGenerator.Version5.NewGuid(ParseGuidNs(ns), ParseBase64(name)));
 
@@ -63,26 +64,32 @@ app.MapGet("/v7", (int? count) => NewGuidCount(GuidGenerator.Version7, count));
 
 app.MapGet("/v8", (int? count) => NewGuidCount(GuidGenerator.Version8, count));
 app.MapGet("/v8n/{hash}/{ns}/{name}", (string hash, string ns, string name) =>
-    ParseHashName(hash).NewGuid(ParseGuidNs(ns), name));
+    ParseHashName(hash).NewGuid(ParseGuidNs(ns), UrlDecodeToBytes(name)));
 app.MapPost("/v8n/{hash}/{ns}", (string hash, string ns, [FromBody] string name) =>
     ParseHashName(hash).NewGuid(ParseGuidNs(ns), ParseBase64(name)));
 #endif
-#pragma warning restore IL2026  // Members attributed with RequiresUnreferencedCode may break when trimming
+#pragma warning restore IL2026, IL3050  // Trimming: RequiresUnreferencedCode, AOT: RequiresDynamicCode
 
 app.Run();
 
 static object NewGuidCount(IGuidGenerator guidGen, int? count) => (count is null) ?
     (object)guidGen.NewGuid() : Enumerable.Range(0, (int)count).Select(index => guidGen.NewGuid());
 
-static Guid ParseGuidNs(string nsNameOrId) => nsNameOrId.ToUpperInvariant() switch
+static Guid ParseGuidNs(string nsNameOrId)
 {
-    "DNS" => GuidNamespaces.Dns, "URL" => GuidNamespaces.Url,
-    "OID" => GuidNamespaces.Oid, "X500" => GuidNamespaces.X500,
+    return nsNameOrId.ToLowerInvariant() switch
+    {
+        "@dns" => GuidNamespaces.Dns,
+        "@url" => GuidNamespaces.Url,
+        "@oid" => GuidNamespaces.Oid,
+        "@x500" => GuidNamespaces.X500,
 #if !UUIDREV_DISABLE
-    "MAX" => Uuid.MaxValue,
+        "@max" => Uuid.MaxValue,
 #endif
-    "NIL" => Guid.Empty, _ => Guid.ParseExact(nsNameOrId, "D"),
-};
+        "@nil" => Guid.Empty,
+        _ => Guid.ParseExact(nsNameOrId, "D"),
+    };
+}
 
 static byte[] ParseBase64(string base64) =>
     Convert.FromBase64String(base64.Replace('-', '+').Replace('_', '/') + new string('=', base64.Length % 4));

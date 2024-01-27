@@ -2,9 +2,11 @@
 
   <PropertyGroup>
     <IsTrimmable Condition="
-      '$(TargetFramework.Split(`-`)[0].TrimEnd(`.0123456789`))'=='net' And
-      '$(TargetFramework.Split(`-`)[0].CompareTo(`net5.0`))'&gt;='0'
+      $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)','net5.0'))
     ">true</IsTrimmable>
+    <IsAotCompatible Condition="
+      $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)','net8.0'))
+    ">true</IsAotCompatible>
     <DefineConstants>$(DefineConstants);IS_TRIMMABLE</DefineConstants>
   </PropertyGroup>
 

@@ -35,12 +35,12 @@ Accept: application/json
 
 ###
 
-GET {{XstarS_GuidGen_Service_HostAddress}}/v3/dns/github.com
+GET {{XstarS_GuidGen_Service_HostAddress}}/v3/@dns/github.com
 Accept: application/json
 
 ###
 
-POST {{XstarS_GuidGen_Service_HostAddress}}/v3/url
+POST {{XstarS_GuidGen_Service_HostAddress}}/v3/@url
 Accept: application/json
 Content-Type: application/json
 
@@ -59,12 +59,12 @@ Accept: application/json
 
 ###
 
-GET {{XstarS_GuidGen_Service_HostAddress}}/v5/dns/github.com
+GET {{XstarS_GuidGen_Service_HostAddress}}/v5/@dns/github.com
 Accept: application/json
 
 ###
 
-POST {{XstarS_GuidGen_Service_HostAddress}}/v5/url
+POST {{XstarS_GuidGen_Service_HostAddress}}/v5/@url
 Accept: application/json
 Content-Type: application/json
 
@@ -103,12 +103,12 @@ Accept: application/json
 
 ###
 
-GET {{XstarS_GuidGen_Service_HostAddress}}/v8n/sha256/dns/github.com
+GET {{XstarS_GuidGen_Service_HostAddress}}/v8n/sha256/@dns/github.com
 Accept: application/json
 
 ###
 
-POST {{XstarS_GuidGen_Service_HostAddress}}/v8n/sha256/url
+POST {{XstarS_GuidGen_Service_HostAddress}}/v8n/sha256/@url
 Accept: application/json
 Content-Type: application/json
 
