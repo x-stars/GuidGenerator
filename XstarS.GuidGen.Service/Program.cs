@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
+using static System.Web.HttpUtility;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 builder.Services.ConfigureHttpJsonOptions(options =>
@@ -43,14 +44,14 @@ app.MapGet("/v2/{domain}/{localId}", (byte domain, uint localId) =>
     GuidGenerator.Version2.NewGuid((DceSecurityDomain)domain, (int)localId));
 
 app.MapGet("/v3/{ns}/{name}", (string ns, string name) =>
-    GuidGenerator.Version3.NewGuid(ParseGuidNs(ns), name));
+    GuidGenerator.Version3.NewGuid(ParseGuidNs(ns), UrlDecodeToBytes(name)));
 app.MapPost("/v3/{ns}", (string ns, [FromBody] string name) =>
     GuidGenerator.Version3.NewGuid(ParseGuidNs(ns), ParseBase64(name)));
 
 app.MapGet("/v4", (int? count) => NewGuidCount(GuidGenerator.Version4, count));
 
 app.MapGet("/v5/{ns}/{name}", (string ns, string name) =>
-    GuidGenerator.Version5.NewGuid(ParseGuidNs(ns), name));
+    GuidGenerator.Version5.NewGuid(ParseGuidNs(ns), UrlDecodeToBytes(name)));
 app.MapPost("/v5/{ns}", (string ns, [FromBody] string name) =>
     GuidGenerator.Version5.NewGuid(ParseGuidNs(ns), ParseBase64(name)));
 
@@ -63,7 +64,7 @@ app.MapGet("/v7", (int? count) => NewGuidCount(GuidGenerator.Version7, count));
 
 app.MapGet("/v8", (int? count) => NewGuidCount(GuidGenerator.Version8, count));
 app.MapGet("/v8n/{hash}/{ns}/{name}", (string hash, string ns, string name) =>
-    ParseHashName(hash).NewGuid(ParseGuidNs(ns), name));
+    ParseHashName(hash).NewGuid(ParseGuidNs(ns), UrlDecodeToBytes(name)));
 app.MapPost("/v8n/{hash}/{ns}", (string hash, string ns, [FromBody] string name) =>
     ParseHashName(hash).NewGuid(ParseGuidNs(ns), ParseBase64(name)));
 #endif
