@@ -319,10 +319,10 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// example implementation (UUIDREV Appendix C.1).
+    /// example implementation (UUIDREV Appendix B.1).
     /// </summary>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// example implementation (UUIDREV Appendix C.1).</returns>
+    /// example implementation (UUIDREV Appendix B.1).</returns>
     [<CompiledName("NewVersion8")>]
     let newV8 () : Guid = Generator.Version8.NewGuid()
 
