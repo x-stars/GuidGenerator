@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // SystemNetworkInterface.cs
@@ -40,28 +41,27 @@ namespace System.Net.NetworkInformation
             List<SystemNetworkInterface> interfaceList = new List<SystemNetworkInterface>();
 
             Interop.IpHlpApi.GetAdaptersAddressesFlags flags =
-                Interop.IpHlpApi.GetAdaptersAddressesFlags.IncludeGateways
-                | Interop.IpHlpApi.GetAdaptersAddressesFlags.IncludeWins;
+                Interop.IpHlpApi.GetAdaptersAddressesFlags.IncludeGateways |
+                Interop.IpHlpApi.GetAdaptersAddressesFlags.IncludeWins;
 
             // Figure out the right buffer size for the adapter information.
-            uint result = Interop.IpHlpApi.GetAdaptersAddresses(
-                family, (uint)flags, (nint)0, (nint)0, &bufferSize);
+            uint result = Interop.IpHlpApi.GetAdaptersAddresses(family, flags, null, null, &bufferSize);
 
             while (result == Interop.IpHlpApi.ERROR_BUFFER_OVERFLOW)
             {
 
                 // Allocate the buffer and get the adapter info.
                 nint buffer = Marshal.AllocHGlobal((int)bufferSize);
+                // Linked list of interfaces.
+                Interop.IpHlpApi.IpAdapterAddresses* adapterAddresses = (Interop.IpHlpApi.IpAdapterAddresses*)buffer;
                 try
                 {
                     result = Interop.IpHlpApi.GetAdaptersAddresses(
-                        family, (uint)flags, (nint)0, buffer, &bufferSize);
+                        family, flags, null, adapterAddresses, &bufferSize);
 
                     // If succeeded, we're going to add each new interface.
                     if (result == Interop.IpHlpApi.ERROR_SUCCESS)
                     {
-                        // Linked list of interfaces.
-                        Interop.IpHlpApi.IpAdapterAddresses* adapterAddresses = (Interop.IpHlpApi.IpAdapterAddresses*)buffer;
                         while (adapterAddresses != null)
                         {
                             // Traverse the list, marshal in the native structures, and create new NetworkInterfaces.
@@ -178,13 +178,6 @@ namespace Interop
         }
 
         [Flags]
-        internal enum AdapterAddressFlags
-        {
-            DnsEligible = 0x1,
-            Transient = 0x2
-        }
-
-        [Flags]
         internal enum GetAdaptersAddressesFlags
         {
             SkipUnicast = 0x0001,
@@ -205,36 +198,6 @@ namespace Interop
         {
             internal nint address;
             internal int addressLength;
-        }
-
-        // IP_ADAPTER_ANYCAST_ADDRESS
-        // IP_ADAPTER_MULTICAST_ADDRESS
-        // IP_ADAPTER_DNS_SERVER_ADDRESS
-        // IP_ADAPTER_WINS_SERVER_ADDRESS
-        // IP_ADAPTER_GATEWAY_ADDRESS
-        [StructLayout(LayoutKind.Sequential)]
-        internal unsafe struct IpAdapterAddress
-        {
-            internal uint length;
-            internal AdapterAddressFlags flags;
-            internal IpAdapterAddress* next;
-            internal IpSocketAddress address;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal unsafe struct IpAdapterUnicastAddress
-        {
-            internal uint length;
-            internal AdapterAddressFlags flags;
-            internal IpAdapterUnicastAddress* next;
-            internal IpSocketAddress address;
-            internal PrefixOrigin prefixOrigin;
-            internal SuffixOrigin suffixOrigin;
-            internal DuplicateAddressDetectionState dadState;
-            internal uint validLifetime;
-            internal uint preferredLifetime;
-            internal uint leaseLifetime;
-            internal byte prefixLength;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -299,8 +262,11 @@ namespace Interop
                   PIP_ADAPTER_DNS_SUFFIX             FirstDnsSuffix;
              * */
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private static T[] BufferToArray<T>(ref T buffer, int length)
+#if !(NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
                 where T : unmanaged
+#endif
             {
 #if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
                 return MemoryMarshal.CreateReadOnlySpan<T>(ref buffer, length).ToArray();
@@ -338,6 +304,7 @@ namespace Interop
 
         [DllImport("iphlpapi.dll", ExactSpelling = true)]
         internal static unsafe extern uint GetAdaptersAddresses(
-            AddressFamily family, uint flags, nint pReserved, nint adapterAddresses, uint* outBufLen);
+            AddressFamily family, GetAdaptersAddressesFlags flags, void* pReserved,
+            IpAdapterAddresses* adapterAddresses, uint* outBufLen);
     }
 }
