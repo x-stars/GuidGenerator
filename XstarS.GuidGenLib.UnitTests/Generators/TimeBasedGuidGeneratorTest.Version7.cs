@@ -61,6 +61,7 @@ partial class TimeBasedGuidGeneratorTest
     {
         var lastGuid = Guid.Empty;
         var guidGen = GuidGenerator.Version7;
+        Parallel.For(0, 1000, index => guidGen.NewGuid());
         Parallel.For(0, 1000, index =>
         {
             lock (guidGen)
