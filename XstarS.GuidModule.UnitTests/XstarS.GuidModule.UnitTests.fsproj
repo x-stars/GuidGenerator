@@ -22,8 +22,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Properties\*.fs" />
     <Compile Include="TestHelpers\*.fs" />
     <Compile Include="GuidModuleTest.fs" />
+    <Compile Include="GuidVersionInfoTest.fs" />
     <Compile Include="GuidComponentTest.fs" />
     <Compile Include="GuidDataComponentTest.fs" />
     <Compile Include="GuidGeneratorTest.fs" />
@@ -31,7 +33,6 @@
     <Compile Include="GuidGeneratorV8NSha3Test.fs" />
     <Compile Include="GuidGeneratorStateTest.fs" />
     <Compile Include="GuidPatternsTest.fs" />
-    <Compile Include="GuidVersionInfoTest.fs" />
     <Compile Include="GuidVersionPatternsTest.fs" />
   </ItemGroup>
 
