@@ -181,23 +181,24 @@ internal abstract class ClockResetCounter
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool TryUpdateTimestamp(long timestamp)
         {
-            if (timestamp != this.LastTimestamp)
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            bool TryUpdateCore(long timestamp)
             {
-                lock (this)
+                if (timestamp == this.LastTimestamp)
                 {
-                    if (timestamp == this.LastTimestamp)
-                    {
-                        return true;
-                    }
-                    if (timestamp == this.LastTimestamp - 1)
-                    {
-                        return false;
-                    }
-                    this.LastTimestamp = timestamp;
-                    this.SequenceState = -1;
+                    return true;
                 }
+                if (timestamp == this.LastTimestamp - 1)
+                {
+                    return false;
+                }
+                this.LastTimestamp = timestamp;
+                this.SequenceState = -1;
+                return true;
             }
-            return true;
+
+            return (timestamp == this.LastTimestamp) ||
+                TryUpdateCore(timestamp);
         }
     }
 }
