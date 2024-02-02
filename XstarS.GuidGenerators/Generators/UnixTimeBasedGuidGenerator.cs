@@ -53,9 +53,9 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         while (true)
         {
             var timestamp = this.CurrentTimestamp;
-            var tsSubMsFrac = this.GetSubMillisecondFraction(timestamp);
+            var tsMilliSec = this.DivideTimestamp(timestamp, out var tsSubMsFrac);
             var counter = this.ClockResetCounter;
-            if (counter.TryGetSequence(ref guid, tsSubMsFrac, out var sequence))
+            if (counter.TryGetSequence(ref guid, tsMilliSec, tsSubMsFrac, out var sequence))
             {
                 var components = this.GuidComponents;
                 components.SetTimestamp(ref guid, timestamp);
@@ -69,11 +69,11 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private short GetSubMillisecondFraction(long timestamp)
+    private long DivideTimestamp(long timestamp, out short tsSubMsFrac)
     {
         var tsSubMs = timestamp % TimeSpan.TicksPerMillisecond;
-        var tsSubMsFrac = (tsSubMs << 12) / TimeSpan.TicksPerMillisecond;
-        return (short)tsSubMsFrac;
+        tsSubMsFrac = (short)((tsSubMs << 12) / TimeSpan.TicksPerMillisecond);
+        return timestamp / TimeSpan.TicksPerMillisecond;
     }
 
     private void FillMonotonicityFields(ref Guid guid, short tsSubMsFrac, short sequence)

@@ -11,7 +11,10 @@ namespace XstarS.GuidGen;
 
 internal static unsafe class NativeLib
 {
-    static NativeLib() { NativeLib.ConfigureStateStorage(); }
+    static NativeLib()
+    {
+        NativeLib.ConfigureStateStorage();
+    }
 
     [UnmanagedCallersOnly(EntryPoint = nameof(GuidCreateV1))]
     internal static HResult GuidCreateV1([Out] Guid* guid)
@@ -153,7 +156,6 @@ internal static unsafe class NativeLib
     }
 #endif
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static HResult GuidCreate(IGuidGenerator guidGen, Guid* guid)
     {
         try
@@ -168,7 +170,6 @@ internal static unsafe class NativeLib
         }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static HResult GuidCreateNameBased(
         INameBasedGuidGenerator guidGen,
         Guid* guid, Guid* nsId, byte* name, nuint nameLen)
@@ -186,7 +187,6 @@ internal static unsafe class NativeLib
         }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static HResult GuidCreateDceSecurity(
         IDceSecurityGuidGenerator guidGen,
         Guid* guid, DceSecurityDomain domain, uint? localId = null)

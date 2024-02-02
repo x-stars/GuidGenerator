@@ -5,10 +5,8 @@
 #include <windows.h>
 #include <guiddef.h>
 
-#pragma comment(lib, "Xstars.GuidGen.NativeLib.lib")
 #define UUIDREV_DISABLE
 
-#ifdef __cplusplus
 extern "C" {
 #endif
 
