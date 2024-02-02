@@ -5,8 +5,6 @@
 #include <windows.h>
 #include <guiddef.h>
 
-#pragma comment(lib, "Xstars.GuidGen.NativeLib.lib")
-
 #ifdef __cplusplus
 extern "C" {
 #endif
