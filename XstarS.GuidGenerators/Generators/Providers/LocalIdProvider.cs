@@ -71,21 +71,7 @@ internal abstract class LocalIdProvider
 #endif
     private sealed class Windows : LocalIdProvider
     {
-        private static readonly WellKnownSidType[] SidTypes =
-            Windows.CreateSidTypes();
-
         internal Windows() { }
-
-        private static WellKnownSidType[] CreateSidTypes()
-        {
-            const int bound = 256;
-            var sidTypes = new WellKnownSidType[bound];
-            foreach (var value in ..bound)
-            {
-                sidTypes[value] = (WellKnownSidType)value;
-            }
-            return sidTypes;
-        }
 
         protected override int GetLocalUserId()
         {
@@ -143,9 +129,10 @@ internal abstract class LocalIdProvider
             {
                 return true;
             }
-            var sidTypes = Windows.SidTypes;
-            foreach (var sidType in sidTypes)
+            const int sidTypeCount = 256;
+            foreach (var value in ..sidTypeCount)
             {
+                var sidType = (WellKnownSidType)value;
                 if (sid.IsWellKnown(sidType))
                 {
                     return true;
