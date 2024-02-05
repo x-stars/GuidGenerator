@@ -180,7 +180,7 @@ static partial class GuidExtensions
         if (customData.Length != 16)
         {
             throw new ArgumentException(
-                "Custom Data for Guid must be exactly 16 bytes long.",
+                "Custom data for Guid must be exactly 16 bytes long.",
                 nameof(customData));
         }
         if (!guid.GetRfc4122Version().IsCustomized())
@@ -212,7 +212,7 @@ static partial class GuidExtensions
         if (customData.Length != 16)
         {
             throw new ArgumentException(
-                "Custom Data for Guid must be exactly 16 bytes long.",
+                "Custom data for Guid must be exactly 16 bytes long.",
                 nameof(customData));
         }
         if (!guid.GetRfc4122Version().IsCustomized())
