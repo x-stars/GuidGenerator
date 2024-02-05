@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 #if NET8_0_OR_GREATER
+using System;
 using XNetEx.Security.Cryptography;
 #endif
 
@@ -86,7 +87,7 @@ partial class NameBasedGuidGenerator
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    using (var validatePlatform = SHA3_256.Create()) { }
+                    ThrowIfNotSupported(SHA3_256.IsSupported, HashAlgorithmNames.SHA3_256);
                     return NameBasedGuidGenerator.CustomHashing.SingletonSha3D256 ??=
                         new NameBasedGuidGenerator.CustomHashing(SHA3_256.Create);
                 }
@@ -103,7 +104,7 @@ partial class NameBasedGuidGenerator
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    using (var validatePlatform = SHA3_384.Create()) { }
+                    ThrowIfNotSupported(SHA3_384.IsSupported, HashAlgorithmNames.SHA3_384);
                     return NameBasedGuidGenerator.CustomHashing.SingletonSha3D384 ??=
                         new NameBasedGuidGenerator.CustomHashing(SHA3_384.Create);
                 }
@@ -120,7 +121,7 @@ partial class NameBasedGuidGenerator
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    using (var validatePlatform = SHA3_512.Create()) { }
+                    ThrowIfNotSupported(SHA3_512.IsSupported, HashAlgorithmNames.SHA3_512);
                     return NameBasedGuidGenerator.CustomHashing.SingletonSha3D512 ??=
                         new NameBasedGuidGenerator.CustomHashing(SHA3_512.Create);
                 }
@@ -137,7 +138,7 @@ partial class NameBasedGuidGenerator
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    using (var validatePlatform = new Shake128()) { }
+                    ThrowIfNotSupported(Shake128.IsSupported, HashAlgorithmNames.SHAKE128);
                     return NameBasedGuidGenerator.CustomHashing.SingletonShake128 ??=
                         new NameBasedGuidGenerator.CustomHashing(Shake128D.Create256);
                 }
@@ -154,12 +155,21 @@ partial class NameBasedGuidGenerator
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    using (var validatePlatform = new Shake256()) { }
+                    ThrowIfNotSupported(Shake256.IsSupported, HashAlgorithmNames.SHAKE256);
                     return NameBasedGuidGenerator.CustomHashing.SingletonShake256 ??=
                         new NameBasedGuidGenerator.CustomHashing(Shake256D.Create512);
                 }
 
                 return NameBasedGuidGenerator.CustomHashing.SingletonShake256 ?? Initialize();
+            }
+        }
+
+        private static void ThrowIfNotSupported(bool isSupported, string hashingName)
+        {
+            if (!isSupported)
+            {
+                throw new PlatformNotSupportedException(
+                    $"The {hashingName} hash algorithm is not supported on this platform.");
             }
         }
 #endif
