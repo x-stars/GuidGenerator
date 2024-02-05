@@ -63,6 +63,9 @@ static partial class GuidExtensions
         if (bytes.Length != 16)
         {
             var throwsException = new Guid(bytes);
+            throw new ArgumentException(
+                "Byte array for Guid must be exactly 16 bytes long.",
+                nameof(bytes));
         }
 
         var uuid = default(Guid);
@@ -92,6 +95,9 @@ static partial class GuidExtensions
         if (bytes.Length != 16)
         {
             var throwsException = new Guid(bytes);
+            throw new ArgumentException(
+                "Byte array for Guid must be exactly 16 bytes long.",
+                nameof(bytes));
         }
 
         var uuid = MemoryMarshal.Read<Guid>(bytes);
