@@ -22,7 +22,7 @@ GuidGenerator.StateStorageException += (sender, e) =>
 {
     var isFirstLoad = (e.OperationType == FileAccess.Read) && (e.Exception is FileNotFoundException);
     var logLevel = isFirstLoad ? LogLevel.Information : LogLevel.Warning;
-    app.Logger.Log(logLevel, e.Exception, "{exception}: {message}", e.Exception.GetType(), e.Exception.Message);
+    app.Logger.Log(logLevel, e.Exception, "{Exception}: {Message}", e.Exception.GetType(), e.Exception.Message);
 };
 var storageDir = Environment.GetFolderPath(
     Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create);
