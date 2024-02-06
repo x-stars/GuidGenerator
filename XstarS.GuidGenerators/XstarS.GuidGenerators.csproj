@@ -26,6 +26,7 @@
   <ItemGroup>
     <Compile Include="..\SharedItems\Common\**\*.cs" />
     <Compile Include="..\SharedItems\SkipLocalsInit\**\*.cs" />
+    <Compile Include="..\SharedItems\NoRuntimeMarshal\**\*.cs" />
   </ItemGroup>
 
   <Import Project="..\BuildItems\RefUnsafe.Build.props" />
