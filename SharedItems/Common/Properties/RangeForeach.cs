@@ -32,6 +32,9 @@ using System.Runtime.CompilerServices;
           "and should not be used directly in user code.")]
 internal static class __RangeEnumerable
 {
+#if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
     public static Enumerator GetEnumerator(this Range range)
     {
         return new Enumerator(in range);
@@ -56,14 +59,24 @@ internal static class __RangeEnumerable
             this.Padding__ = default(long);
         }
 
-        public int Current => this.CurrentIndex;
+        public int Current
+        {
+#if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+            get => this.CurrentIndex;
+        }
 
 #if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        public bool MoveNext() => ++this.CurrentIndex < this.EndIndex;
+        public bool MoveNext() =>
+            ++this.CurrentIndex < this.EndIndex;
     }
 
+#if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
     public static Stepped Step(this Range range, int step)
     {
         return new Stepped(range, step);
@@ -85,6 +98,9 @@ internal static class __RangeEnumerable
             this.Range = range; this.Step = step;
         }
 
+#if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         public Enumerator GetEnumerator() => new Enumerator(in this);
 
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -118,7 +134,13 @@ internal static class __RangeEnumerable
                 this.StepValue = (step ^ sign) - sign;
             }
 
-            public int Current => this.CurrentIndex ^ this.StepSign;
+            public int Current
+            {
+#if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+                get => this.CurrentIndex ^ this.StepSign;
+            }
 
 #if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
