@@ -123,9 +123,7 @@ namespace System.Security.Cryptography
             _ = MethodBridge.Instance;
         }
 
-#if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
+        [MethodImpl((MethodImplOptions)/*AggressiveInlining*/0x0100)]
         private static MethodBridge AsBridge(this HashAlgorithm hashing)
         {
 #if UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER
@@ -245,9 +243,7 @@ namespace System.Security.Cryptography
 
                 private readonly bool EndField;
 
-#if NET45_OR_GREATER || NETCOREAPP || NETSTANDARD
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
+                [MethodImpl((MethodImplOptions)/*AggressiveInlining*/0x0100)]
                 public static unsafe bool GetDisposedField(MethodBridge instance)
                 {
                     if (NonPublicMembers.DisposedFieldOffset < 0) { return false; }
