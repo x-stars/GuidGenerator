@@ -28,6 +28,7 @@
   <ItemGroup>
     <Compile Include="OptionConvert.fs" />
     <Compile Include="TryResult.fs" />
+    <Compile Include="Extensions.fs" />
     <Compile Include="GuidModule.fs" />
     <Compile Include="GuidPatterns.fs" />
   </ItemGroup>

@@ -50,18 +50,6 @@ module Guid =
     /// </summary>
     type DataAndMask = (struct (byte[] * byte[]))
 
-    type IGuidGenerator with
-
-        /// <summary>
-        /// Creates a new unlimited sequence that generates <see cref="T:System.Guid"/> instances
-        /// by the current <see cref="T:XNetEx.Guids.Generators.IGuidGenerator"/>.
-        /// </summary>
-        /// <returns>A new unlimited sequence that generates <see cref="T:System.Guid"/> instances
-        /// by the current <see cref="T:XNetEx.Guids.Generators.IGuidGenerator"/>.</returns>
-        [<CompiledName("GeneratorAsSequence")>]
-        member internal this.AsSequence() : seq<Guid> =
-            seq { while true do yield this.NewGuid() }
-
     /// <summary>
     /// Represents the <see cref="T:System.Guid"/> instance whose value is all zeros.
     /// </summary>
