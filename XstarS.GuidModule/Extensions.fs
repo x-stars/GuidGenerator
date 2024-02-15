@@ -17,8 +17,9 @@ module internal GuidGeneratorExtensions =
         /// </summary>
         /// <returns>A new unlimited sequence that generates <see cref="T:System.Guid"/> instances
         /// by the current <see cref="T:XNetEx.Guids.Generators.IGuidGenerator"/>.</returns>
-        [<CompiledName("AsSequence"); Extension>]
-        member internal this.AsSequence() : seq<Guid> =
+        [<Extension>]
+        [<CompiledName("AsSequence")>]
+        member this.AsSequence() : seq<Guid> =
             seq {
 #if !UUIDREV_DISABLE
                 use _ = this :> IDisposable
