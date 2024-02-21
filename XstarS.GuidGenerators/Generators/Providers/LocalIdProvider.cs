@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Security.Principal;
 using System.Threading;
+using Internal.Security.Principal;
 using XNetEx.Threading;
 
 namespace XNetEx.Guids.Generators;
@@ -48,18 +49,20 @@ internal abstract class LocalIdProvider
 
     private static LocalIdProvider Create()
     {
-        return Environment.OSVersion.Platform switch
-        {
+        var platform = Environment.OSVersion.Platform;
+        return
 #if NET5_0_OR_GREATER
-            PlatformID.Win32NT => OperatingSystem.IsWindows() ?
-                new LocalIdProvider.Windows() : new LocalIdProvider.Unknown(),
+            OperatingSystem.IsWindows() ?
 #else
-            PlatformID.Win32NT => new LocalIdProvider.Windows(),
+            (platform is PlatformID.Win32NT) ?
 #endif
-            PlatformID.Unix => new LocalIdProvider.UnixLike(),
-            PlatformID.MacOSX => new LocalIdProvider.UnixLike(),
-            _ => new LocalIdProvider.Unknown(),
-        };
+                new LocalIdProvider.Windows() :
+#if NET5_0_OR_GREATER
+            !OperatingSystem.IsBrowser() &&
+#endif
+            (platform is PlatformID.Unix or PlatformID.MacOSX) ?
+                new LocalIdProvider.UnixLike() :
+                new LocalIdProvider.Unknown();
     }
 
     protected abstract int GetLocalUserId();
@@ -75,21 +78,22 @@ internal abstract class LocalIdProvider
 
         protected override int GetLocalUserId()
         {
-            var userSid = WindowsIdentity.GetCurrent().User;
+            var token = WindowsIdentity.GetCurrentToken();
+            var userSid = WindowsIdentity.GetUserSid(token);
             return this.GetLocalIdFromSid(userSid);
         }
 
         protected override int GetLocalGroupId()
         {
-            var groupSid = this.GetFirstGroupSid();
+            var token = WindowsIdentity.GetCurrentToken();
+            var groupSid = WindowsIdentity.GetPrimaryGroupSid(token);
             return this.GetLocalIdFromSid(groupSid);
         }
 
-        private unsafe int GetLocalIdFromSid(SecurityIdentifier? sid)
+        private unsafe int GetLocalIdFromSid(byte[]? sidBytes)
         {
-            if (sid is null) { return 0; }
-            var sidBytes = new byte[sid.BinaryLength];
-            sid.GetBinaryForm(sidBytes, 0);
+            if (sidBytes is null) { return 0; }
+            Debug.Assert(sidBytes.Length >= 8);
 #if UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER
             return Unsafe.ReadUnaligned<int>(ref sidBytes[^4]);
 #elif NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -102,55 +106,21 @@ internal abstract class LocalIdProvider
             }
 #endif
         }
-
-        private SecurityIdentifier? GetFirstGroupSid()
-        {
-            var groupIdRefs = WindowsIdentity.GetCurrent().Groups;
-            if (groupIdRefs is null) { return null; }
-            var anyGroupSid = default(SecurityIdentifier);
-            var normalGroupSid = default(SecurityIdentifier);
-            foreach (var groupIdRef in groupIdRefs)
-            {
-                if (groupIdRef is SecurityIdentifier groupSid)
-                {
-                    anyGroupSid ??= groupSid;
-                    if (!this.IsWellKnownSid(groupSid))
-                    {
-                        normalGroupSid ??= groupSid;
-                    }
-                }
-            }
-            return normalGroupSid ?? anyGroupSid;
-        }
-
-        private bool IsWellKnownSid(SecurityIdentifier sid)
-        {
-            if (sid.BinaryLength <= 16)
-            {
-                return true;
-            }
-            const int sidTypeCount = 256;
-            foreach (var value in ..sidTypeCount)
-            {
-                var sidType = (WellKnownSidType)value;
-                if (sid.IsWellKnown(sidType))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 
+#if NET5_0_OR_GREATER
+    [System.Runtime.Versioning.UnsupportedOSPlatform("windows")]
+    [System.Runtime.Versioning.UnsupportedOSPlatform("browser")]
+#endif
     private sealed class UnixLike : LocalIdProvider
     {
         [System.Security.SuppressUnmanagedCodeSecurity]
         private static class SafeNativeMethods
         {
-            [DllImport("libc", EntryPoint = "getuid")]
+            [DllImport("libc", EntryPoint = "getuid", ExactSpelling = true)]
             internal static extern uint GetUserId();
 
-            [DllImport("libc", EntryPoint = "getgid")]
+            [DllImport("libc", EntryPoint = "getgid", ExactSpelling = true)]
             internal static extern uint GetGroupId();
         }
 

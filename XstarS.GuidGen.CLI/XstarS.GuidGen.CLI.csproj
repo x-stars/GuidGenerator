@@ -42,6 +42,4 @@
     </Compile>
   </ItemGroup>
 
-  <Import Project="..\BuildItems\RefWinSID.Build.props" />
-
 </Project>

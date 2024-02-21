@@ -1,8 +1,14 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+﻿// This minimal API is modified to not get the interface properties
+// for much better performance when only getting the MAC address of the interface.
+
+// Original file license:
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-// This minimal API is modified to not get the interface properties
-// for much better performance when only getting the MAC address of the interface.
+// Modified part license:
+// Copyright (c) 2023 XstarS
+// This file is released under the MIT License.
+// https://opensource.org/licenses/MIT
 
 #pragma warning disable
 #nullable enable
@@ -17,6 +23,9 @@ using System.Runtime.InteropServices;
 // SystemNetworkInterface.cs
 namespace System.Net.NetworkInformation
 {
+#if NET5_0_OR_GREATER
+    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#endif
     internal sealed class SystemNetworkInterface : NetworkInterface
     {
         private readonly string _name;
