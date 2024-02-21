@@ -56,13 +56,13 @@ internal abstract class LocalIdProvider
 #else
             (platform is PlatformID.Win32NT) ?
 #endif
-            new LocalIdProvider.Windows() :
+                new LocalIdProvider.Windows() :
 #if NET5_0_OR_GREATER
             !OperatingSystem.IsBrowser() &&
 #endif
             (platform is PlatformID.Unix or PlatformID.MacOSX) ?
-            new LocalIdProvider.UnixLike() :
-            new LocalIdProvider.Unknown();
+                new LocalIdProvider.UnixLike() :
+                new LocalIdProvider.Unknown();
     }
 
     protected abstract int GetLocalUserId();

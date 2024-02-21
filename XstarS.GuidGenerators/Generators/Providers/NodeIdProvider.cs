@@ -101,8 +101,8 @@ internal abstract class NodeIdProvider
 #else
                 (Environment.OSVersion.Platform is PlatformID.Win32NT) ?
 #endif
-                SystemNetworkInterface.GetAllNetworkInterfaces() :
-                NetworkInterface.GetAllNetworkInterfaces();
+                    SystemNetworkInterface.GetAllNetworkInterfaces() :
+                    NetworkInterface.GetAllNetworkInterfaces();
             foreach (var iface in ifaces)
             {
                 if (this.IsValidNetworkInterface(iface))

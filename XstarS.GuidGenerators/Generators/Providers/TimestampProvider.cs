@@ -29,11 +29,12 @@ internal abstract class TimestampProvider
 
     private static TimestampProvider Create()
     {
-        return TimestampProvider.IsDateTimeHiRes() ?
-            new TimestampProvider.DirectTime() :
+        return
+            TimestampProvider.IsDateTimeHiRes() ?
+                new TimestampProvider.DirectTime() :
             Stopwatch.IsHighResolution ?
-            new TimestampProvider.PerfCounter() :
-            new TimestampProvider.IncTimestamp();
+                new TimestampProvider.PerfCounter() :
+                new TimestampProvider.IncTimestamp();
     }
 
     private static bool IsDateTimeHiRes()
