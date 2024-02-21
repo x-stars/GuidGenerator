@@ -49,18 +49,20 @@ internal abstract class LocalIdProvider
 
     private static LocalIdProvider Create()
     {
-        return Environment.OSVersion.Platform switch
-        {
+        var platform = Environment.OSVersion.Platform;
+        return
 #if NET5_0_OR_GREATER
-            PlatformID.Win32NT => OperatingSystem.IsWindows() ?
-                new LocalIdProvider.Windows() : new LocalIdProvider.Unknown(),
+            OperatingSystem.IsWindows() ?
 #else
-            PlatformID.Win32NT => new LocalIdProvider.Windows(),
+            (platform is PlatformID.Win32NT) ?
 #endif
-            PlatformID.Unix => new LocalIdProvider.UnixLike(),
-            PlatformID.MacOSX => new LocalIdProvider.UnixLike(),
-            _ => new LocalIdProvider.Unknown(),
-        };
+            new LocalIdProvider.Windows() :
+#if NET5_0_OR_GREATER
+            !OperatingSystem.IsBrowser() &&
+#endif
+            (platform is PlatformID.Unix or PlatformID.MacOSX) ?
+            new LocalIdProvider.UnixLike() :
+            new LocalIdProvider.Unknown();
     }
 
     protected abstract int GetLocalUserId();
@@ -106,6 +108,10 @@ internal abstract class LocalIdProvider
         }
     }
 
+#if NET5_0_OR_GREATER
+    [System.Runtime.Versioning.UnsupportedOSPlatform("windows")]
+    [System.Runtime.Versioning.UnsupportedOSPlatform("browser")]
+#endif
     private sealed class UnixLike : LocalIdProvider
     {
         [System.Security.SuppressUnmanagedCodeSecurity]

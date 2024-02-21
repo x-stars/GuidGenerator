@@ -21,6 +21,9 @@ using System.ComponentModel;
 
 namespace Internal.Security.Principal
 {
+#if NET5_0_OR_GREATER
+    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#endif
     internal static class WindowsIdentity
     {
         public static SafeAccessTokenHandle? GetCurrentToken()

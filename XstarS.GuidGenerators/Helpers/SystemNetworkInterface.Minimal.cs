@@ -23,6 +23,9 @@ using System.Runtime.InteropServices;
 // SystemNetworkInterface.cs
 namespace System.Net.NetworkInformation
 {
+#if NET5_0_OR_GREATER
+    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#endif
     internal sealed class SystemNetworkInterface : NetworkInterface
     {
         private readonly string _name;
