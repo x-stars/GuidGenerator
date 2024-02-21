@@ -30,6 +30,5 @@
   </ItemGroup>
 
   <Import Project="..\BuildItems\RefUnsafe.Build.props" />
-  <Import Project="..\BuildItems\RefWinSID.Build.props" />
 
 </Project>
