@@ -1,5 +1,5 @@
 ﻿// This minimal API is modified to get the user SID and the primary group SID
-// that is not supported in `System.Security.Principal.Windows` public APIs.
+// that is not supported by `System.Security.Principal.Windows` public APIs.
 
 // Original file license:
 // Licensed to the .NET Foundation under one or more agreements.
@@ -19,6 +19,7 @@ using Internal.Win32.SafeHandles;
 using System.ComponentModel;
 #endif
 
+// WindowsIdentity.cs
 namespace Internal.Security.Principal
 {
 #if NET5_0_OR_GREATER
@@ -594,7 +595,7 @@ namespace Interop
         [DllImport("advapi32.dll", ExactSpelling = true, SetLastError = true)]
 #endif
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static
+        private static
 #if NET7_0_OR_GREATER
         partial
 #else

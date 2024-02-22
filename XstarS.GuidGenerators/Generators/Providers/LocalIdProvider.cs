@@ -78,14 +78,14 @@ internal abstract class LocalIdProvider
 
         protected override int GetLocalUserId()
         {
-            var token = WindowsIdentity.GetCurrentToken();
+            using var token = WindowsIdentity.GetCurrentToken();
             var userSid = WindowsIdentity.GetUserSid(token);
             return this.GetLocalIdFromSid(userSid);
         }
 
         protected override int GetLocalGroupId()
         {
-            var token = WindowsIdentity.GetCurrentToken();
+            using var token = WindowsIdentity.GetCurrentToken();
             var groupSid = WindowsIdentity.GetPrimaryGroupSid(token);
             return this.GetLocalIdFromSid(groupSid);
         }
@@ -114,16 +114,6 @@ internal abstract class LocalIdProvider
 #endif
     private sealed class UnixLike : LocalIdProvider
     {
-        [System.Security.SuppressUnmanagedCodeSecurity]
-        private static class SafeNativeMethods
-        {
-            [DllImport("libc", EntryPoint = "getuid", ExactSpelling = true)]
-            internal static extern uint GetUserId();
-
-            [DllImport("libc", EntryPoint = "getgid", ExactSpelling = true)]
-            internal static extern uint GetGroupId();
-        }
-
         internal UnixLike() { }
 
         protected override int GetLocalUserId()
@@ -134,6 +124,16 @@ internal abstract class LocalIdProvider
         protected override int GetLocalGroupId()
         {
             return (int)SafeNativeMethods.GetGroupId();
+        }
+
+        [System.Security.SuppressUnmanagedCodeSecurity]
+        private static class SafeNativeMethods
+        {
+            [DllImport("libc", EntryPoint = "getuid", ExactSpelling = true)]
+            internal static extern uint GetUserId();
+
+            [DllImport("libc", EntryPoint = "getgid", ExactSpelling = true)]
+            internal static extern uint GetGroupId();
         }
     }
 
