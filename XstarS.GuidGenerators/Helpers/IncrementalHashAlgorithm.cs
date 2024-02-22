@@ -33,6 +33,7 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> object has already been disposed.</exception>
         public static void AppendData(this HashAlgorithm hashing, byte[] buffer)
         {
+            _ = MethodBridge.Instance;
             IncrementalHashAlgorithm.ThrowIfNull(hashing);
             hashing.AsBridge().AppendData(buffer, 0, buffer?.Length ?? 0);
         }
@@ -56,6 +57,7 @@ namespace System.Security.Cryptography
         public static void AppendData(
             this HashAlgorithm hashing, byte[] buffer, int offset, int count)
         {
+            _ = MethodBridge.Instance;
             IncrementalHashAlgorithm.ThrowIfNull(hashing);
             hashing.AsBridge().AppendData(buffer, offset, count);
         }
@@ -72,6 +74,7 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> object has already been disposed.</exception>
         public static void AppendData(this HashAlgorithm hashing, ReadOnlySpan<byte> source)
         {
+            _ = MethodBridge.Instance;
             IncrementalHashAlgorithm.ThrowIfNull(hashing);
             hashing.AsBridge().AppendData(source);
         }
@@ -88,6 +91,7 @@ namespace System.Security.Cryptography
         /// <paramref name="hashing"/> object has already been disposed.</exception>
         public static byte[] GetFinalHash(this HashAlgorithm hashing)
         {
+            _ = MethodBridge.Instance;
             IncrementalHashAlgorithm.ThrowIfNull(hashing);
             return hashing.AsBridge().GetFinalHash();
         }
@@ -109,6 +113,7 @@ namespace System.Security.Cryptography
         public static bool TryGetFinalHash(
             this HashAlgorithm hashing, Span<byte> destination, out int bytesWritten)
         {
+            _ = MethodBridge.Instance;
             IncrementalHashAlgorithm.ThrowIfNull(hashing);
             return hashing.AsBridge().TryGetFinalHash(destination, out bytesWritten);
         }
@@ -120,7 +125,6 @@ namespace System.Security.Cryptography
             {
                 throw new ArgumentNullException(nameof(hashing));
             }
-            _ = MethodBridge.Instance;
         }
 
         [MethodImpl((MethodImplOptions)/*AggressiveInlining*/0x0100)]
