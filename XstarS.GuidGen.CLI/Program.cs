@@ -53,8 +53,9 @@ internal static class Program
                 Path.Combine(GetEnvPathOrThrowNotFound("HOME"), ".local", "share"),
             _ when OperatingSystem.IsMacOS() =>
                 Path.Combine(GetEnvPathOrThrowNotFound("HOME"), "Library", "Application Support"),
-            _ => throw new PlatformNotSupportedException(
-                "Unable to get the environment directory on an unknown operating system."),
+            _ => Environment.GetEnvironmentVariable("HOME") ??
+                throw new PlatformNotSupportedException(
+                    "Unable to get the environment directory on an unknown operating system."),
         };
         return Directory.CreateDirectory(storageDir).FullName;
 #else
