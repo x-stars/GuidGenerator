@@ -3,6 +3,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using XNetEx.Collections.Concurrent;
+using XNetEx.Threading;
 
 namespace XNetEx.Guids.Generators;
 
@@ -23,7 +24,7 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
         this.Generators = new BoundedCollection<IBlockingGuidGenerator>(
             (capacity == -1) ? int.MaxValue : (capacity + ~(capacity >> 31)));
         this.DefaultGeneratorValue = null;
-        this.DisposeState = 0;
+        this.DisposeState = LatchStates.Initial;
     }
 
     public GuidVersion Version => this.DefaultGenerator.Version;
@@ -40,7 +41,7 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
             {
                 lock (this.Generators)
                 {
-                    if (this.DisposeState != 0)
+                    if (this.DisposeState != LatchStates.Initial)
                     {
                         throw new ObjectDisposedException(nameof(GuidGeneratorPool));
                     }
@@ -55,10 +56,20 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
 
     public void Dispose()
     {
-        if (Interlocked.CompareExchange(ref this.DisposeState, 1, 0) == 0)
+        if (Interlocked.CompareExchange(
+            ref this.DisposeState, LatchStates.Entered,
+            LatchStates.Initial) == LatchStates.Initial)
         {
-            this.DisposeGenerators();
-            this.DisposeState = 2;
+            try
+            {
+                this.DisposeGenerators();
+                this.DisposeState = LatchStates.Exited;
+            }
+            catch (Exception)
+            {
+                this.DisposeState = LatchStates.Failed;
+                throw;
+            }
         }
     }
 
@@ -113,7 +124,7 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
 
     private void ReturnGenerator(IBlockingGuidGenerator generator)
     {
-        if (this.DisposeState != 0)
+        if (this.DisposeState != LatchStates.Initial)
         {
             generator.Dispose();
             return;

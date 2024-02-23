@@ -14,9 +14,11 @@ internal sealed class AutoRefreshCache<T> : IDisposable
 
     private readonly Timer RefreshTask;
 
+    private volatile StrongBox<T>? CachedValueBox;
+
     private volatile int SleepCountdown;
 
-    private volatile StrongBox<T>? CachedValueBox;
+    private volatile bool IsDisposed;
 
     public AutoRefreshCache(Func<T> refreshFunc, int refreshPeriod, int sleepAfter)
     {
@@ -24,16 +26,27 @@ internal sealed class AutoRefreshCache<T> : IDisposable
         this.RefreshPeriod = refreshPeriod;
         this.SleepAfter = sleepAfter;
         this.RefreshTask = new Timer(this.RefreshOrSleep);
-        this.SleepCountdown = sleepAfter;
         this.CachedValueBox = null;
+        this.SleepCountdown = sleepAfter;
+        this.IsDisposed = false;
     }
 
     public T Value => this.GetOrRefreshValue();
 
     public void Dispose()
     {
-        this.RefreshTask.Dispose();
-        this.CachedValueBox = null;
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        void DisposeCore()
+        {
+            if (!this.IsDisposed)
+            {
+                this.RefreshTask.Dispose();
+                this.CachedValueBox = null;
+                this.IsDisposed = true;
+            }
+        }
+
+        if (!this.IsDisposed) { DisposeCore(); }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -42,6 +55,10 @@ internal sealed class AutoRefreshCache<T> : IDisposable
         [MethodImpl(MethodImplOptions.Synchronized)]
         StrongBox<T> ForcedRefresh()
         {
+            if (this.IsDisposed)
+            {
+                throw new ObjectDisposedException(nameof(AutoRefreshCache<T>));
+            }
             if (this.CachedValueBox is null)
             {
                 this.CachedValueBox = new StrongBox<T>(this.RefreshFunc.Invoke());
