@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Threading;
 using XNetEx.Runtime.CompilerServices;
+using XNetEx.Threading;
 
 namespace XNetEx.Guids.Generators;
 
@@ -46,27 +47,37 @@ partial class NameBasedGuidGenerator
             internal Disposable(Func<HashAlgorithm> hashingFactory)
                 : base(hashingFactory)
             {
-                this.DisposeState = 0;
+                this.DisposeState = LatchStates.Initial;
             }
 
             protected override bool TrackHashing => true;
 
             protected override void Dispose(bool disposing)
             {
-                if (Interlocked.CompareExchange(ref this.DisposeState, 1, 0) == 0)
+                if (Interlocked.CompareExchange(
+                    ref this.DisposeState, LatchStates.Entered,
+                    LatchStates.Initial) == LatchStates.Initial)
                 {
-                    if (disposing)
+                    try
                     {
-                        this.DisposeHashings();
+                        if (disposing)
+                        {
+                            this.DisposeHashings();
+                        }
+                        this.DisposeState = LatchStates.Exited;
                     }
-                    this.DisposeState = 2;
+                    catch (Exception)
+                    {
+                        this.DisposeState = LatchStates.Failed;
+                        throw;
+                    }
                 }
                 base.Dispose(disposing);
             }
 
             protected override HashAlgorithm GetHashing()
             {
-                if (this.DisposeState != 0)
+                if (this.DisposeState != LatchStates.Initial)
                 {
                     throw new ObjectDisposedException(nameof(NameBasedGuidGenerator));
                 }
@@ -75,7 +86,7 @@ partial class NameBasedGuidGenerator
 
             protected override void ReturnHashing(HashAlgorithm hashing)
             {
-                if (this.DisposeState != 0)
+                if (this.DisposeState != LatchStates.Initial)
                 {
                     hashing.Dispose();
                     return;
@@ -87,6 +98,8 @@ partial class NameBasedGuidGenerator
         private sealed class Synchronized : NameBasedGuidGenerator.CustomHashing, IDisposable
         {
             private readonly HashAlgorithm GlobalHashing;
+
+            private volatile bool IsDisposed;
 
             internal Synchronized(HashAlgorithm hashing)
                 : base(hashing.Identity)
@@ -104,22 +117,31 @@ partial class NameBasedGuidGenerator
 
                 this.GlobalHashing = hashing;
                 this.LocalHashing.Dispose();
+                this.IsDisposed = false;
             }
 
             protected override void Dispose(bool disposing)
             {
-                if (disposing)
+                if (!this.IsDisposed)
                 {
-                    lock (this.GlobalHashing)
+                    if (disposing)
                     {
-                        this.GlobalHashing.Dispose();
+                        lock (this.GlobalHashing)
+                        {
+                            this.GlobalHashing.Dispose();
+                        }
                     }
+                    this.IsDisposed = true;
                 }
                 base.Dispose(disposing);
             }
 
             protected override HashAlgorithm GetHashing()
             {
+                if (this.IsDisposed)
+                {
+                    throw new ObjectDisposedException(nameof(NameBasedGuidGenerator));
+                }
                 var hashing = this.GlobalHashing;
                 Monitor.Enter(hashing);
                 return hashing;

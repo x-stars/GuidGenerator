@@ -10,9 +10,6 @@
 // This file is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-#pragma warning disable
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;

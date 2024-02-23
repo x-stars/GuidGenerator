@@ -49,20 +49,22 @@ internal abstract class LocalIdProvider
 
     private static LocalIdProvider Create()
     {
-        var platform = Environment.OSVersion.Platform;
-        return
+        return Environment.OSVersion.Platform switch
+        {
+            PlatformID.Win32NT
 #if NET5_0_OR_GREATER
-            OperatingSystem.IsWindows() ?
-#else
-            (platform is PlatformID.Win32NT) ?
+            when OperatingSystem.IsWindows()
 #endif
-                new LocalIdProvider.Windows() :
+              => new LocalIdProvider.Windows(),
+            PlatformID.Unix or
+            PlatformID.MacOSX
 #if NET5_0_OR_GREATER
-            !OperatingSystem.IsBrowser() &&
+            when !OperatingSystem.IsWindows()
+              && !OperatingSystem.IsBrowser()
 #endif
-            (platform is PlatformID.Unix or PlatformID.MacOSX) ?
-                new LocalIdProvider.UnixLike() :
-                new LocalIdProvider.Unknown();
+              => new LocalIdProvider.UnixLike(),
+            _ => new LocalIdProvider.Unknown(),
+        };
     }
 
     protected abstract int GetLocalUserId();
@@ -78,14 +80,14 @@ internal abstract class LocalIdProvider
 
         protected override int GetLocalUserId()
         {
-            var token = WindowsIdentity.GetCurrentToken();
+            using var token = WindowsIdentity.GetCurrentToken();
             var userSid = WindowsIdentity.GetUserSid(token);
             return this.GetLocalIdFromSid(userSid);
         }
 
         protected override int GetLocalGroupId()
         {
-            var token = WindowsIdentity.GetCurrentToken();
+            using var token = WindowsIdentity.GetCurrentToken();
             var groupSid = WindowsIdentity.GetPrimaryGroupSid(token);
             return this.GetLocalIdFromSid(groupSid);
         }
@@ -94,9 +96,7 @@ internal abstract class LocalIdProvider
         {
             if (sidBytes is null) { return 0; }
             Debug.Assert(sidBytes.Length >= 8);
-#if UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER
-            return Unsafe.ReadUnaligned<int>(ref sidBytes[^4]);
-#elif NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
             return MemoryMarshal.Read<int>(
                 ((ReadOnlySpan<byte>)sidBytes)[^4..]);
 #else
@@ -114,16 +114,6 @@ internal abstract class LocalIdProvider
 #endif
     private sealed class UnixLike : LocalIdProvider
     {
-        [System.Security.SuppressUnmanagedCodeSecurity]
-        private static class SafeNativeMethods
-        {
-            [DllImport("libc", EntryPoint = "getuid", ExactSpelling = true)]
-            internal static extern uint GetUserId();
-
-            [DllImport("libc", EntryPoint = "getgid", ExactSpelling = true)]
-            internal static extern uint GetGroupId();
-        }
-
         internal UnixLike() { }
 
         protected override int GetLocalUserId()
@@ -134,6 +124,16 @@ internal abstract class LocalIdProvider
         protected override int GetLocalGroupId()
         {
             return (int)SafeNativeMethods.GetGroupId();
+        }
+
+        [System.Security.SuppressUnmanagedCodeSecurity]
+        private static class SafeNativeMethods
+        {
+            [DllImport("libc", EntryPoint = "getuid", ExactSpelling = true)]
+            internal static extern uint GetUserId();
+
+            [DllImport("libc", EntryPoint = "getgid", ExactSpelling = true)]
+            internal static extern uint GetGroupId();
         }
     }
 

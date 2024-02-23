@@ -2,8 +2,6 @@
 using System.Security.Cryptography;
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Diagnostics;
-#elif UNSAFE_HELPERS
-using System.Runtime.CompilerServices;
 #endif
 
 namespace XNetEx.Guids.Generators;
@@ -108,8 +106,8 @@ partial class NameBasedGuidGenerator
         }
 #endif
 
-#if UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER
-        var uuid = Unsafe.ReadUnaligned<Guid>(ref hash[0]);
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        var uuid = MemoryMarshal.Read<Guid>((ReadOnlySpan<byte>)hash);
 #else
         var uuid = default(Guid);
         fixed (byte* pHash = &hash[0])
