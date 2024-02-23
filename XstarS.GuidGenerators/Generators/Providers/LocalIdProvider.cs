@@ -94,9 +94,7 @@ internal abstract class LocalIdProvider
         {
             if (sidBytes is null) { return 0; }
             Debug.Assert(sidBytes.Length >= 8);
-#if UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER
-            return Unsafe.ReadUnaligned<int>(ref sidBytes[^4]);
-#elif NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
             return MemoryMarshal.Read<int>(
                 ((ReadOnlySpan<byte>)sidBytes)[^4..]);
 #else
