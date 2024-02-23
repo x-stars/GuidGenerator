@@ -49,20 +49,22 @@ internal abstract class LocalIdProvider
 
     private static LocalIdProvider Create()
     {
-        var platform = Environment.OSVersion.Platform;
-        return
+        return Environment.OSVersion.Platform switch
+        {
+            PlatformID.Win32NT
 #if NET5_0_OR_GREATER
-            OperatingSystem.IsWindows() ?
-#else
-            (platform is PlatformID.Win32NT) ?
+            when OperatingSystem.IsWindows()
 #endif
-                new LocalIdProvider.Windows() :
+              => new LocalIdProvider.Windows(),
+            PlatformID.Unix or
+            PlatformID.MacOSX
 #if NET5_0_OR_GREATER
-            !OperatingSystem.IsBrowser() &&
+            when !OperatingSystem.IsWindows()
+              && !OperatingSystem.IsBrowser()
 #endif
-            (platform is PlatformID.Unix or PlatformID.MacOSX) ?
-                new LocalIdProvider.UnixLike() :
-                new LocalIdProvider.Unknown();
+              => new LocalIdProvider.UnixLike(),
+            _ => new LocalIdProvider.Unknown(),
+        };
     }
 
     protected abstract int GetLocalUserId();
