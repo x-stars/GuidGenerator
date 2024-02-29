@@ -45,7 +45,6 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
                     {
                         throw new ObjectDisposedException(nameof(GuidGeneratorPool));
                     }
-
                     return this.DefaultGeneratorValue ??= this.CreateGenerator();
                 }
             }
