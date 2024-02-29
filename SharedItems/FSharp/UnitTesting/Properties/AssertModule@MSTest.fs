@@ -24,10 +24,9 @@ module internal Assert =
     /// Provides an <see cref="T:System.Collections.ICollection"/> wrapper
     /// to the type <see cref="T:Microsoft.FSharp.Collections.seq`1"/>.
     /// </summary>
-    /// <param name="source">The <see cref="T:Microsoft.FSharp.Collections.seq`1"/>.</param>
     [<DebuggerNonUserCode; ExcludeFromCodeCoverage>]
     [<Sealed>]
-    type private SeqWrapper<'T>(source: seq<'T>) =
+    type private SeqWrapper<'T> private (source: seq<'T>) =
 
         /// <summary>
         /// Returns an <see cref="T:System.Collections.ICollection"/> wrapper
