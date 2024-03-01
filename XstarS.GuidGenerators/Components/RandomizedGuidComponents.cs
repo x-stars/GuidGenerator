@@ -30,8 +30,7 @@ internal abstract class RandomizedGuidComponents : GuidComponents, IRandomizedGu
 
     internal sealed new class Version4 : RandomizedGuidComponents
     {
-        internal static readonly RandomizedGuidComponents.Version4 Instance =
-            new RandomizedGuidComponents.Version4();
+        internal static readonly RandomizedGuidComponents.Version4 Instance = new();
 
         private Version4() : base() { }
     }

@@ -41,10 +41,9 @@ internal abstract class DceSecurityGuidComponents
 
     internal sealed new class Version2 : DceSecurityGuidComponents
     {
-        internal static readonly DceSecurityGuidComponents.Version2 Instance =
-            new DceSecurityGuidComponents.Version2();
+        internal static readonly DceSecurityGuidComponents.Version2 Instance = new();
 
-        private Version2() { }
+        private Version2() : base() { }
 
         protected override long GetTimestampCore(ref Guid guid)
         {

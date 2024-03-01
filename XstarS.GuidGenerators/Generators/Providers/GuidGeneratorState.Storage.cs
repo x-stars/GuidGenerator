@@ -16,8 +16,7 @@ partial class GuidGeneratorState
     private static volatile string? StorageFileName = GuidGeneratorState.SetSaveOnProcessExit();
 
     private static readonly AutoRefreshCache<Task<bool>> LastSavingAsyncResultCache =
-        new AutoRefreshCache<Task<bool>>(GuidGeneratorState.SaveToStorageAsync,
-            refreshPeriod: 10 * 1000, sleepAfter: 0);
+        new(GuidGeneratorState.SaveToStorageAsync, refreshPeriod: 10 * 1000, sleepAfter: 0);
 
     public static string? StorageFile => GuidGeneratorState.StorageFileName;
 

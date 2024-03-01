@@ -30,8 +30,7 @@ internal abstract class TimeBasedGuidComponents : GuidComponents, ITimeBasedGuid
 #if !UUIDREV_DISABLE
     internal sealed new class Version7 : TimeBasedGuidComponents, ITimeRandomBasedGuidComponents
     {
-        internal static readonly TimeBasedGuidComponents.Version7 Instance =
-            new TimeBasedGuidComponents.Version7();
+        internal static readonly TimeBasedGuidComponents.Version7 Instance = new();
 
         private Version7() : base(TimestampEpochs.UnixTime) { }
 

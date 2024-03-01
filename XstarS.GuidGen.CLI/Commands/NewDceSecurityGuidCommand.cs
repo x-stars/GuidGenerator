@@ -6,8 +6,7 @@ namespace XstarS.GuidGen.Commands;
 
 internal sealed class NewDceSecurityGuidCommand : ProgramCommand
 {
-    internal static readonly NewDceSecurityGuidCommand Version2 =
-        new NewDceSecurityGuidCommand();
+    internal static readonly NewDceSecurityGuidCommand Version2 = new();
 
     private NewDceSecurityGuidCommand() { }
 

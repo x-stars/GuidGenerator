@@ -5,11 +5,9 @@ namespace XstarS.GuidGen.Commands;
 
 internal sealed class ShowHelpCommand : ProgramCommand
 {
-    internal static readonly ShowHelpCommand Instance =
-        new ShowHelpCommand();
+    internal static readonly ShowHelpCommand Instance = new();
 
-    private static readonly HashSet<string> HelpNames =
-        new HashSet<string>() { "-?", "-H", "-HELP" };
+    private static readonly HashSet<string> HelpNames = ["-?", "-H", "-HELP"];
 
     private ShowHelpCommand() { }
 

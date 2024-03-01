@@ -8,36 +8,36 @@ namespace XstarS.GuidGen.Commands;
 internal sealed class NewNameBasedGuidCommand : ProgramCommand
 {
     internal static readonly NewNameBasedGuidCommand Version3 =
-        new NewNameBasedGuidCommand(GuidVersion.Version3);
+        new(GuidVersion.Version3);
 
     internal static readonly NewNameBasedGuidCommand Version5 =
-        new NewNameBasedGuidCommand(GuidVersion.Version5);
+        new(GuidVersion.Version5);
 
 #if !UUIDREV_DISABLE
     internal static readonly NewNameBasedGuidCommand Version8NSha256 =
-        new NewNameBasedGuidCommand(HashAlgorithmNames.SHA256);
+        new(HashAlgorithmNames.SHA256);
 
     internal static readonly NewNameBasedGuidCommand Version8NSha384 =
-        new NewNameBasedGuidCommand(HashAlgorithmNames.SHA384);
+        new(HashAlgorithmNames.SHA384);
 
     internal static readonly NewNameBasedGuidCommand Version8NSha512 =
-        new NewNameBasedGuidCommand(HashAlgorithmNames.SHA512);
+        new(HashAlgorithmNames.SHA512);
 
 #if NET8_0_OR_GREATER
     internal static readonly NewNameBasedGuidCommand Version8NSha3D256 =
-        new NewNameBasedGuidCommand(HashAlgorithmNames.SHA3_256);
+        new(HashAlgorithmNames.SHA3_256);
 
     internal static readonly NewNameBasedGuidCommand Version8NSha3D384 =
-        new NewNameBasedGuidCommand(HashAlgorithmNames.SHA3_384);
+        new(HashAlgorithmNames.SHA3_384);
 
     internal static readonly NewNameBasedGuidCommand Version8NSha3D512 =
-        new NewNameBasedGuidCommand(HashAlgorithmNames.SHA3_512);
+        new(HashAlgorithmNames.SHA3_512);
 
     internal static readonly NewNameBasedGuidCommand Version8NShake128 =
-        new NewNameBasedGuidCommand(HashAlgorithmNames.SHAKE128);
+        new(HashAlgorithmNames.SHAKE128);
 
     internal static readonly NewNameBasedGuidCommand Version8NShake256 =
-        new NewNameBasedGuidCommand(HashAlgorithmNames.SHAKE256);
+        new(HashAlgorithmNames.SHAKE256);
 #endif
 #endif
 

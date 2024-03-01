@@ -7,34 +7,34 @@ namespace XstarS.GuidGen.Commands;
 internal class NewNoInputGuidCommand : ProgramCommand
 {
     internal static readonly NewNoInputGuidCommand Default =
-        new NewNoInputGuidCommand.DefaultVersion();
+        new DefaultVersion();
 
     internal static readonly NewNoInputGuidCommand Version1 =
-        new NewNoInputGuidCommand(GuidVersion.Version1);
+        new(GuidVersion.Version1);
 
     internal static readonly NewNoInputGuidCommand Version4 =
-        new NewNoInputGuidCommand(GuidVersion.Version4);
+        new(GuidVersion.Version4);
 
 #if !UUIDREV_DISABLE
     internal static readonly NewNoInputGuidCommand Version6 =
-        new NewNoInputGuidCommand(GuidVersion.Version6);
+        new(GuidVersion.Version6);
 
     internal static readonly NewNoInputGuidCommand Version7 =
-        new NewNoInputGuidCommand(GuidVersion.Version7);
+        new(GuidVersion.Version7);
 
     internal static readonly NewNoInputGuidCommand Version8 =
-        new NewNoInputGuidCommand(GuidVersion.Version8);
+        new(GuidVersion.Version8);
 #endif
 
     internal static readonly NewNoInputGuidCommand Version1R =
-        new NewNoInputGuidCommand(versionName: "Version1R");
+        new(versionName: "Version1R");
 
 #if !UUIDREV_DISABLE
     internal static readonly NewNoInputGuidCommand Version6P =
-        new NewNoInputGuidCommand(versionName: "Version6P");
+        new(versionName: "Version6P");
 
     internal static readonly NewNoInputGuidCommand Version6R =
-        new NewNoInputGuidCommand(versionName: "Version6R");
+        new(versionName: "Version6R");
 #endif
 
     private readonly GuidVersion Version;

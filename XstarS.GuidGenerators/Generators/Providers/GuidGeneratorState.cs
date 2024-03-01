@@ -8,10 +8,10 @@ namespace XNetEx.Guids.Generators;
 internal sealed partial class GuidGeneratorState
 {
     private static readonly GuidGeneratorState PhysicalNodeState =
-        new GuidGeneratorState(NodeIdSource.PhysicalAddress);
+        new(NodeIdSource.PhysicalAddress);
 
     private static readonly GuidGeneratorState RandomNodeState =
-        new GuidGeneratorState(NodeIdSource.NonVolatileRandom);
+        new(NodeIdSource.NonVolatileRandom);
 
     private readonly NodeIdSource NodeIdSource;
 

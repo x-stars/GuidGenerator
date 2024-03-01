@@ -10,10 +10,10 @@ public class GuidComponentReplaceBenchmark
     [Params(1, 10, 100, 1000)]
     public int GuidCount;
 
-    private Guid[] GuidValues = Array.Empty<Guid>();
+    private Guid[] GuidValues = [];
 
     private readonly DateTime Timestamp =
-        new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        new(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
     private readonly byte[] GuidNodeId = new byte[6];
 

@@ -15,7 +15,7 @@ public static class Uuid
 #else
     internal
 #endif
-    static readonly Guid MaxValue = new Guid(
+    static readonly Guid MaxValue = new(
         // ffffffff-ffff-ffff-ffff-ffffffffffff
         0xffffffff, 0xffff, 0xffff,
         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);

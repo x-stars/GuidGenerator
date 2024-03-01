@@ -10,7 +10,7 @@ public class GuidComponentBenchmark
     [Params(1, 10, 100, 1000)]
     public int GuidCount;
 
-    private Guid[] GuidValues = Array.Empty<Guid>();
+    private Guid[] GuidValues = [];
 
     [GlobalSetup]
     public void PrepareGuidValues()

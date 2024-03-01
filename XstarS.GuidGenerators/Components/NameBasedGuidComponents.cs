@@ -30,16 +30,14 @@ internal abstract class NameBasedGuidComponents : GuidComponents, INameBasedGuid
 
     internal sealed new class Version3 : NameBasedGuidComponents
     {
-        internal static readonly NameBasedGuidComponents.Version3 Instance =
-            new NameBasedGuidComponents.Version3();
+        internal static readonly NameBasedGuidComponents.Version3 Instance = new();
 
         private Version3() : base() { }
     }
 
     internal sealed new class Version5 : NameBasedGuidComponents
     {
-        internal static readonly NameBasedGuidComponents.Version5 Instance =
-            new NameBasedGuidComponents.Version5();
+        internal static readonly NameBasedGuidComponents.Version5 Instance = new();
 
         private Version5() : base() { }
     }

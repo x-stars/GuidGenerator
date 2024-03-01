@@ -11,8 +11,7 @@ internal sealed class GuidFixedFormatComponents : GuidComponents,
     IGuidHashDataComponent
 #endif
 {
-    internal static readonly GuidFixedFormatComponents Instance =
-        new GuidFixedFormatComponents();
+    internal static readonly GuidFixedFormatComponents Instance = new();
 
     private GuidFixedFormatComponents() { }
 

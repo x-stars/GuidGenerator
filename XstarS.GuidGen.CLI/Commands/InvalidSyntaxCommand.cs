@@ -5,8 +5,7 @@ namespace XstarS.GuidGen.Commands;
 
 internal sealed class InvalidSyntaxCommand : ProgramCommand
 {
-    internal static readonly InvalidSyntaxCommand Instance =
-        new InvalidSyntaxCommand();
+    internal static readonly InvalidSyntaxCommand Instance = new();
 
     private InvalidSyntaxCommand() { }
 
