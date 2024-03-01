@@ -10,7 +10,7 @@ public class NameBasedGuidGeneratorBenchmark
     [Params(0, 10, 1000, 1000000)]
     public int NameLength;
 
-    private byte[] Name = Array.Empty<byte>();
+    private byte[] Name = [];
 
     [GlobalSetup]
     public void Initialize()
