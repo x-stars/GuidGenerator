@@ -51,7 +51,7 @@ internal abstract class TimeNodeBasedGuidComponents
     {
         internal static readonly TimeNodeBasedGuidComponents.Version1 Instance = new();
 
-        private Version1() { }
+        private Version1() : base() { }
 
         protected override long GetTimestampCore(ref Guid guid)
         {
@@ -76,7 +76,7 @@ internal abstract class TimeNodeBasedGuidComponents
     {
         internal static readonly TimeNodeBasedGuidComponents.Version6 Instance = new();
 
-        private Version6() { }
+        private Version6() : base() { }
 
         protected override long GetTimestampCore(ref Guid guid)
         {
