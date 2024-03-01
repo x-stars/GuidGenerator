@@ -31,8 +31,7 @@ internal abstract class CustomizedGuidComponents : GuidComponents, ICustomizedGu
 
     internal sealed new class Version8 : CustomizedGuidComponents
     {
-        internal static readonly CustomizedGuidComponents.Version8 Instance =
-            new CustomizedGuidComponents.Version8();
+        internal static readonly CustomizedGuidComponents.Version8 Instance = new();
 
         private Version8() : base() { }
     }

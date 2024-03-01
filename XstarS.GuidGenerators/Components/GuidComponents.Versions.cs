@@ -2,7 +2,7 @@
 
 partial class GuidComponents
 {
-    private static readonly GuidComponents Instance = new GuidComponents();
+    private static readonly GuidComponents Instance = new();
 
     public static GuidComponents Common => GuidComponents.Instance;
 

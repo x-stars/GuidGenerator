@@ -27,8 +27,7 @@ internal abstract class ClockResetCounter
 
     private sealed class Local : ClockResetCounter
     {
-        internal static readonly ClockResetCounter.Local Instance =
-            new ClockResetCounter.Local();
+        internal static readonly ClockResetCounter.Local Instance = new();
 
         [ThreadStatic] private static long LastTimestamp;
 
@@ -95,8 +94,7 @@ internal abstract class ClockResetCounter
 
     private sealed class Global : ClockResetCounter
     {
-        internal static readonly ClockResetCounter.Global Instance =
-            new ClockResetCounter.Global();
+        internal static readonly ClockResetCounter.Global Instance = new();
 
         private long Volatile_LastTimestamp;
 

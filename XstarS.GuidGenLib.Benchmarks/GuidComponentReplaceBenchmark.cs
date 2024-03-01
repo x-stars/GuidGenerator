@@ -13,7 +13,7 @@ public class GuidComponentReplaceBenchmark
     private Guid[] GuidValues = Array.Empty<Guid>();
 
     private readonly DateTime Timestamp =
-        new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        new(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
     private readonly byte[] GuidNodeId = new byte[6];
 
