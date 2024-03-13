@@ -65,7 +65,8 @@ public abstract partial class CustomGuidGenerator : GuidGenerator
     {
         if ((uint)index >= 6)
         {
-            throw new ArgumentOutOfRangeException(nameof(index));
+            throw new ArgumentOutOfRangeException(nameof(index),
+                "Index for node ID must be non-negative and less than 6.");
         }
 
         return this.NodeIdProvider.NodeIdBytes[index];

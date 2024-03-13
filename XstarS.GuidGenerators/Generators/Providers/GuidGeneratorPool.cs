@@ -19,10 +19,19 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
 
     internal GuidGeneratorPool(Func<IBlockingGuidGenerator> factory, int capacity = -1)
     {
-        this.GeneratorFactory = factory ??
+        if (factory is null)
+        {
             throw new ArgumentNullException(nameof(factory));
+        }
+        if ((capacity <= 0) && (capacity != -1))
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(capacity), "Value must be either positive or -1.");
+        }
+
+        this.GeneratorFactory = factory;
         this.Generators = new BoundedCollection<IBlockingGuidGenerator>(
-            (capacity == -1) ? int.MaxValue : (capacity + ~(capacity >> 31)));
+            (capacity == -1) ? int.MaxValue : (capacity - 1));
         this.DefaultGeneratorValue = null;
         this.DisposeState = LatchStates.Initial;
     }
