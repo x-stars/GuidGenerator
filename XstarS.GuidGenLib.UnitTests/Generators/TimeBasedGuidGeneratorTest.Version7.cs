@@ -1,4 +1,4 @@
-﻿#if !UUIDREV_DISABLE
+#if !UUIDREV_DISABLE
 using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -46,14 +46,17 @@ partial class TimeBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version7_GetMonotonicGuids()
     {
-        var lastGuid = Guid.Empty;
-        var guidGen = GuidGenerator.Version7;
-        for (int index = 0; index < 1000; index++)
+        Parallel.For(0, 1000, group =>
         {
-            var guid = guidGen.NewGuid();
-            Assert.IsTrue(guid.CompareTo(lastGuid) > 0);
-            lastGuid = guid;
-        }
+            var lastGuid = Guid.Empty;
+            var guidGen = GuidGenerator.Version7;
+            foreach (var index in 0..1000)
+            {
+                var guid = guidGen.NewGuid();
+                Assert.IsTrue(guid.CompareTo(lastGuid) > 0);
+                lastGuid = guid;
+            }
+        });
     }
 
     [TestMethod]
