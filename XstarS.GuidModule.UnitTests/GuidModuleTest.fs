@@ -1,4 +1,4 @@
-namespace XNetEx.FSharp.Core
+﻿namespace XNetEx.FSharp.Core
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
 open XNetEx.FSharp.UnitTesting.MSTest

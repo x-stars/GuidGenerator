@@ -1,4 +1,4 @@
-#if !UUIDREV_DISABLE
+﻿#if !UUIDREV_DISABLE
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
