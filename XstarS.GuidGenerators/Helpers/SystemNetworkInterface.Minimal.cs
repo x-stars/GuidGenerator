@@ -142,7 +142,7 @@ namespace System.Net.NetworkInformation
         public override bool IsReceiveOnly =>
             ((_adapterFlags & Interop.IpHlpApi.AdapterFlags.ReceiveOnly) > 0);
 
-        /// <summary>The interface doesn't allow multicast.</summary>
+        // The interface doesn't allow multicast.
         public override bool SupportsMulticast =>
             ((_adapterFlags & Interop.IpHlpApi.AdapterFlags.NoMulticast) == 0);
     }

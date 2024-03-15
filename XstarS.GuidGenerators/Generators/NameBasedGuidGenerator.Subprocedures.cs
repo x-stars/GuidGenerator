@@ -106,15 +106,11 @@ partial class NameBasedGuidGenerator
         }
 #endif
 
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        var uuid = MemoryMarshal.Read<Guid>((ReadOnlySpan<byte>)hash);
-#else
         var uuid = default(Guid);
         fixed (byte* pHash = &hash[0])
         {
             uuid = *(Guid*)pHash;
         }
-#endif
         var guid = uuid.ToBigEndian();
         this.FillVersionField(ref guid);
         this.FillVariantField(ref guid);

@@ -21,8 +21,13 @@ internal sealed class BoundedCollection<T>
 
     public BoundedCollection(int capacity)
     {
-        this.Capacity = (capacity >= 0) ? capacity :
-            throw new ArgumentOutOfRangeException(nameof(capacity));
+        if (capacity < 0)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(capacity), "Value must be non-negative.");
+        }
+
+        this.Capacity = capacity;
         this.Items = new ConcurrentQueue<T>();
         this.ItemsCount = 0;
     }

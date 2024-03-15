@@ -1,4 +1,4 @@
-#if !UUIDREV_DISABLE
+﻿#if !UUIDREV_DISABLE
 using System;
 using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

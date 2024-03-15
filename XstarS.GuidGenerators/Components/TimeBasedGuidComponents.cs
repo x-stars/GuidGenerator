@@ -75,9 +75,9 @@ internal abstract class TimeBasedGuidComponents : GuidComponents, ITimeBasedGuid
 
         protected override void SetTimestampCore(ref Guid guid, long timestamp)
         {
-            var tsMilliSec = timestamp / TimeSpan.TicksPerMillisecond;
-            guid.TimeLow() = (uint)(tsMilliSec >> (2 * 8));
-            guid.TimeMid() = (ushort)(tsMilliSec >> (0 * 8));
+            var tsField = timestamp / TimeSpan.TicksPerMillisecond;
+            guid.TimeLow() = (uint)(tsField >> (2 * 8));
+            guid.TimeMid() = (ushort)(tsField >> (0 * 8));
         }
     }
 #endif

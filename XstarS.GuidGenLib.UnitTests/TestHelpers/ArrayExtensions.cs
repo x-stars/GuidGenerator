@@ -42,7 +42,8 @@ internal static class ArrayExtensions
         }
         if (index < 0 || index > array.Length)
         {
-            throw new ArgumentOutOfRangeException(nameof(index));
+            throw new ArgumentOutOfRangeException(nameof(index),
+                "Index must be non-negative and less than the length of the array.");
         }
 
         var result = new T[array.Length + 1];
@@ -64,7 +65,8 @@ internal static class ArrayExtensions
         }
         if (index < 0 || index > array.Length)
         {
-            throw new ArgumentOutOfRangeException(nameof(index));
+            throw new ArgumentOutOfRangeException(nameof(index),
+                "Index must be non-negative and less than the length of the array.");
         }
 
         var result = new T[array.Length + items.Length];

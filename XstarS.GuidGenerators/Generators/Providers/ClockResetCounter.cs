@@ -23,7 +23,7 @@ internal abstract class ClockResetCounter
     }
 
     public abstract bool TryGetSequence(
-        ref Guid newGuid, long timestamp, short clock, out short sequence);
+        long timestamp, short clock, short initSeq, out short sequence);
 
     private sealed class Local : ClockResetCounter
     {
@@ -38,14 +38,9 @@ internal abstract class ClockResetCounter
         private Local() { }
 
         public override bool TryGetSequence(
-            ref Guid newGuid, long timestamp, short clock, out short sequence)
+            long timestamp, short clock, short initSeq, out short sequence)
         {
-            if (!this.TryUpdateTimestamp(timestamp))
-            {
-                sequence = (short)0;
-                return false;
-            }
-
+            this.UpdateTimestamp(timestamp);
             var lastClock = Local.LastClock;
             if (clock < lastClock)
             {
@@ -66,9 +61,7 @@ internal abstract class ClockResetCounter
             }
             else
             {
-                var clkSeqHi = newGuid.ClkSeqHi_Var() << 8;
-                var guidClkSeq = clkSeqHi | newGuid.ClkSeqLow();
-                var newSeq = guidClkSeq & SequenceMask & ~CounterGuard;
+                var newSeq = initSeq & SequenceMask & ~CounterGuard;
                 Local.Sequence = (short)newSeq;
                 sequence = (short)newSeq;
             }
@@ -77,18 +70,13 @@ internal abstract class ClockResetCounter
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool TryUpdateTimestamp(long timestamp)
+        private void UpdateTimestamp(long timestamp)
         {
             if (timestamp != Local.LastTimestamp)
             {
-                if (timestamp == Local.LastTimestamp - 1)
-                {
-                    return false;
-                }
                 Local.LastTimestamp = timestamp;
                 Local.LastClock = -1;
             }
-            return true;
         }
     }
 
@@ -96,15 +84,20 @@ internal abstract class ClockResetCounter
     {
         internal static readonly ClockResetCounter.Global Instance = new();
 
+        private static readonly int RollbackLimit = Environment.ProcessorCount;
+
         private long Volatile_LastTimestamp;
 
         // InitFlag: 31, LastClock: 27~16, Sequence: 14~0.
         private volatile int SequenceState;
 
+        private volatile int RollbackCount;
+
         private Global()
         {
             this.LastTimestamp = 0;
             this.SequenceState = -1;
+            this.RollbackCount = 0;
         }
 
         private long LastTimestamp
@@ -114,19 +107,17 @@ internal abstract class ClockResetCounter
         }
 
         public override bool TryGetSequence(
-            ref Guid newGuid, long timestamp, short clock, out short sequence)
+            long timestamp, short clock, short initSeq, out short sequence)
         {
-            if (!this.TryUpdateTimestamp(timestamp))
-            {
-                sequence = (short)0;
-                return false;
-            }
-
             var initLastClock = -1;
             var spinner = new SpinWait();
             while (true)
             {
-                var state = this.SequenceState;
+                if (!this.TryUpdateTimestamp(timestamp, out var state))
+                {
+                    sequence = (short)0;
+                    return false;
+                }
                 var lastClock = (short)(state >> 16);
                 if (initLastClock == -1)
                 {
@@ -161,9 +152,7 @@ internal abstract class ClockResetCounter
                 }
                 else
                 {
-                    var clkSeqHi = newGuid.ClkSeqHi_Var() << 8;
-                    var guidClkSeq = clkSeqHi | newGuid.ClkSeqLow();
-                    var newSeq = guidClkSeq & SequenceMask & ~CounterGuard;
+                    var newSeq = initSeq & SequenceMask & ~CounterGuard;
                     var nextState = ((int)clock << 16) | newSeq;
                     if (Interlocked.CompareExchange(
                         ref this.SequenceState, nextState, state) == state)
@@ -177,26 +166,37 @@ internal abstract class ClockResetCounter
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool TryUpdateTimestamp(long timestamp)
+        private bool TryUpdateTimestamp(long timestamp, out int state)
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
-            bool TryUpdateCore(long timestamp)
+            bool TryUpdateCore(long timestamp, out int state)
             {
                 if (timestamp == this.LastTimestamp)
                 {
-                    return true;
+                    this.RollbackCount = 0;
+                    return (state = this.SequenceState) >= 0;
                 }
-                if (timestamp == this.LastTimestamp - 1)
+                if ((timestamp - this.LastTimestamp) is > -10 and < 0)
                 {
-                    return false;
+                    return (state = -1) >= 0;
+                }
+                if ((timestamp < this.LastTimestamp) &&
+                    (Interlocked.Increment(ref this.RollbackCount) < RollbackLimit))
+                {
+                    return (state = -1) >= 0;
                 }
                 this.LastTimestamp = timestamp;
-                this.SequenceState = -1;
+                this.SequenceState = state = -1;
+                this.RollbackCount = 0;
                 return true;
             }
 
-            return (timestamp == this.LastTimestamp) ||
-                TryUpdateCore(timestamp);
+            if (timestamp == this.LastTimestamp)
+            {
+                this.RollbackCount = 0;
+                return (state = this.SequenceState) >= 0;
+            }
+            return TryUpdateCore(timestamp, out state);
         }
     }
 }
