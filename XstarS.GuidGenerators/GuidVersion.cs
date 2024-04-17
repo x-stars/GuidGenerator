@@ -33,15 +33,15 @@ public enum GuidVersion : byte
     Version5 = 5,
 #if !UUIDREV_DISABLE
     /// <summary>
-    /// Represents RFC 4122 UUID revision version 6, the reordered time-based version.
+    /// Represents RFC 9562 UUID version 6, the reordered time-based version.
     /// </summary>
     Version6 = 6,
     /// <summary>
-    /// Represents RFC 4122 UUID revision version 7, the Unix Epoch time-based version.
+    /// Represents RFC 9562 UUID version 7, the Unix Epoch time-based version.
     /// </summary>
     Version7 = 7,
     /// <summary>
-    /// Represents RFC 4122 UUID revision version 8, reserved for custom UUID formats.
+    /// Represents RFC 9562 UUID version 8, reserved for custom UUID formats.
     /// </summary>
     Version8 = 8,
     /// <summary>

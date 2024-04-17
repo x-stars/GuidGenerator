@@ -2,34 +2,34 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-为 .NET 平台提供符合 RFC 4122 UUID 标准以及 RFC4122bis UUIDREV 草稿的 GUID 生成器。
+为 .NET 平台提供符合 RFC 4122 (UUID) 与 RFC 9562 (UUIDREV) 标准的 GUID 生成器。
 
 ## RFC 4122 UUID 标准
 
 RFC 4122 定义了以下 5 种 UUID 版本：
 
-* Version 1: 基于时间戳，包含 60 位时间戳和 12 位 MAC 地址
-* Version 2: DCE Security 用途，包含 28 位时间戳、12 位 MAC 地址以及 32 位本地 ID
-* Version 3: 基于命名空间和名称，由 MD5 散列算法计算命名空间和名称得到
-* Version 4: 基于随机数（伪随机或真随机），与 .NET 的 `Guid.NewGuid()` 等价
-* Version 5: 基于命名空间和名称，由 SHA1 散列算法计算命名空间和名称得到
+* Version 1: 基于时间戳，包含 60 位时间戳和 12 位 MAC 地址。
+* Version 2: DCE Security 用途，包含 28 位时间戳、12 位 MAC 地址以及 32 位本地 ID。
+* Version 3: 基于命名空间和名称，由 MD5 散列算法计算命名空间和名称得到。
+* Version 4: 基于随机数（伪随机或真随机），与 .NET 的 `Guid.NewGuid()` 等价。
+* Version 5: 基于命名空间和名称，由 SHA1 散列算法计算命名空间和名称得到。
 
 除此之外，还有一个特殊的 Nil UUID，其所有字节均为 `0x00`，与 .NET 的 `Guid.Empty` 等价。
 
 > * [RFC 4122 UUID 标准](https://www.rfc-editor.org/rfc/rfc4122)
 > * [DCE Security UUID 标准](https://pubs.opengroup.org/onlinepubs/9696989899/chap5.htm)
 
-## RFC4122bis UUIDREV 草稿
+## RFC 9562 UUID 标准
 
-RFC4122bis UUIDREV 定义了以下 3 种 UUID 版本：
+RFC 9562 定义了以下 3 种 UUID 版本：
 
-* Version 6: 基于时间戳，与 Version 1 基本等价，但将时间戳调整为大端序
-* Version 7: 基于 Unix 时间戳，包含 48 位时间戳和 74 位随机数，与 ULID 基本等价
-* Version 8: 预留给自定义 UUID 格式，除变体和版本外的字段均由用户定义
+* Version 6: 基于时间戳，与 Version 1 基本等价，但将时间戳调整为大端序。
+* Version 7: 基于 Unix 时间戳，包含 48 位时间戳和 74 位随机数，与 ULID 基本等价。
+* Version 8: 预留给自定义 UUID 格式，除变体和版本外的字段均由用户定义。
 
 除此之外，还有一个特殊的 Max UUID，其所有字节均为 `0xff`，在 .NET 中暂无等价实现（本项目提供）。
 
-> * [RFC4122bis UUIDREV 草稿](https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis)
+> * [RFC-to-be 9562 UUID 标准](https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis)
 
 ## GUID 生成库使用
 
@@ -125,9 +125,9 @@ F# GUID 模块工程位于 [XstarS.GuidModule](XstarS.GuidModule)。
 
 核心模块：`XNetEx.FSharp.Core.Guid`。
 
-提供一套符合 RFC 4122 标准以及 RFC4122bis UUIDREV 草稿的 GUID 相关操作，并根据 F# 管道模式对输入参数顺序进行了适当调整。
+提供一套符合 RFC 4122 (UUID) 与 RFC 9562 (UUIDREV) 标准的 GUID 相关操作，并根据 F# 管道模式对输入参数顺序进行了适当调整。
 
-### RFC 4122 GUID 生成
+### RFC 标准 GUID 生成
 
 ``` FSharp
 open System
@@ -207,7 +207,7 @@ GUID 生成命令行工具的工程位于 [XstarS.GuidGen.CLI](XstarS.GuidGen.CL
 
 ``` Batch
 > GuidGen -?
-Generate RFC 4122 revision compliant GUIDs.
+Generate RFC 4122/9562 compliant GUIDs.
 Usage:  GuidGen[.exe] [-V1|-V4|-V1R] [-Cn]
         GuidGen[.exe] -V2 Domain [SiteID]
         GuidGen[.exe] -V3|-V5 :NS|GuidNS [Name]

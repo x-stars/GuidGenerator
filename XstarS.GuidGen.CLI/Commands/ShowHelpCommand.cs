@@ -28,7 +28,7 @@ internal sealed class ShowHelpCommand : ProgramCommand
         {
             var cmdName = this.GetCommandName();
 #if !UUIDREV_DISABLE
-            yield return $"Generate RFC 4122 revision compliant GUIDs.";
+            yield return $"Generate RFC 4122/9562 compliant GUIDs.";
 #else
             yield return $"Generate RFC 4122 compliant GUIDs.";
 #endif

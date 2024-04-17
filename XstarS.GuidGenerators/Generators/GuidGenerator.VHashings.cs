@@ -7,75 +7,75 @@ namespace XNetEx.Guids.Generators;
 partial class GuidGenerator
 {
     /// <summary>
-    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the SHA-256 hash algorithm.
     /// </summary>
-    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the SHA-256 hash algorithm.</returns>
     public static INameBasedGuidGenerator Version8NSha256 => NameBasedGuidGenerator.CustomHashing.InstanceSha256;
 
     /// <summary>
-    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the SHA-384 hash algorithm.
     /// </summary>
-    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the SHA-384 hash algorithm.</returns>
     public static INameBasedGuidGenerator Version8NSha384 => NameBasedGuidGenerator.CustomHashing.InstanceSha384;
 
     /// <summary>
-    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the SHA-512 hash algorithm.
     /// </summary>
-    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the SHA-512 hash algorithm.</returns>
     public static INameBasedGuidGenerator Version8NSha512 => NameBasedGuidGenerator.CustomHashing.InstanceSha512;
 
 #if NET8_0_OR_GREATER
     /// <summary>
-    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the SHA3-256 hash algorithm.
     /// </summary>
-    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the SHA3-256 hash algorithm.</returns>
     /// <exception cref="PlatformNotSupportedException">
     /// This platform does not support the SHA3-256 hash algorithm.</exception>
     public static INameBasedGuidGenerator Version8NSha3D256 => NameBasedGuidGenerator.CustomHashing.InstanceSha3D256;
 
     /// <summary>
-    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the SHA3-384 hash algorithm.
     /// </summary>
-    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the SHA3-384 hash algorithm.</returns>
     /// <exception cref="PlatformNotSupportedException">
     /// This platform does not support the SHA3-384 hash algorithm.</exception>
     public static INameBasedGuidGenerator Version8NSha3D384 => NameBasedGuidGenerator.CustomHashing.InstanceSha3D384;
 
     /// <summary>
-    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the SHA3-512 hash algorithm.
     /// </summary>
-    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the SHA3-512 hash algorithm.</returns>
     /// <exception cref="PlatformNotSupportedException">
     /// This platform does not support the SHA3-512 hash algorithm.</exception>
     public static INameBasedGuidGenerator Version8NSha3D512 => NameBasedGuidGenerator.CustomHashing.InstanceSha3D512;
 
     /// <summary>
-    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the SHAKE128 hash algorithm.
     /// </summary>
-    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the SHAKE128 hash algorithm.</returns>
     /// <exception cref="PlatformNotSupportedException">
     /// This platform does not support the SHAKE128 hash algorithm.</exception>
     public static INameBasedGuidGenerator Version8NShake128 => NameBasedGuidGenerator.CustomHashing.InstanceShake128;
 
     /// <summary>
-    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the SHAKE256 hash algorithm.
     /// </summary>
-    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>The <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the SHAKE256 hash algorithm.</returns>
     /// <exception cref="PlatformNotSupportedException">
     /// This platform does not support the SHAKE256 hash algorithm.</exception>
@@ -83,11 +83,11 @@ partial class GuidGenerator
 #endif
 
     /// <summary>
-    /// Creates a new <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// Creates a new <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the specified hash algorithm with a synchronization lock.
     /// </summary>
     /// <param name="hashing">The hash algorithm used to transform input values.</param>
-    /// <returns>A new <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using <paramref name="hashing"/> with a synchronization lock.</returns>
     /// <exception cref="ArgumentNullException">
     /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
@@ -99,11 +99,11 @@ partial class GuidGenerator
     }
 
     /// <summary>
-    /// Creates a new <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// Creates a new <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the specified hash algorithm creation delegate.
     /// </summary>
     /// <param name="hashingFactory">The delegate used to create the hash algorithm.</param>
-    /// <returns>A new <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="INameBasedGuidGenerator"/> instance of RFC 9562 UUID version 8
     /// using the hash algorithm created by <paramref name="hashingFactory"/>.</returns>
     /// <exception cref="ArgumentNullException">
     /// <paramref name="hashingFactory"/> is <see langword="null"/>.</exception>

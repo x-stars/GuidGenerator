@@ -15,8 +15,8 @@
 
   <Import Project="..\BuildItems\NuGetPack.Build.props" />
   <PropertyGroup>
-    <PackageTags>fsharp guid guid-generator rfc4122 uuid uuidrev</PackageTags>
-    <Description>Provides RFC 4122 UUID compliant GUID operations for F#.</Description>
+    <PackageTags>fsharp guid guid-generator rfc4122 uuid rfc9562 uuidrev</PackageTags>
+    <Description>Provides RFC 4122/9562 compliant GUID operations for F#.</Description>
   </PropertyGroup>
 
   <Import Project="..\BuildItems\Trimming.Build.props" />

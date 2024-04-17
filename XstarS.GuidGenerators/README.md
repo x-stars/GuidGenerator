@@ -1,33 +1,33 @@
 ﻿# .NET GUID Generator
 
-Provides RFC 4122 UUID and RFC4122bis UUIDREV (draft) compliant GUID generators for .NET platform.
+Provides RFC 4122 (UUID) and RFC 9562 (UUIDREV) compliant GUID generators for .NET platform.
 
 ## RFC 4122 UUID Standard
 
 RFC 4122 defines the following five versions of UUID:
 
-* Version 1: The time-based version, contains a 60-bit timestamp and a 12-bit MAC address
-* Version 2: DCE Security version, contains a 28-bit timestamp, a 12-bit MAC address and a 32-bit local ID
-* Version 3: The name-based version, using MD5 hashing to compute the hash of the namespace and name
-* Version 4: The randomly or pseudo-randomly generated version, equivalent to `Guid.NewGuid()` in .NET
-* Version 5: The name-based version, using SHA-1 hashing to compute the hash of the namespace and name
+* Version 1: The time-based version, contains a 60-bit timestamp and a 12-bit MAC address.
+* Version 2: DCE Security version, contains a 28-bit timestamp, a 12-bit MAC address and a 32-bit local ID.
+* Version 3: The name-based version, using MD5 hashing to compute the hash of the namespace and name.
+* Version 4: The randomly or pseudo-randomly generated version, equivalent to `Guid.NewGuid()` in .NET.
+* Version 5: The name-based version, using SHA-1 hashing to compute the hash of the namespace and name.
 
 There is also a special Nil UUID whose bytes are all `0x00`s, which is equivalent to `Guid.Empty` in .NET.
 
 > * [RFC 4122 UUID Standard](https://www.rfc-editor.org/rfc/rfc4122)
 > * [DCE Security UUID Standard](https://pubs.opengroup.org/onlinepubs/9696989899/chap5.htm)
 
-## RFC4122bis UUIDREV Draft
+## RFC 9562 UUID Standard
 
-RFC4122bis UUIDREV defines the following three versions of UUID:
+RFC 9562 defines the following three versions of UUID:
 
-* Version 6: The reordered time-based version, field-compatible with Version 1 except that the timestamp is reordered to big-endian order
-* Version 7: The Unix Epoch time-based version, contains a 48-bit timestamp and a 74-bit random number, field-compatible with ULID
-* Version 8: Reserved for custom UUID formats, fields except the variant and version are user-defined
+* Version 6: The reordered time-based version, field-compatible with Version 1 except that the timestamp is reordered to big-endian order.
+* Version 7: The Unix Epoch time-based version, contains a 48-bit timestamp and a 74-bit random number, field-compatible with ULID.
+* Version 8: Reserved for custom UUID formats, fields except the variant and version are user-defined.
 
 There is also a special Max UUID whose bytes are all `0xff`s, which has no equivalent implementation in .NET (provided in this project).
 
-> * [RFC4122bis UUIDREV Draft](https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis)
+> * [RFC-to-be 9562 UUID Standard](https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis)
 
 ## GUID Generator Library Usage
 
@@ -93,7 +93,7 @@ GuidGenerator.StateStorageException += (sender, e) =>
 var loadResult = GuidGenerator.SetStateStorageFile("state.bin");
 ```
 
-### Component-Based GUID Building
+### Component-based GUID Building
 
 ``` CSharp
 using System;
