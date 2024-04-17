@@ -50,23 +50,23 @@ partial class GuidGenerator
 
 #if !UUIDREV_DISABLE
     /// <summary>
-    /// Gets the <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID revision version 6.
+    /// Gets the <see cref="IBlockingGuidGenerator"/> instance of RFC 9562 UUID version 6.
     /// </summary>
-    /// <returns>The <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID revision version 6.</returns>
+    /// <returns>The <see cref="IBlockingGuidGenerator"/> instance of RFC 9562 UUID version 6.</returns>
     public static IBlockingGuidGenerator Version6 => TimeBasedGuidGenerator.Sequential.Instance;
 
     /// <summary>
-    /// Gets the <see cref="IGuidGenerator"/> instance of RFC 4122 UUID revision version 7.
+    /// Gets the <see cref="IGuidGenerator"/> instance of RFC 9562 UUID version 7.
     /// </summary>
-    /// <returns>The <see cref="IGuidGenerator"/> instance of RFC 4122 UUID revision version 7.</returns>
+    /// <returns>The <see cref="IGuidGenerator"/> instance of RFC 9562 UUID version 7.</returns>
     public static IGuidGenerator Version7 => UnixTimeBasedGuidGenerator.Instance;
 
     /// <summary>
-    /// Gets the <see cref="IGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// example implementation (UUIDREV Appendix B.1).
+    /// Gets the <see cref="IGuidGenerator"/> instance of RFC 9562 UUID version 8
+    /// example implementation (RFC 9562 Appendix B.1).
     /// </summary>
-    /// <returns>The <see cref="IGuidGenerator"/> instance of RFC 4122 UUID revision version 8
-    /// example implementation (UUIDREV Appendix B.1).</returns>
+    /// <returns>The <see cref="IGuidGenerator"/> instance of RFC 9562 UUID version 8
+    /// example implementation (RFC 9562 Appendix B.1).</returns>
     public static IGuidGenerator Version8 => CustomGuidGenerator.Example.Instance;
 
     /// <summary>
@@ -96,18 +96,18 @@ partial class GuidGenerator
 
 #if !UUIDREV_DISABLE
     /// <summary>
-    /// Gets the <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID revision version 6
+    /// Gets the <see cref="IBlockingGuidGenerator"/> instance of RFC 9562 UUID version 6
     /// using a physical (IEEE 802 MAC) address node ID.
     /// </summary>
-    /// <returns>The <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID revision version 6
+    /// <returns>The <see cref="IBlockingGuidGenerator"/> instance of RFC 9562 UUID version 6
     /// using a physical (IEEE 802 MAC) address node ID.</returns>
     public static IBlockingGuidGenerator Version6P => TimeBasedGuidGenerator.Sequential.InstanceP;
 
     /// <summary>
-    /// Gets the <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID revision version 6
+    /// Gets the <see cref="IBlockingGuidGenerator"/> instance of RFC 9562 UUID version 6
     /// using a non-volatile random node ID.
     /// </summary>
-    /// <returns>The <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID revision version 6
+    /// <returns>The <see cref="IBlockingGuidGenerator"/> instance of RFC 9562 UUID version 6
     /// using a non-volatile random node ID.</returns>
     public static IBlockingGuidGenerator Version6R => TimeBasedGuidGenerator.Sequential.InstanceR;
 #endif
@@ -132,10 +132,10 @@ partial class GuidGenerator
 
 #if !UUIDREV_DISABLE
     /// <summary>
-    /// Creates a new <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID revision version 6
+    /// Creates a new <see cref="IBlockingGuidGenerator"/> instance of RFC 9562 UUID version 6
     /// using a volatile random node ID.
     /// </summary>
-    /// <returns>A new <see cref="IBlockingGuidGenerator"/> instance of RFC 4122 UUID revision version 6
+    /// <returns>A new <see cref="IBlockingGuidGenerator"/> instance of RFC 9562 UUID version 6
     /// using a volatile random node ID.</returns>
     public static IBlockingGuidGenerator CreateVersion6R() => TimeBasedGuidGenerator.Sequential.CreateInstanceR();
 #endif

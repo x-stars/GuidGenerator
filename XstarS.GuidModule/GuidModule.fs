@@ -254,75 +254,75 @@ module Guid =
 
 #if !UUIDREV_DISABLE
     /// <summary>
-    /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6.
+    /// Generates a new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 6.
     /// </summary>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6.</returns>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 6.</returns>
     [<CompiledName("NewVersion6")>]
     let newV6 () : Guid = Generator.Version6.NewGuid()
 
     /// <summary>
-    /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6
+    /// Generates a new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 6
     /// using a physical (IEEE 802 MAC) address node ID.
     /// </summary>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 6
     /// using a physical (IEEE 802 MAC) address node ID.</returns>
     [<CompiledName("NewVersion6P")>]
     let newV6P () : Guid = Generator.Version6P.NewGuid()
 
     /// <summary>
-    /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6
+    /// Generates a new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 6
     /// using a non-volatile random node ID.
     /// </summary>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 6
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 6
     /// using a non-volatile random node ID.</returns>
     [<CompiledName("NewVersion6R")>]
     let newV6R () : Guid = Generator.Version6R.NewGuid()
 
     /// <summary>
     /// Creates a new unlimited sequence that generates <see cref="T:System.Guid"/> instances
-    /// of RFC 4122 UUID revision version 6 using a volatile random node ID.
+    /// of RFC 9562 UUID version 6 using a volatile random node ID.
     /// </summary>
     /// <returns>A new unlimited sequence that generates <see cref="T:System.Guid"/> instances
-    /// of RFC 4122 UUID revision version 6 using a volatile random node ID.</returns>
+    /// of RFC 9562 UUID version 6 using a volatile random node ID.</returns>
     [<CompiledName("NewVersion6RSequence")>]
     let newV6RSeq () : seq<Guid> =
         Generator.CreateVersion6R().AsSequence()
 
     /// <summary>
     /// Creates a new unlimited sequence that generates <see cref="T:System.Guid"/> instances
-    /// of RFC 4122 UUID revision version 6 using a volatile random node ID without blocking.
+    /// of RFC 9562 UUID version 6 using a volatile random node ID without blocking.
     /// </summary>
     /// <returns>A new unlimited sequence that generates <see cref="T:System.Guid"/> instances
-    /// of RFC 4122 UUID revision version 6 using a volatile random node ID without blocking.</returns>
+    /// of RFC 9562 UUID version 6 using a volatile random node ID without blocking.</returns>
     [<CompiledName("NewVersion6RPooledSequence")>]
     let newV6RPoolSeq () : seq<Guid> =
         Generator.CreatePooled(Func<_>(Generator.CreateVersion6R)).AsSequence()
 
     /// <summary>
-    /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 7.
+    /// Generates a new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 7.
     /// </summary>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 7.</returns>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 7.</returns>
     [<CompiledName("NewVersion7")>]
     let newV7 () : Guid = Generator.Version7.NewGuid()
 
     /// <summary>
-    /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// example implementation (UUIDREV Appendix B.1).
+    /// Generates a new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
+    /// example implementation (RFC 9562 Appendix B.1).
     /// </summary>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
-    /// example implementation (UUIDREV Appendix B.1).</returns>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
+    /// example implementation (RFC 9562 Appendix B.1).</returns>
     [<CompiledName("NewVersion8")>]
     let newV8 () : Guid = Generator.Version8.NewGuid()
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the specified hash algorithm
+    /// of RFC 9562 UUID version 8 using the specified hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="hashing">The hash algorithm.</param>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using <paramref name="hashing"/>.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="hashing"/> or <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -335,13 +335,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the specified hash algorithm
+    /// of RFC 9562 UUID version 8 using the specified hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="hashing">The hash algorithm.</param>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using <paramref name="hashing"/>.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="hashing"/> or <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -354,14 +354,14 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the specified hash algorithm
+    /// of RFC 9562 UUID version 8 using the specified hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="hashing">The hash algorithm.</param>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <param name="name">The name string.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using <paramref name="hashing"/>.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="hashing"/> or <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -374,12 +374,12 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA-256 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHA-256 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHA-256 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -389,12 +389,12 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA-256 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHA-256 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHA-256 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -404,13 +404,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA-256 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHA-256 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <param name="name">The name string.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHA-256 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -420,12 +420,12 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA-384 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHA-384 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHA-384 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -435,12 +435,12 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA-384 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHA-384 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHA-384 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -450,13 +450,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA-384 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHA-384 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <param name="name">The name string.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHA-384 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -466,12 +466,12 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA-512 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHA-512 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHA-512 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -481,12 +481,12 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA-512 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHA-512 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHA-512 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -496,13 +496,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA-512 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHA-512 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <param name="name">The name string.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHA-512 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -513,12 +513,12 @@ module Guid =
 #if NET8_0_OR_GREATER
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA3-256 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHA3-256 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHA3-256 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -530,12 +530,12 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA3-256 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHA3-256 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHA3-256 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -547,13 +547,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA3-256 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHA3-256 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <param name="name">The name string.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHA3-256 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -565,12 +565,12 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA3-384 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHA3-384 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHA3-384 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -582,12 +582,12 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA3-384 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHA3-384 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHA3-384 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -599,13 +599,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA3-384 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHA3-384 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <param name="name">The name string.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHA3-384 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -617,12 +617,12 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA3-512 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHA3-512 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHA3-512 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -634,12 +634,12 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA3-512 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHA3-512 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHA3-512 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -651,13 +651,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHA3-512 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHA3-512 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <param name="name">The name string.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHA3-512 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -669,12 +669,12 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHAKE128 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHAKE128 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHAKE128 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -686,12 +686,12 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHAKE128 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHAKE128 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHAKE128 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -703,13 +703,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHAKE128 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHAKE128 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <param name="name">The name string.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHAKE128 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -721,12 +721,12 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHAKE256 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHAKE256 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name byte array.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHAKE256 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -738,12 +738,12 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHAKE256 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHAKE256 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="name">The name string.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHAKE256 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>
@@ -755,13 +755,13 @@ module Guid =
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
-    /// of RFC 4122 UUID revision version 8 using the SHAKE256 hash algorithm
+    /// of RFC 9562 UUID version 8 using the SHAKE256 hash algorithm
     /// based on the specified namespace ID and name.
     /// </summary>
     /// <param name="nsId">The namespace <see cref="T:System.Guid"/>.</param>
     /// <param name="enc">The <see cref="T:System.Text.Encoding"/> of the name string.</param>
     /// <param name="name">The name string.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID revision version 8
+    /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 9562 UUID version 8
     /// using the SHAKE256 hash algorithm.</returns>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="name"/> is <see langword="null"/>.</exception>

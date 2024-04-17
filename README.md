@@ -2,17 +2,17 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-Provides RFC 4122 UUID compliant GUID generators for .NET platform.
+Provides RFC 4122 (UUID) compliant GUID generators for .NET platform.
 
 ## RFC 4122 UUID Standard
 
 RFC 4122 defines the following five versions of UUID:
 
-* Version 1: The time-based version, contains a 60-bit timestamp and a 12-bit MAC address
-* Version 2: DCE Security version, contains a 28-bit timestamp, a 12-bit MAC address and a 32-bit local ID
-* Version 3: The name-based version, using MD5 hashing to compute the hash of the namespace and name
-* Version 4: The randomly or pseudo-randomly generated version, equivalent to `Guid.NewGuid()` in .NET
-* Version 5: The name-based version, using SHA-1 hashing to compute the hash of the namespace and name
+* Version 1: The time-based version, contains a 60-bit timestamp and a 12-bit MAC address.
+* Version 2: DCE Security version, contains a 28-bit timestamp, a 12-bit MAC address and a 32-bit local ID.
+* Version 3: The name-based version, using MD5 hashing to compute the hash of the namespace and name.
+* Version 4: The randomly or pseudo-randomly generated version, equivalent to `Guid.NewGuid()` in .NET.
+* Version 5: The name-based version, using SHA-1 hashing to compute the hash of the namespace and name.
 
 There is also a special Nil UUID whose bytes are all `0x00`s, which is equivalent to `Guid.Empty` in .NET.
 
@@ -77,7 +77,7 @@ GuidGenerator.StateStorageException += (sender, e) =>
 var loadResult = GuidGenerator.SetStateStorageFile("state.bin");
 ```
 
-### Component-Based GUID Building
+### Component-based GUID Building
 
 ``` CSharp
 using System;
@@ -99,10 +99,10 @@ The F# GUID Module project is located at [XstarS.GuidModule](XstarS.GuidModule).
 
 Core module: `XNetEx.FSharp.Core.Guid`.
 
-Provides RFC 4122 UUID compliant GUID operations for F#.
+Provides RFC 4122 (UUID) compliant GUID operations for F#.
 The orders of input parameters are adjusted to match F# pipeline patterns.
 
-### RFC 4122 GUID Generation
+### RFC-compliant GUID Generation
 
 ``` FSharp
 open System

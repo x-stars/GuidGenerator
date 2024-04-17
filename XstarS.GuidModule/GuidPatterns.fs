@@ -181,7 +181,7 @@ module GuidPatterns =
 
 #if !UUIDREV_DISABLE
     /// <summary>
-    /// Matches <see cref="T:System.Guid"/> values of RFC 4122 UUID revision version 6.
+    /// Matches <see cref="T:System.Guid"/> values of RFC 9562 UUID version 6.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>A value option of the timestamp, clock sequence and node ID.</returns>
@@ -195,7 +195,7 @@ module GuidPatterns =
         | _, _ -> ValueNone
 
     /// <summary>
-    /// Matches <see cref="T:System.Guid"/> values of RFC 4122 UUID revision version 7.
+    /// Matches <see cref="T:System.Guid"/> values of RFC 9562 UUID version 7.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>A value option of the timestamp and random data and its bitmask.</returns>
@@ -208,7 +208,7 @@ module GuidPatterns =
         | _, _ -> ValueNone
 
     /// <summary>
-    /// Matches <see cref="T:System.Guid"/> values of RFC 4122 UUID revision version 8.
+    /// Matches <see cref="T:System.Guid"/> values of RFC 9562 UUID version 8.
     /// </summary>
     /// <param name="guid">The <see cref="T:System.Guid"/>.</param>
     /// <returns>A value option of the custom data and its bitmask.</returns>
