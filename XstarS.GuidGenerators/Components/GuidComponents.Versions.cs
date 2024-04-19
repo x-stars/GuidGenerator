@@ -23,7 +23,7 @@ partial class GuidComponents
 #if !UUIDREV_DISABLE
     public static ITimeNodeBasedGuidComponents Version6 => TimeNodeBasedGuidComponents.Version6.Instance;
 
-    public static ITimeRandomBasedGuidComponents Version7 => TimeBasedGuidComponents.Version7.Instance;
+    public static ITimeRandomBasedGuidComponents Version7 => TimeRandomBasedGuidComponents.Version7.Instance;
 
     public static ICustomizedGuidComponents Version8 => CustomizedGuidComponents.Version8.Instance;
 
@@ -40,7 +40,7 @@ partial class GuidComponents
         GuidVersion.Version5 => NameBasedGuidComponents.Version5.Instance,
 #if !UUIDREV_DISABLE
         GuidVersion.Version6 => TimeNodeBasedGuidComponents.Version6.Instance,
-        GuidVersion.Version7 => TimeBasedGuidComponents.Version7.Instance,
+        GuidVersion.Version7 => TimeRandomBasedGuidComponents.Version7.Instance,
         GuidVersion.Version8 => CustomizedGuidComponents.Version8.Instance,
         GuidVersion.MaxValue => GuidComponents.Instance,
 #endif
