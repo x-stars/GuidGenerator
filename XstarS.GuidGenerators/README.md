@@ -27,7 +27,7 @@ RFC 9562 defines the following three versions of UUID:
 
 There is also a special Max UUID whose bytes are all `0xff`s, which has no equivalent implementation in .NET (provided in this project).
 
-> * [RFC-to-be 9562 UUID Standard](https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis)
+> * [RFC 9562 UUID Standard](https://www.rfc-editor.org/rfc/rfc9562)
 
 ## GUID Generator Library Usage
 

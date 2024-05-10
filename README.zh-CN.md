@@ -29,7 +29,7 @@ RFC 9562 定义了以下 3 种 UUID 版本：
 
 除此之外，还有一个特殊的 Max UUID，其所有字节均为 `0xff`，在 .NET 中暂无等价实现（本项目提供）。
 
-> * [RFC-to-be 9562 UUID 标准](https://datatracker.ietf.org/doc/html/draft-ietf-uuidrev-rfc4122bis)
+> * [RFC 9562 UUID 标准](https://www.rfc-editor.org/rfc/rfc9562)
 
 ## GUID 生成库使用
 
