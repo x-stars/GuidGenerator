@@ -202,7 +202,7 @@ assert (guid3 = guid5)
 
 The GUID Generator Command Line Tool project is located at [XstarS.GuidGen.CLI](XstarS.GuidGen.CLI).
 
-> The following commands are executed after renaming the command line tool to  `GuidGen.exe`.
+> The following commands are executed after renaming the command line tool to `GuidGen.exe`.
 
 ### Command Line Tool Help Message
 
