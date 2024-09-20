@@ -6,6 +6,7 @@ namespace XNetEx.FSharp.UnitTesting.MSTest
 
 open System
 open System.Collections
+open System.ComponentModel
 open System.Diagnostics
 open System.Diagnostics.CodeAnalysis
 open System.Text.RegularExpressions
@@ -25,8 +26,9 @@ module internal Assert =
     /// to the type <see cref="T:Microsoft.FSharp.Collections.seq`1"/>.
     /// </summary>
     [<DebuggerNonUserCode; ExcludeFromCodeCoverage>]
+    [<EditorBrowsable(EditorBrowsableState.Never)>]
     [<Sealed>]
-    type private SeqWrapper<'T> private (source: seq<'T>) =
+    type internal SeqWrapper<'T>(source: seq<'T>) =
 
         /// <summary>
         /// Returns an <see cref="T:System.Collections.ICollection"/> wrapper
