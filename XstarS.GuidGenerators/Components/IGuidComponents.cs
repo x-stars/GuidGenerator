@@ -30,12 +30,12 @@ internal interface IRandomizedGuidComponents
 {
 }
 
+#if !UUIDREV_DISABLE
 internal interface ITimeRandomBasedGuidComponents
     : ITimeBasedGuidComponents, IRandomizedGuidComponents
 {
 }
 
-#if !UUIDREV_DISABLE
 internal interface ICustomizedGuidComponents
     : IGuidCommonComponents, IGuidCustomDataComponent
 {
