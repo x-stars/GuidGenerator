@@ -34,7 +34,7 @@ namespace System.Security.Cryptography
         public static void AppendData(this HashAlgorithm hashing, byte[] buffer)
         {
             _ = MethodBridge.Instance;
-            IncrementalHashAlgorithm.ThrowIfNull(hashing);
+            IncrementalHashAlgorithm.CheckNullArg(hashing);
             hashing.AsBridge().AppendData(buffer, 0, buffer?.Length ?? 0);
         }
 
@@ -58,7 +58,7 @@ namespace System.Security.Cryptography
             this HashAlgorithm hashing, byte[] buffer, int offset, int count)
         {
             _ = MethodBridge.Instance;
-            IncrementalHashAlgorithm.ThrowIfNull(hashing);
+            IncrementalHashAlgorithm.CheckNullArg(hashing);
             hashing.AsBridge().AppendData(buffer, offset, count);
         }
 
@@ -75,7 +75,7 @@ namespace System.Security.Cryptography
         public static void AppendData(this HashAlgorithm hashing, ReadOnlySpan<byte> source)
         {
             _ = MethodBridge.Instance;
-            IncrementalHashAlgorithm.ThrowIfNull(hashing);
+            IncrementalHashAlgorithm.CheckNullArg(hashing);
             hashing.AsBridge().AppendData(source);
         }
 #endif
@@ -92,7 +92,7 @@ namespace System.Security.Cryptography
         public static byte[] GetFinalHash(this HashAlgorithm hashing)
         {
             _ = MethodBridge.Instance;
-            IncrementalHashAlgorithm.ThrowIfNull(hashing);
+            IncrementalHashAlgorithm.CheckNullArg(hashing);
             return hashing.AsBridge().GetFinalHash();
         }
 
@@ -114,12 +114,12 @@ namespace System.Security.Cryptography
             this HashAlgorithm hashing, Span<byte> destination, out int bytesWritten)
         {
             _ = MethodBridge.Instance;
-            IncrementalHashAlgorithm.ThrowIfNull(hashing);
+            IncrementalHashAlgorithm.CheckNullArg(hashing);
             return hashing.AsBridge().TryGetFinalHash(destination, out bytesWritten);
         }
 #endif
 
-        private static void ThrowIfNull(this HashAlgorithm hashing)
+        private static void CheckNullArg(HashAlgorithm hashing)
         {
             if (hashing is null)
             {
@@ -155,7 +155,8 @@ namespace System.Security.Cryptography
 
             private static MethodBridge InitializeInstance()
             {
-                var instance = new NonPublicMembers();
+                var instance = (Environment.TickCount % 2 == 0) ?
+                    (MethodBridge)new NonPublicMembers() : new DummyImplementation();
                 instance.AppendData(Array.Empty<byte>(), 0, 0);
 #if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
                 instance.AppendData(ReadOnlySpan<byte>.Empty);
@@ -304,6 +305,30 @@ namespace System.Security.Cryptography
                 protected override byte[] HashFinal() => Array.Empty<byte>();
 
 #if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                protected override bool TryHashFinal(
+                    Span<byte> destination, out int bytesWritten) => (bytesWritten = 0) == 0;
+#endif
+            }
+
+            [DebuggerNonUserCode, ExcludeFromCodeCoverage]
+            private sealed class DummyImplementation : MethodBridge
+            {
+                [MethodImpl((MethodImplOptions)/*Synchronized*/0x0020)]
+                public override void Initialize() => throw new NotImplementedException();
+
+                [MethodImpl((MethodImplOptions)/*Synchronized*/0x0020)]
+                protected override void HashCore(byte[] array, int ibStart, int cbSize) { }
+
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                [MethodImpl((MethodImplOptions)/*Synchronized*/0x0020)]
+                protected override void HashCore(ReadOnlySpan<byte> source) { }
+#endif
+
+                [MethodImpl((MethodImplOptions)/*Synchronized*/0x0020)]
+                protected override byte[] HashFinal() => Array.Empty<byte>();
+
+#if NETCOREAPP3_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                [MethodImpl((MethodImplOptions)/*Synchronized*/0x0020)]
                 protected override bool TryHashFinal(
                     Span<byte> destination, out int bytesWritten) => (bytesWritten = 0) == 0;
 #endif
