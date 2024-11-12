@@ -50,16 +50,6 @@ partial class GuidGeneratorState
         Volatile.Read(ref GuidGeneratorState.StorageException)?.Invoke(null, e);
     }
 
-    private static class LocalBuffers
-    {
-        private const int StorageDataLength = 4 + 4 + 8 + 4 + 6 + 6;
-
-        [ThreadStatic] private static byte[]? StorageDataValue;
-
-        public static byte[] StorageData =>
-            LocalBuffers.StorageDataValue ??= new byte[LocalBuffers.StorageDataLength];
-    }
-
     [MethodImpl(MethodImplOptions.Synchronized)]
     private static bool LoadFromStorage()
     {
@@ -68,18 +58,9 @@ partial class GuidGeneratorState
 
         try
         {
-            var storageData = LocalBuffers.StorageData;
-            using (var stream = new FileStream(storageFile,
-                FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                var length = stream.Read(storageData, 0, storageData.Length);
-                if (length != storageData.Length)
-                {
-                    throw new EndOfStreamException();
-                }
-            }
-            using var buffer = new MemoryStream(storageData);
-            using var reader = new BinaryReader(buffer);
+            using var stream = new FileStream(storageFile,
+                FileMode.Open, FileAccess.Read, FileShare.Read);
+            using var reader = new BinaryReader(stream);
             const int nodeIdSize = 6;
             var version = reader.ReadInt32();
             if (version != GuidGeneratorState.VersionNumber)
@@ -171,21 +152,16 @@ partial class GuidGeneratorState
                 }
             }
 
-            var storageData = LocalBuffers.StorageData;
-            using (var buffer = new MemoryStream(storageData))
-            using (var writer = new BinaryWriter(buffer))
-            {
-                const int nodeIdSize = 6;
-                writer.Write(GuidGeneratorState.VersionNumber);
-                writer.Write(fieldFlags);
-                writer.Write(timestamp);
-                writer.Write(clockSeq);
-                writer.Write(phyNodeId, 0, nodeIdSize);
-                writer.Write(randNodeId, 0, nodeIdSize);
-            }
             using var stream = new FileStream(storageFile,
                 FileMode.Create, FileAccess.Write, FileShare.None);
-            stream.Write(storageData, 0, storageData.Length);
+            using var writer = new BinaryWriter(stream);
+            const int nodeIdSize = 6;
+            writer.Write(GuidGeneratorState.VersionNumber);
+            writer.Write(fieldFlags);
+            writer.Write(timestamp);
+            writer.Write(clockSeq);
+            writer.Write(phyNodeId, 0, nodeIdSize);
+            writer.Write(randNodeId, 0, nodeIdSize);
             return true;
         }
         catch (Exception ex)
