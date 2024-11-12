@@ -73,6 +73,7 @@ partial class GuidGeneratorState
             var phyNodeId = reader.ReadBytes(nodeIdSize);
             var randNodeId = reader.ReadBytes(nodeIdSize);
             var isIndClkSeq = (fieldFlags >> (2 * 8)) != 0;
+            stream.Close();
 
             var phyState = GuidGeneratorState.PhysicalNodeState;
             var randState = GuidGeneratorState.RandomNodeState;
@@ -153,7 +154,7 @@ partial class GuidGeneratorState
             }
 
             using var stream = new FileStream(storageFile,
-                FileMode.Create, FileAccess.Write, FileShare.None);
+                FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
             using var writer = new BinaryWriter(stream);
             const int nodeIdSize = 6;
             writer.Write(GuidGeneratorState.VersionNumber);
