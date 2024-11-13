@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace XNetEx.Collections.Concurrent;
 
-[DebuggerDisplay($"Count = {{{nameof(Count)}}}")]
+[DebuggerDisplay($"Count = {{{nameof(Count)}}}, Capacity = {{{nameof(Capacity)}}}")]
 [DebuggerTypeProxy(typeof(BoundedCollection<>.DebugView))]
 internal sealed class BoundedCollection<T>
     : IProducerConsumerCollection<T>, IReadOnlyCollection<T>
@@ -81,16 +81,10 @@ internal sealed class BoundedCollection<T>
         return ((IEnumerable)this.Items).GetEnumerator();
     }
 
-    private sealed class DebugView
+    private sealed class DebugView(BoundedCollection<T> value)
     {
-        private readonly BoundedCollection<T> Value;
-
-        internal DebugView(BoundedCollection<T> value)
-        {
-            this.Value = value;
-        }
 
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
-        public T[] Items => this.Value.ToArray();
+        public T[] Items => value.ToArray();
     }
 }
