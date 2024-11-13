@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !UUIDREV_DISABLE
+using System;
 
 namespace XNetEx.Runtime.CompilerServices;
 
@@ -29,3 +30,4 @@ internal static class ClosureFunctions
     /// is not an instance of <typeparamref name="T"/>.</exception>
     public static T Identity<T>(this ValueType? value) => (T)(object?)value!;
 }
+#endif

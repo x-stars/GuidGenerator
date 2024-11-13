@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !UUIDREV_DISABLE
+using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -88,3 +89,4 @@ internal sealed class BoundedCollection<T>
         public T[] Items => value.ToArray();
     }
 }
+#endif
