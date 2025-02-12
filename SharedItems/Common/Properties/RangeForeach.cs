@@ -89,6 +89,8 @@ internal static class __RangeEnumerable
         [MethodImpl((MethodImplOptions)/*AggressiveInlining*/0x0100)]
         public Enumerator GetEnumerator() => new Enumerator(in this);
 
+        public override string ToString() => $"({this.Range}).Step({this.Step})";
+
         [MethodImpl((MethodImplOptions)/*NoInlining*/0x0008)]
         private static void ThrowStepOutOfRange() =>
             throw new ArgumentOutOfRangeException("step", "Non-zero number required.");
