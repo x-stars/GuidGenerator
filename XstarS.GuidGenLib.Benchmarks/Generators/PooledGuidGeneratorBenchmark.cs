@@ -37,9 +37,9 @@ public class PooledGuidGeneratorBenchmark
     [Benchmark]
     public void GuidV1Generate()
     {
+        var guidGen = GuidGenerator.Version1R;
         this.ParallelInvoke(count =>
         {
-            var guidGen = GuidGenerator.Version1R;
             for (int index = 0; index < count; index++)
             {
                 var guid = guidGen.NewGuid();
@@ -50,10 +50,10 @@ public class PooledGuidGeneratorBenchmark
     [Benchmark]
     public void GuidV1PoolGenerate()
     {
+        var guidGen = GuidGenerator.CreatePooled(
+            GuidGenerator.CreateVersion1R);
         this.ParallelInvoke(count =>
         {
-            var guidGen = GuidGenerator.CreatePooled(
-                GuidGenerator.CreateVersion1R);
             for (int index = 0; index < count; index++)
             {
                 var guid = guidGen.NewGuid();
@@ -64,9 +64,9 @@ public class PooledGuidGeneratorBenchmark
     [Benchmark]
     public void GuidV6Generate()
     {
+        var guidGen = GuidGenerator.Version6R;
         this.ParallelInvoke(count =>
         {
-            var guidGen = GuidGenerator.Version6R;
             for (int index = 0; index < count; index++)
             {
                 var guid = guidGen.NewGuid();
@@ -77,10 +77,10 @@ public class PooledGuidGeneratorBenchmark
     [Benchmark]
     public void GuidV6PoolGenerate()
     {
+        var guidGen = GuidGenerator.CreatePooled(
+            GuidGenerator.CreateVersion6R);
         this.ParallelInvoke(count =>
         {
-            var guidGen = GuidGenerator.CreatePooled(
-                GuidGenerator.CreateVersion6R);
             for (int index = 0; index < count; index++)
             {
                 var guid = guidGen.NewGuid();
