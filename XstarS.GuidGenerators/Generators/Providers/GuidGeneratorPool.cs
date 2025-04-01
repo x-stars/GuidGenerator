@@ -13,7 +13,9 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
 
     private readonly BoundedCollection<IBlockingGuidGenerator> Generators;
 
-    private volatile IBlockingGuidGenerator? DefaultGeneratorValue;
+    private readonly ThreadLocal<IBlockingGuidGenerator>? LocalDefaultGenerator;
+
+    private volatile IBlockingGuidGenerator? GlobalDefaultGenerator;
 
     private volatile int DisposeState;
 
@@ -32,7 +34,10 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
         this.GeneratorFactory = factory;
         this.Generators = new BoundedCollection<IBlockingGuidGenerator>(
             (capacity == -1) ? int.MaxValue : (capacity - 1));
-        this.DefaultGeneratorValue = null;
+        this.LocalDefaultGenerator = (capacity == -1) ?
+            new ThreadLocal<IBlockingGuidGenerator>(
+                this.CreateGenerator, trackAllValues: true) : null;
+        this.GlobalDefaultGenerator = null;
         this.DisposeState = LatchStates.Initial;
     }
 
@@ -45,8 +50,13 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
+            if (this.LocalDefaultGenerator is not null)
+            {
+                return this.LocalDefaultGenerator.Value!;
+            }
+
             [MethodImpl(MethodImplOptions.NoInlining)]
-            IBlockingGuidGenerator Initialize()
+            IBlockingGuidGenerator InitializeGlobal()
             {
                 lock (this.Generators)
                 {
@@ -54,11 +64,11 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
                     {
                         throw new ObjectDisposedException(nameof(GuidGeneratorPool));
                     }
-                    return this.DefaultGeneratorValue ??= this.CreateGenerator();
+                    return this.GlobalDefaultGenerator ??= this.CreateGenerator();
                 }
             }
 
-            return this.DefaultGeneratorValue ?? Initialize();
+            return this.GlobalDefaultGenerator ?? InitializeGlobal();
         }
     }
 
@@ -150,8 +160,17 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
         {
             generator.Dispose();
         }
-        this.DefaultGeneratorValue?.Dispose();
-        this.DefaultGeneratorValue = null;
+        if (this.LocalDefaultGenerator is not null)
+        {
+            var localGenerators = this.LocalDefaultGenerator.Values;
+            foreach (var generator in localGenerators)
+            {
+                generator.Dispose();
+            }
+            this.LocalDefaultGenerator.Dispose();
+        }
+        this.GlobalDefaultGenerator?.Dispose();
+        this.GlobalDefaultGenerator = null;
     }
 }
 #endif
