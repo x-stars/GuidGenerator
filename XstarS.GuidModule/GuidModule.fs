@@ -1359,3 +1359,58 @@ module Guid =
     let replaceCustomData (customData: byte[]) (guid: Guid) : Guid =
         guid.ReplaceCustomData(customData)
 #endif
+
+    [<RequireQualifiedAccess>]
+    [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+    module Generator =
+
+        type CustomStateBuilder = CustomStateGuidGeneratorBuilder
+
+        [<AutoOpen>]
+        [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+        module CustomStateBuilder =
+
+            [<CompiledName("UseTimestampProvider")>]
+            let useGuidTimeFunc (timeFunc: unit -> DateTime) (builder: CustomStateBuilder)
+                : CustomStateBuilder =
+                builder.UseTimestampProvider(Func<_>(timeFunc))
+
+            [<CompiledName("UseTimestampProvider")>]
+            let useGuidTimeOffsetFunc (timeFunc: unit -> DateTimeOffset) (builder: CustomStateBuilder)
+                : CustomStateBuilder =
+                builder.UseTimestampProvider(Func<_>(timeFunc))
+
+#if NET8_0_OR_GREATER
+            [<CompiledName("UseTimeProvider")>]
+            let useGuidTimeProvider (timeProvider: TimeProvider) (builder: CustomStateBuilder)
+                : CustomStateBuilder =
+                builder.UseTimeProvider(timeProvider)
+#endif
+
+            [<CompiledName("UseClockSequence")>]
+            let useGuidClockSeq (initClockSeq: int16) (builder: CustomStateBuilder)
+                : CustomStateBuilder =
+                builder.UseClockSequence(initClockSeq)
+
+            [<CompiledName("UseNodeIdSource")>]
+            let useGuidNodeIdSource (nodeIdSource: NodeIdSource) (builder: CustomStateBuilder)
+                : CustomStateBuilder =
+                builder.UseNodeIdSource(nodeIdSource)
+
+            [<CompiledName("UseNodeIdProvider")>]
+            let useGuidNodeIdFunc (nodeIdFunc: unit -> byte[]) (builder: CustomStateBuilder)
+                : CustomStateBuilder =
+                builder.UseNodeIdProvider(Func<_>(nodeIdFunc))
+
+            [<CompiledName("UseNodeIdBytes")>]
+            let useGuidNodeIdBytes (nodeId: byte[]) (builder: CustomStateBuilder)
+                : CustomStateBuilder =
+                builder.UseNodeIdBytes(nodeId)
+
+            [<CompiledName("ToGuidSequence")>]
+            let toGuidSeq (builder: CustomStateBuilder) : seq<Guid> =
+                builder.ToGuidGenerator().AsSequence()
+
+    [<CompiledName("BuildCustomStateSequence")>]
+    let buildCustomStateSeq (version: Version) : Generator.CustomStateBuilder =
+        GuidGenerator.CreateCustomStateBuilder(version)
