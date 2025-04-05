@@ -17,6 +17,13 @@ partial class TimeBasedGuidGenerator
 
         private Sequential(NodeIdSource nodeIdSource) : base(nodeIdSource) { }
 
+        private Sequential(
+            NodeIdSource nodeIdSource, short? initClockSeq = null,
+            Func<DateTime>? timestampProvider = null, Func<byte[]>? nodeIdProvider = null)
+            : base(nodeIdSource, initClockSeq, timestampProvider, nodeIdProvider)
+        {
+        }
+
         internal static new TimeBasedGuidGenerator.Sequential Instance
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -72,9 +79,27 @@ partial class TimeBasedGuidGenerator
             return new TimeBasedGuidGenerator.Sequential(NodeIdSource.VolatileRandom);
         }
 
+        internal static new TimeBasedGuidGenerator.Sequential CreateCustomState(
+            NodeIdSource nodeIdSource = NodeIdSource.None, short? initClockSeq = null,
+            Func<DateTime>? timestampProvider = null, Func<byte[]>? nodeIdProvider = null)
+        {
+            if (nodeIdSource is NodeIdSource.None)
+            {
+                return new TimeBasedGuidGenerator.Sequential.Randomized(timestampProvider);
+            }
+
+            return new TimeBasedGuidGenerator.Sequential(
+                nodeIdSource, initClockSeq, timestampProvider, nodeIdProvider);
+        }
+
         private sealed class Randomized : TimeBasedGuidGenerator.Sequential
         {
             internal Randomized() : base(NodeIdSource.VolatileRandom) { }
+
+            internal Randomized(Func<DateTime>? timestampProvider = null)
+                : base(NodeIdSource.None, initClockSeq: null, timestampProvider)
+            {
+            }
 
             public override bool TryNewGuid(out Guid result)
             {

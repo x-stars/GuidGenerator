@@ -37,6 +37,8 @@ internal sealed partial class GuidGeneratorState
     {
         return nodeIdSource switch
         {
+            NodeIdSource.None => throw new InvalidOperationException(
+                "The GUID generator state does not support using NodeIdSource.None."),
             NodeIdSource.PhysicalAddress => GuidGeneratorState.PhysicalNodeState,
             NodeIdSource.VolatileRandom => GuidGeneratorState.CreateVolatileState(),
             NodeIdSource.NonVolatileRandom => GuidGeneratorState.RandomNodeState,
@@ -60,6 +62,14 @@ internal sealed partial class GuidGeneratorState
         }
         _ = GuidGeneratorState.LastSavingAsyncResultCache.Value;
         return refreshed;
+    }
+
+    internal void SetClockSequence(short clockSeq)
+    {
+        lock (this)
+        {
+            this.ClockSequence = clockSeq;
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -52,4 +52,11 @@ partial class GuidGenerator
         return new GuidGeneratorPool(factory, capacity);
     }
 #endif
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public static CustomStateGuidGeneratorBuilder CreateCustomStateBuilder(GuidVersion version)
+    {
+        return CustomStateGuidGeneratorBuilder.Create(version);
+    }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
