@@ -1488,7 +1488,7 @@ module Guid =
         /// <returns>A new <see cref="T:XNetEx.Guids.Generators.CustomStateGuidGeneratorBuilder"/> instance
         /// of the current state and using <paramref name="timeProvider"/>.</returns>
         /// <exception cref="T:System.ArgumentNullException">
-        /// <paramref name="timeProvider"/>is <se langword="null"/>.</exception>
+        /// <paramref name="timeProvider"/>is <see langword="null"/>.</exception>
         [<CustomOperation("timeProvider")>]
         member _.UseTimeProvider(builder: Generator.CustomStateBuilder, timeProvider: TimeProvider)
             : Generator.CustomStateBuilder =
@@ -1578,7 +1578,7 @@ module Guid =
 
     /// <summary>
     /// Builds a custom state <see cref="T:System.Guid"/> sequence of the specified
-    /// <see cref="T:XNetEx.Guids.GuidVersion"/> using the F# computation expression syntax.
+    /// GUID version number using the F# computation expression syntax.
     /// </summary>
     /// <param name="version">The version of the <see cref="T:System.Guid"/> sequence.</param>
     /// <returns>A new <see cref="T:XNetEx.Guids.Generators.CustomStateGuidGeneratorBuilder"/>
