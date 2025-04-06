@@ -164,9 +164,9 @@ public readonly struct CustomStateGuidGeneratorBuilder
 
     /// <summary>
     /// Returns a new <see cref="CustomStateGuidGeneratorBuilder"/> instance
-    /// of the current state and using the specified initail clock sequence.
+    /// of the current state and using the specified initial clock sequence.
     /// </summary>
-    /// <param name="initClockSeq">The initail clock sequence to use.</param>
+    /// <param name="initClockSeq">The initial clock sequence to use.</param>
     /// <returns>A new <see cref="CustomStateGuidGeneratorBuilder"/> instance
     /// of the current state and using <paramref name="initClockSeq"/>.</returns>
     public CustomStateGuidGeneratorBuilder UseClockSequence(short initClockSeq)
