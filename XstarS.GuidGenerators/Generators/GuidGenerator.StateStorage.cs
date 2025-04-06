@@ -53,10 +53,17 @@ partial class GuidGenerator
     }
 #endif
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Creates a new <see cref="CustomStateGuidGeneratorBuilder"/> instance
+    /// of the specified <see cref="GuidVersion"/>.
+    /// </summary>
+    /// <param name="version">The version of the <see cref="Guid"/> to generate.</param>
+    /// <returns>The <see cref="CustomStateGuidGeneratorBuilder"/>
+    /// instance of <paramref name="version"/>.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="version"/> does not support using custom states.</exception>
     public static CustomStateGuidGeneratorBuilder CreateCustomStateBuilder(GuidVersion version)
     {
         return CustomStateGuidGeneratorBuilder.Create(version);
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

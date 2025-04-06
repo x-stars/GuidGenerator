@@ -1360,22 +1360,34 @@ module Guid =
         guid.ReplaceCustomData(customData)
 #endif
 
+    /// <summary>
+    /// Contains operations for working with values of type
+    /// <see cref="T:XNetEx.FSharp.Core.Guid.Generator"/>.
+    /// </summary>
     [<RequireQualifiedAccess>]
     [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
     module Generator =
 
+        /// <summary>
+        /// An abbreviation for the type
+        /// <see cref="T:XNetEx.Guids.Generators.CustomStateGuidGeneratorBuilder"/>.
+        /// </summary>
         type CustomStateBuilder = CustomStateGuidGeneratorBuilder
 
+        /// <summary>
+        /// Contains operations for working with values of type
+        /// <see cref="T:XNetEx.FSharp.Core.Guid.Generator.CustomStateBuilder"/>.
+        /// </summary>
         [<AutoOpen>]
         [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
         module CustomStateBuilder =
 
-            [<CompiledName("UseTimestampProvider")>]
+            [<CompiledName("UseTimestampFunc")>]
             let useGuidTimeFunc (timeFunc: unit -> DateTime) (builder: CustomStateBuilder)
                 : CustomStateBuilder =
                 builder.UseTimestampProvider(Func<_>(timeFunc))
 
-            [<CompiledName("UseTimestampProvider")>]
+            [<CompiledName("UseTimestampFunc")>]
             let useGuidTimeOffsetFunc (timeFunc: unit -> DateTimeOffset) (builder: CustomStateBuilder)
                 : CustomStateBuilder =
                 builder.UseTimestampProvider(Func<_>(timeFunc))
@@ -1397,7 +1409,7 @@ module Guid =
                 : CustomStateBuilder =
                 builder.UseNodeIdSource(nodeIdSource)
 
-            [<CompiledName("UseNodeIdProvider")>]
+            [<CompiledName("UseNodeIdFunc")>]
             let useGuidNodeIdFunc (nodeIdFunc: unit -> byte[]) (builder: CustomStateBuilder)
                 : CustomStateBuilder =
                 builder.UseNodeIdProvider(Func<_>(nodeIdFunc))
