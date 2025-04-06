@@ -3,8 +3,6 @@ using XNetEx.Runtime.CompilerServices;
 
 namespace XNetEx.Guids.Generators;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
 /// <summary>
 /// Provides a mechanism for building <see cref="IGuidGenerator"/> using custom state providers.
 /// </summary>
@@ -15,7 +13,7 @@ public readonly struct CustomStateGuidGeneratorBuilder
     /// </summary>
     /// <returns>The <see cref="CustomStateGuidGeneratorBuilder"/> instance of RFC 4122 UUID version 1.</returns>
     public static CustomStateGuidGeneratorBuilder Version1 { get; } =
-        new(GuidVersion.Version1) { NodeIdSource = NodeIdSource.PhysicalAddress };
+        new(GuidVersion.Version1) { NodeIdSourceType = NodeIdSource.PhysicalAddress };
 
 #if !UUIDREV_DISABLE
     /// <summary>
@@ -23,14 +21,14 @@ public readonly struct CustomStateGuidGeneratorBuilder
     /// </summary>
     /// <returns>The <see cref="CustomStateGuidGeneratorBuilder"/> instance of RFC 9562 UUID version 6.</returns>
     public static CustomStateGuidGeneratorBuilder Version6 { get; } =
-        new(GuidVersion.Version6) { NodeIdSource = NodeIdSource.None };
+        new(GuidVersion.Version6) { NodeIdSourceType = NodeIdSource.None };
 
     /// <summary>
     /// Gets the <see cref="CustomStateGuidGeneratorBuilder"/> instance of RFC 9562 UUID version 7.
     /// </summary>
     /// <returns>The <see cref="CustomStateGuidGeneratorBuilder"/> instance of RFC 9562 UUID version 7.</returns>
     public static CustomStateGuidGeneratorBuilder Version7 { get; } =
-        new(GuidVersion.Version7) { NodeIdSource = NodeIdSource.None };
+        new(GuidVersion.Version7) { NodeIdSourceType = NodeIdSource.None };
 #endif
 
     /// <summary>
@@ -39,12 +37,39 @@ public readonly struct CustomStateGuidGeneratorBuilder
     /// <returns>The version of the <see cref="IGuidGenerator"/> to build of this instance.</returns>
     public GuidVersion Version { get; }
 
+    /// <summary>
+    /// Gets the initial clock sequence to use
+    /// of the <see cref="IGuidGenerator"/> building by this instance.
+    /// </summary>
+    /// <returns>The initial clock sequence to use
+    /// of the <see cref="IGuidGenerator"/> building by this instance;
+    /// or <see langword="null"/> to use the default clock sequence.</returns>
     private short? ClockSequence { get; init; }
 
-    private NodeIdSource NodeIdSource { get; init; }
+    /// <summary>
+    /// Gets the <see cref="NodeIdSource"/> type to use
+    /// of the <see cref="IGuidGenerator"/> building by this instance.
+    /// </summary>
+    /// <returns>The <see cref="NodeIdSource"/> type to use
+    /// of the <see cref="IGuidGenerator"/> building by this instance.</returns>
+    private NodeIdSource NodeIdSourceType { get; init; }
 
+    /// <summary>
+    /// Gets the custom timestamp provider function to use
+    /// of the <see cref="IGuidGenerator"/> building by this instance.
+    /// </summary>
+    /// <returns>The custom timestamp provider function to use
+    /// of the <see cref="IGuidGenerator"/> building by this instance;
+    /// or <see langword="null"/> to use the default timestamp provider.</returns>
     private Func<DateTime>? TimestampProvider { get; init; }
 
+    /// <summary>
+    /// Gets the custom node ID provider function to use
+    /// of the <see cref="IGuidGenerator"/> building by this instance.
+    /// </summary>
+    /// <returns>The custom node ID provider function to use
+    /// of the <see cref="IGuidGenerator"/> building by this instance;
+    /// or <see langword="null"/> to use the default node ID provider.</returns>
     private Func<byte[]>? NodeIdProvider { get; init; }
 
     /// <summary>
@@ -77,6 +102,15 @@ public readonly struct CustomStateGuidGeneratorBuilder
             nameof(version), "This GUID version does not support using custom states."),
     };
 
+    /// <summary>
+    /// Returns a new <see cref="CustomStateGuidGeneratorBuilder"/> instance
+    /// of the current state and using the specified custom timestamp provider function.
+    /// </summary>
+    /// <param name="timestampProvider">The custom timestamp provider function to use.</param>
+    /// <returns>A new <see cref="CustomStateGuidGeneratorBuilder"/> instance
+    /// of the current state and using <paramref name="timestampProvider"/>.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="timestampProvider"/> is <see langword="null"/>.</exception>
     public CustomStateGuidGeneratorBuilder UseTimestampProvider(Func<DateTime> timestampProvider)
     {
         if (timestampProvider is null)
@@ -87,6 +121,15 @@ public readonly struct CustomStateGuidGeneratorBuilder
         return this with { TimestampProvider = timestampProvider };
     }
 
+    /// <summary>
+    /// Returns a new <see cref="CustomStateGuidGeneratorBuilder"/> instance
+    /// of the current state and using the specified custom timestamp provider function.
+    /// </summary>
+    /// <param name="timestampProvider">The custom timestamp provider function to use.</param>
+    /// <returns>A new <see cref="CustomStateGuidGeneratorBuilder"/> instance
+    /// of the current state and using <paramref name="timestampProvider"/>.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="timestampProvider"/> is <see langword="null"/>.</exception>
     public CustomStateGuidGeneratorBuilder UseTimestampProvider(Func<DateTimeOffset> timestampProvider)
     {
         if (timestampProvider is null)
@@ -98,6 +141,15 @@ public readonly struct CustomStateGuidGeneratorBuilder
     }
 
 #if NET8_0_OR_GREATER
+    /// <summary>
+    /// Returns a new <see cref="CustomStateGuidGeneratorBuilder"/> instance
+    /// of the current state and using the specified custom <see cref="TimeProvider"/>.
+    /// </summary>
+    /// <param name="timeProvider">The custom <see cref="TimeProvider"/> to use.</param>
+    /// <returns>A new <see cref="CustomStateGuidGeneratorBuilder"/> instance
+    /// of the current state and using <paramref name="timeProvider"/>.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="timeProvider"/> is <see langword="null"/>.</exception>
     public CustomStateGuidGeneratorBuilder UseTimeProvider(TimeProvider timeProvider)
     {
         if (timeProvider is null)
@@ -110,11 +162,27 @@ public readonly struct CustomStateGuidGeneratorBuilder
     }
 #endif
 
+    /// <summary>
+    /// Returns a new <see cref="CustomStateGuidGeneratorBuilder"/> instance
+    /// of the current state and using the specified initail clock sequence.
+    /// </summary>
+    /// <param name="initClockSeq">The initail clock sequence to use.</param>
+    /// <returns>A new <see cref="CustomStateGuidGeneratorBuilder"/> instance
+    /// of the current state and using <paramref name="initClockSeq"/>.</returns>
     public CustomStateGuidGeneratorBuilder UseClockSequence(short initClockSeq)
     {
         return this with { ClockSequence = initClockSeq };
     }
 
+    /// <summary>
+    /// Returns a new <see cref="CustomStateGuidGeneratorBuilder"/> instance
+    /// of the current state and using the specified <see cref="NodeIdSource"/>.
+    /// </summary>
+    /// <param name="nodeIdSource">The <see cref="NodeIdSource"/> to use.</param>
+    /// <returns>A new <see cref="CustomStateGuidGeneratorBuilder"/> instance
+    /// of the current state and using <paramref name="nodeIdSource"/>.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="nodeIdSource"/> is not a valid enum value.</exception>
     public CustomStateGuidGeneratorBuilder UseNodeIdSource(NodeIdSource nodeIdSource)
     {
         if (nodeIdSource is < NodeIdSource.None or > NodeIdSource.NonVolatileRandom)
@@ -122,9 +190,18 @@ public readonly struct CustomStateGuidGeneratorBuilder
             throw new ArgumentOutOfRangeException(nameof(nodeIdSource));
         }
 
-        return this with { NodeIdSource = nodeIdSource, NodeIdProvider = null };
+        return this with { NodeIdSourceType = nodeIdSource, NodeIdProvider = null };
     }
 
+    /// <summary>
+    /// Returns a new <see cref="CustomStateGuidGeneratorBuilder"/> instance
+    /// of the current state and using the specified custom node ID provider function.
+    /// </summary>
+    /// <param name="nodeIdProvider">The custom node ID provider function to use.</param>
+    /// <returns>A new <see cref="CustomStateGuidGeneratorBuilder"/> instance
+    /// of the current state and using <paramref name="nodeIdProvider"/>.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="nodeIdProvider"/> is <see langword="null"/>.</exception>
     public CustomStateGuidGeneratorBuilder UseNodeIdProvider(Func<byte[]> nodeIdProvider)
     {
         if (nodeIdProvider is null)
@@ -132,10 +209,21 @@ public readonly struct CustomStateGuidGeneratorBuilder
             throw new ArgumentNullException(nameof(nodeIdProvider));
         }
 
-        return this with { NodeIdSource = NodeIdSource.VolatileRandom, NodeIdProvider = nodeIdProvider };
+        return this with { NodeIdSourceType = NodeIdSource.VolatileRandom, NodeIdProvider = nodeIdProvider };
     }
 
-    public CustomStateGuidGeneratorBuilder UseNodeIdBytes(byte[] nodeId)
+    /// <summary>
+    /// Returns a new <see cref="CustomStateGuidGeneratorBuilder"/> instance
+    /// of the current state and using the specified custom node ID.
+    /// </summary>
+    /// <param name="nodeId">The custom node ID to use.</param>
+    /// <returns>A new <see cref="CustomStateGuidGeneratorBuilder"/> instance
+    /// of the current state and using <paramref name="nodeId"/>.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="nodeId"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="nodeId"/> is not 6 bytes long.</exception>
+    public CustomStateGuidGeneratorBuilder UseNodeId(byte[] nodeId)
     {
         if (nodeId is null)
         {
@@ -146,12 +234,20 @@ public readonly struct CustomStateGuidGeneratorBuilder
             throw new ArgumentException("Node ID for Guid must be exactly 6 bytes long.", nameof(nodeId));
         }
 
-        return this with { NodeIdSource = NodeIdSource.VolatileRandom, NodeIdProvider = nodeId.Identity };
+        return this with { NodeIdSourceType = NodeIdSource.VolatileRandom, NodeIdProvider = nodeId.Identity };
     }
 
+    /// <summary>
+    /// Creates a new <see cref="IGuidGenerator"/> instance
+    /// based on custom state providers used in this instance.
+    /// </summary>
+    /// <returns>A new <see cref="IGuidGenerator"/> instance
+    /// based on custom state providers used in this instance.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// This instance is not initialized correctly.</exception>
     public IGuidGenerator ToGuidGenerator()
     {
-        if (this.NodeIdSource is < NodeIdSource.None or > NodeIdSource.NonVolatileRandom)
+        if (this.NodeIdSourceType is < NodeIdSource.None or > NodeIdSource.NonVolatileRandom)
         {
             throw new InvalidOperationException("This instance is not initialized correctly.");
         }
@@ -159,10 +255,10 @@ public readonly struct CustomStateGuidGeneratorBuilder
         return this.Version switch
         {
             GuidVersion.Version1 => TimeBasedGuidGenerator.CreateCustomState(
-                this.NodeIdSource, this.ClockSequence, this.TimestampProvider, this.NodeIdProvider),
+                this.NodeIdSourceType, this.ClockSequence, this.TimestampProvider, this.NodeIdProvider),
 #if !UUIDREV_DISABLE
             GuidVersion.Version6 => TimeBasedGuidGenerator.Sequential.CreateCustomState(
-                this.NodeIdSource, this.ClockSequence, this.TimestampProvider, this.NodeIdProvider),
+                this.NodeIdSourceType, this.ClockSequence, this.TimestampProvider, this.NodeIdProvider),
             GuidVersion.Version7 => UnixTimeBasedGuidGenerator.CreateCustomState(this.TimestampProvider),
 #endif
             _ => throw new InvalidOperationException("This instance is not initialized correctly."),

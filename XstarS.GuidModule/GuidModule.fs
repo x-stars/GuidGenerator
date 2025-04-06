@@ -46,6 +46,11 @@ module Guid =
     type Generator = GuidGenerator
 
     /// <summary>
+    /// An abbreviation for the type <see cref="T:XNetEx.Guids.Generators.NodeIdSource"/>.
+    /// </summary>
+    type NodeIdSource = Generators.NodeIdSource
+
+    /// <summary>
     /// A byte array value pair type abbreviation that represents GUID data and its bitmask.
     /// </summary>
     type DataAndMask = (struct (byte[] * byte[]))
@@ -1383,7 +1388,7 @@ module Guid =
 
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="T:XNetEx.FSharp.Core.Guid.CustomStateSeq"/> structure
+        /// <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/> structure
         /// of the specified <see cref="T:XNetEx.Guids.Generators.CustomStateGuidGeneratorBuilder"/>.
         /// </summary>
         /// <param name="builder">
@@ -1414,7 +1419,7 @@ module Guid =
 
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="T:XNetEx.FSharp.Core.Guid.CustomStateSeqBuilder"/> structure
+        /// <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeqBuilder"/> structure
         /// of the specified <see cref="T:XNetEx.Guids.GuidVersion"/>.
         /// </summary>
         /// <param name="version">The version of the <see cref="T:System.Guid"/> sequence.</param>
@@ -1422,10 +1427,10 @@ module Guid =
 
         /// <summary>
         /// A method used to support the F# computation syntax.
-        /// Returns a <see cref="T:XNetEx.FSharp.Core.Guid.CustomStateSeqBuilder"/>
+        /// Returns a <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/>
         /// instance of the current GUID version.
         /// </summary>
-        /// <returns>A <see cref="T:XNetEx.FSharp.Core.Guid.CustomStateSeqBuilder"/>
+        /// <returns>A <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/>
         /// instance of the current GUID version.</returns>
         /// <exception cref="T:System.InvalidOperationException">
         /// This instance is not initialized correctly.</exception>
@@ -1434,11 +1439,11 @@ module Guid =
 
         /// <summary>
         /// A method used to support the F# computation syntax.
-        /// Returns a <see cref="T:XNetEx.FSharp.Core.Guid.CustomStateSeqBuilder"/>
+        /// Returns a <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/>
         /// instance of the current GUID version.
         /// </summary>
         /// <param name="unused">This parameter is not used.</param>
-        /// <returns>A <see cref="T:XNetEx.FSharp.Core.Guid.CustomStateSeqBuilder"/>
+        /// <returns>A <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/>
         /// instance of the current GUID version.</returns>
         /// <exception cref="T:System.InvalidOperationException">
         /// This instance is not initialized correctly.</exception>
@@ -1448,52 +1453,132 @@ module Guid =
         /// <summary>
         /// A method used to support the F# computation syntax.
         /// Returns the result <see cref="T:System.Guid"/> sequence of the specified
-        /// <see cref="T:XNetEx.FSharp.Core.Guid.CustomStateSeqBuilder"/>.
+        /// <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/>.
         /// </summary>
         /// <param name="guidSeq">
-        /// The <see cref="T:XNetEx.FSharp.Core.Guid.CustomStateSeqBuilder"/>.</param>
+        /// The <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/>.</param>
         /// <returns>The result <see cref="T:System.Guid"/> sequence of the specified
-        /// <see cref="T:XNetEx.FSharp.Core.Guid.CustomStateSeqBuilder"/>.</returns>
+        /// <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/>.</returns>
         /// <exception cref="T:System.InvalidOperationException">
         /// <paramref name="guidSeq"/> is not initialized correctly.</exception>
         member _.Run(guidSeq: CustomStateSeq) : seq<Guid> = guidSeq.Result
 
+        /// <summary>
+        /// A method used to support the F# computation syntax.
+        /// Returns a new <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/> instance
+        /// of the current state and using the specified custom timestamp provider function.
+        /// </summary>
+        /// <param name="guidSeq">
+        /// The current <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/>.</param>
+        /// <param name="timeFunc">The custom timestamp provider function to use.</param>
+        /// <returns>A new <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/> instance
+        /// of the current state and using <paramref name="timeFunc"/>.</returns>
         [<CustomOperation("timeFunc")>]
         member _.UseTimestampFunc(guidSeq: CustomStateSeq, timeFunc: unit -> DateTime) : CustomStateSeq =
             CustomStateSeq(guidSeq.Builder.UseTimestampProvider(Func<_>(timeFunc)))
 
+        /// <summary>
+        /// A method used to support the F# computation syntax.
+        /// Returns a new <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/> instance
+        /// of the current state and using the specified custom timestamp provider function.
+        /// </summary>
+        /// <param name="guidSeq">
+        /// The current <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/>.</param>
+        /// <param name="timeFunc">The custom timestamp provider function to use.</param>
+        /// <returns>A new <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/> instance
+        /// of the current state and using <paramref name="timeFunc"/>.</returns>
         [<CustomOperation("timeFunc")>]
         member _.UseTimestampFunc(guidSeq: CustomStateSeq, timeFunc: unit -> DateTimeOffset) : CustomStateSeq =
             CustomStateSeq(guidSeq.Builder.UseTimestampProvider(Func<_>(timeFunc)))
 
 #if NET8_0_OR_GREATER
+        /// <summary>
+        /// A method used to support the F# computation syntax.
+        /// Returns a new <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/> instance
+        /// of the current state and using the specified custom <see cref="T:System.TimeProvider"/>.
+        /// </summary>
+        /// <param name="guidSeq">
+        /// The current <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/>.</param>
+        /// <param name="timeProvider">The custom <see cref="T:System.TimeProvider"/> to use.</param>
+        /// <returns>A new <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/> instance
+        /// of the current state and using <paramref name="timeProvider"/>.</returns>
+        /// <exception cref="T:System.ArgumentNullException">
+        /// <paramref name="timeProvider"/>is <se langword="null"/>.</exception>
         [<CustomOperation("timeProvider")>]
         member _.UseTimeProvider(guidSeq: CustomStateSeq, timeProvider: TimeProvider) : CustomStateSeq =
             CustomStateSeq(guidSeq.Builder.UseTimeProvider(timeProvider))
 #endif
 
+        /// <summary>
+        /// A method used to support the F# computation syntax.
+        /// Returns a new <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/> instance
+        /// of the current state and using the specified initial clock sequence.
+        /// </summary>
+        /// <param name="guidSeq">
+        /// The current <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/>.</param>
+        /// <param name="initClockSeq">The custom initial clock sequence to use.</param>
+        /// <returns>A new <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/> instance
+        /// of the current state and using <paramref name="initClockSeq"/>.</returns>
         [<CustomOperation("clockSeq")>]
         member _.UseClockSequence(guidSeq: CustomStateSeq, initClockSeq: int16) : CustomStateSeq =
             CustomStateSeq(guidSeq.Builder.UseClockSequence(initClockSeq))
 
+        /// <summary>
+        /// A method used to support the F# computation syntax.
+        /// Returns a new <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/> instance
+        /// of the current state and using the specified
+        /// <see cref="T:XNetEx.Guids.Generators.NodeIdSource"/>.
+        /// </summary>
+        /// <param name="guidSeq">
+        /// The current <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/>.</param>
+        /// <param name="nodeIdSource">
+        /// The <see cref="T:XNetEx.Guids.Generators.NodeIdSource"/> to use.</param>
+        /// <returns>A new <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/> instance
+        /// of the current state and using <paramref name="nodeIdSource"/>.</returns>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">
+        /// <paramref name="nodeIdSource"/>is not a valid enum value.</exception>
         [<CustomOperation("nodeIdSource")>]
         member _.UseNodeIdSource(guidSeq: CustomStateSeq, nodeIdSource: NodeIdSource) : CustomStateSeq =
             CustomStateSeq(guidSeq.Builder.UseNodeIdSource(nodeIdSource))
 
+        /// <summary>
+        /// A method used to support the F# computation syntax.
+        /// Returns a new <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/> instance
+        /// of the current state and using the specified custom node ID provider function.
+        /// </summary>
+        /// <param name="guidSeq">
+        /// The current <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/>.</param>
+        /// <param name="nodeIdFunc">The custom node ID provider function to use.</param>
+        /// <returns>A new <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/> instance
+        /// of the current state and using <paramref name="nodeIdFunc"/>.</returns>
         [<CustomOperation("nodeIdFunc")>]
         member _.UseNodeIdFunc(guidSeq: CustomStateSeq, nodeIdFunc: unit -> byte[]) : CustomStateSeq =
             CustomStateSeq(guidSeq.Builder.UseNodeIdProvider(Func<_>(nodeIdFunc)))
 
+        /// <summary>
+        /// A method used to support the F# computation syntax.
+        /// Returns a new <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/> instance
+        /// of the current state and using the specified custom node ID.
+        /// </summary>
+        /// <param name="guidSeq">
+        /// The current <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/>.</param>
+        /// <param name="nodeId">The custom node ID to use.</param>
+        /// <returns>A new <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeq"/> instance
+        /// of the current state and using <paramref name="nodeId"/>.</returns>
+        /// <exception cref="T:System.ArgumentNullException">
+        /// <paramref name="nodeId"/> is <see langword="null"/>.</exception>
+        /// <exception cref="T:System.ArgumentException">
+        /// <paramref name="nodeId"/> is not 6 bytes long.</exception>
         [<CustomOperation("nodeId")>]
-        member _.UseNodeIdBytes(guidSeq: CustomStateSeq, nodeId: byte[]) : CustomStateSeq =
-            CustomStateSeq(guidSeq.Builder.UseNodeIdBytes(nodeId))
+        member _.UseNodeId(guidSeq: CustomStateSeq, nodeId: byte[]) : CustomStateSeq =
+            CustomStateSeq(guidSeq.Builder.UseNodeId(nodeId))
 
     /// <summary>
     /// Builds a custom state <see cref="T:System.Guid"/> sequence of the specified
     /// <see cref="T:XNetEx.Guids.GuidVersion"/> using the F# computation expression syntax.
     /// </summary>
     /// <param name="version">The version of the <see cref="T:System.Guid"/> sequence.</param>
-    /// <returns>A new <see cref="T:XNetEx.FSharp.Core.Guid.CustomStateSeqBuilder"/>
+    /// <returns>A new <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeqBuilder"/>
     /// instance of <paramref name="version"/>.</returns>
     /// <exception cref="T:System.ArgumentOutOfRangeException">
     /// <paramref name="version"/> does not support using custom states.</exception>
@@ -1507,7 +1592,7 @@ module Guid =
     /// <see cref="T:XNetEx.Guids.GuidVersion"/> using the F# computation expression syntax.
     /// </summary>
     /// <param name="version">The version of the <see cref="T:System.Guid"/> sequence.</param>
-    /// <returns>A new <see cref="T:XNetEx.FSharp.Core.Guid.CustomStateSeqBuilder"/>
+    /// <returns>A new <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeqBuilder"/>
     /// instance of <paramref name="version"/>.</returns>
     /// <exception cref="T:System.ArgumentOutOfRangeException">
     /// <paramref name="version"/> does not support using custom states.</exception>
