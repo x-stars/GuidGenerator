@@ -214,7 +214,8 @@ internal abstract class NodeIdProvider
             if (nodeId.Length != 6)
             {
                 throw new InvalidOperationException(
-                    "Node ID returned from the custom provider must be exactly 6 bytes long.");
+                    "Node ID returned from the custom provider " +
+                    "must be exactly 6 bytes long.");
             }
 
             return nodeId;

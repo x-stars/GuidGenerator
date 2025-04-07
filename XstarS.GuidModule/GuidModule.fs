@@ -1564,11 +1564,11 @@ module Guid =
             builder.UseNodeId(nodeId)
 
     /// <summary>
-    /// Builds a custom state <see cref="T:System.Guid"/> sequence of the specified
+    /// Builds an unlimited custom state <see cref="T:System.Guid"/> sequence of the specified
     /// <see cref="T:XNetEx.Guids.GuidVersion"/> using the F# computation expression syntax.
     /// </summary>
     /// <param name="version">The version of the <see cref="T:System.Guid"/> sequence.</param>
-    /// <returns>A new <see cref="T:XNetEx.Guids.Generators.CustomStateGuidGeneratorBuilder"/>
+    /// <returns>A new <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeqBuilder"/>
     /// instance of <paramref name="version"/>.</returns>
     /// <exception cref="T:System.ArgumentOutOfRangeException">
     /// <paramref name="version"/> does not support using custom states.</exception>
@@ -1577,11 +1577,11 @@ module Guid =
         CustomStateSeqBuilder.Create(version)
 
     /// <summary>
-    /// Builds a custom state <see cref="T:System.Guid"/> sequence of the specified
+    /// Builds an unlimited custom state <see cref="T:System.Guid"/> sequence of the specified
     /// GUID version number using the F# computation expression syntax.
     /// </summary>
     /// <param name="version">The version of the <see cref="T:System.Guid"/> sequence.</param>
-    /// <returns>A new <see cref="T:XNetEx.Guids.Generators.CustomStateGuidGeneratorBuilder"/>
+    /// <returns>A new <see cref="T:XNetEx.FSharp.Core.GuidModule.CustomStateSeqBuilder"/>
     /// instance of <paramref name="version"/>.</returns>
     /// <exception cref="T:System.ArgumentOutOfRangeException">
     /// <paramref name="version"/> does not support using custom states.</exception>
