@@ -83,8 +83,6 @@ internal sealed partial class GuidGeneratorState
                     in NodeIdEqualityHelper.OfBytes(lastNode));
         }
 
-        var nodeIdSource = this.NodeIdSource;
-        if (!nodeIdSource.IsNonVolatile()) { return false; }
         var lastNode = this.LastNodeIdBytes;
         if (nodeId == lastNode) { return false; }
 
