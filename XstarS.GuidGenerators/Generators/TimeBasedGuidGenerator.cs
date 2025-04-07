@@ -38,10 +38,15 @@ internal partial class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         : this(NodeIdSource.VolatileRandom)
     {
         this.TimestampProvider = (timestampProvider is not null) ?
-            TimestampProvider.CreateCustom(timestampProvider) : TimestampProvider.Instance;
+            TimestampProvider.CreateCustom(timestampProvider) :
+            TimestampProvider.Instance;
         this.NodeIdProvider = (nodeIdProvider is not null) ?
-            NodeIdProvider.CreateCustom(nodeIdProvider) : NodeIdProvider.GetInstance(nodeIdSource);
-        if (initClockSeq is not null) { this.GeneratorState.SetClockSequence((short)initClockSeq); }
+            NodeIdProvider.CreateCustom(nodeIdProvider) :
+            NodeIdProvider.GetInstance(nodeIdSource);
+        if (initClockSeq is short initClockSeqValue)
+        {
+            this.GeneratorState.SetClockSequence(initClockSeqValue);
+        }
     }
 
     internal static TimeBasedGuidGenerator Instance

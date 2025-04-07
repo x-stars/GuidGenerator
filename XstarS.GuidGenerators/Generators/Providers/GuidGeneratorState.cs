@@ -21,10 +21,12 @@ internal sealed partial class GuidGeneratorState
 
     private volatile byte[]? LastNodeIdBytes;
 
+    private NodeIdData LastNodeIdData;
+
     private GuidGeneratorState(NodeIdSource nodeIdSource)
     {
         this.NodeIdSource = nodeIdSource;
-        this.Reinitialize();
+        this.Reset();
     }
 
     private long LastTimestamp
@@ -75,24 +77,15 @@ internal sealed partial class GuidGeneratorState
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private bool UpdateNodeId(byte[] nodeId)
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static bool NodeIdEquals(byte[] nodeId, byte[] lastNode)
-        {
-            return (nodeId == lastNode) ||
-                NodeIdEqualityHelper.OfBytes(nodeId).Equals(
-                    in NodeIdEqualityHelper.OfBytes(lastNode));
-        }
-
-        var lastNode = this.LastNodeIdBytes;
-        if (nodeId == lastNode) { return false; }
-
+        ref var nodeIdData = ref NodeIdData.OfBytes(nodeId);
         var nodeIdChanged = false;
-        if ((lastNode is not null) && !NodeIdEquals(nodeId, lastNode))
+        if ((this.LastNodeIdBytes is not null) &&
+            !nodeIdData.Equals(in this.LastNodeIdData))
         {
             this.ClockSequence = this.GetInitClockSequence();
             nodeIdChanged = true;
         }
-        this.LastNodeIdBytes = nodeId;
+        this.SetLastNodeId(nodeId);
         return nodeIdChanged;
     }
 
@@ -113,11 +106,12 @@ internal sealed partial class GuidGeneratorState
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void Reinitialize()
+    private void Reset()
     {
         this.LastTimestamp = 0L;
         this.ClockSequence = this.GetInitClockSequence();
         this.LastNodeIdBytes = null;
+        this.LastNodeIdData = default(NodeIdData);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -127,30 +121,52 @@ internal sealed partial class GuidGeneratorState
         return (int)newGuid.TimeLow();
     }
 
-    [StructLayout(LayoutKind.Sequential, Size = 6)]
-    private struct NodeIdEqualityHelper
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void SetLastNodeId(byte[] nodeId)
     {
-        public uint Bytes0123;
-        public ushort Bytes45;
+        this.LastNodeIdBytes = nodeId;
+        this.LastNodeIdData = NodeIdData.OfBytes(nodeId);
+    }
+
+    [StructLayout(LayoutKind.Sequential, Size = 6)]
+    private struct NodeIdData
+    {
+        public volatile uint Bytes0123;
+        public volatile ushort Bytes45;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly bool Equals(in NodeIdEqualityHelper other)
+        public readonly bool Equals(in NodeIdData other)
         {
             return (this.Bytes0123 == other.Bytes0123) &&
                    (this.Bytes45 == other.Bytes45);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe ref NodeIdEqualityHelper OfBytes(byte[] bytes)
+        public static unsafe ref NodeIdData OfBytes(byte[] bytes)
         {
 #if UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER
-            return ref Unsafe.As<byte, NodeIdEqualityHelper>(ref bytes[0]);
+            return ref Unsafe.As<byte, NodeIdData>(ref bytes[0]);
 #else
             fixed (byte* pBytes = &bytes[0])
             {
-                return ref *(NodeIdEqualityHelper*)pBytes;
+                return ref *(NodeIdData*)pBytes;
             }
 #endif
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public readonly unsafe byte[] ToBytes()
+        {
+            var bytes = new byte[6];
+#if UNSAFE_HELPERS || NETCOREAPP3_0_OR_GREATER
+            Unsafe.As<byte, NodeIdData>(ref bytes[0]) = this;
+#else
+            fixed (byte* pBytes = &bytes[0])
+            {
+                *(NodeIdData*)pBytes = this;
+            }
+#endif
+            return bytes;
         }
     }
 }
