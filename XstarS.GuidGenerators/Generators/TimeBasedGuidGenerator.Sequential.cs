@@ -97,7 +97,7 @@ partial class TimeBasedGuidGenerator
             internal Randomized() : base(NodeIdSource.VolatileRandom) { }
 
             internal Randomized(Func<DateTime>? timestampProvider = null)
-                : base(NodeIdSource.None, initClockSeq: null, timestampProvider)
+                : base(NodeIdSource.VolatileRandom, initClockSeq: null, timestampProvider)
             {
             }
 
