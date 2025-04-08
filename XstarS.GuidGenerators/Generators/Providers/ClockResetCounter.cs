@@ -22,6 +22,11 @@ internal abstract class ClockResetCounter
         };
     }
 
+    internal static ClockResetCounter CreateCustom()
+    {
+        return ClockResetCounter.Global.Create();
+    }
+
     public abstract bool TryGetSequence(
         long timestamp, short clock, short initSeq, out short sequence);
 
@@ -105,6 +110,8 @@ internal abstract class ClockResetCounter
             get => Volatile.Read(ref this.Volatile_LastTimestamp);
             set => Volatile.Write(ref this.Volatile_LastTimestamp, value);
         }
+
+        internal static ClockResetCounter.Global Create() => new();
 
         public override bool TryGetSequence(
             long timestamp, short clock, short initSeq, out short sequence)

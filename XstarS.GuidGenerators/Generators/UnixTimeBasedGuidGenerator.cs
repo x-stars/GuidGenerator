@@ -30,7 +30,9 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         : this()
     {
         this.TimestampProvider = (timestampProvider is not null) ?
-            TimestampProvider.CreateCustom(timestampProvider) : TimestampProvider.Instance;
+            TimestampProvider.CreateCustom(timestampProvider) :
+            TimestampProvider.Instance;
+        this.ClockResetCounter = ClockResetCounter.CreateCustom();
     }
 
     internal static UnixTimeBasedGuidGenerator Instance
