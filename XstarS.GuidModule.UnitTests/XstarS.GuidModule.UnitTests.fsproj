@@ -34,6 +34,7 @@
     <Compile Include="GuidGeneratorStateTest.fs" />
     <Compile Include="GuidPatternsTest.fs" />
     <Compile Include="GuidVersionPatternsTest.fs" />
+    <Compile Include="GuidCustomStateSeqBuilderTest.fs" />
   </ItemGroup>
 
   <ItemGroup>
