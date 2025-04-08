@@ -56,6 +56,16 @@ let guidV3 = Guid.newV3S Guid.nsDns "github.com"
 let guidV5 = "github.com" |> Guid.newV5S Guid.nsDns
 // 6fca3dd2-d61d-58de-9363-1574b382ea68
 
+// Build custom state time-based GUID sequence.
+let guidV1CSeq =
+    Guid.customStateSeq Guid.Version.Version1 {
+        timeFunc (fun () -> DateTime.UtcNow + TimeSpan.FromHours(8))
+        clockSeq 0x0123s
+        nodeId (Array.init 6 (((+) 1) >> byte))
+    }
+let guidV1C = guidV1CSeq |> Seq.head
+// 2a85a1d1-14c5-11f0-8123-010203040506
+
 // Build time-based GUID.
 let guid6 =
     Guid.empty

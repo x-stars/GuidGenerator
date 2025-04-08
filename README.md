@@ -41,15 +41,15 @@ The GUID Generator Library project is located at [XstarS.GuidGenerators](XstarS.
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
-// Time-based GUID generation.
+// Generate time-based GUID.
 var guidV1 = GuidGenerator.Version1.NewGuid();
 // 3944a871-aa14-11ed-8791-a9a9a46de54f
 
-// Name-based GUID generation.
+// Generate name-based GUID.
 var guidV5 = GuidGenerator.Version5.NewGuid(GuidNamespaces.Dns, "github.com");
 // 6fca3dd2-d61d-58de-9363-1574b382ea68
 
-// Unix time-based GUID generation.
+// Generate Unix time-based GUID.
 var guidV7 = GuidGenerator.Version7.NewGuid();
 // 018640c6-0dc9-7189-a644-31acdba4cabc
 ```
@@ -60,7 +60,7 @@ var guidV7 = GuidGenerator.Version7.NewGuid();
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
-// Generate time-based GUID generation.
+// Generate time-based GUID.
 var guidV1 = GuidGenerator.OfVersion(1).NewGuid();
 // 3944a871-aa14-11ed-8791-a9a9a46de54f
 
@@ -71,6 +71,27 @@ var guidV5 = GuidGenerator.OfVersion(5).NewGuid(GuidNamespaces.Dns, "github.com"
 // Generate Unix time-based GUID.
 var guidV7 = GuidGenerator.OfVersion(7).NewGuid();
 // 018640c6-0dc9-7189-a644-31acdba4cabc
+```
+
+### Build Custom State Generator Instance
+
+``` csharp
+using XNetEx.Guids;
+using XNetEx.Guids.Generators;
+
+// Build custom state time-based GUID generator.
+var guidGenV1C =
+    GuidGenerator.CreateCustomStateBuilder(GuidVersion.Version1)
+    // Can also create by static property:
+    // CustomStateGuidGeneratorBuilder.Version1
+        .UseTimestampProvider(() => DateTime.UtcNow + TimeSpan.FromHours(8))
+        .UseClockSequence(0x0123)
+        .UseNodeId(new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 })
+        .ToGuidGenerator();
+
+// Generate custom state time-based GUID.
+var guidV1C = guidGenV1C.NewGuid();
+// 2a85a1d1-14c5-11f0-8123-010203040506
 ```
 
 ### GUID Generator State Storage
@@ -149,6 +170,16 @@ let guidV3 = Guid.newV3S Guid.nsDns "github.com"
 // 7f4771a0-1982-373d-928f-d31140a51652
 let guidV5 = "github.com" |> Guid.newV5S Guid.nsDns
 // 6fca3dd2-d61d-58de-9363-1574b382ea68
+
+// Build custom state time-based GUID sequence.
+let guidV1CSeq =
+    Guid.customStateSeq Guid.Version.Version1 {
+        timeFunc (fun () -> DateTime.UtcNow + TimeSpan.FromHours(8))
+        clockSeq 0x0123s
+        nodeId (Array.init 6 (((+) 1) >> byte))
+    }
+let guidV1C = guidV1CSeq |> Seq.head
+// 2a85a1d1-14c5-11f0-8123-010203040506
 
 // Build time-based GUID.
 let guid6 =
