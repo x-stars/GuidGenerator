@@ -33,15 +33,15 @@ There is also a special Max UUID whose bytes are all `0xff`s, which has no equiv
 
 ### Get Generator Instance by Static Properties
 
-``` CSharp
+``` csharp
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
-// time-based GUID generation.
+// Time-based GUID generation.
 var guidV1 = GuidGenerator.Version1.NewGuid();
 // 3944a871-aa14-11ed-8791-a9a9a46de54f
 
-// name-based GUID generation.
+// Name-based GUID generation.
 var guidV5 = GuidGenerator.Version5.NewGuid(GuidNamespaces.Dns, "github.com");
 // 6fca3dd2-d61d-58de-9363-1574b382ea68
 
@@ -52,19 +52,19 @@ var guidV7 = GuidGenerator.Version7.NewGuid();
 
 ### Get Generator Instance by the Factory Method
 
-``` CSharp
+``` csharp
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
-// generate time-based GUID generation.
+// Generate time-based GUID generation.
 var guidV1 = GuidGenerator.OfVersion(1).NewGuid();
 // 3944a871-aa14-11ed-8791-a9a9a46de54f
 
-// generate name-based GUID.
+// Generate name-based GUID.
 var guidV5 = GuidGenerator.OfVersion(5).NewGuid(GuidNamespaces.Dns, "github.com");
 // 6fca3dd2-d61d-58de-9363-1574b382ea68
 
-// generate Unix time-based GUID.
+// Generate Unix time-based GUID.
 var guidV7 = GuidGenerator.OfVersion(7).NewGuid();
 // 018640c6-0dc9-7189-a644-31acdba4cabc
 ```
@@ -75,12 +75,12 @@ var guidV7 = GuidGenerator.OfVersion(7).NewGuid();
 
 Optional support and requires configuration to enable:
 
-``` CSharp
+``` csharp
 using System;
 using System.IO;
 using XNetEx.Guids.Generators;
 
-// listen state storage exceptions.
+// Listen state storage exceptions.
 GuidGenerator.StateStorageException += (sender, e) =>
 {
     if ((e.OperationType != FileAccess.Read) ||
@@ -89,17 +89,17 @@ GuidGenerator.StateStorageException += (sender, e) =>
         Console.Error.WriteLine(e.Exception);
     }
 };
-// set storage file path and load state.
+// Set storage file path and load state.
 var loadResult = GuidGenerator.SetStateStorageFile("state.bin");
 ```
 
 ### Component-based GUID Building
 
-``` CSharp
+``` csharp
 using System;
 using XNetEx.Guids;
 
-// build time-based GUID.
+// Build time-based GUID.
 var guidV6 = Guid.Empty
     .ReplaceVariant(GuidVariant.Rfc4122)
     .ReplaceVersion(GuidVersion.Version6)
@@ -108,7 +108,7 @@ var guidV6 = Guid.Empty
     .ReplaceNodeId(new byte[] { 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8 });
     // 1d19dad6-ba7b-6810-80b4-00c04fd430c8
 
-// build Unix time-based GUID.
+// Build Unix time-based GUID.
 var guidV7 = Guid.NewGuid()
     .ReplaceVersion(GuidVersion.Version7)
     .ReplaceTimestamp(new DateTime(0x08D9F638A666EB00, DateTimeKind.Utc));
