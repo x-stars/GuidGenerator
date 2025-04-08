@@ -265,11 +265,3 @@ public readonly struct CustomStateGuidGeneratorBuilder
         };
     }
 }
-
-internal static class TimestampFunc
-{
-    internal static DateTime UtcDateTime(this Func<DateTimeOffset> timeFunc)
-    {
-        return timeFunc.Invoke().UtcDateTime;
-    }
-}
