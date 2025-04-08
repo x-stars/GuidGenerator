@@ -27,7 +27,7 @@ RFC 9562 定义了以下 3 种 UUID 版本：
 * Version 7: 基于 Unix 时间戳，包含 48 位时间戳和 74 位随机数，与 ULID 基本等价。
 * Version 8: 预留给自定义 UUID 格式，除变体和版本外的字段均由用户定义。
 
-除此之外，还有一个特殊的 Max UUID，其所有字节均为 `0xff`，在 .NET 中暂无等价实现（本项目提供）。
+除此之外，还有一个特殊的 Max UUID，其所有字节均为 `0xff`，与 .NET 9.0 及更高版本的 `Guid.AllBitsSet` 等价。
 
 > * [RFC 9562 UUID 标准](https://www.rfc-editor.org/rfc/rfc9562)
 

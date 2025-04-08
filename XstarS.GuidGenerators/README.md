@@ -25,7 +25,7 @@ RFC 9562 defines the following three versions of UUID:
 * Version 7: The Unix Epoch time-based version, contains a 48-bit timestamp and a 74-bit random number, field-compatible with ULID.
 * Version 8: Reserved for custom UUID formats, fields except the variant and version are user-defined.
 
-There is also a special Max UUID whose bytes are all `0xff`s, which has no equivalent implementation in .NET (provided in this project).
+There is also a special Max UUID whose bytes are all `0xff`s, which is equivalent to `Guid.AllBitsSet` in .NET 9.0 or greater.
 
 > * [RFC 9562 UUID Standard](https://www.rfc-editor.org/rfc/rfc9562)
 
