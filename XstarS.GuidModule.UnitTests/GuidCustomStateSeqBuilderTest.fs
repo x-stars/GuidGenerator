@@ -70,16 +70,16 @@ type GuidCustomStateSeqBuilderTest() =
 
     [<TestMethod>]
     member _.CreateCustomStateSeqBuilder_Version1UseInvalidProviders_CatchArgumentExceptions() =
-        let builder = Guid.customStateSeq Guid.Version.Version1
+        let seqBuilder = Guid.customStateSeq Guid.Version.Version1
 #if NET8_0_OR_GREATER
-        fun () -> builder { timeProvider null } |> ignore
+        fun () -> seqBuilder { timeProvider null } |> ignore
         |> Assert.exception'<ArgumentNullException> |> ignore
 #endif
-        fun () -> builder { nodeIdSource Guid.NodeIdSource.None } |> ignore
+        fun () -> seqBuilder { nodeIdSource Guid.NodeIdSource.None } |> ignore
         |> Assert.exception'<InvalidOperationException> |> ignore
-        fun () -> builder { nodeIdSource (enumof -1) } |> ignore
+        fun () -> seqBuilder { nodeIdSource (enumof -1) } |> ignore
         |> Assert.exception'<ArgumentOutOfRangeException> |> ignore
-        fun () -> builder { nodeId null } |> ignore
+        fun () -> seqBuilder { nodeId null } |> ignore
         |> Assert.exception'<ArgumentNullException> |> ignore
 
     [<TestMethod>]

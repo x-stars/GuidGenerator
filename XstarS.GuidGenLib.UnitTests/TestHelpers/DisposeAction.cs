@@ -2,18 +2,13 @@
 
 namespace XNetEx;
 
-internal sealed class DisposeAction : IDisposable
+internal sealed class DisposeAction(Action<bool> action)
+    : IDisposable
 {
-    private readonly Action<bool> Action;
+    private readonly Action<bool> Action = action ??
+        throw new ArgumentNullException(nameof(action));
 
-    private bool IsDisposed;
-
-    public DisposeAction(Action<bool> action)
-    {
-        this.Action = action ??
-            throw new ArgumentNullException(nameof(action));
-        this.IsDisposed = false;
-    }
+    private bool IsDisposed = false;
 
     ~DisposeAction()
     {
