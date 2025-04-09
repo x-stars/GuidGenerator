@@ -113,12 +113,11 @@ public readonly struct CustomStateGuidGeneratorBuilder
     /// <paramref name="timestampProvider"/> is <see langword="null"/>.</exception>
     public CustomStateGuidGeneratorBuilder UseTimestampProvider(Func<DateTime> timestampProvider)
     {
-        if (timestampProvider is null)
+        return this with
         {
-            throw new ArgumentNullException(nameof(timestampProvider));
-        }
-
-        return this with { TimestampProvider = timestampProvider };
+            TimestampProvider = timestampProvider ??
+                throw new ArgumentNullException(nameof(timestampProvider)),
+        };
     }
 
     /// <summary>
@@ -132,12 +131,8 @@ public readonly struct CustomStateGuidGeneratorBuilder
     /// <paramref name="timestampProvider"/> is <see langword="null"/>.</exception>
     public CustomStateGuidGeneratorBuilder UseTimestampProvider(Func<DateTimeOffset> timestampProvider)
     {
-        if (timestampProvider is null)
-        {
-            throw new ArgumentNullException(nameof(timestampProvider));
-        }
-
-        return this with { TimestampProvider = timestampProvider.UtcDateTime };
+        return this.UseTimestampProvider((timestampProvider ??
+            throw new ArgumentNullException(nameof(timestampProvider))).UtcDateTime);
     }
 
 #if NET8_0_OR_GREATER
@@ -152,13 +147,8 @@ public readonly struct CustomStateGuidGeneratorBuilder
     /// <paramref name="timeProvider"/> is <see langword="null"/>.</exception>
     public CustomStateGuidGeneratorBuilder UseTimeProvider(TimeProvider timeProvider)
     {
-        if (timeProvider is null)
-        {
-            throw new ArgumentNullException(nameof(timeProvider));
-        }
-
-        var timestampProvider = ((Func<DateTimeOffset>)timeProvider.GetUtcNow).UtcDateTime;
-        return this with { TimestampProvider = timestampProvider };
+        return this.UseTimestampProvider((timeProvider ??
+            throw new ArgumentNullException(nameof(timeProvider))).GetUtcNow);
     }
 #endif
 
@@ -204,12 +194,12 @@ public readonly struct CustomStateGuidGeneratorBuilder
     /// <paramref name="nodeIdProvider"/> is <see langword="null"/>.</exception>
     public CustomStateGuidGeneratorBuilder UseNodeIdProvider(Func<byte[]> nodeIdProvider)
     {
-        if (nodeIdProvider is null)
+        return this with
         {
-            throw new ArgumentNullException(nameof(nodeIdProvider));
-        }
-
-        return this with { NodeIdSourceType = NodeIdSource.VolatileRandom, NodeIdProvider = nodeIdProvider };
+            NodeIdSourceType = NodeIdSource.VolatileRandom,
+            NodeIdProvider = nodeIdProvider ??
+                throw new ArgumentNullException(nameof(nodeIdProvider)),
+        };
     }
 
     /// <summary>
@@ -231,10 +221,11 @@ public readonly struct CustomStateGuidGeneratorBuilder
         }
         if (nodeId.Length != 6)
         {
-            throw new ArgumentException("Node ID for Guid must be exactly 6 bytes long.", nameof(nodeId));
+            throw new ArgumentException(
+                "Node ID for Guid must be exactly 6 bytes long.", nameof(nodeId));
         }
 
-        return this with { NodeIdSourceType = NodeIdSource.VolatileRandom, NodeIdProvider = nodeId.Identity };
+        return this.UseNodeIdProvider(nodeId.Identity);
     }
 
     /// <summary>
