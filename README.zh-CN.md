@@ -25,32 +25,53 @@ GUID 生成库的工程位于 [XstarS.GuidGenerators](XstarS.GuidGenerators)。
 
 ### 静态属性获取实例后调用
 
-``` CSharp
+``` csharp
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
-// time-based GUID generation.
+// Time-based GUID generation.
 var guidV1 = GuidGenerator.Version1.NewGuid();
 // 3944a871-aa14-11ed-8791-a9a9a46de54f
 
-// name-based GUID generation.
+// Name-based GUID generation.
 var guidV5 = GuidGenerator.Version5.NewGuid(GuidNamespaces.Dns, "github.com");
 // 6fca3dd2-d61d-58de-9363-1574b382ea68
 ```
 
 ### 工厂方法获取实例后调用
 
-``` CSharp
+``` csharp
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
-// generate time-based GUID generation.
+// Generate time-based GUID generation.
 var guidV1 = GuidGenerator.OfVersion(1).NewGuid();
 // 3944a871-aa14-11ed-8791-a9a9a46de54f
 
-// generate name-based GUID.
+// Generate name-based GUID.
 var guidV5 = GuidGenerator.OfVersion(5).NewGuid(GuidNamespaces.Dns, "github.com");
 // 6fca3dd2-d61d-58de-9363-1574b382ea68
+```
+
+### 构建自定义状态的生成器实例
+
+``` csharp
+using XNetEx.Guids;
+using XNetEx.Guids.Generators;
+
+// Build custom state time-based GUID generator.
+var guidGenV1C =
+    GuidGenerator.CreateCustomStateBuilder(GuidVersion.Version1)
+    // Can also create by static property:
+    // CustomStateGuidGeneratorBuilder.Version1
+        .UseTimestampProvider(() => DateTime.UtcNow + TimeSpan.FromHours(8))
+        .UseClockSequence(0x0123)
+        .UseNodeId(new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05 })
+        .ToGuidGenerator();
+
+// Generate custom state time-based GUID.
+var guidV1C = guidGenV1C.NewGuid();
+// 2a85a1d1-14c5-11f0-8123-010203040506
 ```
 
 ### GUID 生成器状态存储
@@ -59,12 +80,12 @@ var guidV5 = GuidGenerator.OfVersion(5).NewGuid(GuidNamespaces.Dns, "github.com"
 
 可选支持，需要配置方可启用：
 
-``` CSharp
+``` csharp
 using System;
 using System.IO;
 using XNetEx.Guids.Generators;
 
-// listen state storage exceptions.
+// Listen state storage exceptions.
 GuidGenerator.StateStorageException += (sender, e) =>
 {
     if ((e.OperationType != FileAccess.Read) ||
@@ -73,17 +94,17 @@ GuidGenerator.StateStorageException += (sender, e) =>
         Console.Error.WriteLine(e.Exception);
     }
 };
-// set storage file path and load state.
+// Set storage file path and load state.
 var loadResult = GuidGenerator.SetStateStorageFile("state.bin");
 ```
 
 ### 基于组件的 GUID 构建
 
-``` CSharp
+``` csharp
 using System;
 using XNetEx.Guids;
 
-// build time-based GUID.
+// Build time-based GUID.
 var guidV1 = Guid.Empty
     .ReplaceVariant(GuidVariant.Rfc4122)
     .ReplaceVersion(GuidVersion.Version1)
@@ -103,62 +124,75 @@ F# GUID 模块工程位于 [XstarS.GuidModule](XstarS.GuidModule)。
 
 ### RFC 标准 GUID 生成
 
-``` FSharp
+``` fsharp
 open System
 open XNetEx.FSharp.Core
 
-// load generator state from file.
+// Load generator state from file.
 let loadResult = Guid.loadState "state.bin"
 
-// generate time-based GUID.
+// Generate time-based GUID.
 let guidV1 = Guid.newV1 () // 3944a871-aa14-11ed-8791-a9a9a46de54f
-// generate randomized GUID.
+// Generate randomized GUID.
 let guidV4 = Guid.newV4 () // 0658f02d-45a4-4c25-b9d0-8ddbda3c3e08
 
-// generate name-based GUID.
+// Generate name-based GUID.
 let guidV3 = Guid.newV3S Guid.nsDns "github.com"
 // 7f4771a0-1982-373d-928f-d31140a51652
 let guidV5 = "github.com" |> Guid.newV5S Guid.nsDns
 // 6fca3dd2-d61d-58de-9363-1574b382ea68
 
-// build time-based GUID.
-let guid6 = Guid.empty
-            |> Guid.replaceVariant Guid.Variant.Rfc4122
-            |> Guid.replaceVersion Guid.Version.Version1
-            |> Guid.replaceTime DateTime.UtcNow
-            |> Guid.replaceClockSeq 0x0123s
-            |> Guid.replaceNodeId (Array.init 6 (((+) 1) >> byte))
-            // 8dec2054-aa17-11ed-8123-010203040506
+// Build custom state time-based GUID sequence.
+let guidV1CSeq =
+    Guid.customStateSeq Guid.Version.Version1 {
+        timeFunc (fun () -> DateTime.UtcNow + TimeSpan.FromHours(8))
+        clockSeq 0x0123s
+        nodeId (Array.init 6 (((+) 1) >> byte))
+    }
+let guidV1C = guidV1CSeq |> Seq.head
+// 2a85a1d1-14c5-11f0-8123-010203040506
+
+// Build time-based GUID.
+let guid6 =
+    Guid.empty
+    |> Guid.replaceVariant Guid.Variant.Rfc4122
+    |> Guid.replaceVersion Guid.Version.Version1
+    |> Guid.replaceTime DateTime.UtcNow
+    |> Guid.replaceClockSeq 0x0123s
+    |> Guid.replaceNodeId (Array.init 6 (((+) 1) >> byte))
+    // 8dec2054-aa17-11ed-8123-010203040506
 ```
 
 ### 常见 GUID 相关操作
 
-``` FSharp
+``` fsharp
 open XNetEx.FSharp.Core
 
 // GUID parsing and formatting.
 let guid1 = Guid.parse "6ba7b810-9dad-11d1-80b4-00c04fd430c8"
-let guid2 = "{6ba7b810-9dad-11d1-80b4-00c04fd430c8}"
-            |> Guid.parseExact "B"
+let guid2 = "{6ba7b810-9dad-11d1-80b4-00c04fd430c8}" |> Guid.parseExact "B"
 printfn "%s" (guid2 |> Guid.format "X")
 
 // GUID construction and deconstruction.
-let guid3 = Guid.ofFields
-                0x00112233 0x4455s 0x6677s (0x88uy, 0x99uy)
-                (0xAAuy, 0xBBuy, 0xCCuy, 0xDDuy, 0xEEuy, 0xFFuy)
+let guid3 =
+    Guid.ofFields
+        0x00112233 0x4455s 0x6677s (0x88uy, 0x99uy)
+        (0xAAuy, 0xBBuy, 0xCCuy, 0xDDuy, 0xEEuy, 0xFFuy)
 let guid3Fields = guid3 |> Guid.toFields
 
-let guid4 = Array.map byte
-                [| 0x00; 0x11; 0x22; 0x33; 0x44; 0x55; 0x66; 0x77
-                   0x88; 0x99; 0xAA; 0xBB; 0xCC; 0xDD; 0xEE; 0xFF |]
-            |> Guid.ofBytesUuid
+let guid4 =
+    Array.map byte
+        [| 0x00; 0x11; 0x22; 0x33; 0x44; 0x55; 0x66; 0x77
+            0x88; 0x99; 0xAA; 0xBB; 0xCC; 0xDD; 0xEE; 0xFF |]
+    |> Guid.ofBytesUuid
 let guid4Bytes = Guid.toBytes guid4
 assert (guid3 = guid4)
 
-let guid5 = Array.map byte
-                [| 0x33; 0x22; 0x11; 0x00; 0x55; 0x44; 0x77; 0x66
-                   0x88; 0x99; 0xAA; 0xBB; 0xCC; 0xDD; 0xEE; 0xFF |]
-            |> Guid.ofBytes
+let guid5 =
+    Array.map byte
+        [| 0x33; 0x22; 0x11; 0x00; 0x55; 0x44; 0x77; 0x66
+            0x88; 0x99; 0xAA; 0xBB; 0xCC; 0xDD; 0xEE; 0xFF |]
+    |> Guid.ofBytes
 let guid5Bytes = Guid.toBytesUuid guid5
 assert (guid3 = guid5)
 ```
@@ -171,7 +205,7 @@ GUID 生成命令行工具的工程位于 [XstarS.GuidGen.CLI](XstarS.GuidGen.CL
 
 ### 命令行帮助信息
 
-``` Batch
+``` bat
 > GuidGen -?
 Generate RFC 4122 compliant GUIDs.
 Usage:  GuidGen[.exe] [-V1|-V4|-V1R] [-Cn]
@@ -201,7 +235,7 @@ Parameters:
 
 ### 命令行工具使用例
 
-``` Batch
+``` bat
 > GuidGen
 7603eaf0-9aa8-47e6-a90b-009f9e7bbdf4
 > GuidGen -V4 -C3
@@ -218,7 +252,7 @@ e129f27c-5103-5c5c-844b-cdf0a15e160d
 
 ## 性能基准测试
 
-``` PlainText
+``` plaintext
 BenchmarkDotNet v0.13.10, Windows 11 (10.0.22631.2861/23H2/2023Update/SunValley3)
 AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
 .NET SDK 8.0.100

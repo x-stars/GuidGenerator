@@ -21,32 +21,53 @@ There is also a special Nil UUID whose bytes are all `0x00`s, which is equivalen
 
 ### Get Generator Instance by Static Properties
 
-``` CSharp
+``` csharp
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
-// time-based GUID generation.
+// Generate time-based GUID.
 var guidV1 = GuidGenerator.Version1.NewGuid();
 // 3944a871-aa14-11ed-8791-a9a9a46de54f
 
-// name-based GUID generation.
+// Generate name-based GUID.
 var guidV5 = GuidGenerator.Version5.NewGuid(GuidNamespaces.Dns, "github.com");
 // 6fca3dd2-d61d-58de-9363-1574b382ea68
 ```
 
 ### Get Generator Instance by the Factory Method
 
-``` CSharp
+``` csharp
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
-// generate time-based GUID generation.
+// Generate time-based GUID.
 var guidV1 = GuidGenerator.OfVersion(1).NewGuid();
 // 3944a871-aa14-11ed-8791-a9a9a46de54f
 
-// generate name-based GUID.
+// Generate name-based GUID.
 var guidV5 = GuidGenerator.OfVersion(5).NewGuid(GuidNamespaces.Dns, "github.com");
 // 6fca3dd2-d61d-58de-9363-1574b382ea68
+```
+
+### Build Custom State Generator Instance
+
+``` csharp
+using XNetEx.Guids;
+using XNetEx.Guids.Generators;
+
+// Build custom state time-based GUID generator.
+var guidGenV1C =
+    GuidGenerator.CreateCustomStateBuilder(GuidVersion.Version1)
+    // Can also create by static property:
+    // CustomStateGuidGeneratorBuilder.Version1
+        .UseTimestampProvider(() => DateTime.UtcNow + TimeSpan.FromHours(8))
+        .UseClockSequence(0x0123)
+        .UseNodeId(new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 })
+        .ToGuidGenerator();
+
+// Generate custom state time-based GUID.
+var guidV1C = guidGenV1C.NewGuid();
+// 2a85a1d1-14c5-11f0-8123-010203040506
 ```
 
 ### GUID Generator State Storage
@@ -55,12 +76,12 @@ var guidV5 = GuidGenerator.OfVersion(5).NewGuid(GuidNamespaces.Dns, "github.com"
 
 Optional support and requires configuration to enable:
 
-``` CSharp
+``` csharp
 using System;
 using System.IO;
 using XNetEx.Guids.Generators;
 
-// listen state storage exceptions.
+// Listen state storage exceptions.
 GuidGenerator.StateStorageException += (sender, e) =>
 {
     if ((e.OperationType != FileAccess.Read) ||
@@ -69,17 +90,17 @@ GuidGenerator.StateStorageException += (sender, e) =>
         Console.Error.WriteLine(e.Exception);
     }
 };
-// set storage file path and load state.
+// Set storage file path and load state.
 var loadResult = GuidGenerator.SetStateStorageFile("state.bin");
 ```
 
 ### Component-based GUID Building
 
-``` CSharp
+``` csharp
 using System;
 using XNetEx.Guids;
 
-// build time-based GUID.
+// Build time-based GUID.
 var guidV1 = Guid.Empty
     .ReplaceVariant(GuidVariant.Rfc4122)
     .ReplaceVersion(GuidVersion.Version1)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using XNetEx.Threading;
@@ -21,6 +22,12 @@ internal abstract class NodeIdProvider
         NodeIdSource.NonVolatileRandom => NodeIdProvider.RandomNumber.Instance,
         _ => throw new ArgumentOutOfRangeException(nameof(source)),
     };
+
+    internal static NodeIdProvider CreateCustom(Func<byte[]> nodeIdProvider)
+    {
+        Debug.Assert(nodeIdProvider is not null);
+        return new NodeIdProvider.Custom(nodeIdProvider!);
+    }
 
     private sealed class Nothing : NodeIdProvider
     {
@@ -180,6 +187,38 @@ internal abstract class NodeIdProvider
                 GuidGeneratorState.RandomNodeId ?? this.NodeIdBytesValue;
 
             public override NodeIdSource SourceType => NodeIdSource.NonVolatileRandom;
+        }
+    }
+
+    private sealed class Custom : NodeIdProvider
+    {
+        private readonly Func<byte[]> CustomNodeIdProvider;
+
+        internal Custom(Func<byte[]> nodeIdProvider)
+        {
+            this.CustomNodeIdProvider = nodeIdProvider;
+        }
+
+        public override byte[] NodeIdBytes =>
+            this.CheckNodeIdBytes(this.CustomNodeIdProvider.Invoke());
+
+        public override NodeIdSource SourceType => NodeIdSource.VolatileRandom;
+
+        private byte[] CheckNodeIdBytes(byte[] nodeId)
+        {
+            if (nodeId is null)
+            {
+                throw new InvalidOperationException(
+                    "The custom node ID provider returns null.");
+            }
+            if (nodeId.Length != 6)
+            {
+                throw new InvalidOperationException(
+                    "Node ID returned from the custom provider " +
+                    "must be exactly 6 bytes long.");
+            }
+
+            return nodeId;
         }
     }
 }

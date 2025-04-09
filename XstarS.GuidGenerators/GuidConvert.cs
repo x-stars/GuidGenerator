@@ -20,6 +20,18 @@ public static class Uuid
         0xffffffff, 0xffff, 0xffff,
         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
 
+    /// <summary>
+    /// Returns a new <see cref="Guid"/> instance of the specified <see cref="GuidVersion"/>
+    /// with all components set to zero. This method is useful when building a GUID by components.
+    /// </summary>
+    /// <param name="version">The version of the new <see cref="Guid"/> instance.</param>
+    /// <returns>A new <see cref="Guid"/> instance of
+    /// <paramref name="version"/> with all components set to zero.</returns>
+    public static Guid EmptyOf(GuidVersion version)
+    {
+        return Guid.Empty.ReplaceVariant(GuidVariant.Rfc4122).ReplaceVersion(version);
+    }
+
 #if NET7_0_OR_GREATER
     /// <summary>
     /// Creates a new <see cref="Guid"/> instance

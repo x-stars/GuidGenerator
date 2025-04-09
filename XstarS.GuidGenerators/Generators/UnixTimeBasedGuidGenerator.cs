@@ -26,6 +26,15 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         this.ClockResetCounter = ClockResetCounter.GetInstance(isGlobalMonotonic);
     }
 
+    private UnixTimeBasedGuidGenerator(Func<DateTime>? timestampProvider = null)
+        : this()
+    {
+        this.TimestampProvider = (timestampProvider is not null) ?
+            TimestampProvider.CreateCustom(timestampProvider) :
+            TimestampProvider.Instance;
+        this.ClockResetCounter = ClockResetCounter.CreateCustom();
+    }
+
     internal static UnixTimeBasedGuidGenerator Instance
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -45,6 +54,12 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
     public override GuidVersion Version => GuidVersion.Version7;
 
     private long CurrentTimestamp => this.TimestampProvider.CurrentTimestamp;
+
+    internal static UnixTimeBasedGuidGenerator CreateCustomState(
+        Func<DateTime>? timestampProvider = null)
+    {
+        return new UnixTimeBasedGuidGenerator(timestampProvider);
+    }
 
     public override Guid NewGuid()
     {

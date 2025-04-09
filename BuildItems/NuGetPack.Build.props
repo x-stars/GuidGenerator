@@ -5,6 +5,7 @@
     <PackageVersion>$(Version)</PackageVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/x-stars/GuidGenerator</PackageProjectUrl>
+    <PackageIcon>GuidGenerator.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>$(PackageProjectUrl)/releases/tag/v$(PackageVersion)</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/x-stars/GuidGenerator</RepositoryUrl>
@@ -26,6 +27,7 @@
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\GuidGenerator.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

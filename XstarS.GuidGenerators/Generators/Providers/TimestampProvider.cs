@@ -37,6 +37,12 @@ internal abstract class TimestampProvider
                 new TimestampProvider.IncTimestamp();
     }
 
+    internal static TimestampProvider CreateCustom(Func<DateTime> timestampProvider)
+    {
+        Debug.Assert(timestampProvider is not null);
+        return new TimestampProvider.Custom(timestampProvider!);
+    }
+
     private static bool IsDateTimeHiRes()
     {
         var spinner = new SpinWait();
@@ -136,5 +142,18 @@ internal abstract class TimestampProvider
             this.LastTimeTicks = nowTicks;
             return nowTicks + this.TicksOffset;
         }
+    }
+
+    private sealed class Custom : TimestampProvider
+    {
+        private readonly Func<DateTime> CustomTimestampProvider;
+
+        internal Custom(Func<DateTime> timestampProvider)
+        {
+            this.CustomTimestampProvider = timestampProvider;
+        }
+
+        public override long CurrentTimestamp =>
+            this.CustomTimestampProvider.Invoke().ToUniversalTime().Ticks;
     }
 }
