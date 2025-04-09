@@ -12,7 +12,7 @@ public readonly struct CustomStateGuidGeneratorBuilder
     /// Gets the <see cref="CustomStateGuidGeneratorBuilder"/> instance of RFC 4122 UUID version 1.
     /// </summary>
     /// <returns>The <see cref="CustomStateGuidGeneratorBuilder"/> instance of RFC 4122 UUID version 1.</returns>
-    public static CustomStateGuidGeneratorBuilder Version1 { get; } =
+    public static CustomStateGuidGeneratorBuilder Version1 =>
         new(GuidVersion.Version1) { NodeIdSourceType = NodeIdSource.PhysicalAddress };
 
 #if !UUIDREV_DISABLE
@@ -20,14 +20,14 @@ public readonly struct CustomStateGuidGeneratorBuilder
     /// Gets the <see cref="CustomStateGuidGeneratorBuilder"/> instance of RFC 9562 UUID version 6.
     /// </summary>
     /// <returns>The <see cref="CustomStateGuidGeneratorBuilder"/> instance of RFC 9562 UUID version 6.</returns>
-    public static CustomStateGuidGeneratorBuilder Version6 { get; } =
+    public static CustomStateGuidGeneratorBuilder Version6 =>
         new(GuidVersion.Version6) { NodeIdSourceType = NodeIdSource.None };
 
     /// <summary>
     /// Gets the <see cref="CustomStateGuidGeneratorBuilder"/> instance of RFC 9562 UUID version 7.
     /// </summary>
     /// <returns>The <see cref="CustomStateGuidGeneratorBuilder"/> instance of RFC 9562 UUID version 7.</returns>
-    public static CustomStateGuidGeneratorBuilder Version7 { get; } =
+    public static CustomStateGuidGeneratorBuilder Version7 =>
         new(GuidVersion.Version7) { NodeIdSourceType = NodeIdSource.None };
 #endif
 
