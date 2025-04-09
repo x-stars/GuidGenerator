@@ -52,6 +52,7 @@ var guidV5 = GuidGenerator.OfVersion(5).NewGuid(GuidNamespaces.Dns, "github.com"
 ### Build Custom State Generator Instance
 
 ``` csharp
+using System;
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
