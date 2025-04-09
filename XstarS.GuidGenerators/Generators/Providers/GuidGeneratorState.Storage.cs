@@ -86,7 +86,7 @@ partial class GuidGeneratorState
                 var nodeIdBytes = isRandom ? randNodeId : phyNodeId;
                 lock (state)
                 {
-                    state.Reinitialize();
+                    state.Reset();
                     if ((fieldFlags & 0x01) == 0x01)
                     {
                         state.LastTimestamp = timestamp;
@@ -101,7 +101,7 @@ partial class GuidGeneratorState
                     }
                     if ((fieldFlags & nodeIdFlag) == nodeIdFlag)
                     {
-                        state.LastNodeIdBytes = nodeIdBytes;
+                        state.SetLastNodeId(nodeIdBytes);
                     }
                 }
             }

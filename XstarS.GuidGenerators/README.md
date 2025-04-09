@@ -25,7 +25,7 @@ RFC 9562 defines the following three versions of UUID:
 * Version 7: The Unix Epoch time-based version, contains a 48-bit timestamp and a 74-bit random number, field-compatible with ULID.
 * Version 8: Reserved for custom UUID formats, fields except the variant and version are user-defined.
 
-There is also a special Max UUID whose bytes are all `0xff`s, which has no equivalent implementation in .NET (provided in this project).
+There is also a special Max UUID whose bytes are all `0xff`s, which is equivalent to `Guid.AllBitsSet` in .NET 9.0 or greater.
 
 > * [RFC 9562 UUID Standard](https://www.rfc-editor.org/rfc/rfc9562)
 
@@ -33,40 +33,61 @@ There is also a special Max UUID whose bytes are all `0xff`s, which has no equiv
 
 ### Get Generator Instance by Static Properties
 
-``` CSharp
+``` csharp
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
-// time-based GUID generation.
+// Generate time-based GUID.
 var guidV1 = GuidGenerator.Version1.NewGuid();
 // 3944a871-aa14-11ed-8791-a9a9a46de54f
 
-// name-based GUID generation.
+// Generate name-based GUID.
 var guidV5 = GuidGenerator.Version5.NewGuid(GuidNamespaces.Dns, "github.com");
 // 6fca3dd2-d61d-58de-9363-1574b382ea68
 
-// Unix time-based GUID generation.
+// Generate Unix time-based GUID.
 var guidV7 = GuidGenerator.Version7.NewGuid();
 // 018640c6-0dc9-7189-a644-31acdba4cabc
 ```
 
 ### Get Generator Instance by the Factory Method
 
-``` CSharp
+``` csharp
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
-// generate time-based GUID generation.
+// Generate time-based GUID.
 var guidV1 = GuidGenerator.OfVersion(1).NewGuid();
 // 3944a871-aa14-11ed-8791-a9a9a46de54f
 
-// generate name-based GUID.
+// Generate name-based GUID.
 var guidV5 = GuidGenerator.OfVersion(5).NewGuid(GuidNamespaces.Dns, "github.com");
 // 6fca3dd2-d61d-58de-9363-1574b382ea68
 
-// generate Unix time-based GUID.
+// Generate Unix time-based GUID.
 var guidV7 = GuidGenerator.OfVersion(7).NewGuid();
 // 018640c6-0dc9-7189-a644-31acdba4cabc
+```
+
+### Build Custom State Generator Instance
+
+``` csharp
+using XNetEx.Guids;
+using XNetEx.Guids.Generators;
+
+// Build custom state time-based GUID generator.
+var guidGenV1C =
+    GuidGenerator.CreateCustomStateBuilder(GuidVersion.Version1)
+    // Can also create by static property:
+    // CustomStateGuidGeneratorBuilder.Version1
+        .UseTimestampProvider(() => DateTime.UtcNow + TimeSpan.FromHours(8))
+        .UseClockSequence(0x0123)
+        .UseNodeId(new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 })
+        .ToGuidGenerator();
+
+// Generate custom state time-based GUID.
+var guidV1C = guidGenV1C.NewGuid();
+// 2a85a1d1-14c5-11f0-8123-010203040506
 ```
 
 ### GUID Generator State Storage
@@ -75,12 +96,12 @@ var guidV7 = GuidGenerator.OfVersion(7).NewGuid();
 
 Optional support and requires configuration to enable:
 
-``` CSharp
+``` csharp
 using System;
 using System.IO;
 using XNetEx.Guids.Generators;
 
-// listen state storage exceptions.
+// Listen state storage exceptions.
 GuidGenerator.StateStorageException += (sender, e) =>
 {
     if ((e.OperationType != FileAccess.Read) ||
@@ -89,17 +110,17 @@ GuidGenerator.StateStorageException += (sender, e) =>
         Console.Error.WriteLine(e.Exception);
     }
 };
-// set storage file path and load state.
+// Set storage file path and load state.
 var loadResult = GuidGenerator.SetStateStorageFile("state.bin");
 ```
 
 ### Component-based GUID Building
 
-``` CSharp
+``` csharp
 using System;
 using XNetEx.Guids;
 
-// build time-based GUID.
+// Build time-based GUID.
 var guidV6 = Guid.Empty
     .ReplaceVariant(GuidVariant.Rfc4122)
     .ReplaceVersion(GuidVersion.Version6)
@@ -108,7 +129,7 @@ var guidV6 = Guid.Empty
     .ReplaceNodeId(new byte[] { 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8 });
     // 1d19dad6-ba7b-6810-80b4-00c04fd430c8
 
-// build Unix time-based GUID.
+// Build Unix time-based GUID.
 var guidV7 = Guid.NewGuid()
     .ReplaceVersion(GuidVersion.Version7)
     .ReplaceTimestamp(new DateTime(0x08D9F638A666EB00, DateTimeKind.Utc));

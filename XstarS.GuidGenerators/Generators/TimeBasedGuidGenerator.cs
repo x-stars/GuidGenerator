@@ -32,6 +32,23 @@ internal partial class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         this.GeneratorState = GuidGeneratorState.GetInstance(nodeIdSource);
     }
 
+    protected TimeBasedGuidGenerator(
+        NodeIdSource nodeIdSource, short? initClockSeq = null,
+        Func<DateTime>? timestampProvider = null, Func<byte[]>? nodeIdProvider = null)
+        : this(NodeIdSource.VolatileRandom)
+    {
+        this.TimestampProvider = (timestampProvider is not null) ?
+            TimestampProvider.CreateCustom(timestampProvider) :
+            TimestampProvider.Instance;
+        this.NodeIdProvider = (nodeIdProvider is not null) ?
+            NodeIdProvider.CreateCustom(nodeIdProvider) :
+            NodeIdProvider.GetInstance(nodeIdSource);
+        if (initClockSeq is short initClockSeqValue)
+        {
+            this.GeneratorState.SetClockSequence(initClockSeqValue);
+        }
+    }
+
     internal static TimeBasedGuidGenerator Instance
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -73,6 +90,20 @@ internal partial class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
     internal static TimeBasedGuidGenerator CreateInstanceR()
     {
         return new TimeBasedGuidGenerator(NodeIdSource.VolatileRandom);
+    }
+
+    internal static TimeBasedGuidGenerator CreateCustomState(
+        NodeIdSource nodeIdSource = NodeIdSource.PhysicalAddress, short? initClockSeq = null,
+        Func<DateTime>? timestampProvider = null, Func<byte[]>? nodeIdProvider = null)
+    {
+        if (nodeIdSource is NodeIdSource.None)
+        {
+            throw new InvalidOperationException(
+                "This GUID version does not support using NodeIdSource.None.");
+        }
+
+        return new TimeBasedGuidGenerator(
+            nodeIdSource, initClockSeq, timestampProvider, nodeIdProvider);
     }
 
     public override Guid NewGuid()
