@@ -114,6 +114,16 @@ module Guid =
     let nsX500: Guid = Namespace.X500
 
     /// <summary>
+    /// Returns a new <see cref="T:System.Guid"/> instance of the specified
+    /// <see cref="T:XNetEx.Guids.GuidVersion"/> with all components set to zero.
+    /// </summary>
+    /// <param name="version">The version of the new <see cref="T:System.Guid"/> instance.</param>
+    /// <returns>A new <see cref="T:System.Guid"/> instance of
+    /// <paramref name="version"/> with all components set to zero.</returns>
+    [<CompiledName("EmptyOf")>]
+    let emptyOf (version: Version) : Guid = Uuid.EmptyOf(version)
+
+    /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 1.
     /// </summary>
     /// <returns>A new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 1.</returns>
