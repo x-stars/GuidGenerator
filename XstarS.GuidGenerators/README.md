@@ -72,6 +72,7 @@ var guidV7 = GuidGenerator.OfVersion(7).NewGuid();
 ### Build Custom State Generator Instance
 
 ``` csharp
+using System;
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
