@@ -191,22 +191,34 @@ public class CustomStateGuidGeneratorBuilderTest
     {
         Assert.AreEqual(CustomStateGuidGeneratorBuilder.Version1,
                         CustomStateGuidGeneratorBuilder.Create(GuidVersion.Version1));
+#if !UUIDREV_DISABLE
         Assert.AreEqual(CustomStateGuidGeneratorBuilder.Version6,
                         CustomStateGuidGeneratorBuilder.Create(GuidVersion.Version6));
         Assert.AreEqual(CustomStateGuidGeneratorBuilder.Version7,
                         CustomStateGuidGeneratorBuilder.Create(GuidVersion.Version7));
+#endif
         Assert.AreEqual(CustomStateGuidGeneratorBuilder.Version1,
                         GuidGenerator.CreateCustomStateBuilder(GuidVersion.Version1));
+#if !UUIDREV_DISABLE
         Assert.AreEqual(CustomStateGuidGeneratorBuilder.Version6,
                         GuidGenerator.CreateCustomStateBuilder(GuidVersion.Version6));
         Assert.AreEqual(CustomStateGuidGeneratorBuilder.Version7,
                         GuidGenerator.CreateCustomStateBuilder(GuidVersion.Version7));
+#endif
     }
 
     [TestMethod]
     public void Create_InvalidGuidVersion_CatchOutOfRangeException()
     {
-        foreach (var version in new[] { 0, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15 })
+        foreach (var version in new[]
+        {
+#if !UUIDREV_DISABLE
+            0, 2, 3, 4, 5,
+#else
+            0, 2, 3, 4, 5, 6, 7,
+#endif
+            8, 9, 10, 11, 12, 13, 14, 15,
+        })
         {
             Assert.ThrowsException<ArgumentOutOfRangeException>(
                 () => CustomStateGuidGeneratorBuilder.Create((GuidVersion)version));
