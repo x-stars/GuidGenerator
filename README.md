@@ -83,7 +83,7 @@ using XNetEx.Guids.Generators;
 // Build custom state time-based GUID generator.
 var guidGenV1C =
     GuidGenerator.CreateCustomStateBuilder(GuidVersion.Version1)
-    // Can also create by static property:
+    // Can also create by static properties:
     // CustomStateGuidGeneratorBuilder.Version1
         .UseTimestampProvider(() => DateTime.UtcNow + TimeSpan.FromHours(8))
         .UseClockSequence(0x0123)
@@ -126,9 +126,7 @@ using System;
 using XNetEx.Guids;
 
 // Build time-based GUID.
-var guidV6 = Guid.Empty
-    .ReplaceVariant(GuidVariant.Rfc4122)
-    .ReplaceVersion(GuidVersion.Version6)
+var guidV6 = Uuid.EmptyOf(GuidVersion.Version6)
     .ReplaceTimestamp(new DateTime(0x08BEFFD14FDBF810, DateTimeKind.Utc))
     .ReplaceClockSequence((short)0x00b4)
     .ReplaceNodeId(new byte[] { 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8 });
@@ -184,9 +182,7 @@ let guidV1C = guidV1CSeq |> Seq.head
 
 // Build time-based GUID.
 let guid6 =
-    Guid.empty
-    |> Guid.replaceVariant Guid.Variant.Rfc4122
-    |> Guid.replaceVersion Guid.Version.Version6
+    Guid.emptyOf Guid.Version.Version6
     |> Guid.replaceTime DateTime.UtcNow
     |> Guid.replaceClockSeq 0x0123s
     |> Guid.replaceNodeId (Array.init 6 (((+) 1) >> byte))
