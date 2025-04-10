@@ -12,9 +12,7 @@ public class GuidBuildingTest
         var timestamp = new DateTime(0x08BEFFD14FDBF810, DateTimeKind.Utc);
         var clockSeq = (short)0x00b4;
         var nodeId = new byte[] { 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8 };
-        var guid = Guid.Empty
-            .ReplaceVariant(GuidVariant.Rfc4122)
-            .ReplaceVersion(GuidVersion.Version1)
+        var guid = Uuid.EmptyOf(GuidVersion.Version1)
             .ReplaceTimestamp(timestamp)
             .ReplaceClockSequence(clockSeq)
             .ReplaceNodeId(nodeId);
@@ -34,9 +32,7 @@ public class GuidBuildingTest
         var nodeId = new byte[] { 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8 };
         var domain = DceSecurityDomain.Org;
         var localId = 0x6ba7b810;
-        var guid = Guid.Empty
-            .ReplaceVariant(GuidVariant.Rfc4122)
-            .ReplaceVersion(GuidVersion.Version2)
+        var guid = Uuid.EmptyOf(GuidVersion.Version2)
             .ReplaceTimestamp(timestamp)
             .ReplaceClockSequence(clockSeq)
             .ReplaceNodeId(nodeId)
@@ -59,9 +55,7 @@ public class GuidBuildingTest
         var timestamp = new DateTime(0x08BEFFD14FDBF810, DateTimeKind.Utc);
         var clockSeq = (short)0x00b4;
         var nodeId = new byte[] { 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8 };
-        var guid = Guid.Empty
-            .ReplaceVariant(GuidVariant.Rfc4122)
-            .ReplaceVersion(GuidVersion.Version6)
+        var guid = Uuid.EmptyOf(GuidVersion.Version6)
             .ReplaceTimestamp(timestamp)
             .ReplaceClockSequence(clockSeq)
             .ReplaceNodeId(nodeId);

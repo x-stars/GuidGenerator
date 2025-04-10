@@ -17,7 +17,7 @@ partial class GuidComponentReplaceTest
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     [TestMethod]
-    public void TryWriteNodeId_Version1Guid_GetInputBytes()
+    public void ReplaceNodeIdSpan_Version1Guid_GetInputBytes()
     {
         var nodeId = (stackalloc byte[] { 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8 });
         var original = Guid.Parse("6ba7b810-9dad-11d1-80b4-000000000000");
@@ -40,7 +40,7 @@ partial class GuidComponentReplaceTest
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     [TestMethod]
-    public void TryWriteNodeId_Version2Guid_GetInputBytes()
+    public void ReplaceNodeIdSpan_Version2Guid_GetInputBytes()
     {
         var nodeId = (stackalloc byte[] { 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8 });
         var original = Guid.Parse("6ba7b810-9dad-21d1-b402-000000000000");
@@ -64,7 +64,7 @@ partial class GuidComponentReplaceTest
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     [TestMethod]
-    public void TryWriteNodeId_Version6Guid_GetInputBytes()
+    public void ReplaceNodeIdSpan_Version6Guid_GetInputBytes()
     {
         var nodeId = (stackalloc byte[] { 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8 });
         var original = Guid.Parse("1d19dad6-ba7b-6810-80b4-000000000000");
@@ -101,7 +101,7 @@ partial class GuidComponentReplaceTest
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     [TestMethod]
-    public void TryWriteNodeId_OtherVersionGuids_GetOriginalGuidValues()
+    public void ReplaceNodeIdSpan_OtherVersionGuids_GetOriginalGuidValues()
     {
         var nodeId = (stackalloc byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF });
         foreach (var guidText in new[]

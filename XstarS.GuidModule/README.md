@@ -54,9 +54,7 @@ let guidV1C = guidV1CSeq |> Seq.head
 
 // Build time-based GUID.
 let guid6 =
-    Guid.empty
-    |> Guid.replaceVariant Guid.Variant.Rfc4122
-    |> Guid.replaceVersion Guid.Version.Version1
+    Guid.emptyOf Guid.Version.Version1
     |> Guid.replaceTime DateTime.UtcNow
     |> Guid.replaceClockSeq 0x0123s
     |> Guid.replaceNodeId (Array.init 6 (((+) 1) >> byte))
