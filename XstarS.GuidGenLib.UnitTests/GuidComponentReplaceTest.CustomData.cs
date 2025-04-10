@@ -22,7 +22,7 @@ partial class GuidComponentReplaceTest
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     [TestMethod]
-    public void TryWriteCustomData_Version8Guid_GetInputBytes()
+    public void ReplaceCustomDataSpan_Version8Guid_GetInputBytes()
     {
         var customData = (stackalloc byte[]
         {
@@ -67,7 +67,7 @@ partial class GuidComponentReplaceTest
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     [TestMethod]
-    public void TryWriteCustomData_OtherVersionGuids_GetOriginalGuidValues()
+    public void ReplaceCustomDataSpan_OtherVersionGuids_GetOriginalGuidValues()
     {
         var customData = (stackalloc byte[16]
         {

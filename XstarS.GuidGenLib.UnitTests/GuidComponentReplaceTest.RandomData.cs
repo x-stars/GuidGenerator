@@ -21,7 +21,7 @@ partial class GuidComponentReplaceTest
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     [TestMethod]
-    public void TryWriteRandomData_Version4Guid_GetInputBytes()
+    public void ReplaceRandomDataSpan_Version4Guid_GetInputBytes()
     {
         var randomData = (stackalloc byte[]
         {
@@ -54,7 +54,7 @@ partial class GuidComponentReplaceTest
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     [TestMethod]
-    public void TryWriteRandomData_Version7Guid_GetInputBytes()
+    public void ReplaceRandomDataSpan_Version7Guid_GetInputBytes()
     {
         var randomData = (stackalloc byte[]
         {
@@ -101,7 +101,7 @@ partial class GuidComponentReplaceTest
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     [TestMethod]
-    public void TryWriteRandomData_OtherVersionGuids_GetOriginalGuidValues()
+    public void ReplaceRandomDataSpan_OtherVersionGuids_GetOriginalGuidValues()
     {
         var randomData = (stackalloc byte[16]
         {

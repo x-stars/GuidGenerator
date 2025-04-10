@@ -21,7 +21,7 @@ partial class GuidComponentReplaceTest
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     [TestMethod]
-    public void TryWriteHashData_Version3Guid_GetInputBytes()
+    public void ReplaceHashDataSpan_Version3Guid_GetInputBytes()
     {
         var hashData = (stackalloc byte[]
         {
@@ -53,7 +53,7 @@ partial class GuidComponentReplaceTest
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     [TestMethod]
-    public void TryWriteHashData_Version5Guid_GetInputBytes()
+    public void ReplaceHashDataSpan_Version5Guid_GetInputBytes()
     {
         var hashData = (stackalloc byte[]
         {
@@ -99,7 +99,7 @@ partial class GuidComponentReplaceTest
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     [TestMethod]
-    public void TryWriteHashData_OtherVersionGuids_GetOriginalGuidValues()
+    public void ReplaceHashDataSpan_OtherVersionGuids_GetOriginalGuidValues()
     {
         var hashData = (stackalloc byte[16]
         {
