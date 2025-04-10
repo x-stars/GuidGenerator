@@ -38,7 +38,7 @@ public readonly struct CustomStateGuidGeneratorBuilder
     public GuidVersion Version { get; }
 
     /// <summary>
-    /// Gets the initial clock sequence to use
+    /// Gets or initializes the initial clock sequence to use
     /// of the <see cref="IGuidGenerator"/> building by this instance.
     /// </summary>
     /// <returns>The initial clock sequence to use
@@ -47,7 +47,7 @@ public readonly struct CustomStateGuidGeneratorBuilder
     private short? ClockSequence { get; init; }
 
     /// <summary>
-    /// Gets the <see cref="NodeIdSource"/> type to use
+    /// Gets or initializes the <see cref="NodeIdSource"/> type to use
     /// of the <see cref="IGuidGenerator"/> building by this instance.
     /// </summary>
     /// <returns>The <see cref="NodeIdSource"/> type to use
@@ -55,7 +55,7 @@ public readonly struct CustomStateGuidGeneratorBuilder
     private NodeIdSource NodeIdSourceType { get; init; }
 
     /// <summary>
-    /// Gets the custom timestamp provider function to use
+    /// Gets or initializes the custom timestamp provider function to use
     /// of the <see cref="IGuidGenerator"/> building by this instance.
     /// </summary>
     /// <returns>The custom timestamp provider function to use
@@ -64,7 +64,7 @@ public readonly struct CustomStateGuidGeneratorBuilder
     private Func<DateTime>? TimestampProvider { get; init; }
 
     /// <summary>
-    /// Gets the custom node ID provider function to use
+    /// Gets or initializes the custom node ID provider function to use
     /// of the <see cref="IGuidGenerator"/> building by this instance.
     /// </summary>
     /// <returns>The custom node ID provider function to use
@@ -235,12 +235,12 @@ public readonly struct CustomStateGuidGeneratorBuilder
     /// <returns>A new <see cref="IGuidGenerator"/> instance
     /// based on custom state providers used in this instance.</returns>
     /// <exception cref="InvalidOperationException">
-    /// This instance is not initialized correctly.</exception>
+    /// This instance is not initializes correctly.</exception>
     public IGuidGenerator ToGuidGenerator()
     {
         if (this.NodeIdSourceType is < NodeIdSource.None or > NodeIdSource.NonVolatileRandom)
         {
-            throw new InvalidOperationException("This instance is not initialized correctly.");
+            throw new InvalidOperationException("This instance is not initializes correctly.");
         }
 
         return this.Version switch
@@ -252,7 +252,7 @@ public readonly struct CustomStateGuidGeneratorBuilder
                 this.NodeIdSourceType, this.ClockSequence, this.TimestampProvider, this.NodeIdProvider),
             GuidVersion.Version7 => UnixTimeBasedGuidGenerator.CreateCustomState(this.TimestampProvider),
 #endif
-            _ => throw new InvalidOperationException("This instance is not initialized correctly."),
+            _ => throw new InvalidOperationException("This instance is not initializes correctly."),
         };
     }
 }
