@@ -235,12 +235,12 @@ public readonly struct CustomStateGuidGeneratorBuilder
     /// <returns>A new <see cref="IGuidGenerator"/> instance
     /// based on custom state providers used in this instance.</returns>
     /// <exception cref="InvalidOperationException">
-    /// This instance is not initializes correctly.</exception>
+    /// This instance is not initialized correctly.</exception>
     public IGuidGenerator ToGuidGenerator()
     {
         if (this.NodeIdSourceType is < NodeIdSource.None or > NodeIdSource.NonVolatileRandom)
         {
-            throw new InvalidOperationException("This instance is not initializes correctly.");
+            throw new InvalidOperationException("This instance is not initialized correctly.");
         }
 
         return this.Version switch
@@ -252,7 +252,7 @@ public readonly struct CustomStateGuidGeneratorBuilder
                 this.NodeIdSourceType, this.ClockSequence, this.TimestampProvider, this.NodeIdProvider),
             GuidVersion.Version7 => UnixTimeBasedGuidGenerator.CreateCustomState(this.TimestampProvider),
 #endif
-            _ => throw new InvalidOperationException("This instance is not initializes correctly."),
+            _ => throw new InvalidOperationException("This instance is not initialized correctly."),
         };
     }
 }
