@@ -72,7 +72,6 @@ public class GuidBuildingTest
     {
         var timestamp = new DateTime(0x08D9F638A666EB00, DateTimeKind.Utc);
         var guid = Guid.NewGuid()
-            .ReplaceVariant(GuidVariant.Rfc4122)
             .ReplaceVersion(GuidVersion.Version7)
             .ReplaceTimestamp(timestamp);
         _ = guid.TryGetTimestamp(out var guidTimestamp);

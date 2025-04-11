@@ -13,29 +13,18 @@ namespace XNetEx.Collections.Concurrent;
 
 [DebuggerDisplay($"Count = {{{nameof(Count)}}}, Capacity = {{{nameof(Capacity)}}}")]
 [DebuggerTypeProxy(typeof(BoundedCollection<>.DebugView))]
-internal sealed class BoundedCollection<T>
+internal sealed class BoundedCollection<T>(int capacity)
     : IProducerConsumerCollection<T>, IReadOnlyCollection<T>
 {
-    private readonly ConcurrentQueue<T> Items;
+    private readonly ConcurrentQueue<T> Items = new();
 
-    private volatile int ItemsCount;
-
-    public BoundedCollection(int capacity)
-    {
-        if (capacity < 0)
-        {
-            throw new ArgumentOutOfRangeException(
-                nameof(capacity), "Value must be non-negative.");
-        }
-
-        this.Capacity = capacity;
-        this.Items = new ConcurrentQueue<T>();
-        this.ItemsCount = 0;
-    }
+    private volatile int ItemsCount = 0;
 
     public int Count => this.Items.Count;
 
-    public int Capacity { get; }
+    public int Capacity { get; } = (capacity >= 0) ? capacity :
+        throw new ArgumentOutOfRangeException(
+            nameof(capacity), "Value must be non-negative.");
 
     object ICollection.SyncRoot => ((ICollection)this.Items).SyncRoot;
 
