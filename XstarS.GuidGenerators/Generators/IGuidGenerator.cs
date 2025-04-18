@@ -32,6 +32,8 @@ public interface IGuidGenerator : IGuidGeneratorInfo
     /// Generates a new <see cref="Guid"/> instance.
     /// </summary>
     /// <returns>A new <see cref="Guid"/> instance.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// This instance is not in a valid state.</exception>
     /// <exception cref="ObjectDisposedException">
     /// This instance has already been disposed.</exception>
     Guid NewGuid();
@@ -93,6 +95,8 @@ public interface IDceSecurityGuidGenerator : IGuidGeneratorInfo
     /// or <see langword="null"/> to get the local user or group ID from the system.</param>
     /// <returns>A new <see cref="Guid"/> instance generated based on
     /// <paramref name="domain"/> and <paramref name="localId"/>.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// This instance is not in a valid state.</exception>
     /// <exception cref="PlatformNotSupportedException">
     /// The current operating system does not support getting the local user or group ID.</exception>
     /// <exception cref="ObjectDisposedException">
@@ -114,6 +118,8 @@ public interface IBlockingGuidGenerator : IGuidGenerator
     /// <returns><see langword="true"/> if this instance can
     /// generate a new <see cref="Guid"/> instance without blocking;
     /// otherwise, <see langword="false"/>.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// This instance is not in a valid state.</exception>
     /// <exception cref="ObjectDisposedException">
     /// This instance has already been disposed.</exception>
     bool TryNewGuid(out Guid result);

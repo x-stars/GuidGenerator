@@ -124,8 +124,8 @@ internal partial class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         result = default(Guid);
         if (this.TryFillTimeAndNodeFields(ref result))
         {
-            this.FillVersionField(ref result);
-            this.FillVariantField(ref result);
+            this.FillVersionFieldUnchecked(ref result);
+            this.FillVariantFieldUnchecked(ref result);
             return true;
         }
         return false;
@@ -139,10 +139,22 @@ internal partial class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         var refreshed = state.Refresh(
             timestamp, nodeId, out var clockSeq);
         if (!refreshed) { return false; }
+        this.FillTimeFieldsChecked(ref guid, timestamp);
         var components = this.GuidComponents;
-        components.SetTimestamp(ref guid, timestamp);
         components.SetClockSequence(ref guid, clockSeq);
         components.SetNodeId(ref guid, nodeId);
         return true;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void FillTimeFieldsChecked(ref Guid guid, long timestamp)
+    {
+        var components = this.GuidComponents;
+        if (components.CheckTimestamp(timestamp) is string message)
+        {
+            throw new InvalidOperationException(message);
+        }
+
+        components.SetTimestamp(ref guid, timestamp);
     }
 }

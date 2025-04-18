@@ -50,6 +50,8 @@ public abstract partial class GuidGenerator : IGuidGenerator, IGuidGeneratorInfo
     /// Generates a new <see cref="Guid"/> instance.
     /// </summary>
     /// <returns>A new <see cref="Guid"/> instance.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// This instance is not in a valid state.</exception>
     /// <exception cref="ObjectDisposedException">
     /// This instance has already been disposed.</exception>
     public abstract Guid NewGuid();
@@ -103,6 +105,8 @@ public abstract partial class GuidGenerator : IGuidGenerator, IGuidGeneratorInfo
     /// or <see langword="null"/> to get the local user or group ID from the system.</param>
     /// <returns>A new <see cref="Guid"/> instance generated based on
     /// <paramref name="domain"/> and <paramref name="localId"/>.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// This instance is not in a valid state.</exception>
     /// <exception cref="PlatformNotSupportedException">
     /// The current operating system does not support getting the local user or group ID.</exception>
     /// <exception cref="NotSupportedException">
@@ -130,19 +134,62 @@ public abstract partial class GuidGenerator : IGuidGenerator, IGuidGeneratorInfo
     /// Fills the version field of the specified <see cref="Guid"/>.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/> to fill the version field.</param>
+    /// <exception cref="InvalidOperationException">
+    /// <see cref="GuidGenerator.Version"/> is not a valid <see cref="GuidVersion"/> value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected void FillVersionField(ref Guid guid)
     {
-        GuidComponents.Common.SetVersion(ref guid, this.Version);
+        if (GuidComponents.Common.CheckVersion(this.Version) is string message)
+        {
+            GuidGenerator.ThrowComponentValueInvalid(nameof(this.Version));
+        }
+
+        this.FillVersionFieldUnchecked(ref guid);
     }
 
     /// <summary>
     /// Fills the variant field of the specified <see cref="Guid"/>.
     /// </summary>
     /// <param name="guid">The <see cref="Guid"/> to fill the variant field.</param>
+    /// <exception cref="InvalidOperationException">
+    /// <see cref="GuidGenerator.Variant"/> is not a valid <see cref="GuidVariant"/> value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected void FillVariantField(ref Guid guid)
     {
+        if (GuidComponents.Common.CheckVariant(this.Variant) is string message)
+        {
+            GuidGenerator.ThrowComponentValueInvalid(nameof(this.Variant));
+        }
+
+        this.FillVariantFieldUnchecked(ref guid);
+    }
+
+    /// <summary>
+    /// Fills the version field of the specified <see cref="Guid"/>.
+    /// The <see cref="GuidGenerator.Version"/> value is not checked.
+    /// </summary>
+    /// <param name="guid">The <see cref="Guid"/> to fill the version field.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private protected void FillVersionFieldUnchecked(ref Guid guid)
+    {
+        GuidComponents.Common.SetVersion(ref guid, this.Version);
+    }
+
+    /// <summary>
+    /// Fills the variant field of the specified <see cref="Guid"/>.
+    /// The <see cref="GuidGenerator.Variant"/> value is not checked.
+    /// </summary>
+    /// <param name="guid">The <see cref="Guid"/> to fill the variant field.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private protected void FillVariantFieldUnchecked(ref Guid guid)
+    {
         GuidComponents.Common.SetVariant(ref guid, this.Variant);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowComponentValueInvalid(string componentName)
+    {
+        throw new InvalidOperationException(
+            $"The {componentName} value of this instance is invalid.");
     }
 }
