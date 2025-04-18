@@ -71,13 +71,13 @@ public interface INameBasedGuidGenerator : IGuidGeneratorInfo
     /// implementation is incorrect or the hash size is less than 128 bits.</exception>
     /// <exception cref="ObjectDisposedException">
     /// This instance has already been disposed.</exception>
-#if NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     Guid NewGuid(Guid nsId, ReadOnlySpan<byte> name)
+#if NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     {
         return this.NewGuid(nsId, name.ToArray());
     }
 #else
-    Guid NewGuid(Guid nsId, ReadOnlySpan<byte> name);
+    ;
 #endif
 #endif
 }
