@@ -30,21 +30,24 @@ internal abstract class TimeNodeBasedGuidComponents
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public sealed override string? CheckClockSequence(short clockSeq)
+    public sealed override string? TrySetClockSequence(ref Guid guid, short clockSeq)
     {
-        return ((ushort)clockSeq <= (ushort)this.MaxClockSequence) ? null :
-            $"Clock sequence for the current GUID version " +
-            $"must be between 0 and {this.MaxClockSequence}.";
+        if ((ushort)clockSeq > (ushort)this.MaxClockSequence)
+        {
+            return $"Clock sequence for the current GUID version " +
+                   $"must be between 0 and {this.MaxClockSequence}.";
+        }
+
+        this.SetClockSequence(ref guid, clockSeq);
+        return null;
     }
 
     public sealed override void SetClockSequenceChecked(ref Guid guid, short clockSeq)
     {
-        if (this.CheckClockSequence(clockSeq) is string message)
+        if (this.TrySetClockSequence(ref guid, clockSeq) is string message)
         {
             throw new ArgumentOutOfRangeException(nameof(clockSeq), message);
         }
-
-        this.SetClockSequence(ref guid, clockSeq);
     }
 
     public sealed override byte[] GetNodeId(ref Guid guid)

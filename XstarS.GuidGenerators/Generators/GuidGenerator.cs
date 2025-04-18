@@ -139,12 +139,10 @@ public abstract partial class GuidGenerator : IGuidGenerator, IGuidGeneratorInfo
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected void FillVersionField(ref Guid guid)
     {
-        if (GuidComponents.Common.CheckVersion(this.Version) is string message)
+        if (GuidComponents.Common.TrySetVersion(ref guid, this.Version) is not null)
         {
-            GuidGenerator.ThrowComponentValueInvalid(nameof(this.Version));
+            GuidGenerator.ThrowFieldValueInvalid(nameof(this.Version));
         }
-
-        this.FillVersionFieldUnchecked(ref guid);
     }
 
     /// <summary>
@@ -156,12 +154,10 @@ public abstract partial class GuidGenerator : IGuidGenerator, IGuidGeneratorInfo
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected void FillVariantField(ref Guid guid)
     {
-        if (GuidComponents.Common.CheckVariant(this.Variant) is string message)
+        if (GuidComponents.Common.TrySetVariant(ref guid, this.Variant) is not null)
         {
-            GuidGenerator.ThrowComponentValueInvalid(nameof(this.Variant));
+            GuidGenerator.ThrowFieldValueInvalid(nameof(this.Variant));
         }
-
-        this.FillVariantFieldUnchecked(ref guid);
     }
 
     /// <summary>
@@ -187,9 +183,9 @@ public abstract partial class GuidGenerator : IGuidGenerator, IGuidGeneratorInfo
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static void ThrowComponentValueInvalid(string componentName)
+    private static void ThrowFieldValueInvalid(string fieldName)
     {
         throw new InvalidOperationException(
-            $"The {componentName} value of this instance is invalid.");
+            $"The {fieldName} value of this instance is invalid.");
     }
 }

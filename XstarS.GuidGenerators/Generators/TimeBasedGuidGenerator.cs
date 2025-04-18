@@ -150,11 +150,9 @@ internal partial class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
     private void FillTimeFieldsChecked(ref Guid guid, long timestamp)
     {
         var components = this.GuidComponents;
-        if (components.CheckTimestamp(timestamp) is string message)
+        if (components.TrySetTimestamp(ref guid, timestamp) is string message)
         {
             throw new InvalidOperationException(message);
         }
-
-        components.SetTimestamp(ref guid, timestamp);
     }
 }

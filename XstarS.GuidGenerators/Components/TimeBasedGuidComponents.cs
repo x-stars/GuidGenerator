@@ -28,22 +28,25 @@ internal abstract class TimeBasedGuidComponents : GuidComponents, ITimeBasedGuid
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public sealed override string? CheckTimestamp(long timestamp)
+    public sealed override string? TrySetTimestamp(ref Guid guid, long timestamp)
     {
         var tsTicks = timestamp - this.EpochDateTime.Ticks;
-        return ((ulong)tsTicks <= (ulong)this.MaxTimestamp) ? null :
-            $"Timestamp for the current GUID version " +
-            $"must be between {this.EpochDateTime} and {this.GetMaxDateTime()}.";
+        if ((ulong)tsTicks > (ulong)this.MaxTimestamp)
+        {
+            return $"Timestamp for the current GUID version " +
+                   $"must be between {this.EpochDateTime} and {this.GetMaxDateTime()}.";
+        }
+
+        this.SetTimestamp(ref guid, timestamp);
+        return null;
     }
 
     public sealed override void SetTimestampChecked(ref Guid guid, long timestamp)
     {
-        if (this.CheckTimestamp(timestamp) is string message)
+        if (this.TrySetTimestamp(ref guid, timestamp) is string message)
         {
             throw new ArgumentOutOfRangeException(nameof(timestamp), message);
         }
-
-        this.SetTimestamp(ref guid, timestamp);
     }
 
     protected abstract long GetTimestampCore(ref Guid guid);
