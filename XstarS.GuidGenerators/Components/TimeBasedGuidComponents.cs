@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace XNetEx.Guids.Components;
 
@@ -26,14 +27,20 @@ internal abstract class TimeBasedGuidComponents : GuidComponents, ITimeBasedGuid
         this.SetTimestampCore(ref guid, tsTicks);
     }
 
-    public sealed override void SetTimestampChecked(ref Guid guid, long timestamp)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public sealed override string? CheckTimestamp(long timestamp)
     {
         var tsTicks = timestamp - this.EpochDateTime.Ticks;
-        if ((ulong)tsTicks > (ulong)this.MaxTimestamp)
+        return ((ulong)tsTicks <= (ulong)this.MaxTimestamp) ? null :
+            $"Timestamp for the current GUID version " +
+            $"must be between {this.EpochDateTime} and {this.GetMaxDateTime()}.";
+    }
+
+    public sealed override void SetTimestampChecked(ref Guid guid, long timestamp)
+    {
+        if (this.CheckTimestamp(timestamp) is string message)
         {
-            throw new ArgumentOutOfRangeException(nameof(timestamp),
-                $"Timestamp for the current GUID version " +
-                $"must be between {this.EpochDateTime} and {this.GetMaxDateTime()}.");
+            throw new ArgumentOutOfRangeException(nameof(timestamp), message);
         }
 
         this.SetTimestamp(ref guid, timestamp);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace XNetEx.Guids.Components;
 
@@ -28,13 +29,19 @@ internal abstract class TimeNodeBasedGuidComponents
         clkSeqHi_Var = (byte)(clkSeqHi_Var & 0xC0 | clkSeqHi);
     }
 
-    public override void SetClockSequenceChecked(ref Guid guid, short clockSeq)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public sealed override string? CheckClockSequence(short clockSeq)
     {
-        if ((ushort)clockSeq > (ushort)this.MaxClockSequence)
+        return ((ushort)clockSeq <= (ushort)this.MaxClockSequence) ? null :
+            $"Clock sequence for the current GUID version " +
+            $"must be between 0 and {this.MaxClockSequence}.";
+    }
+
+    public sealed override void SetClockSequenceChecked(ref Guid guid, short clockSeq)
+    {
+        if (this.CheckClockSequence(clockSeq) is string message)
         {
-            throw new ArgumentOutOfRangeException(nameof(clockSeq),
-                $"Clock sequence for the current GUID version " +
-                $"must be between 0 and {this.MaxClockSequence}.");
+            throw new ArgumentOutOfRangeException(nameof(clockSeq), message);
         }
 
         this.SetClockSequence(ref guid, clockSeq);

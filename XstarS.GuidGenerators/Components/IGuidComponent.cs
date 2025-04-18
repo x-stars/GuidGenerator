@@ -8,6 +8,8 @@ internal interface IGuidVariantComponent
 
     void SetVariant(ref Guid guid, GuidVariant variant);
 
+    string? CheckVariant(GuidVariant variant);
+
     void SetVariantChecked(ref Guid guid, GuidVariant variant);
 }
 
@@ -16,6 +18,8 @@ internal interface IGuidVersionComponent
     GuidVersion GetVersion(ref Guid guid);
 
     void SetVersion(ref Guid guid, GuidVersion version);
+
+    string? CheckVersion(GuidVersion version);
 
     void SetVersionChecked(ref Guid guid, GuidVersion version);
 }
@@ -55,6 +59,8 @@ internal interface IGuidTimestampComponent
 
     void SetTimestamp(ref Guid guid, long timestamp);
 
+    string? CheckTimestamp(long timestamp);
+
     void SetTimestampChecked(ref Guid guid, long timestamp);
 }
 
@@ -63,6 +69,8 @@ internal interface IGuidClockSequenceComponent
     short GetClockSequence(ref Guid guid);
 
     void SetClockSequence(ref Guid guid, short clockSeq);
+
+    string? CheckClockSequence(short clockSeq);
 
     void SetClockSequenceChecked(ref Guid guid, short clockSeq);
 }

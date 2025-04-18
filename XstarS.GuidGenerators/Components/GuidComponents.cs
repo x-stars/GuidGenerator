@@ -46,9 +46,15 @@ internal partial class GuidComponents : IGuidCommonComponents
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public string? CheckVariant(GuidVariant variant)
+    {
+        return (variant <= GuidVariant.Reserved) ? null : string.Empty;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SetVariantChecked(ref Guid guid, GuidVariant variant)
     {
-        if (variant > GuidVariant.Reserved)
+        if (this.CheckVariant(variant) is string message)
         {
             GuidComponents.ThrowArgumentOutOfRange(nameof(variant));
         }
@@ -73,9 +79,15 @@ internal partial class GuidComponents : IGuidCommonComponents
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public string? CheckVersion(GuidVersion version)
+    {
+        return (version <= GuidVersion.MaxValue) ? null : string.Empty;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SetVersionChecked(ref Guid guid, GuidVersion version)
     {
-        if (version > GuidVersion.MaxValue)
+        if (this.CheckVersion(version) is string message)
         {
             GuidComponents.ThrowArgumentOutOfRange(nameof(version));
         }
@@ -93,6 +105,11 @@ internal partial class GuidComponents : IGuidCommonComponents
         throw new NotSupportedException(GuidComponents.NotSupportedMessage);
     }
 
+    public virtual string? CheckTimestamp(long timestamp)
+    {
+        throw new NotSupportedException(GuidComponents.NotSupportedMessage);
+    }
+
     public virtual void SetTimestampChecked(ref Guid guid, long timestamp)
     {
         throw new NotSupportedException(GuidComponents.NotSupportedMessage);
@@ -104,6 +121,11 @@ internal partial class GuidComponents : IGuidCommonComponents
     }
 
     public virtual void SetClockSequence(ref Guid guid, short clockSeq)
+    {
+        throw new NotSupportedException(GuidComponents.NotSupportedMessage);
+    }
+
+    public virtual string? CheckClockSequence(short clockSeq)
     {
         throw new NotSupportedException(GuidComponents.NotSupportedMessage);
     }
