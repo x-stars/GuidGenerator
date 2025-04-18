@@ -5,9 +5,12 @@ namespace XNetEx.Guids.Components;
 internal abstract class TimeNodeBasedGuidComponents
     : TimeBasedGuidComponents, ITimeNodeBasedGuidComponents
 {
-    protected TimeNodeBasedGuidComponents()
-        : base(TimestampEpochs.Gregorian)
+    public readonly short MaxClockSequence;
+
+    protected TimeNodeBasedGuidComponents(short maxClockSeq = (1 << 14) - 1)
+        : base(TimestampEpochs.Gregorian, maxTimestamp: (1L << 60) - 1L)
     {
+        this.MaxClockSequence = maxClockSeq;
     }
 
     public override short GetClockSequence(ref Guid guid)
@@ -23,6 +26,18 @@ internal abstract class TimeNodeBasedGuidComponents
         var clkSeqHi = (byte)((clockSeq >> (1 * 8)) & ~0xC0);
         ref var clkSeqHi_Var = ref guid.ClkSeqHi_Var();
         clkSeqHi_Var = (byte)(clkSeqHi_Var & 0xC0 | clkSeqHi);
+    }
+
+    public override void SetClockSequenceChecked(ref Guid guid, short clockSeq)
+    {
+        if ((ushort)clockSeq > (ushort)this.MaxClockSequence)
+        {
+            throw new ArgumentOutOfRangeException(nameof(clockSeq),
+                $"Clock sequence for the current GUID version " +
+                $"must be between 0 and {this.MaxClockSequence}.");
+        }
+
+        this.SetClockSequence(ref guid, clockSeq);
     }
 
     public sealed override byte[] GetNodeId(ref Guid guid)

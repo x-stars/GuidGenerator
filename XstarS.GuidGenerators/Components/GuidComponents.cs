@@ -46,6 +46,17 @@ internal partial class GuidComponents : IGuidCommonComponents
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SetVariantChecked(ref Guid guid, GuidVariant variant)
+    {
+        if (variant > GuidVariant.Reserved)
+        {
+            GuidComponents.ThrowArgumentOutOfRange(nameof(variant));
+        }
+
+        this.SetVariant(ref guid, variant);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public GuidVersion GetVersion(ref Guid guid)
     {
         var shiftVer = (int)guid.TimeHi_Ver() & 0xF000;
@@ -61,6 +72,17 @@ internal partial class GuidComponents : IGuidCommonComponents
         timeHi_Ver = (ushort)(timeHi_Ver & ~0xF000 | shiftVer);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SetVersionChecked(ref Guid guid, GuidVersion version)
+    {
+        if (version > GuidVersion.MaxValue)
+        {
+            GuidComponents.ThrowArgumentOutOfRange(nameof(version));
+        }
+
+        this.SetVersion(ref guid, version);
+    }
+
     public virtual long GetTimestamp(ref Guid guid)
     {
         throw new NotSupportedException(GuidComponents.NotSupportedMessage);
@@ -71,12 +93,22 @@ internal partial class GuidComponents : IGuidCommonComponents
         throw new NotSupportedException(GuidComponents.NotSupportedMessage);
     }
 
+    public virtual void SetTimestampChecked(ref Guid guid, long timestamp)
+    {
+        throw new NotSupportedException(GuidComponents.NotSupportedMessage);
+    }
+
     public virtual short GetClockSequence(ref Guid guid)
     {
         throw new NotSupportedException(GuidComponents.NotSupportedMessage);
     }
 
     public virtual void SetClockSequence(ref Guid guid, short clockSeq)
+    {
+        throw new NotSupportedException(GuidComponents.NotSupportedMessage);
+    }
+
+    public virtual void SetClockSequenceChecked(ref Guid guid, short clockSeq)
     {
         throw new NotSupportedException(GuidComponents.NotSupportedMessage);
     }
@@ -122,5 +154,11 @@ internal partial class GuidComponents : IGuidCommonComponents
     public virtual void SetLocalId(ref Guid guid, int localId)
     {
         throw new NotSupportedException(GuidComponents.NotSupportedMessage);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowArgumentOutOfRange(string? paramName)
+    {
+        throw new ArgumentOutOfRangeException(paramName);
     }
 }

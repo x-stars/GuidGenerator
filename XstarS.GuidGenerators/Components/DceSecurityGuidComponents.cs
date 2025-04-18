@@ -5,7 +5,10 @@ namespace XNetEx.Guids.Components;
 internal abstract class DceSecurityGuidComponents
     : TimeNodeBasedGuidComponents, IDceSecurityGuidComponents
 {
-    protected DceSecurityGuidComponents() { }
+    protected DceSecurityGuidComponents()
+        : base(maxClockSeq: (1 << 6) - 1)
+    {
+    }
 
     public sealed override short GetClockSequence(ref Guid guid)
     {
