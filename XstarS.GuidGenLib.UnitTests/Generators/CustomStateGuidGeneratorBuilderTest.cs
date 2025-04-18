@@ -40,9 +40,9 @@ public class CustomStateGuidGeneratorBuilderTest
     [TestMethod]
     public void Version1_UseBackwardTimestampProvider_GetIncClockSeq()
     {
+        var startTime = DateTime.UtcNow;
         var guidGen = CustomStateGuidGeneratorBuilder.Version1
-            .UseTimestampProvider(() => new DateTime(
-                DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks, DateTimeKind.Utc))
+            .UseTimestampProvider(() => startTime - (DateTime.UtcNow - startTime))
             .ToGuidGenerator();
         var guid0 = guidGen.NewGuid();
         _ = guid0.TryGetClockSequence(out var clockSeq0);
@@ -102,7 +102,7 @@ public class CustomStateGuidGeneratorBuilderTest
             () => builder.UseTimestampProvider((Func<DateTimeOffset>)null!));
 #if NET8_0_OR_GREATER
         Assert.ThrowsException<ArgumentNullException>(
-            () => builder.UseTimeProvider((TimeProvider)null!));
+            () => builder.UseTimeProvider(null!));
 #endif
         Assert.ThrowsException<ArgumentOutOfRangeException>(
             () => builder.UseNodeIdSource((NodeIdSource)(-1)));
@@ -151,10 +151,11 @@ public class CustomStateGuidGeneratorBuilderTest
     [TestMethod]
     public void Version6_UseBackwardTimestampProvider_GetIncClockSeq()
     {
+        var startTime = DateTime.UtcNow;
         var guidGenV6R = CustomStateGuidGeneratorBuilder.Version6
             .UseNodeIdSource(NodeIdSource.NonVolatileRandom)
             .UseTimestampProvider(() => new DateTimeOffset(
-                DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks, TimeSpan.Zero))
+                startTime - (DateTime.UtcNow - startTime), TimeSpan.Zero))
             .ToGuidGenerator();
         var guid0 = guidGenV6R.NewGuid();
         _ = guid0.TryGetClockSequence(out var clockSeq0);
