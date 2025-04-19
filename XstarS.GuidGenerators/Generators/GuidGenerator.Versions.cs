@@ -38,7 +38,7 @@ partial class GuidGenerator
     /// Gets the <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 4.
     /// </summary>
     /// <returns>The <see cref="IGuidGenerator"/> instance of RFC 4122 UUID version 4.</returns>
-    public static IGuidGenerator Version4 => RandomizedGuidGenerator.Instance;
+    public static IGuidGenerator Version4 => RandomGuidGenerator.Instance;
 
     /// <summary>
     /// Gets the <see cref="INameBasedGuidGenerator"/> instance of RFC 4122 UUID version 5.
@@ -140,7 +140,7 @@ partial class GuidGenerator
         GuidVersion.Version1 => TimeBasedGuidGenerator.Instance,
         GuidVersion.Version2 => DceSecurityGuidGenerator.Instance,
         GuidVersion.Version3 => NameBasedGuidGenerator.MD5Hashing.Instance,
-        GuidVersion.Version4 => RandomizedGuidGenerator.Instance,
+        GuidVersion.Version4 => RandomGuidGenerator.Instance,
         GuidVersion.Version5 => NameBasedGuidGenerator.SHA1Hashing.Instance,
 #if !UUIDREV_DISABLE
         GuidVersion.Version6 => TimeBasedGuidGenerator.Sequential.Instance,

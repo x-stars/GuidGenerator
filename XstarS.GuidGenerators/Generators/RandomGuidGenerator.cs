@@ -4,25 +4,25 @@ using System.Runtime.CompilerServices;
 
 namespace XNetEx.Guids.Generators;
 
-internal sealed class RandomizedGuidGenerator : GuidGenerator, IGuidGenerator
+internal sealed class RandomGuidGenerator : GuidGenerator, IGuidGenerator
 {
-    private static volatile RandomizedGuidGenerator? Singleton;
+    private static volatile RandomGuidGenerator? Singleton;
 
-    private RandomizedGuidGenerator() { }
+    private RandomGuidGenerator() { }
 
-    internal static RandomizedGuidGenerator Instance
+    internal static RandomGuidGenerator Instance
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
-            static RandomizedGuidGenerator Initialize()
+            static RandomGuidGenerator Initialize()
             {
-                return RandomizedGuidGenerator.Singleton ??=
-                    new RandomizedGuidGenerator();
+                return RandomGuidGenerator.Singleton ??=
+                    new RandomGuidGenerator();
             }
 
-            return RandomizedGuidGenerator.Singleton ?? Initialize();
+            return RandomGuidGenerator.Singleton ?? Initialize();
         }
     }
 
