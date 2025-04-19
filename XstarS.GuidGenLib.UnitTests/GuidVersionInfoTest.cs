@@ -33,6 +33,7 @@ public class GuidVersionInfoTest
         Assert.IsTrue(version.ContainsClockSequence());
         Assert.IsTrue(version.ContainsNodeId());
         Assert.IsFalse(version.ContainsLocalId());
+        Assert.AreEqual(version, GuidVersion.TimeBased);
     }
 
     [TestMethod]
@@ -48,6 +49,7 @@ public class GuidVersionInfoTest
         Assert.IsTrue(version.ContainsClockSequence());
         Assert.IsTrue(version.ContainsNodeId());
         Assert.IsTrue(version.ContainsLocalId());
+        Assert.AreEqual(version, GuidVersion.DceSecurity);
     }
 
     [TestMethod]
@@ -63,6 +65,7 @@ public class GuidVersionInfoTest
         Assert.IsFalse(version.ContainsClockSequence());
         Assert.IsFalse(version.ContainsNodeId());
         Assert.IsFalse(version.ContainsLocalId());
+        Assert.AreEqual(version, GuidVersion.NameBasedMD5);
     }
 
     [TestMethod]
@@ -78,6 +81,7 @@ public class GuidVersionInfoTest
         Assert.IsFalse(version.ContainsClockSequence());
         Assert.IsFalse(version.ContainsNodeId());
         Assert.IsFalse(version.ContainsLocalId());
+        Assert.AreEqual(version, GuidVersion.Random);
     }
 
     [TestMethod]
@@ -93,6 +97,7 @@ public class GuidVersionInfoTest
         Assert.IsFalse(version.ContainsClockSequence());
         Assert.IsFalse(version.ContainsNodeId());
         Assert.IsFalse(version.ContainsLocalId());
+        Assert.AreEqual(version, GuidVersion.NameBasedSHA1);
     }
 
 #if !UUIDREV_DISABLE
@@ -107,6 +112,7 @@ public class GuidVersionInfoTest
         Assert.IsTrue(version.ContainsClockSequence());
         Assert.IsTrue(version.ContainsNodeId());
         Assert.IsFalse(version.ContainsLocalId());
+        Assert.AreEqual(version, GuidVersion.TimeBasedReordered);
     }
 
     [TestMethod]
@@ -120,6 +126,7 @@ public class GuidVersionInfoTest
         Assert.IsFalse(version.ContainsClockSequence());
         Assert.IsFalse(version.ContainsNodeId());
         Assert.IsFalse(version.ContainsLocalId());
+        Assert.AreEqual(version, GuidVersion.UnixTimeBased);
     }
 
     [TestMethod]
@@ -133,6 +140,7 @@ public class GuidVersionInfoTest
         Assert.IsFalse(version.ContainsClockSequence());
         Assert.IsFalse(version.ContainsNodeId());
         Assert.IsFalse(version.ContainsLocalId());
+        Assert.AreEqual(version, GuidVersion.Custom);
     }
 
     [TestMethod]
