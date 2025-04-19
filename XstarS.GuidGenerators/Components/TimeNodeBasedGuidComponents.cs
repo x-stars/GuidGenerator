@@ -34,8 +34,11 @@ internal abstract class TimeNodeBasedGuidComponents
     {
         if ((ushort)clockSeq > (ushort)this.MaxClockSequence)
         {
-            return $"Clock sequence for the current GUID version " +
-                   $"must be between 0 and {this.MaxClockSequence}.";
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            string GetErrorMessage() =>
+                $"Clock sequence for the current GUID version " +
+                $"must be between 0 and {this.MaxClockSequence}.";
+            return GetErrorMessage();
         }
 
         this.SetClockSequence(ref guid, clockSeq);
@@ -44,9 +47,9 @@ internal abstract class TimeNodeBasedGuidComponents
 
     public sealed override void SetClockSequenceChecked(ref Guid guid, short clockSeq)
     {
-        if (this.TrySetClockSequence(ref guid, clockSeq) is string message)
+        if (this.TrySetClockSequence(ref guid, clockSeq) is string errorMessage)
         {
-            throw new ArgumentOutOfRangeException(nameof(clockSeq), message);
+            throw new ArgumentOutOfRangeException(nameof(clockSeq), errorMessage);
         }
     }
 

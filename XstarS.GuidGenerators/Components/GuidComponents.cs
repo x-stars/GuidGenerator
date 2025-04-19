@@ -85,7 +85,7 @@ internal partial class GuidComponents : IGuidCommonComponents
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public string? TrySetVersion(ref Guid guid, GuidVersion version)
     {
-        if (version > GuidVersion.MaxValue)
+        if (version > (GuidVersion)/*MaxValue*/15)
         {
             return string.Empty;
         }

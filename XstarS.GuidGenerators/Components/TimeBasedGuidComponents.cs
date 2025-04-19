@@ -33,19 +33,22 @@ internal abstract class TimeBasedGuidComponents : GuidComponents, ITimeBasedGuid
         var tsTicks = timestamp - this.EpochDateTime.Ticks;
         if ((ulong)tsTicks > (ulong)this.MaxTimestamp)
         {
-            return $"Timestamp for the current GUID version " +
-                   $"must be between {this.EpochDateTime} and {this.GetMaxDateTime()}.";
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            string GetErrorMessage() =>
+                $"Timestamp for the current GUID version " +
+                $"must be between {this.EpochDateTime} and {this.GetMaxDateTime()}.";
+            return GetErrorMessage();
         }
 
-        this.SetTimestamp(ref guid, timestamp);
+        this.SetTimestampCore(ref guid, tsTicks);
         return null;
     }
 
     public sealed override void SetTimestampChecked(ref Guid guid, long timestamp)
     {
-        if (this.TrySetTimestamp(ref guid, timestamp) is string message)
+        if (this.TrySetTimestamp(ref guid, timestamp) is string errorMessage)
         {
-            throw new ArgumentOutOfRangeException(nameof(timestamp), message);
+            throw new ArgumentOutOfRangeException(nameof(timestamp), errorMessage);
         }
     }
 
