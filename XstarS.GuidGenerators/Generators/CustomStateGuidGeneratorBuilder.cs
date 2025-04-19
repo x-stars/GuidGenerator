@@ -267,4 +267,13 @@ public readonly struct CustomStateGuidGeneratorBuilder
             _ => throw new InvalidOperationException("This instance is not initialized correctly."),
         };
     }
+
+    /// <summary>
+    /// Returns a string representation of the current
+    /// <see cref="CustomStateGuidGeneratorBuilder"/> instance.
+    /// </summary>
+    /// <returns>A string representation of the current
+    /// <see cref="CustomStateGuidGeneratorBuilder"/> instance.</returns>
+    public override string ToString() =>
+        $"{nameof(CustomStateGuidGeneratorBuilder)} {{ {nameof(this.Version)} = {this.Version} }}";
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using XNetEx.Guids.Components;
 
@@ -168,6 +169,7 @@ public abstract partial class GuidGenerator : IGuidGenerator, IGuidGeneratorInfo
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private protected void FillVersionFieldUnchecked(ref Guid guid)
     {
+        Debug.Assert(this.Version <= (GuidVersion)/*MaxValue*/15);
         GuidComponents.Common.SetVersion(ref guid, this.Version);
     }
 
@@ -179,6 +181,7 @@ public abstract partial class GuidGenerator : IGuidGenerator, IGuidGeneratorInfo
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private protected void FillVariantFieldUnchecked(ref Guid guid)
     {
+        Debug.Assert(this.Variant <= GuidVariant.Reserved);
         GuidComponents.Common.SetVariant(ref guid, this.Variant);
     }
 

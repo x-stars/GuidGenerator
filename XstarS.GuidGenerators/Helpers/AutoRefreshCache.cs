@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace XNetEx.Threading;
 
+[DebuggerDisplay(
+    $"{nameof(this.IsValueValid)} = {{{nameof(this.IsValueValid)}}}, " +
+    $"{nameof(this.Value)} = {{{nameof(this.ValueForDebugDisplay)}}}")]
 internal sealed class AutoRefreshCache<T> : IDisposable
 {
     private readonly Func<T> RefreshFunc;
@@ -46,7 +50,13 @@ internal sealed class AutoRefreshCache<T> : IDisposable
         this.IsDisposed = false;
     }
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public T Value => this.GetOrRefreshValue();
+
+    public bool IsValueValid => this.CachedValueBox is not null;
+
+    private T? ValueForDebugDisplay =>
+        (this.CachedValueBox is { Value: var value }) ? value : default(T?);
 
     public void Dispose()
     {
