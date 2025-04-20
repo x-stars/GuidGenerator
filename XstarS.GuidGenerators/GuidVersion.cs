@@ -16,34 +16,74 @@ public enum GuidVersion : byte
     /// </summary>
     Version1 = 1,
     /// <summary>
+    /// Represents RFC 4122 UUID version 1, the time-based version.
+    /// This is an alias for <see cref="GuidVersion.Version1"/>.
+    /// </summary>
+    TimeBased = Version1,
+    /// <summary>
     /// Represents RFC 4122 UUID version 2, DCE Security version with embedded UIDs.
     /// </summary>
     Version2 = 2,
+    /// <summary>
+    /// Represents RFC 4122 UUID version 2, DCE Security version with embedded UIDs.
+    /// This is an alias for <see cref="GuidVersion.Version2"/>.
+    /// </summary>
+    DceSecurity = Version2,
     /// <summary>
     /// Represents RFC 4122 UUID version 3, the name-based version using the MD5 hashing.
     /// </summary>
     Version3 = 3,
     /// <summary>
+    /// Represents RFC 4122 UUID version 3, the name-based version using the MD5 hashing.
+    /// This is an alias for <see cref="GuidVersion.Version3"/>.
+    /// </summary>
+    NameBasedMd5 = Version3,
+    /// <summary>
     /// Represents RFC 4122 UUID version 4, the randomly generated version.
     /// </summary>
     Version4 = 4,
     /// <summary>
+    /// Represents RFC 4122 UUID version 4, the randomly generated version.
+    /// This is an alias for <see cref="GuidVersion.Version4"/>.
+    /// </summary>
+    Random = Version4,
+    /// <summary>
     /// Represents RFC 4122 UUID version 5, the name-based version using the SHA-1 hashing.
     /// </summary>
     Version5 = 5,
+    /// <summary>
+    /// Represents RFC 4122 UUID version 5, the name-based version using the SHA-1 hashing.
+    /// This is an alias for <see cref="GuidVersion.Version5"/>.
+    /// </summary>
+    NameBasedSha1 = Version5,
 #if !UUIDREV_DISABLE
     /// <summary>
     /// Represents RFC 9562 UUID version 6, the reordered time-based version.
     /// </summary>
     Version6 = 6,
     /// <summary>
+    /// Represents RFC 9562 UUID version 6, the reordered time-based version.
+    /// This is an alias for <see cref="GuidVersion.Version6"/>.
+    /// </summary>
+    TimeBasedReordered = Version6,
+    /// <summary>
     /// Represents RFC 9562 UUID version 7, the Unix Epoch time-based version.
     /// </summary>
     Version7 = 7,
     /// <summary>
+    /// Represents RFC 9562 UUID version 7, the Unix Epoch time-based version.
+    /// This is an alias for <see cref="GuidVersion.Version7"/>.
+    /// </summary>
+    UnixTimeBased = Version7,
+    /// <summary>
     /// Represents RFC 9562 UUID version 8, reserved for custom UUID formats.
     /// </summary>
     Version8 = 8,
+    /// <summary>
+    /// Represents RFC 9562 UUID version 8, reserved for custom UUID formats.
+    /// /// This is an alias for <see cref="GuidVersion.Version8"/>.
+    /// </summary>
+    Custom = Version8,
     /// <summary>
     /// Represents the largest possible value of <see cref="GuidVersion"/>.
     /// </summary>

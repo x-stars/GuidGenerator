@@ -55,8 +55,8 @@ partial class NameBasedGuidGenerator
 #endif
 
         var guid = Uuid.FromBytes(hash[..16]);
-        this.FillVersionField(ref guid);
-        this.FillVariantField(ref guid);
+        this.FillVersionFieldUnchecked(ref guid);
+        this.FillVariantFieldUnchecked(ref guid);
         return guid;
     }
 #else
@@ -112,8 +112,8 @@ partial class NameBasedGuidGenerator
             uuid = *(Guid*)pHash;
         }
         var guid = uuid.ToBigEndian();
-        this.FillVersionField(ref guid);
-        this.FillVariantField(ref guid);
+        this.FillVersionFieldUnchecked(ref guid);
+        this.FillVariantFieldUnchecked(ref guid);
         return guid;
     }
 #endif

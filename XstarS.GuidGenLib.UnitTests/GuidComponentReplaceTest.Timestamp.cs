@@ -38,19 +38,17 @@ partial class GuidComponentReplaceTest
 #endif
 
     [TestMethod]
-    public void ReplaceTimestamp_DateTimeMinMaxValue_GetOverflowTimestamp()
+    public void ReplaceTimestamp_DateTimeMinMaxValue_CatchArgumentOutOfRangeException()
     {
         var timestamp0 = DateTime.MinValue.ToUniversalTime();
         var original0 = Guid.Parse("00000000-0000-1000-80b4-00c04fd430c8");
-        var guid0 = original0.ReplaceTimestamp(timestamp0);
-        _ = guid0.TryGetTimestamp(out var guidTimestamp0);
-        Assert.AreNotEqual(timestamp0, guidTimestamp0);
+        Assert.ThrowsException<ArgumentOutOfRangeException>(
+            () => original0.ReplaceTimestamp(timestamp0));
 #if !UUIDREV_DISABLE
         var timestamp1 = DateTime.MaxValue.ToUniversalTime();
         var original1 = Guid.Parse("00000000-0000-6000-80b4-00c04fd430c8");
-        var guid1 = original1.ReplaceTimestamp(timestamp1);
-        _ = guid1.TryGetTimestamp(out var guidTimestamp1);
-        Assert.AreNotEqual(timestamp1, guidTimestamp1);
+        Assert.ThrowsException<ArgumentOutOfRangeException>(
+            () => original1.ReplaceTimestamp(timestamp1));
 #endif
     }
 
@@ -66,13 +64,12 @@ partial class GuidComponentReplaceTest
     }
 
     [TestMethod]
-    public void ReplaceTimestamp_Version7DateTimeMinValue_GetOverflowTimestamp()
+    public void ReplaceTimestamp_Version7DateTimeMinValue_CatchArgumentOutOfRangeException()
     {
         var timestamp = DateTime.MinValue.ToUniversalTime();
         var original = Guid.Parse("00000000-0000-7cc3-98c4-dc0c0c07398f");
-        var guid = original.ReplaceTimestamp(timestamp);
-        _ = guid.TryGetTimestamp(out var guidTimestamp);
-        Assert.AreNotEqual(timestamp, guidTimestamp);
+        Assert.ThrowsException<ArgumentOutOfRangeException>(
+            () => original.ReplaceTimestamp(timestamp));
     }
 #endif
 
@@ -131,18 +128,16 @@ partial class GuidComponentReplaceTest
 #endif
 
     [TestMethod]
-    public void ReplaceClockSequence_Int16MinMaxValue_GetOverflowClockSequence()
+    public void ReplaceClockSequence_Int16MinMaxValue_CatchArgumentOutOfRangeException()
     {
         var clockSeq0 = short.MinValue;
         var original0 = Guid.Parse("6ba7b810-9dad-11d1-8000-00c04fd430c8");
-        var guid0 = original0.ReplaceClockSequence(clockSeq0);
-        _ = guid0.TryGetClockSequence(out var guidClockSeq0);
-        Assert.AreNotEqual(clockSeq0, guidClockSeq0);
+        Assert.ThrowsException<ArgumentOutOfRangeException>(
+            () => original0.ReplaceClockSequence(clockSeq0));
         var clockSeq1 = short.MaxValue;
         var original1 = Guid.Parse("6ba7b810-9dad-11d1-8000-00c04fd430c8");
-        var guid1 = original1.ReplaceClockSequence(clockSeq1);
-        _ = guid1.TryGetClockSequence(out var guidClockSeq1);
-        Assert.AreNotEqual(clockSeq1, guidClockSeq1);
+        Assert.ThrowsException<ArgumentOutOfRangeException>(
+            () => original1.ReplaceClockSequence(clockSeq1));
     }
 
     [TestMethod]

@@ -1226,6 +1226,8 @@ module Guid =
     /// <returns>A new <see cref="T:System.Guid"/> instance that is
     /// equivalent to this <see cref="T:System.Guid"/> except that
     /// the version replaced with <paramref name="variant"/>.</returns>
+    /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="variant"/>
+    /// is not a valid <see cref="T:XNetEx.Guids.GuidVariant"/> value.</exception>
     [<CompiledName("ReplaceVariant")>]
     let replaceVariant (variant: Variant) (guid: Guid) : Guid =
         guid.ReplaceVariant(variant)
@@ -1239,6 +1241,8 @@ module Guid =
     /// <returns>A new <see cref="T:System.Guid"/> instance that is
     /// equivalent to the <see cref="T:System.Guid"/> except that
     /// the version replaced with <paramref name="version"/>.</returns>
+    /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="version"/>
+    /// is not a valid <see cref="T:XNetEx.Guids.GuidVersion"/> value.</exception>
     [<CompiledName("ReplaceVersion")>]
     let replaceVersion (version: Version) (guid: Guid) : Guid =
         guid.ReplaceVersion(version)
@@ -1252,6 +1256,8 @@ module Guid =
     /// <returns>A new <see cref="T:System.Guid"/> instance that is
     /// equivalent to the <see cref="T:System.Guid"/> except that
     /// the version replaced with <paramref name="version"/>.</returns>
+    /// <exception cref="T:System.ArgumentOutOfRangeException">
+    /// <paramref name="version"/> is not a valid GUID version number.</exception>
     [<CompiledName("ReplaceVersionNumber")>]
     let replaceVersionNum (version: byte) (guid: Guid) : Guid =
         guid.ReplaceVersion(version)
@@ -1266,6 +1272,8 @@ module Guid =
     /// equivalent to the <see cref="T:System.Guid"/> except that
     /// the timestamp replaced with <paramref name="time"/>, or the original value
     /// if the <see cref="T:System.Guid"/> is not time-based.</returns>
+    /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="time"/>
+    /// is out of the range that <paramref name="guid"/> can represent.</exception>
     [<CompiledName("ReplaceTimestamp")>]
     let replaceTime (time: DateTime) (guid: Guid) : Guid =
         guid.ReplaceTimestamp(time)
@@ -1280,6 +1288,8 @@ module Guid =
     /// equivalent to the <see cref="T:System.Guid"/> except that
     /// the timestamp replaced with <paramref name="time"/>, or the original value
     /// if the <see cref="T:System.Guid"/> is not time-based.</returns>
+    /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="time"/>
+    /// is out of the range that <paramref name="guid"/> can represent.</exception>
     [<CompiledName("ReplaceTimestampByOffset")>]
     let replaceTimeOffset (time: DateTimeOffset) (guid: Guid) : Guid =
         guid.ReplaceTimestamp(time)
@@ -1294,6 +1304,8 @@ module Guid =
     /// equivalent to the <see cref="T:System.Guid"/> except that
     /// the clock sequence replaced with <paramref name="clockSeq"/>, or the original value
     /// if the <see cref="T:System.Guid"/> does not contain a clock sequence.</returns>
+    /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="clockSeq"/>
+    /// is out of the range that <paramref name="guid"/> can represent.</exception>
     [<CompiledName("ReplaceClockSequence")>]
     let replaceClockSeq (clockSeq: int16) (guid: Guid) : Guid =
         guid.ReplaceClockSequence(clockSeq)
@@ -1515,6 +1527,8 @@ module Guid =
         /// <param name="initClockSeq">The custom initial clock sequence to use.</param>
         /// <returns>A new <see cref="T:XNetEx.Guids.Generators.CustomStateGuidGeneratorBuilder"/> instance
         /// of the current state and using <paramref name="initClockSeq"/>.</returns>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">
+        /// <paramref name="initClockSeq"/> is negative or greater than 0x3FFF.</exception>
         [<CustomOperation("clockSeq")>]
         member _.UseClockSequence(builder: Generator.CustomStateBuilder, initClockSeq: int16)
             : Generator.CustomStateBuilder =

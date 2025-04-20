@@ -159,8 +159,16 @@ public readonly struct CustomStateGuidGeneratorBuilder
     /// <param name="initClockSeq">The initial clock sequence to use.</param>
     /// <returns>A new <see cref="CustomStateGuidGeneratorBuilder"/> instance
     /// of the current state and using <paramref name="initClockSeq"/>.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="initClockSeq"/> is negative or greater than 0x3FFF.</exception>
     public CustomStateGuidGeneratorBuilder UseClockSequence(short initClockSeq)
     {
+        if ((ushort)initClockSeq > 0x3FFF)
+        {
+            throw new ArgumentOutOfRangeException(nameof(initClockSeq),
+                "Clock sequence for Guid must be between 0 and 0x3FFF.");
+        }
+
         return this with { ClockSequence = initClockSeq };
     }
 
@@ -242,6 +250,10 @@ public readonly struct CustomStateGuidGeneratorBuilder
         {
             throw new InvalidOperationException("This instance is not initialized correctly.");
         }
+        if ((this.ClockSequence is short clockSeqValue) && ((ushort)clockSeqValue > 0x3FFF))
+        {
+            throw new InvalidOperationException("This instance is not initialized correctly.");
+        }
 
         return this.Version switch
         {
@@ -255,4 +267,13 @@ public readonly struct CustomStateGuidGeneratorBuilder
             _ => throw new InvalidOperationException("This instance is not initialized correctly."),
         };
     }
+
+    /// <summary>
+    /// Returns a string representation of the current
+    /// <see cref="CustomStateGuidGeneratorBuilder"/> instance.
+    /// </summary>
+    /// <returns>A string representation of the current
+    /// <see cref="CustomStateGuidGeneratorBuilder"/> instance.</returns>
+    public override string ToString() =>
+        $"{nameof(CustomStateGuidGeneratorBuilder)} {{ {nameof(this.Version)} = {this.Version} }}";
 }

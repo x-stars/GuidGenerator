@@ -73,10 +73,9 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
             var counter = this.ClockResetCounter;
             if (counter.TryGetSequence(tsNoClock, clock, initSeq, out var sequence))
             {
-                var components = this.GuidComponents;
-                components.SetTimestamp(ref guid, timestamp);
+                this.FillTimeFieldsChecked(ref guid, timestamp);
                 this.FillMonotonicityFields(ref guid, clock, sequence);
-                this.FillVersionField(ref guid);
+                this.FillVersionFieldUnchecked(ref guid);
                 Debug.Assert(guid.GetVariant() == this.Variant);
                 return guid;
             }
@@ -90,6 +89,16 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         var tsSubMs = timestamp % TimeSpan.TicksPerMillisecond;
         clock = (short)((tsSubMs << 12) / TimeSpan.TicksPerMillisecond);
         return timestamp / TimeSpan.TicksPerMillisecond;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void FillTimeFieldsChecked(ref Guid guid, long timestamp)
+    {
+        var components = this.GuidComponents;
+        if (components.TrySetTimestamp(ref guid, timestamp) is string errorMessage)
+        {
+            throw new InvalidOperationException(errorMessage);
+        }
     }
 
     private void FillMonotonicityFields(ref Guid guid, short clock, short sequence)
