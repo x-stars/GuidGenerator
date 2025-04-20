@@ -81,7 +81,7 @@ public enum GuidVersion : byte
     Version8 = 8,
     /// <summary>
     /// Represents RFC 9562 UUID version 8, reserved for custom UUID formats.
-    /// /// This is an alias for <see cref="GuidVersion.Version8"/>.
+    /// This is an alias for <see cref="GuidVersion.Version8"/>.
     /// </summary>
     Custom = Version8,
     /// <summary>
