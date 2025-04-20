@@ -65,7 +65,7 @@ public class GuidVersionInfoTest
         Assert.IsFalse(version.ContainsClockSequence());
         Assert.IsFalse(version.ContainsNodeId());
         Assert.IsFalse(version.ContainsLocalId());
-        Assert.AreEqual(version, GuidVersion.NameBasedMD5);
+        Assert.AreEqual(version, GuidVersion.NameBasedMd5);
     }
 
     [TestMethod]
@@ -97,7 +97,7 @@ public class GuidVersionInfoTest
         Assert.IsFalse(version.ContainsClockSequence());
         Assert.IsFalse(version.ContainsNodeId());
         Assert.IsFalse(version.ContainsLocalId());
-        Assert.AreEqual(version, GuidVersion.NameBasedSHA1);
+        Assert.AreEqual(version, GuidVersion.NameBasedSha1);
     }
 
 #if !UUIDREV_DISABLE

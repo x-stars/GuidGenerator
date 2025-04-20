@@ -37,7 +37,7 @@ public enum GuidVersion : byte
     /// Represents RFC 4122 UUID version 3, the name-based version using the MD5 hashing.
     /// This is an alias for <see cref="GuidVersion.Version3"/>.
     /// </summary>
-    NameBasedMD5 = Version3,
+    NameBasedMd5 = Version3,
     /// <summary>
     /// Represents RFC 4122 UUID version 4, the randomly generated version.
     /// </summary>
@@ -55,7 +55,7 @@ public enum GuidVersion : byte
     /// Represents RFC 4122 UUID version 5, the name-based version using the SHA-1 hashing.
     /// This is an alias for <see cref="GuidVersion.Version5"/>.
     /// </summary>
-    NameBasedSHA1 = Version5,
+    NameBasedSha1 = Version5,
 #if !UUIDREV_DISABLE
     /// <summary>
     /// Represents RFC 9562 UUID version 6, the reordered time-based version.
