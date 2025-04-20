@@ -88,6 +88,10 @@ public partial class GuidComponentTest
     {
         var guid = Guid.Parse("768a7b1b-ae51-5c0a-bc9d-a85a343f2c24");
         Assert.AreEqual(GuidVariant.Rfc4122, guid.GetVariant());
+#if !UUIDREV_DISABLE
+        Assert.AreEqual(GuidVariant.Rfc9562, guid.GetVariant());
+#endif
+        Assert.AreEqual(GuidVariant.OsfDce, guid.GetVariant());
     }
 
     [TestMethod]

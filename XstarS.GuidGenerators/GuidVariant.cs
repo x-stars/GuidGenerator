@@ -11,16 +11,22 @@ public enum GuidVariant : byte
     /// Reserved for NCS UUID backward compatibility.
     /// </summary>
     Ncs = 0,
-#if !UUIDREV_DISABLE
-    /// <summary>
-    /// Represents the variant specified in RFC 4122 and RFC 9562.
-    /// </summary>
-#else
     /// <summary>
     /// Represents the variant specified in RFC 4122.
     /// </summary>
-#endif
     Rfc4122 = 1,
+#if !UUIDREV_DISABLE
+    /// <summary>
+    /// Represents the variant specified in RFC 9562.
+    /// This is an alias for <see cref="GuidVariant.Rfc4122"/>.
+    /// </summary>
+    Rfc9562 = Rfc4122,
+#endif
+    /// <summary>
+    /// Represents the variant specified in OSF DCE 1.1.
+    /// This is an alias for <see cref="GuidVariant.Rfc4122"/>.
+    /// </summary>
+    OsfDce = Rfc4122,
     /// <summary>
     /// Represents the variant of Microsoft legacy GUIDs.
     /// </summary>
