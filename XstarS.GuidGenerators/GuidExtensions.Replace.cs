@@ -12,6 +12,8 @@ static partial class GuidExtensions
     /// <param name="version">The version to use as replacement.</param>
     /// <returns>A new <see cref="Guid"/> instance that is equivalent to the current <see cref="Guid"/>
     /// except that the version replaced with <paramref name="version"/>.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="version"/> is not a valid GUID version number.</exception>
     public static Guid ReplaceVersion(this Guid guid, byte version)
     {
         return guid.ReplaceVersion((GuidVersion)version);
@@ -24,11 +26,13 @@ static partial class GuidExtensions
     /// <param name="version">The version to use as replacement.</param>
     /// <returns>A new <see cref="Guid"/> instance that is equivalent to the current <see cref="Guid"/>
     /// except that the version replaced with <paramref name="version"/>.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="version"/> is not a valid <see cref="GuidVersion"/> value.</exception>
     public static Guid ReplaceVersion(this Guid guid, GuidVersion version)
     {
         var result = guid;
         var components = GuidComponents.Common;
-        components.SetVersion(ref result, version);
+        components.SetVersionChecked(ref result, version);
         return result;
     }
 
@@ -39,11 +43,13 @@ static partial class GuidExtensions
     /// <param name="variant">The variant to use as replacement.</param>
     /// <returns>A new <see cref="Guid"/> instance that is equivalent to the current <see cref="Guid"/>
     /// except that the variant replaced with <paramref name="variant"/>.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="variant"/> is not a valid <see cref="GuidVariant"/> value.</exception>
     public static Guid ReplaceVariant(this Guid guid, GuidVariant variant)
     {
         var result = guid;
         var components = GuidComponents.Common;
-        components.SetVariant(ref result, variant);
+        components.SetVariantChecked(ref result, variant);
         return result;
     }
 
@@ -56,6 +62,8 @@ static partial class GuidExtensions
     /// <returns>A new <see cref="Guid"/> instance that is equivalent to the current <see cref="Guid"/>
     /// except that the timestamp replaced with <paramref name="timestamp"/>,
     /// or the original value if the <see cref="Guid"/> is not time-based.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="timestamp"/> is out of the range that <paramref name="guid"/> can represent.</exception>
     public static Guid ReplaceTimestamp(this Guid guid, DateTime timestamp)
     {
         if (!guid.GetRfc4122Version().IsTimeBased())
@@ -67,7 +75,7 @@ static partial class GuidExtensions
         var version = guid.GetVersion();
         var components = GuidComponents.OfVersion(version);
         var tsTicks = timestamp.ToUniversalTime().Ticks;
-        components.SetTimestamp(ref result, tsTicks);
+        components.SetTimestampChecked(ref result, tsTicks);
         return result;
     }
 
@@ -80,6 +88,8 @@ static partial class GuidExtensions
     /// <returns>A new <see cref="Guid"/> instance that is equivalent to the current <see cref="Guid"/>
     /// except that the timestamp replaced with <paramref name="timestamp"/>,
     /// or the original value if the <see cref="Guid"/> is not time-based.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="timestamp"/> is out of the range that <paramref name="guid"/> can represent.</exception>
     public static Guid ReplaceTimestamp(this Guid guid, DateTimeOffset timestamp)
     {
         return guid.ReplaceTimestamp(timestamp.UtcDateTime);
@@ -94,6 +104,8 @@ static partial class GuidExtensions
     /// <returns>A new <see cref="Guid"/> instance that is equivalent to the current <see cref="Guid"/>
     /// except that the clock sequence replaced with <paramref name="clockSeq"/>,
     /// or the original value if the <see cref="Guid"/> does not contain a clock sequence.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="clockSeq"/> is out of the range that <paramref name="guid"/> can represent.</exception>
     public static Guid ReplaceClockSequence(this Guid guid, short clockSeq)
     {
         if (!guid.GetRfc4122Version().ContainsClockSequence())
@@ -104,7 +116,7 @@ static partial class GuidExtensions
         var result = guid;
         var version = guid.GetVersion();
         var components = GuidComponents.OfVersion(version);
-        components.SetClockSequence(ref result, clockSeq);
+        components.SetClockSequenceChecked(ref result, clockSeq);
         return result;
     }
 

@@ -33,7 +33,7 @@ partial class CustomGuidGenerator
         {
             var guid = Guid.NewGuid();
             this.FillTimestampFields(ref guid);
-            this.FillVersionField(ref guid);
+            this.FillVersionFieldUnchecked(ref guid);
             Debug.Assert(guid.GetVariant() == this.Variant);
             return guid;
         }

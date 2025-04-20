@@ -20,6 +20,11 @@ internal static class Program
             Console.Error.WriteLine(ex.Message);
             return 2;
         }
+        catch (InvalidOperationException ex)
+        {
+            Console.Error.WriteLine(ex.Message);
+            return 3;
+        }
     }
 
     private static void ConfigureStateStorage()

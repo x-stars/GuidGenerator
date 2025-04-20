@@ -31,6 +31,16 @@ public partial class GuidComponentReplaceTest
 #endif
 
     [TestMethod]
+    public void ReplaceVersion_InvalidVersion_CatchArgumentOutOfRangeException()
+    {
+        foreach (var version in 16..byte.MaxValue)
+        {
+            Assert.ThrowsException<ArgumentOutOfRangeException>(
+                () => Guid.Empty.ReplaceVersion((GuidVersion)version));
+        }
+    }
+
+    [TestMethod]
     public void ReplaceVersion_GuidNewGuid_GetGuidWithInputVersionNumber()
     {
         var versions = Array.ConvertAll(
@@ -66,6 +76,16 @@ public partial class GuidComponentReplaceTest
         }
     }
 #endif
+
+    [TestMethod]
+    public void ReplaceVariant_InvalidVariant_CatchArgumentOutOfRangeException()
+    {
+        foreach (var variant in 4..byte.MaxValue)
+        {
+            Assert.ThrowsException<ArgumentOutOfRangeException>(
+                () => Guid.Empty.ReplaceVariant((GuidVariant)variant));
+        }
+    }
 
     [TestMethod]
     public void ReplaceDomainAndLocalId_Version2Guid_GetInputDomainAndLocalId()

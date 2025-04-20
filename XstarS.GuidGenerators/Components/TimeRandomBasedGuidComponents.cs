@@ -6,8 +6,9 @@ namespace XNetEx.Guids.Components;
 internal abstract class TimeRandomBasedGuidComponents
     : TimeBasedGuidComponents, ITimeRandomBasedGuidComponents
 {
-    protected TimeRandomBasedGuidComponents()
-        : base(TimestampEpochs.UnixTime)
+    protected TimeRandomBasedGuidComponents() : base(
+        TimestampEpochs.UnixTime,
+        maxTimestamp: ((1L << 48) - 1L) * TimeSpan.TicksPerMillisecond)
     {
     }
 

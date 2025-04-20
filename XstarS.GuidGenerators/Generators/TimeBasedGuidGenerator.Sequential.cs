@@ -109,7 +109,7 @@ partial class TimeBasedGuidGenerator
                     var newGuid = Guid.NewGuid();
                     result.DataLow() = newGuid.DataLow();
                     result.NodeId(0) |= 0x01;
-                    this.FillVersionField(ref result);
+                    this.FillVersionFieldUnchecked(ref result);
                     Debug.Assert(result.GetVariant() == this.Variant);
                     return true;
                 }
@@ -124,8 +124,7 @@ partial class TimeBasedGuidGenerator
                 var refreshed = state.Refresh(
                     timestamp, nodeId, out var clockSeq);
                 if (!refreshed) { return false; }
-                var components = this.GuidComponents;
-                components.SetTimestamp(ref guid, timestamp);
+                this.FillTimeFieldsChecked(ref guid, timestamp);
                 return true;
             }
         }

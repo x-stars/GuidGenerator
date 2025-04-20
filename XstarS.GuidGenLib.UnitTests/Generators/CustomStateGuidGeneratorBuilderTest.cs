@@ -40,9 +40,9 @@ public class CustomStateGuidGeneratorBuilderTest
     [TestMethod]
     public void Version1_UseBackwardTimestampProvider_GetIncClockSeq()
     {
+        var startTime = DateTime.UtcNow;
         var guidGen = CustomStateGuidGeneratorBuilder.Version1
-            .UseTimestampProvider(() => new DateTime(
-                DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks, DateTimeKind.Utc))
+            .UseTimestampProvider(() => startTime - (DateTime.UtcNow - startTime))
             .ToGuidGenerator();
         var guid0 = guidGen.NewGuid();
         _ = guid0.TryGetClockSequence(out var clockSeq0);
@@ -50,6 +50,37 @@ public class CustomStateGuidGeneratorBuilderTest
         _ = guid1.TryGetClockSequence(out var clockSeq1);
         var expected = (short)((clockSeq0 + 1) & ~0xC000);
         Assert.AreEqual(expected, clockSeq1);
+    }
+
+    [TestMethod]
+    public void Version1_UseOutOfRangeTimestampProvider_CatchInvalidOperationException()
+    {
+        var startTime = new DateTime(6000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var guidGen = CustomStateGuidGeneratorBuilder.Version1
+            .UseTimestampProvider(() => startTime = startTime.AddTicks(1))
+            .ToGuidGenerator();
+        Assert.ThrowsException<InvalidOperationException>(() => guidGen.NewGuid());
+    }
+
+    [TestMethod]
+    public void Version1_UseUserDefinedClockSequence_GetInputClockSequence()
+    {
+        var clockSeq = (short)0x1234;
+        var guidGen = CustomStateGuidGeneratorBuilder.Version1
+            .UseClockSequence(clockSeq)
+            .ToGuidGenerator();
+        var guid = guidGen.NewGuid();
+        _ = guid.TryGetClockSequence(out var guidClockSeq);
+        Assert.AreEqual(clockSeq, guidClockSeq);
+    }
+
+    [TestMethod]
+    public void Version1_UseOutOfRangeClockSequence_CatchArgumentOutOfRangeException()
+    {
+        var clockSeq = (short)0x7FFF;
+        var builder = CustomStateGuidGeneratorBuilder.Version1;
+        Assert.ThrowsException<ArgumentOutOfRangeException>(
+            () => builder.UseClockSequence(clockSeq));
     }
 
     [TestMethod]
@@ -102,7 +133,7 @@ public class CustomStateGuidGeneratorBuilderTest
             () => builder.UseTimestampProvider((Func<DateTimeOffset>)null!));
 #if NET8_0_OR_GREATER
         Assert.ThrowsException<ArgumentNullException>(
-            () => builder.UseTimeProvider((TimeProvider)null!));
+            () => builder.UseTimeProvider(null!));
 #endif
         Assert.ThrowsException<ArgumentOutOfRangeException>(
             () => builder.UseNodeIdSource((NodeIdSource)(-1)));
@@ -137,24 +168,13 @@ public class CustomStateGuidGeneratorBuilderTest
     }
 
     [TestMethod]
-    public void Version6_UseNonVolatileNodeIdSource_GetRandomNodeId()
-    {
-        var guidGen = CustomStateGuidGeneratorBuilder.Version6
-            .UseNodeIdSource(NodeIdSource.NonVolatileRandom)
-            .ToGuidGenerator();
-        var guid = guidGen.NewGuid();
-        _ = guid.TryGetNodeId(out var nodeId);
-        _ = GuidGenerator.Version6R.NewGuid().TryGetNodeId(out var expected);
-        CollectionAssert.AreEqual(expected, nodeId);
-    }
-
-    [TestMethod]
     public void Version6_UseBackwardTimestampProvider_GetIncClockSeq()
     {
+        var startTime = DateTime.UtcNow;
         var guidGenV6R = CustomStateGuidGeneratorBuilder.Version6
             .UseNodeIdSource(NodeIdSource.NonVolatileRandom)
             .UseTimestampProvider(() => new DateTimeOffset(
-                DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks, TimeSpan.Zero))
+                startTime - (DateTime.UtcNow - startTime), TimeSpan.Zero))
             .ToGuidGenerator();
         var guid0 = guidGenV6R.NewGuid();
         _ = guid0.TryGetClockSequence(out var clockSeq0);
@@ -187,6 +207,16 @@ public class CustomStateGuidGeneratorBuilderTest
 #endif
 
     [TestMethod]
+    public void Version7_UseOutOfRangeTimestampProvider_CatchInvalidOperationException()
+    {
+        var startTime = new DateTime(1000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var guidGen = CustomStateGuidGeneratorBuilder.Version7
+            .UseTimestampProvider(() => startTime = startTime.AddTicks(1))
+            .ToGuidGenerator();
+        Assert.ThrowsException<InvalidOperationException>(() => guidGen.NewGuid());
+    }
+
+    [TestMethod]
     public void Create_ValidGuidVersion_GetExpectedInstance()
     {
         Assert.AreEqual(CustomStateGuidGeneratorBuilder.Version1,
@@ -212,10 +242,9 @@ public class CustomStateGuidGeneratorBuilderTest
     {
         foreach (var version in new[]
         {
-#if !UUIDREV_DISABLE
             0, 2, 3, 4, 5,
-#else
-            0, 2, 3, 4, 5, 6, 7,
+#if UUIDREV_DISABLE
+            6, 7,
 #endif
             8, 9, 10, 11, 12, 13, 14, 15,
         })
