@@ -204,7 +204,6 @@ public class CustomStateGuidGeneratorBuilderTest
         var expected = timestamp0 + TimeSpan.FromMilliseconds(1);
         Assert.AreEqual(expected, timestamp1);
     }
-#endif
 
     [TestMethod]
     public void Version7_UseOutOfRangeTimestampProvider_CatchInvalidOperationException()
@@ -215,6 +214,7 @@ public class CustomStateGuidGeneratorBuilderTest
             .ToGuidGenerator();
         Assert.ThrowsException<InvalidOperationException>(() => guidGen.NewGuid());
     }
+#endif
 
     [TestMethod]
     public void Create_ValidGuidVersion_GetExpectedInstance()

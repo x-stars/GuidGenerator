@@ -11,7 +11,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace XNetEx.Collections.Concurrent;
 
-[DebuggerDisplay($"Count = {{{nameof(Count)}}}, Capacity = {{{nameof(Capacity)}}}")]
+[DebuggerDisplay(
+    $"{nameof(this.Count)} = {{{nameof(this.Count)}}}, " +
+    $"{nameof(this.Capacity)} = {{{nameof(this.Capacity)}}}")]
 [DebuggerTypeProxy(typeof(BoundedCollection<>.DebugView))]
 internal sealed class BoundedCollection<T>(int capacity)
     : IProducerConsumerCollection<T>, IReadOnlyCollection<T>
@@ -73,7 +75,6 @@ internal sealed class BoundedCollection<T>(int capacity)
 
     private sealed class DebugView(BoundedCollection<T> value)
     {
-
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
         public T[] Items => value.ToArray();
     }
