@@ -10,7 +10,7 @@ open System.Security.Cryptography
 /// Provides extra extension methods for <see cref="T:XNetEx.Guids.Generators.GuidGenerator"/>.
 /// </summary>
 [<AutoOpen; Extension>]
-module internal GuidGeneratorExtensions =
+module internal GuidGeneratorExtraExtensions =
 
     type IGuidGenerator with
 
@@ -34,8 +34,8 @@ module internal GuidGeneratorExtensions =
 #if !UUIDREV_DISABLE
     type private WeakTableOfHashing = ConditionalWeakTable<HashAlgorithm, INameBasedGuidGenerator>
 
-    [<CompiledName("Version8NCache")>]
-    let private v8NCache = WeakTableOfHashing()
+    [<CompiledName("Version8NOfHashing")>]
+    let private v8NOfHashing = WeakTableOfHashing()
 
     [<CompiledName("CreateVersion8NCallback")>]
     let private createV8N = WeakTableOfHashing.CreateValueCallback(GuidGenerator.CreateVersion8N)
@@ -43,15 +43,15 @@ module internal GuidGeneratorExtensions =
     type GuidGenerator with
 
         /// <summary>
-        /// Gets the cached <see cref="T:XNetEx.Guids.Generators.INameBasedGuidGenerator"/> instance
-        /// of the specified hash algorithm. If the hash algorithm does not exist in the cache, a new
-        /// <see cref="T:XNetEx.Guids.Generators.INameBasedGuidGenerator"/> instance will be created.
+        /// Gets the related <see cref="T:XNetEx.Guids.Generators.INameBasedGuidGenerator"/>
+        /// instance of the specified hash algorithm.
         /// </summary>
-        /// <param name="hashing">The hash algorithm to get the cache.</param>
-        /// <returns>The cached <see cref="T:XNetEx.Guids.Generators.INameBasedGuidGenerator"/>
+        /// <param name="hashing">The hash algorithm to use.</param>
+        /// <returns>The related <see cref="T:XNetEx.Guids.Generators.INameBasedGuidGenerator"/>
         /// instance of <paramref name="hashing"/>.</returns>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="hashing"/> is null.</exception>
-        [<CompiledName("GetVersion8NCache")>]
-        static member GetVersion8NCache(hashing: HashAlgorithm) : INameBasedGuidGenerator =
-            v8NCache.GetValue(hashing, createV8N)
+        /// <exception cref="T:System.ArgumentNullException">
+        /// <paramref name="hashing"/> is null.</exception>
+        [<CompiledName("GetVersion8NOf")>]
+        static member GetVersion8NOf(hashing: HashAlgorithm) : INameBasedGuidGenerator =
+            v8NOfHashing.GetValue(hashing, createV8N)
 #endif
