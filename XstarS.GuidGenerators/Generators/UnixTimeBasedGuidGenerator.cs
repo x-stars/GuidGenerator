@@ -27,7 +27,7 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
     }
 
     private UnixTimeBasedGuidGenerator(Func<DateTime>? timestampProvider = null)
-        : this()
+        : this(isGlobalMonotonic: true)
     {
         this.TimestampProvider = (timestampProvider is not null) ?
             TimestampProvider.CreateCustom(timestampProvider) :
