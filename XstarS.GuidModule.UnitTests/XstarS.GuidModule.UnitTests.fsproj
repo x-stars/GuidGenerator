@@ -4,7 +4,6 @@
     <TargetFrameworks>net461;net472;net6.0;net8.0</TargetFrameworks>
     <RootNamespace>XNetEx.FSharp.Core</RootNamespace>
     <LangVersion>latest</LangVersion>
-    <WarnOn>FS3390</WarnOn>
   </PropertyGroup>
 
   <Import Project="..\BuildItems\AssemblyInfo.Build.props" />

@@ -5,7 +5,6 @@
     <RootNamespace>XNetEx.FSharp.Core</RootNamespace>
     <LangVersion>latest</LangVersion>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <WarnOn>FS3390</WarnOn>
   </PropertyGroup>
 
   <Import Project="..\BuildItems\AssemblyInfo.Build.props" />
