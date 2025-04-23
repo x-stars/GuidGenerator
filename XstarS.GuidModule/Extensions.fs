@@ -53,5 +53,6 @@ module internal GuidGeneratorExtraExtensions =
         /// <paramref name="hashing"/> is null.</exception>
         [<CompiledName("GetVersion8NOf")>]
         static member GetVersion8NOf(hashing: HashAlgorithm) : INameBasedGuidGenerator =
+            if isNull hashing then nullArg (nameof hashing)
             v8NOfHashing.GetValue(hashing, createV8N)
 #endif
