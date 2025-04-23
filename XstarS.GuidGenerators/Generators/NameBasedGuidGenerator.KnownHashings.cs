@@ -30,6 +30,9 @@ partial class NameBasedGuidGenerator
         private static volatile NameBasedGuidGenerator.CustomHashing? SingletonShake256;
 #endif
 
+        // Don't use `Lazy<T>` for lazy initialization for performance issues
+        // in .NET Framework (fixed in .NET Core).
+
         internal static NameBasedGuidGenerator.CustomHashing InstanceSha256
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
