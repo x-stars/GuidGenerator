@@ -114,14 +114,28 @@ module Guid =
     let nsX500: Guid = Namespace.X500
 
     /// <summary>
-    /// Returns a new <see cref="T:System.Guid"/> instance of the specified
-    /// <see cref="T:XNetEx.Guids.GuidVersion"/> with all components set to zero.
+    /// Returns a new RFC 4122 <see cref="T:System.Guid"/> instance of the specified
+    /// <see cref="T:XNetEx.Guids.GuidVersion"/> with all other fields set to zero.
     /// </summary>
     /// <param name="version">The version of the new <see cref="T:System.Guid"/> instance.</param>
-    /// <returns>A new <see cref="T:System.Guid"/> instance of
-    /// <paramref name="version"/> with all components set to zero.</returns>
+    /// <returns>A new RFC 4122 <see cref="T:System.Guid"/> instance of
+    /// <paramref name="version"/> with all other fields set to zero.</returns>
+    /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="version"/>
+    /// is not a valid <see cref="T:XNetEx.Guids.GuidVersion"/> value.</exception>
     [<CompiledName("EmptyOf")>]
     let emptyOf (version: Version) : Guid = Uuid.EmptyOf(version)
+
+    /// <summary>
+    /// Returns a new RFC 4122 <see cref="T:System.Guid"/> instance of the specified
+    /// GUID version number with all other fields set to zero.
+    /// </summary>
+    /// <param name="version">The version of the new <see cref="T:System.Guid"/> instance.</param>
+    /// <returns>A new RFC 4122 <see cref="T:System.Guid"/> instance of
+    /// <paramref name="version"/> with all other fields set to zero.</returns>
+    /// <exception cref="T:System.ArgumentOutOfRangeException">
+    /// <paramref name="version"/> is not a valid GUID version number.</exception>
+    [<CompiledName("EmptyOfVersion")>]
+    let emptyOfVersion (version: byte) : Guid = Uuid.EmptyOf(enumof version)
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance of RFC 4122 UUID version 1.

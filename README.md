@@ -4,6 +4,13 @@
 
 Provides RFC 4122 (UUID) compliant GUID generators for .NET platform.
 
+**Features:**
+
+* Full support for generating GUID version 1 through 8.
+* Support for getting and setting fields of GUID version 1 through 8.
+* Fully compatiable with Native AOT (including reflection-free mode).
+* F# adapter module for GUID APIs in the framework and this project.
+
 ## RFC 4122 UUID Standard
 
 RFC 4122 defines the following five versions of UUID:
