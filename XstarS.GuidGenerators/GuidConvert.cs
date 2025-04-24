@@ -2,9 +2,15 @@
 
 namespace XNetEx.Guids;
 
+#if !UUIDREV_DISABLE
+/// <summary>
+/// Provides RFC 4122/9562 compliant constants and conversion methods for <see cref="Guid"/>.
+/// </summary>
+#else
 /// <summary>
 /// Provides RFC 4122 compliant constants and conversion methods for <see cref="Guid"/>.
 /// </summary>
+#endif
 public static class Uuid
 {
     /// <summary>
@@ -21,17 +27,23 @@ public static class Uuid
         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
 
     /// <summary>
-    /// Returns a new <see cref="Guid"/> instance of the specified <see cref="GuidVersion"/>
-    /// with all components set to zero. This method is useful when building a GUID by components.
+    /// Returns a new RFC 4122 <see cref="Guid"/> instance of the specified
+    /// <see cref="GuidVersion"/> with all other fields set to zero.
+    /// This method is useful when building a GUID by components.
     /// </summary>
     /// <param name="version">The version of the new <see cref="Guid"/> instance.</param>
-    /// <returns>A new <see cref="Guid"/> instance of
-    /// <paramref name="version"/> with all components set to zero.</returns>
+    /// <returns>A new RFC 4122 <see cref="Guid"/> instance of
+    /// <paramref name="version"/> with all other fields set to zero.</returns>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="version"/> is not a valid <see cref="GuidVersion"/> value.</exception>
     public static Guid EmptyOf(GuidVersion version)
     {
-        return Guid.Empty.ReplaceVariant(GuidVariant.Rfc4122).ReplaceVersion(version);
+        if (version > (GuidVersion)/*MaxValue*/15)
+        {
+            throw new ArgumentOutOfRangeException(nameof(version));
+        }
+
+        return new Guid(0, 0, (short)((byte)version << 12), 0x80, 0, 0, 0, 0, 0, 0, 0);
     }
 
 #if NET7_0_OR_GREATER
