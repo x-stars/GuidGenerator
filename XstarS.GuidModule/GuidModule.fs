@@ -120,6 +120,8 @@ module Guid =
     /// <param name="version">The version of the new <see cref="T:System.Guid"/> instance.</param>
     /// <returns>A new <see cref="T:System.Guid"/> instance of
     /// <paramref name="version"/> with all components set to zero.</returns>
+    /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="version"/>
+    /// is not a valid <see cref="T:XNetEx.Guids.GuidVersion"/> value.</exception>
     [<CompiledName("EmptyOf")>]
     let emptyOf (version: Version) : Guid = Uuid.EmptyOf(version)
 

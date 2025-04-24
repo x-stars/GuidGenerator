@@ -27,6 +27,8 @@ public static class Uuid
     /// <param name="version">The version of the new <see cref="Guid"/> instance.</param>
     /// <returns>A new <see cref="Guid"/> instance of
     /// <paramref name="version"/> with all components set to zero.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="version"/> is not a valid <see cref="GuidVersion"/> value.</exception>
     public static Guid EmptyOf(GuidVersion version)
     {
         return Guid.Empty.ReplaceVariant(GuidVariant.Rfc4122).ReplaceVersion(version);
