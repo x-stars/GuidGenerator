@@ -132,7 +132,7 @@ public readonly struct CustomStateGuidGeneratorBuilder
     public CustomStateGuidGeneratorBuilder UseTimestampProvider(Func<DateTimeOffset> timestampProvider)
     {
         return this.UseTimestampProvider((timestampProvider ??
-            throw new ArgumentNullException(nameof(timestampProvider))).UtcDateTime);
+            throw new ArgumentNullException(nameof(timestampProvider))).GetUtcDateTime);
     }
 
 #if NET8_0_OR_GREATER
