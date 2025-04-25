@@ -43,7 +43,9 @@ public static class Uuid
             throw new ArgumentOutOfRangeException(nameof(version));
         }
 
-        return new Guid(0, 0, (short)((byte)version << 12), 0x80, 0, 0, 0, 0, 0, 0, 0);
+        return new Guid(
+            // 00000000-0000-x000-8000-000000000000
+            0, 0, (short)((uint)version << (3 * 4)), 0x80, 0, 0, 0, 0, 0, 0, 0);
     }
 
 #if NET7_0_OR_GREATER

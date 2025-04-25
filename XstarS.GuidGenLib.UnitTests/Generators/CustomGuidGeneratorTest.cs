@@ -109,7 +109,7 @@ public partial class CustomGuidGeneratorTest
         var guidGen = new TestCustomGuidGenerator(
             nodeIdSource: NodeIdSource.VolatileRandom);
         Assert.ThrowsException<ArgumentNullException>(
-            () => guidGen.GetNodeIdBytes(default(byte[])!));
+            () => guidGen.GetNodeIdBytes(null!));
     }
 
     [TestMethod]
