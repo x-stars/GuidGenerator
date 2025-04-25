@@ -6,7 +6,7 @@ Provides RFC 4122 (UUID) and RFC 9562 (UUIDREV) compliant GUID generators for .N
 
 * Full support for generating GUID version 1 through 8.
 * Support for getting and setting fields of GUID version 1 through 8.
-* Fully compatiable with Native AOT (including reflection-free mode).
+* Fully compatible with Native AOT (including reflection-free mode).
 
 ## RFC 4122 UUID Standard
 
