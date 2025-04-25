@@ -117,7 +117,8 @@ internal abstract class NodeIdProvider
                     var ifaceStatus = iface.OperationalStatus;
                     if (ifaceStatus == OperationalStatus.Up)
                     {
-                        upValidIface ??= iface;
+                        upValidIface = iface;
+                        break;
                     }
                 }
             }
