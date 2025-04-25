@@ -54,9 +54,9 @@ public partial class NameBasedGuidGeneratorTest
     public void NewGuid_Version3NullName_CatchArgumentNullException()
     {
         Assert.ThrowsException<ArgumentNullException>(
-            () => GuidGenerator.Version3.NewGuid(Guid.Empty, default(byte[])!));
+            () => GuidGenerator.Version3.NewGuid(Guid.Empty, (byte[])null!));
         Assert.ThrowsException<ArgumentNullException>(
-            () => GuidGenerator.Version3.NewGuid(Guid.Empty, default(string)!));
+            () => GuidGenerator.Version3.NewGuid(Guid.Empty, (string)null!));
     }
 
     [TestMethod]
@@ -107,9 +107,9 @@ public partial class NameBasedGuidGeneratorTest
     public void NewGuid_Version5NullName_CatchArgumentNullException()
     {
         Assert.ThrowsException<ArgumentNullException>(
-            () => GuidGenerator.Version5.NewGuid(Guid.Empty, default(byte[])!));
+            () => GuidGenerator.Version5.NewGuid(Guid.Empty, (byte[])null!));
         Assert.ThrowsException<ArgumentNullException>(
-            () => GuidGenerator.Version5.NewGuid(Guid.Empty, default(string)!));
+            () => GuidGenerator.Version5.NewGuid(Guid.Empty, (string)null!));
     }
 
     [TestMethod]

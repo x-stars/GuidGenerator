@@ -94,7 +94,7 @@ internal sealed class NewNameBasedGuidCommand : ProgramCommand
         var guidGen = this.GetGuidGenerator();
         if (readInput)
         {
-            var name = default(string);
+            var name = (string?)null;
             while ((name = Console.In.ReadLine()) != null)
             {
                 var guid = guidGen.NewGuid(nsId, name);

@@ -24,7 +24,7 @@ internal sealed class NewDceSecurityGuidCommand : ProgramCommand
 
         var domainArg = args[1];
         var siteIdArg = (args.Length == 3) ? args[2] : null;
-        var nSiteId = default(int?);
+        var nSiteId = (int?)null;
         var dParsed = this.TryParseDomain(domainArg, out var domain);
         if (!dParsed) { return false; }
         if (siteIdArg is not null)

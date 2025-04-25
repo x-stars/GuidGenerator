@@ -100,8 +100,8 @@ internal abstract class NodeIdProvider
 
         private NetworkInterface? GetValidNetworkInterface()
         {
-            var validIface = default(NetworkInterface);
-            var upValidIface = default(NetworkInterface);
+            var validIface = (NetworkInterface?)null;
+            var upValidIface = (NetworkInterface?)null;
             var ifaces =
 #if NET5_0_OR_GREATER
                 OperatingSystem.IsWindows() &&
