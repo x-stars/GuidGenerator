@@ -26,7 +26,7 @@ internal sealed partial class GuidGeneratorState
     private GuidGeneratorState(NodeIdSource nodeIdSource)
     {
         this.NodeIdSource = nodeIdSource;
-        this.ResetUnlocked();
+        this.Reset();
     }
 
     private long LastTimestamp
@@ -67,16 +67,6 @@ internal sealed partial class GuidGeneratorState
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public void Reset()
-    {
-        if (this.NodeIdSource is NodeIdSource.NonVolatileRandom)
-        {
-            NodeIdProvider.ResetNonVolatileRandom();
-        }
-        this.ResetUnlocked();
-    }
-
-    [MethodImpl(MethodImplOptions.Synchronized)]
     internal void SetClockSequence(short clockSeq)
     {
         this.ClockSequence = clockSeq;
@@ -114,7 +104,7 @@ internal sealed partial class GuidGeneratorState
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void ResetUnlocked()
+    private void Reset()
     {
         this.LastTimestamp = 0L;
         this.ClockSequence = this.GetInitClockSequence();

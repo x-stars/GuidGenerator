@@ -33,8 +33,15 @@ partial class GuidGeneratorState
 
     public static void ResetGlobal()
     {
-        GuidGeneratorState.PhysicalNodeState.Reset();
-        GuidGeneratorState.RandomNodeState.Reset();
+        lock (GuidGeneratorState.PhysicalNodeState)
+        {
+            GuidGeneratorState.PhysicalNodeState.Reset();
+        }
+        lock (GuidGeneratorState.RandomNodeState)
+        {
+            NodeIdProvider.ResetNonVolatileRandom();
+            GuidGeneratorState.RandomNodeState.Reset();
+        }
     }
 
     private static string? SetSaveOnProcessExit()
@@ -92,7 +99,7 @@ partial class GuidGeneratorState
                 var nodeIdBytes = isRandom ? randNodeId : phyNodeId;
                 lock (state)
                 {
-                    state.ResetUnlocked();
+                    state.Reset();
                     if ((fieldFlags & 0x01) == 0x01)
                     {
                         state.LastTimestamp = timestamp;
