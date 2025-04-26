@@ -31,6 +31,12 @@ partial class GuidGeneratorState
         return GuidGeneratorState.LoadFromStorage();
     }
 
+    public static void ResetGlobal()
+    {
+        GuidGeneratorState.PhysicalNodeState.Reset();
+        GuidGeneratorState.RandomNodeState.Reset();
+    }
+
     private static string? SetSaveOnProcessExit()
     {
         static void SaveToStorage(object? sender, EventArgs e) =>
@@ -86,7 +92,7 @@ partial class GuidGeneratorState
                 var nodeIdBytes = isRandom ? randNodeId : phyNodeId;
                 lock (state)
                 {
-                    state.Reset();
+                    state.ResetUnlocked();
                     if ((fieldFlags & 0x01) == 0x01)
                     {
                         state.LastTimestamp = timestamp;
