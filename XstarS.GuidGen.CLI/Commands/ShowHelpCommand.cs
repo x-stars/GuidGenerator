@@ -7,7 +7,7 @@ internal sealed class ShowHelpCommand : ProgramCommand
 {
     internal static readonly ShowHelpCommand Instance = new();
 
-    private static readonly HashSet<string> HelpNames = ["-?", "-H", "-HELP"];
+    private static readonly string[] HelpNames = ["-?", "-H", "-HELP"];
 
     private ShowHelpCommand() { }
 
@@ -19,7 +19,7 @@ internal sealed class ShowHelpCommand : ProgramCommand
         }
         var helpNames = ShowHelpCommand.HelpNames;
         var helpArg = args[0].ToUpperInvariant();
-        if (!helpNames.Contains(helpArg))
+        if (Array.IndexOf(helpNames, helpArg) < 0)
         {
             return false;
         }
@@ -39,6 +39,7 @@ internal sealed class ShowHelpCommand : ProgramCommand
             yield return $"        {cmdName} -V6|-V7|-V8|-V6P|-V6R [-Cn]";
             yield return $"        {cmdName} -V8N Hash :NS|GuidNS [Name]";
 #endif
+            yield return $"        {cmdName} -V|-Version";
             yield return $"        {cmdName} -?|-H|-Help";
             yield return "Parameters:";
             yield return "    -V1     Generate time-based GUID.";
@@ -79,6 +80,8 @@ internal sealed class ShowHelpCommand : ProgramCommand
             yield return "            which can be SHA256, SHA384 or SHA512.";
 #endif
 #endif
+            yield return "    -V|-Version";
+            yield return "            Show the version information.";
             yield return "    -?|-H|-Help";
             yield return "            Show the current help message.";
         }

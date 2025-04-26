@@ -11,9 +11,13 @@
 #if !(STRING_SYNTAX_ATTRIBUTE_EXTERNAL || NET7_0_OR_GREATER)
 namespace System.Diagnostics.CodeAnalysis
 {
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Specifies the syntax used in a string.
     /// </summary>
+    [DebuggerNonUserCode, ExcludeFromCodeCoverage]
     [AttributeUsage(
         AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property,
         AllowMultiple = false, Inherited = false)]

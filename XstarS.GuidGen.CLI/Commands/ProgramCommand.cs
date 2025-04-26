@@ -41,6 +41,7 @@ internal abstract class ProgramCommand
             yield return NewNameBasedGuidCommand.Version8NShake256;
 #endif
 #endif
+            yield return ShowVersionCommand.Instance;
             yield return ShowHelpCommand.Instance;
             yield return InvalidSyntaxCommand.Instance;
         }

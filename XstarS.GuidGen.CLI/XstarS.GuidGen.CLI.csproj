@@ -42,4 +42,8 @@
     </Compile>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="ThisAssembly.AssemblyInfo" Version="2.0.13" PrivateAssets="all" />
+  </ItemGroup>
+
 </Project>
