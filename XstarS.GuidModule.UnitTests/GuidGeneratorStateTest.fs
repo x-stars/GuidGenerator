@@ -30,6 +30,7 @@ type GuidGeneratorStateTest() =
 
     [<TestMethod>]
     member _.LoadGeneratorState_FileWithRandomNodeId_GetNodeIdFromFile() =
+        Guid.resetState ()
         let exception' = &catchStateLoadExn ()
         let mutable fileName = null
         use tempFile = createTempFile &fileName
