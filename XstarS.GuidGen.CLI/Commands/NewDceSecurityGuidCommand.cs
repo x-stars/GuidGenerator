@@ -23,15 +23,15 @@ internal sealed class NewDceSecurityGuidCommand : ProgramCommand
         }
 
         var domainArg = args[1];
-        var siteIdArg = (args.Length == 3) ? args[2] : null;
-        var nSiteId = (int?)null;
+        var localIdArg = (args.Length == 3) ? args[2] : null;
+        var nLocalId = (int?)null;
         var dParsed = this.TryParseDomain(domainArg, out var domain);
         if (!dParsed) { return false; }
-        if (siteIdArg is not null)
+        if (localIdArg is not null)
         {
-            var iParsed = this.TryParseSiteId(siteIdArg, out var siteId);
+            var iParsed = this.TryParseLocalId(localIdArg, out var localId);
             if (!iParsed) { return false; }
-            nSiteId = (int)siteId;
+            nLocalId = (int)localId;
         }
         else if (domain is not (DceSecurityDomain.Person or DceSecurityDomain.Group))
         {
@@ -39,7 +39,7 @@ internal sealed class NewDceSecurityGuidCommand : ProgramCommand
         }
 
         var guidGen = GuidGenerator.Version2;
-        var guid = guidGen.NewGuid(domain, nSiteId);
+        var guid = guidGen.NewGuid(domain, nLocalId);
         Console.Out.WriteLine(in guid);
         return true;
     }
@@ -57,7 +57,7 @@ internal sealed class NewDceSecurityGuidCommand : ProgramCommand
         return value >= 0;
     }
 
-    private bool TryParseSiteId(string text, out uint result)
+    private bool TryParseLocalId(string text, out uint result)
     {
         var parsed = uint.TryParse(text, out result);
         if (!parsed)

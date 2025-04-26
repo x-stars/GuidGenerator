@@ -214,8 +214,10 @@ The GUID Generator Command Line Tool project is located at [XstarS.GuidGen.CLI](
 > GuidGen -?
 Generate RFC 4122 compliant GUIDs.
 Usage:  GuidGen[.exe] [-V1|-V4|-V1R] [-Cn]
-        GuidGen[.exe] -V2 Domain [SiteID]
+        GuidGen[.exe] -V2 Domain [LocalID]
         GuidGen[.exe] -V3|-V5 :NS|GuidNS [Name]
+        GuidGen[.exe] -RS|-Reset
+        GuidGen[.exe] -V|-Version
         GuidGen[.exe] -?|-H|-Help
 Parameters:
     -V1     Generate time-based GUID.
@@ -227,13 +229,17 @@ Parameters:
     -Cn     Generate n GUIDs of the current version.
     Domain  Specify a DCE Security domain,
             which can be Person, Group or Org.
-    SiteID  Specify a user-defined local ID
+    LocalID Specify a user-defined local ID
             for DCE Security domain Org (required).
     :NS     Specify a well-known GUID namespace,
             which can be :DNS, :URL, :OID or :X500.
     GuidNS  Specify a user-defined GUID namespace.
     Name    Specify the name to generate GUID,
             or empty to read from standard input.
+    -RS|-Reset
+            Reset the GUID generator state.
+    -V|-Version
+            Show the version information.
     -?|-H|-Help
             Show the current help message.
 ```

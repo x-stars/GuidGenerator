@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace XNetEx.Guids.Generators;
 
@@ -31,6 +32,14 @@ partial class GuidGenerator
     public static bool SetStateStorageFile(string? fileName)
     {
         return GuidGeneratorState.SetStorageFile(fileName);
+    }
+
+    /// <summary>
+    /// Resets the state that can be saving to the state storage file.
+    /// </summary>
+    public static void ResetState()
+    {
+        GuidGeneratorState.ResetGlobal();
     }
 
 #if !UUIDREV_DISABLE

@@ -829,6 +829,12 @@ module Guid =
         Generator.SetStateStorageFile(fileName)
 
     /// <summary>
+    /// Resets the GUID generator state that can be saving to the state storage file.
+    /// </summary>
+    [<CompiledName("ResetGeneratorState")>]
+    let resetState () : unit = Generator.ResetState()
+
+    /// <summary>
     /// Connects a listener function to the event that occurs
     /// when a GUID generator state storage I/O operation throws an exception.
     /// </summary>

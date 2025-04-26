@@ -38,8 +38,8 @@ app.MapGet("/v1r", (int? count) => NewGuidCount(GuidGenerator.Version1R, count))
 
 app.MapGet("/v2/person", () => GuidGenerator.Version2.NewGuid(DceSecurityDomain.Person));
 app.MapGet("/v2/group", () => GuidGenerator.Version2.NewGuid(DceSecurityDomain.Group));
-app.MapGet("/v2/org/{siteId}", (uint siteId) =>
-    GuidGenerator.Version2.NewGuid(DceSecurityDomain.Org, (int)siteId));
+app.MapGet("/v2/org/{localId}", (uint localId) =>
+    GuidGenerator.Version2.NewGuid(DceSecurityDomain.Org, (int)localId));
 app.MapGet("/v2/{domain}/{localId}", (byte domain, uint localId) =>
     GuidGenerator.Version2.NewGuid((DceSecurityDomain)domain, (int)localId));
 

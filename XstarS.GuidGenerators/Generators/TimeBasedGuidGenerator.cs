@@ -136,9 +136,9 @@ internal partial class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         var state = this.GeneratorState;
         var timestamp = this.CurrentTimestamp;
         var nodeId = this.NodeIdBytes;
-        var refreshed = state.Refresh(
+        var updated = state.Update(
             timestamp, nodeId, out var clockSeq);
-        if (!refreshed) { return false; }
+        if (!updated) { return false; }
         this.FillTimeFieldsChecked(ref guid, timestamp);
         var components = this.GuidComponents;
         components.SetClockSequence(ref guid, clockSeq);

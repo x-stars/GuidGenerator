@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using XNetEx.Threading;
@@ -27,6 +28,11 @@ internal abstract class NodeIdProvider
     {
         Debug.Assert(nodeIdProvider is not null);
         return new NodeIdProvider.Custom(nodeIdProvider!);
+    }
+
+    internal static void ResetNonVolatileRandom()
+    {
+        NodeIdProvider.RandomNumber.Instance.ResetNodeIdBytes();
     }
 
     private sealed class Nothing : NodeIdProvider
@@ -139,12 +145,11 @@ internal abstract class NodeIdProvider
     {
         private static volatile NodeIdProvider.RandomNumber? Singleton;
 
-        private readonly byte[] NodeIdBytesValue;
+        private volatile byte[] NodeIdBytesValue;
 
         private RandomNumber()
         {
-            this.NodeIdBytesValue =
-                NodeIdProvider.RandomNumber.CreateNodeIdBytes();
+            this.ResetNodeIdBytes();
         }
 
         internal static NodeIdProvider.RandomNumber Instance
@@ -178,6 +183,13 @@ internal abstract class NodeIdProvider
             var nodeId = newGuid.NodeIdToArray();
             nodeId[0] |= 0x01;
             return nodeId;
+        }
+
+        [MemberNotNull(nameof(this.NodeIdBytesValue))]
+        internal void ResetNodeIdBytes()
+        {
+            this.NodeIdBytesValue =
+                NodeIdProvider.RandomNumber.CreateNodeIdBytes();
         }
 
         private sealed class NonVolatile : NodeIdProvider.RandomNumber
