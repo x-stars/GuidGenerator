@@ -11,9 +11,13 @@
 #if !(CONSTANT_EXPECTED_ATTRIBUTE_EXTERNAL || NET7_0_OR_GREATER)
 namespace System.Diagnostics.CodeAnalysis
 {
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Indicates that the specified method parameter expects a constant.
     /// </summary>
+    [DebuggerNonUserCode, ExcludeFromCodeCoverage]
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     internal sealed class ConstantExpectedAttribute : Attribute
     {
