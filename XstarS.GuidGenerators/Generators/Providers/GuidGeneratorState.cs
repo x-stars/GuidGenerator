@@ -69,6 +69,10 @@ internal sealed partial class GuidGeneratorState
     [MethodImpl(MethodImplOptions.Synchronized)]
     public void Reset()
     {
+        if (this.NodeIdSource is NodeIdSource.NonVolatileRandom)
+        {
+            NodeIdProvider.ResetNonVolatileRandom();
+        }
         this.ResetUnlocked();
     }
 
