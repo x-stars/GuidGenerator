@@ -116,6 +116,7 @@ partial class GuidGeneratorState
                     {
                         state.SetLastNodeId(nodeIdBytes);
                     }
+                    state.IsRefreshed = false;
                 }
             }
             return true;
@@ -148,8 +149,11 @@ partial class GuidGeneratorState
                     fieldFlags |= (0x01 | 0x02) << (2 * 8);
                     var phyState = GuidGeneratorState.PhysicalNodeState;
                     var randState = GuidGeneratorState.RandomNodeState;
-                    timestamp = Math.Max(
-                        phyState.LastTimestamp, randState.LastTimestamp);
+                    timestamp = (!phyState.IsRefreshed && !randState.IsRefreshed) ?
+                        Math.Max(phyState.LastTimestamp, randState.LastTimestamp) :
+                        Math.Max(
+                            phyState.IsRefreshed ? phyState.LastTimestamp : 0L,
+                            randState.IsRefreshed ? randState.LastTimestamp : 0L);
                     clockSeq = (int)(
                         ((uint)(ushort)phyState.ClockSequence << (0 * 8)) |
                         ((uint)(ushort)randState.ClockSequence << (2 * 8)));

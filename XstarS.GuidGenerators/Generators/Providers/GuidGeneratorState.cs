@@ -23,6 +23,8 @@ internal sealed partial class GuidGeneratorState
 
     private NodeIdData LastNodeIdData;
 
+    private volatile bool IsRefreshed;
+
     private GuidGeneratorState(NodeIdSource nodeIdSource)
     {
         this.NodeIdSource = nodeIdSource;
@@ -53,17 +55,18 @@ internal sealed partial class GuidGeneratorState
         return new GuidGeneratorState(NodeIdSource.VolatileRandom);
     }
 
-    public bool Refresh(long timestamp, byte[] nodeId, out short clockSeq)
+    public bool Update(long timestamp, byte[] nodeId, out short clockSeq)
     {
-        var refreshed = false;
+        var updated = false;
         lock (this)
         {
             _ = this.UpdateNodeId(nodeId);
-            refreshed = this.UpdateTimestamp(timestamp);
+            updated = this.UpdateTimestamp(timestamp);
             clockSeq = (short)this.ClockSequence;
+            this.IsRefreshed = true;
         }
         _ = GuidGeneratorState.LastSavingAsyncResultCache.Value;
-        return refreshed;
+        return updated;
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
@@ -110,6 +113,7 @@ internal sealed partial class GuidGeneratorState
         this.ClockSequence = this.GetInitClockSequence();
         this.LastNodeIdBytes = null;
         this.LastNodeIdData = default(NodeIdData);
+        this.IsRefreshed = false;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
