@@ -91,7 +91,7 @@ public interface IDceSecurityGuidGenerator : IGuidGeneratorInfo
     /// Generates a new <see cref="Guid"/> instance based on the specified DCE Security domain and local ID.
     /// </summary>
     /// <param name="domain">The DCE Security domain used to generate the <see cref="Guid"/>.</param>
-    /// <param name="localId">The site-defined local ID used to generate the <see cref="Guid"/>,
+    /// <param name="localId">The local ID used to generate the <see cref="Guid"/>,
     /// or <see langword="null"/> to get the local user or group ID from the system.</param>
     /// <returns>A new <see cref="Guid"/> instance generated based on
     /// <paramref name="domain"/> and <paramref name="localId"/>.</returns>
