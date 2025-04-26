@@ -42,6 +42,7 @@ internal abstract class ProgramCommand
 #endif
 #endif
             yield return ResetStateCommand.Instance;
+            yield return ShowVersionCommand.Instance;
             yield return ShowHelpCommand.Instance;
             yield return InvalidSyntaxCommand.Instance;
         }

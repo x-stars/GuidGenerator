@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace XNetEx.Guids;
 
@@ -149,7 +150,8 @@ public static class Uuid
     /// <paramref name="input"/> is <see langword="null"/>.</exception>
     /// <exception cref="FormatException">
     /// <paramref name="input"/> is not in the URN format.</exception>
-    public static Guid ParseUrn(string input)
+    public static Guid ParseUrn(
+        [StringSyntax(StringSyntaxAttribute.Uri)] string input)
     {
         return GuidExtensions.ParseUrn(input);
     }
@@ -164,7 +166,8 @@ public static class Uuid
     /// <returns>A structure that contains the value that was parsed.</returns>
     /// <exception cref="FormatException">
     /// <paramref name="input"/> is not in the URN format.</exception>
-    public static Guid ParseUrn(ReadOnlySpan<char> input)
+    public static Guid ParseUrn(
+        [StringSyntax(StringSyntaxAttribute.Uri)] ReadOnlySpan<char> input)
     {
         return GuidExtensions.ParseUrn(input);
     }
@@ -179,7 +182,8 @@ public static class Uuid
     /// contains the parsed <see cref="Guid"/> value.</param>
     /// <returns><see langword="true"/> if the parse operation was successful;
     /// otherwise, <see langword="false"/>.</returns>
-    public static bool TryParseUrn(string input, out Guid result)
+    public static bool TryParseUrn(
+        [StringSyntax(StringSyntaxAttribute.Uri)] string input, out Guid result)
     {
         return GuidExtensions.TryParseUrn(input, out result);
     }
@@ -195,7 +199,8 @@ public static class Uuid
     /// contains the parsed <see cref="Guid"/> value.</param>
     /// <returns><see langword="true"/> if the parse operation was successful;
     /// otherwise, <see langword="false"/>.</returns>
-    public static bool TryParseUrn(ReadOnlySpan<char> input, out Guid result)
+    public static bool TryParseUrn(
+        [StringSyntax(StringSyntaxAttribute.Uri)] ReadOnlySpan<char> input, out Guid result)
     {
         return GuidExtensions.TryParseUrn(input, out result);
     }
