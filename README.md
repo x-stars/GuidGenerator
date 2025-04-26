@@ -253,6 +253,8 @@ Usage:  GuidGen[.exe] [-V1|-V4|-V1R] [-Cn]
         GuidGen[.exe] -V3|-V5 :NS|GuidNS [Name]
         GuidGen[.exe] -V6|-V7|-V8|-V6P|-V6R [-Cn]
         GuidGen[.exe] -V8N Hash :NS|GuidNS [Name]
+        GuidGen[.exe] -RS|-Reset
+        GuidGen[.exe] -V|-Version
         GuidGen[.exe] -?|-H|-Help
 Parameters:
     -V1     Generate time-based GUID.
@@ -283,6 +285,10 @@ Parameters:
             which can be SHA256, SHA384, SHA512,
                 SHA3-256, SHA3-384, SHA3-512,
                 SHAKE128 or SHAKE256.
+    -RS|-Reset
+            Reset the GUID generator state.
+    -V|-Version
+            Show the version information.
     -?|-H|-Help
             Show the current help message.
 ```
