@@ -86,7 +86,7 @@ type GuidComponentTest() =
 
     [<TestMethod>]
     member _.ReplaceVersionNumber_Version4Guid_GetInputVersionNumber() =
-        Guid.newV4 ()
+        Guid.emptyOfVersion 4uy
         |> Guid.replaceVersionNum 8uy
         |> Guid.version
         |> Assert.equalTo (enumof 8uy)
@@ -131,7 +131,7 @@ type GuidComponentTest() =
 
     [<TestMethod>]
     member _.ReplaceDomainAndLocalId_Version2Guid_GetInputDomainAndLocalId() =
-        Guid.parse "00000000-9dad-21d1-b400-00c04fd430c8"
+        Guid.emptyOf Guid.Version.Version2
         |> Guid.replaceLocalId Guid.Domain.Org 0x6ba7b810
         |> Guid.tryGetLocalId
         |> tee (Assert.true' << ValueOption.isSome)

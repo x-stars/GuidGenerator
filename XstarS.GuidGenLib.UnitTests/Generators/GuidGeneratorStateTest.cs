@@ -189,4 +189,19 @@ public partial class GuidGeneratorStateTest
         Assert.AreNotEqual(inputClockSeq, clockSeq);
         CollectionAssert.AreNotEqual(inputNodeId1, nodeId);
     }
+
+    [TestMethod]
+    public void ResetState_GuidVersion1R_GetDifferentClockSequencesAndNodeIds()
+    {
+        var guidGen = GuidGenerator.Version1R;
+        var guid0 = guidGen.NewGuid();
+        _ = guid0.TryGetClockSequence(out var clockSeq0);
+        _ = guid0.TryGetNodeId(out var nodeId0);
+        GuidGenerator.ResetState();
+        var guid1 = guidGen.NewGuid();
+        _ = guid1.TryGetClockSequence(out var clockSeq1);
+        _ = guid1.TryGetNodeId(out var nodeId1);
+        Assert.AreNotEqual(clockSeq0, clockSeq1);
+        CollectionAssert.AreNotEqual(nodeId0, nodeId1);
+    }
 }
