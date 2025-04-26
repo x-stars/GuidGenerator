@@ -33,7 +33,7 @@ internal sealed class ShowHelpCommand : ProgramCommand
             yield return $"Generate RFC 4122 compliant GUIDs.";
 #endif
             yield return $"Usage:  {cmdName} [-V1|-V4|-V1R] [-Cn]";
-            yield return $"        {cmdName} -V2 Domain [SiteID]";
+            yield return $"        {cmdName} -V2 Domain [LocalID]";
             yield return $"        {cmdName} -V3|-V5 :NS|GuidNS [Name]";
 #if !UUIDREV_DISABLE
             yield return $"        {cmdName} -V6|-V7|-V8|-V6P|-V6R [-Cn]";
@@ -63,7 +63,7 @@ internal sealed class ShowHelpCommand : ProgramCommand
             yield return "    -Cn     Generate n GUIDs of the current version.";
             yield return "    Domain  Specify a DCE Security domain,";
             yield return "            which can be Person, Group or Org.";
-            yield return "    SiteID  Specify a user-defined local ID";
+            yield return "    LocalID Specify a user-defined local ID";
             yield return "            for DCE Security domain Org (required).";
             yield return "    :NS     Specify a well-known GUID namespace,";
             yield return "            which can be :DNS, :URL, :OID or :X500.";
