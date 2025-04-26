@@ -248,7 +248,7 @@ GUID 生成命令行工具的工程位于 [XstarS.GuidGen.CLI](XstarS.GuidGen.CL
 > GuidGen -?
 Generate RFC 4122/9562 compliant GUIDs.
 Usage:  GuidGen[.exe] [-V1|-V4|-V1R] [-Cn]
-        GuidGen[.exe] -V2 Domain [SiteID]
+        GuidGen[.exe] -V2 Domain [LocalID]
         GuidGen[.exe] -V3|-V5 :NS|GuidNS [Name]
         GuidGen[.exe] -V6|-V7|-V8|-V6P|-V6R [-Cn]
         GuidGen[.exe] -V8N Hash :NS|GuidNS [Name]
@@ -271,7 +271,7 @@ Parameters:
     -Cn     Generate n GUIDs of the current version.
     Domain  Specify a DCE Security domain,
             which can be Person, Group or Org.
-    SiteID  Specify a user-defined local ID
+    LocalID Specify a user-defined local ID
             for DCE Security domain Org (required).
     :NS     Specify a well-known GUID namespace,
             which can be :DNS, :URL, :OID or :X500.
