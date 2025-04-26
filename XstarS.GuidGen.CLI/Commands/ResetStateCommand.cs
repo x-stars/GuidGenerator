@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using XNetEx.Guids.Generators;
 
 namespace XstarS.GuidGen.Commands;
@@ -7,7 +7,7 @@ internal sealed class ResetStateCommand : ProgramCommand
 {
     internal static readonly ResetStateCommand Instance = new();
 
-    private static readonly HashSet<string> ResetNames = ["-RS", "-RESET"];
+    private static readonly string[] ResetNames = ["-RS", "-RESET"];
 
     private ResetStateCommand() { }
 
@@ -19,7 +19,7 @@ internal sealed class ResetStateCommand : ProgramCommand
         }
         var resetNames = ResetStateCommand.ResetNames;
         var resetArg = args[0].ToUpperInvariant();
-        if (!resetNames.Contains(resetArg))
+        if (Array.IndexOf(resetNames, resetArg) < 0)
         {
             return false;
         }
