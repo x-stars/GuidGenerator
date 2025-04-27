@@ -3,27 +3,14 @@ using System.Collections.Generic;
 
 namespace XstarS.GuidGen.Commands;
 
-internal sealed class ShowHelpCommand : ProgramCommand
+internal sealed class ShowHelpCommand : SingleOptionCommand
 {
     internal static readonly ShowHelpCommand Instance = new();
 
-    private static readonly string[] HelpNames = ["-?", "-H", "-HELP"];
+    private ShowHelpCommand() : base("-?", "-H", "-HELP") { }
 
-    private ShowHelpCommand() { }
-
-    public override bool TryExecute(string[] args)
+    protected override void ExecuteCore(string optionArg)
     {
-        if (args.Length != 1)
-        {
-            return false;
-        }
-        var helpNames = ShowHelpCommand.HelpNames;
-        var helpArg = args[0].ToUpperInvariant();
-        if (Array.IndexOf(helpNames, helpArg) < 0)
-        {
-            return false;
-        }
-
         IEnumerable<string> GetHelpMessage()
         {
             var cmdName = this.GetCommandName();
@@ -40,7 +27,7 @@ internal sealed class ShowHelpCommand : ProgramCommand
             yield return $"        {cmdName} -V8N Hash :NS|GuidNS [Name]";
 #endif
             yield return $"        {cmdName} -RS|-Reset";
-            yield return $"        {cmdName} -V|-Version";
+            yield return $"        {cmdName} -Version";
             yield return $"        {cmdName} -?|-H|-Help";
             yield return "Parameters:";
             yield return "    -V1     Generate time-based GUID.";
@@ -83,7 +70,7 @@ internal sealed class ShowHelpCommand : ProgramCommand
 #endif
             yield return "    -RS|-Reset";
             yield return "            Reset the GUID generator state.";
-            yield return "    -V|-Version";
+            yield return "    -Version";
             yield return "            Show the version information.";
             yield return "    -?|-H|-Help";
             yield return "            Show the current help message.";
@@ -93,6 +80,5 @@ internal sealed class ShowHelpCommand : ProgramCommand
         {
             Console.Out.WriteLine(helpLine);
         }
-        return true;
     }
 }

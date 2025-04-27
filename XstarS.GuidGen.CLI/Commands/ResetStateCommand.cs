@@ -1,30 +1,15 @@
-﻿using System;
-using XNetEx.Guids.Generators;
+﻿using XNetEx.Guids.Generators;
 
 namespace XstarS.GuidGen.Commands;
 
-internal sealed class ResetStateCommand : ProgramCommand
+internal sealed class ResetStateCommand : SingleOptionCommand
 {
     internal static readonly ResetStateCommand Instance = new();
 
-    private static readonly string[] ResetNames = ["-RS", "-RESET"];
+    private ResetStateCommand() : base("-RS", "-RESET") { }
 
-    private ResetStateCommand() { }
-
-    public override bool TryExecute(string[] args)
+    protected override void ExecuteCore(string optionArg)
     {
-        if (args.Length != 1)
-        {
-            return false;
-        }
-        var resetNames = ResetStateCommand.ResetNames;
-        var resetArg = args[0].ToUpperInvariant();
-        if (Array.IndexOf(resetNames, resetArg) < 0)
-        {
-            return false;
-        }
-
         GuidGenerator.ResetState();
-        return true;
     }
 }

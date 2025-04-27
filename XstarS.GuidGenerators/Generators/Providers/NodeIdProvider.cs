@@ -30,6 +30,11 @@ internal abstract class NodeIdProvider
         return new NodeIdProvider.Custom(nodeIdProvider!);
     }
 
+    internal static void RefreshPhysicalAddress()
+    {
+        NodeIdProvider.PhysicalAddress.Instance.InvalidateCache();
+    }
+
     internal static void ResetNonVolatileRandom()
     {
         NodeIdProvider.RandomNumber.Instance.ResetNodeIdBytes();
@@ -95,6 +100,11 @@ internal abstract class NodeIdProvider
         public override byte[] NodeIdBytes => this.NodeIdBytesCache.Value;
 
         public override NodeIdSource SourceType => NodeIdSource.PhysicalAddress;
+
+        internal void InvalidateCache()
+        {
+            this.NodeIdBytesCache.Invalidate();
+        }
 
         private byte[] GetNodeIdBytes()
         {
