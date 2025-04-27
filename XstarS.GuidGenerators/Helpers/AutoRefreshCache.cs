@@ -58,6 +58,11 @@ internal sealed class AutoRefreshCache<T> : IDisposable
     private T? ValueForDebugDisplay =>
         (this.CachedValueBox is { Value: var value }) ? value : default(T?);
 
+    public void Invalidate()
+    {
+        this.CachedValueBox = null;
+    }
+
     public void Dispose()
     {
         [MethodImpl(MethodImplOptions.Synchronized)]

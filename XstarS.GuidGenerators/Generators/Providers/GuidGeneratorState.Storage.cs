@@ -35,6 +35,7 @@ partial class GuidGeneratorState
     {
         lock (GuidGeneratorState.PhysicalNodeState)
         {
+            NodeIdProvider.RefreshPhysicalAddress();
             GuidGeneratorState.PhysicalNodeState.Reset();
         }
         lock (GuidGeneratorState.RandomNodeState)
