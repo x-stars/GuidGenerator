@@ -67,5 +67,42 @@ public class NameBasedGuidGeneratorBenchmark
         var guidGen = GuidGenerator.Version8NSha512;
         var guid = guidGen.NewGuid(Guid.Empty, this.Name);
     }
+
+#if NET8_0_OR_GREATER
+    [Benchmark]
+    public void GuidV8NSha3D256Generate()
+    {
+        var guidGen = GuidGenerator.Version8NSha3D256;
+        var guid = guidGen.NewGuid(Guid.Empty, this.Name);
+    }
+
+    [Benchmark]
+    public void GuidV8NSha3D384Generate()
+    {
+        var guidGen = GuidGenerator.Version8NSha3D384;
+        var guid = guidGen.NewGuid(Guid.Empty, this.Name);
+    }
+
+    [Benchmark]
+    public void GuidV8NSha3D512Generate()
+    {
+        var guidGen = GuidGenerator.Version8NSha3D512;
+        var guid = guidGen.NewGuid(Guid.Empty, this.Name);
+    }
+
+    [Benchmark]
+    public void GuidV8NShake128Generate()
+    {
+        var guidGen = GuidGenerator.Version8NShake128;
+        var guid = guidGen.NewGuid(Guid.Empty, this.Name);
+    }
+
+    [Benchmark]
+    public void GuidV8NShake256Generate()
+    {
+        var guidGen = GuidGenerator.Version8NShake256;
+        var guid = guidGen.NewGuid(Guid.Empty, this.Name);
+    }
+#endif
 #endif
 }
