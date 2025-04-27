@@ -2,31 +2,16 @@
 
 namespace XstarS.GuidGen.Commands;
 
-internal sealed class ShowVersionCommand : ProgramCommand
+internal sealed class ShowVersionCommand : SingleOptionCommand
 {
     internal static readonly ShowVersionCommand Instance = new();
 
-    private static readonly string[] VersionNames = ["-V", "-VERSION"];
+    private ShowVersionCommand() : base("-VERSION") { }
 
-    private ShowVersionCommand() { }
-
-    public override bool TryExecute(string[] args)
+    protected override void ExecuteCore(string optionArg)
     {
-        if (args.Length != 1)
-        {
-            return false;
-        }
-        var versionNames = ShowVersionCommand.VersionNames;
-        var versionArg = args[0].ToUpperInvariant();
-        if (Array.IndexOf(versionNames, versionArg) < 0)
-        {
-            return false;
-        }
-
-        var program = ThisAssembly.Info.Title;
         var version = ThisAssembly.Info.InformationalVersion;
         version = version[..version.LastIndexOf('+')];
-        Console.WriteLine($"{program}, {version}");
-        return true;
+        Console.WriteLine($"{ThisAssembly.Info.Title} {version}");
     }
 }
