@@ -43,6 +43,7 @@ partial class GuidGeneratorState
             NodeIdProvider.ResetNonVolatileRandom();
             GuidGeneratorState.RandomNodeState.Reset();
         }
+        _ = GuidGeneratorState.SaveToStorageAsync();
     }
 
     private static string? SetSaveOnProcessExit()
