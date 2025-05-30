@@ -6,7 +6,7 @@ namespace XNetEx.Guids.Components;
 internal abstract class TimeNodeBasedGuidComponents
     : TimeBasedGuidComponents, ITimeNodeBasedGuidComponents
 {
-    public readonly short MaxClockSequence;
+    private readonly short MaxClockSequence;
 
     protected TimeNodeBasedGuidComponents(short maxClockSeq = (1 << 14) - 1)
         : base(TimestampEpochs.Gregorian, maxTimestamp: (1L << 60) - 1L)
