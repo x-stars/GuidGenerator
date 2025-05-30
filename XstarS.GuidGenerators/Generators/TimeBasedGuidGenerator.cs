@@ -14,7 +14,7 @@ internal partial class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 
     private static volatile TimeBasedGuidGenerator? SingletonR;
 
-    protected readonly GuidComponents GuidComponents;
+    private protected readonly GuidComponents GuidComponents;
 
     private readonly TimestampProvider TimestampProvider;
 
