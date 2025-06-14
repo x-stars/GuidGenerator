@@ -8,7 +8,9 @@
 
 #pragma warning disable
 #nullable enable
+
 #define INCRHASH_CHECK_DISPOSED
+#define INCRHASH_DEBUG_CHECK_SUPPORTED
 
 namespace System.Security.Cryptography
 {
@@ -26,6 +28,11 @@ namespace System.Security.Cryptography
     [DebuggerNonUserCode, ExcludeFromCodeCoverage]
     internal static class IncrementalHashAlgorithm
     {
+        /// <summary>
+        /// Indicates whether the incremental hash extensions are supported by the current runtime.
+        /// </summary>
+        public static readonly bool IsSupported = IncrementalHashAlgorithm.CheckIsSupported();
+
         /// <summary>
         /// Appends the specified data into the hash algorithm for computing the hash.
         /// </summary>
@@ -128,6 +135,35 @@ namespace System.Security.Cryptography
             if (hashing is null)
             {
                 throw new ArgumentNullException(nameof(hashing));
+            }
+        }
+
+        private static bool CheckIsSupported()
+        {
+            const string notSupportedMessage =
+                $"{nameof(IncrementalHashAlgorithm)} is not supported.";
+            try
+            {
+                using var hashing = SHA1.Create();
+                hashing.Initialize();
+                hashing.AppendData(Array.Empty<byte>());
+                var hash = hashing.GetFinalHash();
+                var hashBase64 = Convert.ToBase64String(hash);
+                var result = hashBase64 == "2jmj7l5rSw0yVb/vlWAYkK/YBwk=";
+#if INCRHASH_DEBUG_CHECK_SUPPORTED
+                if (!result)
+                {
+                    Debug.Fail(notSupportedMessage);
+                }
+#endif
+                return result;
+            }
+            catch (Exception ex)
+            {
+#if INCRHASH_DEBUG_CHECK_SUPPORTED
+                Debug.Fail(notSupportedMessage);
+#endif
+                return false;
             }
         }
 
