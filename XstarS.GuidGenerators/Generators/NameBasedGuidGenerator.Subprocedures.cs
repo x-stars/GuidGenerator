@@ -35,6 +35,16 @@ partial class NameBasedGuidGenerator
         HashAlgorithm hashing, Guid nsId, ReadOnlySpan<byte> name,
         Span<byte> destination, out int bytesWritten)
     {
+        if (!IncrementalHashAlgorithm.IsSupported
+#if DEBUG
+            == (Environment.TickCount % 2 != 0) // For testing fallback.
+#endif
+            )
+        {
+            return this.TryComputeHashFallback(
+                hashing, nsId, name, destination, out bytesWritten);
+        }
+
         hashing.Initialize();
         var guidBytes = (stackalloc byte[16]);
         var nsIdResult = nsId.TryWriteUuidBytes(guidBytes);
@@ -42,6 +52,23 @@ partial class NameBasedGuidGenerator
         hashing.AppendData(guidBytes);
         hashing.AppendData(name);
         return hashing.TryGetFinalHash(destination, out bytesWritten);
+    }
+
+    private bool TryComputeHashFallback(
+        HashAlgorithm hashing, Guid nsId, ReadOnlySpan<byte> name,
+        Span<byte> destination, out int bytesWritten)
+    {
+#if DEBUG
+        hashing.Initialize();
+#endif
+        const int guidSize = 16;
+        var inputLength = guidSize + name.Length;
+        var input = (name.Length <= 1024) ?
+            (stackalloc byte[inputLength]) : (new byte[inputLength]);
+        var nsIdResult = nsId.TryWriteUuidBytes(input);
+        Debug.Assert(nsIdResult);
+        name.CopyTo(input[guidSize..]);
+        return hashing.TryComputeHash(input, destination, out bytesWritten);
     }
 
     private Guid HashToGuid(ReadOnlySpan<byte> hash)
@@ -85,6 +112,15 @@ partial class NameBasedGuidGenerator
     private unsafe byte[] ComputeHash(
         HashAlgorithm hashing, Guid nsId, byte[] name)
     {
+        if (!IncrementalHashAlgorithm.IsSupported
+#if DEBUG
+            == (Environment.TickCount % 2 != 0) // For testing fallback.
+#endif
+            )
+        {
+            return this.ComputeHashFallback(hashing, nsId, name);
+        }
+
         hashing.Initialize();
         var guidBytes = LocalBuffers.GuidBytes;
         fixed (byte* pGuidBytes = &guidBytes[0])
@@ -94,6 +130,23 @@ partial class NameBasedGuidGenerator
         hashing.AppendData(guidBytes);
         hashing.AppendData(name);
         return hashing.GetFinalHash();
+    }
+
+    private unsafe byte[] ComputeHashFallback(
+        HashAlgorithm hashing, Guid nsId, byte[] name)
+    {
+#if DEBUG
+        hashing.Initialize();
+#endif
+        const int guidSize = 16;
+        var inputLength = guidSize + name.Length;
+        var input = new byte[inputLength];
+        fixed (byte* pInput = &input[0])
+        {
+            *(Guid*)pInput = nsId.ToBigEndian();
+        }
+        Buffer.BlockCopy(name, 0, input, guidSize, name.Length);
+        return hashing.ComputeHash(input);
     }
 
     private unsafe Guid HashToGuid(byte[] hash)
