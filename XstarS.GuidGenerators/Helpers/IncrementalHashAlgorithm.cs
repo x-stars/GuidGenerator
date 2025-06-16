@@ -31,7 +31,7 @@ namespace System.Security.Cryptography
         /// <summary>
         /// Indicates whether the incremental hash extensions are supported by the current runtime.
         /// </summary>
-        public static readonly bool IsSupported = IncrementalHashAlgorithm.CheckIsSupported();
+        public static readonly bool IsSupported = IncrementalHashAlgorithm.CheckSupported();
 
         /// <summary>
         /// Appends the specified data into the hash algorithm for computing the hash.
@@ -138,7 +138,7 @@ namespace System.Security.Cryptography
             }
         }
 
-        private static bool CheckIsSupported()
+        private static bool CheckSupported()
         {
             const string notSupportedMessage =
                 $"{nameof(IncrementalHashAlgorithm)} is not supported.";
@@ -161,7 +161,7 @@ namespace System.Security.Cryptography
             catch (Exception ex)
             {
 #if INCRHASH_DEBUG_CHECK_SUPPORTED
-                Debug.Fail(notSupportedMessage);
+                Debug.Fail(notSupportedMessage, ex.Message);
 #endif
                 return false;
             }
