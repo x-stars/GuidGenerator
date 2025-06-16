@@ -15,7 +15,8 @@ partial class NameBasedGuidGenerator
         try
         {
             var hashSize = hashing.HashSize / 8;
-            var hash = (stackalloc byte[hashSize]);
+            var hash = ((uint)hashSize <= 1024) ?
+                (stackalloc byte[hashSize]) : (new byte[hashSize]);
             var result = this.TryComputeHash(
                 hashing, nsId, name, hash, out var bytesWritten);
             if (!result || (bytesWritten != hashSize))
@@ -63,7 +64,7 @@ partial class NameBasedGuidGenerator
 #endif
         const int guidSize = 16;
         var inputLength = guidSize + name.Length;
-        var input = (name.Length <= 1024) ?
+        var input = ((uint)name.Length <= 1024) ?
             (stackalloc byte[inputLength]) : (new byte[inputLength]);
         var nsIdResult = nsId.TryWriteUuidBytes(input);
         Debug.Assert(nsIdResult);
