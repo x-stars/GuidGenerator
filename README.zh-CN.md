@@ -48,15 +48,15 @@ GUID 生成库的工程位于 [XstarS.GuidGenerators](XstarS.GuidGenerators)。
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
-// Time-based GUID generation.
+// Generate time-based GUID.
 var guidV1 = GuidGenerator.Version1.NewGuid();
 // 3944a871-aa14-11ed-8791-a9a9a46de54f
 
-// Name-based GUID generation.
+// Generate name-based GUID.
 var guidV5 = GuidGenerator.Version5.NewGuid(GuidNamespaces.Dns, "github.com");
 // 6fca3dd2-d61d-58de-9363-1574b382ea68
 
-// Unix time-based GUID generation.
+// Generate Unix time-based GUID.
 var guidV7 = GuidGenerator.Version7.NewGuid();
 // 018640c6-0dc9-7189-a644-31acdba4cabc
 ```
@@ -67,7 +67,7 @@ var guidV7 = GuidGenerator.Version7.NewGuid();
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
 
-// Generate time-based GUID generation.
+// Generate time-based GUID.
 var guidV1 = GuidGenerator.OfVersion(1).NewGuid();
 // 3944a871-aa14-11ed-8791-a9a9a46de54f
 
@@ -94,7 +94,7 @@ var guidGenV1C =
     // CustomStateGuidGeneratorBuilder.Version1
         .UseTimestampProvider(() => DateTime.UtcNow + TimeSpan.FromHours(8))
         .UseClockSequence(0x0123)
-        .UseNodeId(new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05 })
+        .UseNodeId(new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 })
         .ToGuidGenerator();
 
 // Generate custom state time-based GUID.
