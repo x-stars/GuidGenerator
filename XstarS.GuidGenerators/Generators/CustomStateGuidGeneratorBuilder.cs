@@ -223,10 +223,7 @@ public readonly struct CustomStateGuidGeneratorBuilder
     /// <paramref name="nodeId"/> is not 6 bytes long.</exception>
     public CustomStateGuidGeneratorBuilder UseNodeId(byte[] nodeId)
     {
-        if (nodeId is null)
-        {
-            throw new ArgumentNullException(nameof(nodeId));
-        }
+        ArgumentNullException.ThrowIfNull(nodeId);
         if (nodeId.Length != 6)
         {
             throw new ArgumentException(

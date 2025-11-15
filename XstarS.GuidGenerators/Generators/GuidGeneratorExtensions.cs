@@ -31,14 +31,8 @@ public static class GuidGeneratorExtensions
     public static Guid NewGuid(this GuidGenerator guidGen,
         Guid nsId, string name, Encoding? encoding = null)
     {
-        if (guidGen is null)
-        {
-            throw new ArgumentNullException(nameof(guidGen));
-        }
-        if (name is null)
-        {
-            throw new ArgumentNullException(nameof(name));
-        }
+        ArgumentNullException.ThrowIfNull(guidGen);
+        ArgumentNullException.ThrowIfNull(name);
         encoding ??= Encoding.UTF8;
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -70,10 +64,7 @@ public static class GuidGeneratorExtensions
     public static Guid NewGuid(this GuidGenerator guidGen,
         Guid nsId, ReadOnlySpan<char> name, Encoding? encoding = null)
     {
-        if (guidGen is null)
-        {
-            throw new ArgumentNullException(nameof(guidGen));
-        }
+        ArgumentNullException.ThrowIfNull(guidGen);
         encoding ??= Encoding.UTF8;
 
         var nameLength = encoding.GetByteCount(name);
@@ -103,14 +94,8 @@ public static class GuidGeneratorExtensions
     public static Guid NewGuid(this INameBasedGuidGenerator guidGen,
         Guid nsId, string name, Encoding? encoding = null)
     {
-        if (guidGen is null)
-        {
-            throw new ArgumentNullException(nameof(guidGen));
-        }
-        if (name is null)
-        {
-            throw new ArgumentNullException(nameof(name));
-        }
+        ArgumentNullException.ThrowIfNull(guidGen);
+        ArgumentNullException.ThrowIfNull(name);
         encoding ??= Encoding.UTF8;
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -140,10 +125,7 @@ public static class GuidGeneratorExtensions
     public static Guid NewGuid(this INameBasedGuidGenerator guidGen,
         Guid nsId, ReadOnlySpan<char> name, Encoding? encoding = null)
     {
-        if (guidGen is null)
-        {
-            throw new ArgumentNullException(nameof(guidGen));
-        }
+        ArgumentNullException.ThrowIfNull(guidGen);
         encoding ??= Encoding.UTF8;
 
         var nameLength = encoding.GetByteCount(name);

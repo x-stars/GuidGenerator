@@ -29,10 +29,7 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 
     public sealed override Guid NewGuid(Guid nsId, byte[] name)
     {
-        if (name is null)
-        {
-            throw new ArgumentNullException(nameof(name));
-        }
+        ArgumentNullException.ThrowIfNull(name);
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         return this.NewGuid(nsId, (ReadOnlySpan<byte>)name);

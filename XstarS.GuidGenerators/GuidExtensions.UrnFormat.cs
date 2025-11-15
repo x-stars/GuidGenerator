@@ -22,10 +22,7 @@ static partial class GuidExtensions
     public static Guid ParseUrn(
         [StringSyntax(StringSyntaxAttribute.Uri)] string input)
     {
-        if (input is null)
-        {
-            throw new ArgumentNullException(nameof(input));
-        }
+        ArgumentNullException.ThrowIfNull(input);
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         return GuidExtensions.ParseUrn((ReadOnlySpan<char>)input);

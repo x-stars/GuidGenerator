@@ -104,10 +104,7 @@ partial class NameBasedGuidGenerator
             internal Synchronized(HashAlgorithm hashing)
                 : base(hashing.Identity)
             {
-                if (hashing is null)
-                {
-                    throw new ArgumentNullException(nameof(hashing));
-                }
+                ArgumentNullException.ThrowIfNull(hashing);
                 if (hashing.HashSize < 16 * 8)
                 {
                     throw new ArgumentException(

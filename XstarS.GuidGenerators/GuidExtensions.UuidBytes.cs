@@ -52,10 +52,7 @@ static partial class GuidExtensions
     /// <paramref name="bytes"/> is not 16 bytes long.</exception>
     public static unsafe Guid FromUuidByteArray(byte[] bytes)
     {
-        if (bytes is null)
-        {
-            throw new ArgumentNullException(nameof(bytes));
-        }
+        ArgumentNullException.ThrowIfNull(bytes);
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         return GuidExtensions.FromUuidBytes((ReadOnlySpan<byte>)bytes);

@@ -20,10 +20,7 @@ static partial class GuidExtensions
     /// <paramref name="hashData"/> is not 16 bytes long.</exception>
     public static Guid ReplaceHashData(this Guid guid, byte[] hashData)
     {
-        if (hashData is null)
-        {
-            throw new ArgumentNullException(nameof(hashData));
-        }
+        ArgumentNullException.ThrowIfNull(hashData);
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         return guid.ReplaceHashData((ReadOnlySpan<byte>)hashData);
@@ -93,10 +90,8 @@ static partial class GuidExtensions
     /// <paramref name="randomData"/> is not 16 bytes long.</exception>
     public static Guid ReplaceRandomData(this Guid guid, byte[] randomData)
     {
-        if (randomData is null)
-        {
-            throw new ArgumentNullException(nameof(randomData));
-        }
+        ArgumentNullException.ThrowIfNull(randomData);
+
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         return guid.ReplaceRandomData((ReadOnlySpan<byte>)randomData);
@@ -169,10 +164,8 @@ static partial class GuidExtensions
     /// <paramref name="customData"/> is not 16 bytes long.</exception>
     public static Guid ReplaceCustomData(this Guid guid, byte[] customData)
     {
-        if (customData is null)
-        {
-            throw new ArgumentNullException(nameof(customData));
-        }
+        ArgumentNullException.ThrowIfNull(customData);
+
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         return guid.ReplaceCustomData((ReadOnlySpan<byte>)customData);

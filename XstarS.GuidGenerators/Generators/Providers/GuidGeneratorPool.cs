@@ -21,10 +21,7 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
 
     internal GuidGeneratorPool(Func<IBlockingGuidGenerator> factory, int capacity = -1)
     {
-        if (factory is null)
-        {
-            throw new ArgumentNullException(nameof(factory));
-        }
+        ArgumentNullException.ThrowIfNull(factory);
         if ((capacity <= 0) && (capacity != -1))
         {
             throw new ArgumentOutOfRangeException(
