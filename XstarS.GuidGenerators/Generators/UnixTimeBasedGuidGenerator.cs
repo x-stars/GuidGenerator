@@ -9,8 +9,6 @@ namespace XNetEx.Guids.Generators;
 
 internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
 {
-    private static volatile UnixTimeBasedGuidGenerator? Singleton;
-
     private readonly GuidComponents GuidComponents;
 
     private readonly TimestampProvider TimestampProvider;
@@ -43,11 +41,11 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
             [MethodImpl(MethodImplOptions.Synchronized)]
             static UnixTimeBasedGuidGenerator Initialize()
             {
-                return UnixTimeBasedGuidGenerator.Singleton ??=
-                    new UnixTimeBasedGuidGenerator();
+                return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                    new UnixTimeBasedGuidGenerator());
             }
 
-            return UnixTimeBasedGuidGenerator.Singleton ?? Initialize();
+            return Volatile.Read(ref field) ?? Initialize();
         }
     }
 

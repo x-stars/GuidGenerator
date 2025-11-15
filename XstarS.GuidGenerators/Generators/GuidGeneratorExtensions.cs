@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Diagnostics;
@@ -31,14 +33,8 @@ public static class GuidGeneratorExtensions
     public static Guid NewGuid(this GuidGenerator guidGen,
         Guid nsId, string name, Encoding? encoding = null)
     {
-        if (guidGen is null)
-        {
-            throw new ArgumentNullException(nameof(guidGen));
-        }
-        if (name is null)
-        {
-            throw new ArgumentNullException(nameof(name));
-        }
+        ArgumentNullException.ThrowIfNull(guidGen);
+        ArgumentNullException.ThrowIfNull(name);
         encoding ??= Encoding.UTF8;
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -70,10 +66,7 @@ public static class GuidGeneratorExtensions
     public static Guid NewGuid(this GuidGenerator guidGen,
         Guid nsId, ReadOnlySpan<char> name, Encoding? encoding = null)
     {
-        if (guidGen is null)
-        {
-            throw new ArgumentNullException(nameof(guidGen));
-        }
+        ArgumentNullException.ThrowIfNull(guidGen);
         encoding ??= Encoding.UTF8;
 
         var nameLength = encoding.GetByteCount(name);
@@ -103,14 +96,8 @@ public static class GuidGeneratorExtensions
     public static Guid NewGuid(this INameBasedGuidGenerator guidGen,
         Guid nsId, string name, Encoding? encoding = null)
     {
-        if (guidGen is null)
-        {
-            throw new ArgumentNullException(nameof(guidGen));
-        }
-        if (name is null)
-        {
-            throw new ArgumentNullException(nameof(name));
-        }
+        ArgumentNullException.ThrowIfNull(guidGen);
+        ArgumentNullException.ThrowIfNull(name);
         encoding ??= Encoding.UTF8;
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -140,10 +127,7 @@ public static class GuidGeneratorExtensions
     public static Guid NewGuid(this INameBasedGuidGenerator guidGen,
         Guid nsId, ReadOnlySpan<char> name, Encoding? encoding = null)
     {
-        if (guidGen is null)
-        {
-            throw new ArgumentNullException(nameof(guidGen));
-        }
+        ArgumentNullException.ThrowIfNull(guidGen);
         encoding ??= Encoding.UTF8;
 
         var nameLength = encoding.GetByteCount(name);
@@ -152,6 +136,26 @@ public static class GuidGeneratorExtensions
         var bytesWritten = encoding.GetBytes(name, nameBytes);
         Debug.Assert(bytesWritten == nameLength);
         return guidGen.NewGuid(nsId, nameBytes);
+    }
+#endif
+
+#if !UUIDREV_DISABLE
+    private static readonly ConditionalWeakTable<HashAlgorithm, INameBasedGuidGenerator> Version8NOfHashing = new();
+
+    extension(GuidGenerator)
+    {
+        /// <summary>
+        /// Gets the related <see cref="INameBasedGuidGenerator"/> instance of the specified hash algorithm.
+        /// </summary>
+        /// <param name="hashing">The hash algorithm to use.</param>
+        /// <returns>The related <see cref="INameBasedGuidGenerator"/>
+        /// instance of <paramref name="hashing"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="hashing"/> is null.</exception>
+        internal static INameBasedGuidGenerator GetVersion8NOf(HashAlgorithm hashing)
+        {
+            ArgumentNullException.ThrowIfNull(hashing);
+            return GuidGeneratorExtensions.Version8NOfHashing.GetValue(hashing, GuidGenerator.CreateVersion8N);
+        }
     }
 #endif
 }

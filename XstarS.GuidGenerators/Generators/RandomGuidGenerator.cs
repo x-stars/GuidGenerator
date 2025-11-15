@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace XNetEx.Guids.Generators;
 
 internal sealed class RandomGuidGenerator : GuidGenerator, IGuidGenerator
 {
-    private static volatile RandomGuidGenerator? Singleton;
-
     private RandomGuidGenerator() { }
 
     internal static RandomGuidGenerator Instance
@@ -18,11 +17,11 @@ internal sealed class RandomGuidGenerator : GuidGenerator, IGuidGenerator
             [MethodImpl(MethodImplOptions.Synchronized)]
             static RandomGuidGenerator Initialize()
             {
-                return RandomGuidGenerator.Singleton ??=
-                    new RandomGuidGenerator();
+                return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                    new RandomGuidGenerator());
             }
 
-            return RandomGuidGenerator.Singleton ?? Initialize();
+            return Volatile.Read(ref field) ?? Initialize();
         }
     }
 

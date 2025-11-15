@@ -162,10 +162,7 @@ static partial class GuidExtensions
     /// <paramref name="nodeId"/> is not 6 bytes long.</exception>
     public static Guid ReplaceNodeId(this Guid guid, byte[] nodeId)
     {
-        if (nodeId is null)
-        {
-            throw new ArgumentNullException(nameof(nodeId));
-        }
+        ArgumentNullException.ThrowIfNull(nodeId);
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         return guid.ReplaceNodeId((ReadOnlySpan<byte>)nodeId);

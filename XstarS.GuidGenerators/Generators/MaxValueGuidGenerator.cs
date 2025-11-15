@@ -2,13 +2,12 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace XNetEx.Guids.Generators;
 
 internal sealed class MaxValueGuidGenerator : GuidGenerator, IGuidGenerator
 {
-    private static volatile MaxValueGuidGenerator? Singleton;
-
     private MaxValueGuidGenerator() { }
 
     internal static MaxValueGuidGenerator Instance
@@ -19,11 +18,11 @@ internal sealed class MaxValueGuidGenerator : GuidGenerator, IGuidGenerator
             [MethodImpl(MethodImplOptions.Synchronized)]
             static MaxValueGuidGenerator Initialize()
             {
-                return MaxValueGuidGenerator.Singleton ??=
-                    new MaxValueGuidGenerator();
+                return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                    new MaxValueGuidGenerator());
             }
 
-            return MaxValueGuidGenerator.Singleton ?? Initialize();
+            return Volatile.Read(ref field) ?? Initialize();
         }
     }
 

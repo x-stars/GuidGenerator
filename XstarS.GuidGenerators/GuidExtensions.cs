@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -11,6 +12,37 @@ namespace XNetEx.Guids;
 /// </summary>
 public static partial class GuidExtensions
 {
+    extension(Guid)
+    {
+#if !UUIDREV_DISABLE
+        /// <summary>
+        /// Gets an instance of the <see cref="Guid"/> structure whose value is all ones.
+        /// </summary>
+        /// <returns>An instance of the <see cref="Guid"/> structure whose value is all ones.</returns>
+        public static Guid MaxValue
+        {
+            // Add to hide the `get_*` method only in IntelliSense.
+            [EditorBrowsable(EditorBrowsableState.Never)]
+            get => Uuid.MaxValue;
+        }
+#endif
+
+        /// <summary>
+        /// Returns a new RFC 4122 <see cref="Guid"/> instance of the specified
+        /// <see cref="GuidVersion"/> with all other fields set to zero.
+        /// This method is useful when building a GUID by components.
+        /// </summary>
+        /// <param name="version">The version of the new <see cref="Guid"/> instance.</param>
+        /// <returns>A new RFC 4122 <see cref="Guid"/> instance of
+        /// <paramref name="version"/> with all other fields set to zero.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="version"/> is not a valid <see cref="GuidVersion"/> value.</exception>
+        public static Guid EmptyOf(GuidVersion version)
+        {
+            return Uuid.EmptyOf(version);
+        }
+    }
+
     /// <summary>
     /// Deconstructs the <see cref="Guid"/> into fields of integers and bytes.
     /// </summary>

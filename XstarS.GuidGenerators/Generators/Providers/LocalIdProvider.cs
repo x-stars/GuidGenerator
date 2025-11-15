@@ -10,8 +10,6 @@ namespace XNetEx.Guids.Generators;
 
 internal abstract class LocalIdProvider
 {
-    private static volatile LocalIdProvider? Singleton;
-
     private readonly AutoRefreshCache<int> LocalUserIdCache;
 
     private readonly AutoRefreshCache<int> LocalGroupIdCache;
@@ -33,11 +31,11 @@ internal abstract class LocalIdProvider
             [MethodImpl(MethodImplOptions.Synchronized)]
             static LocalIdProvider Initialize()
             {
-                return LocalIdProvider.Singleton ??=
-                    LocalIdProvider.Create();
+                return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                    LocalIdProvider.Create());
             }
 
-            return LocalIdProvider.Singleton ?? Initialize();
+            return Volatile.Read(ref field) ?? Initialize();
         }
     }
 

@@ -84,10 +84,7 @@ public abstract partial class CustomGuidGenerator : GuidGenerator
     /// The input <see cref="NodeIdSource"/> is <see cref="NodeIdSource.None"/>.</exception>
     protected void GetNodeIdBytes(byte[] buffer)
     {
-        if (buffer is null)
-        {
-            throw new ArgumentNullException(nameof(buffer));
-        }
+        ArgumentNullException.ThrowIfNull(buffer);
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         this.GetNodeIdBytes((Span<byte>)buffer);

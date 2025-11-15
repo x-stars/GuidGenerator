@@ -26,10 +26,7 @@ internal sealed class AutoRefreshCache<T> : IDisposable
 
     public AutoRefreshCache(Func<T> refreshFunc, int refreshPeriod, int sleepAfter)
     {
-        if (refreshFunc is null)
-        {
-            throw new ArgumentNullException(nameof(refreshFunc));
-        }
+        ArgumentNullException.ThrowIfNull(refreshFunc);
         if ((refreshPeriod < 0) && (refreshPeriod != Timeout.Infinite))
         {
             throw new ArgumentOutOfRangeException(nameof(refreshPeriod),

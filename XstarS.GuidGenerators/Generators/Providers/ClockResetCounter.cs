@@ -91,8 +91,6 @@ internal abstract class ClockResetCounter
 
         private static readonly int RollbackLimit = Environment.ProcessorCount;
 
-        private long Volatile_LastTimestamp;
-
         // InitFlag: 31, LastClock: 27~16, Sequence: 14~0.
         private volatile int SequenceState;
 
@@ -107,8 +105,8 @@ internal abstract class ClockResetCounter
 
         private long LastTimestamp
         {
-            get => Volatile.Read(ref this.Volatile_LastTimestamp);
-            set => Volatile.Write(ref this.Volatile_LastTimestamp, value);
+            get => Volatile.Read(ref field);
+            set => Volatile.Write(ref field, value);
         }
 
         internal static ClockResetCounter.Global Create() => new();

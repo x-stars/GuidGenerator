@@ -15,8 +15,6 @@ internal sealed partial class GuidGeneratorState
 
     private readonly NodeIdSource NodeIdSource;
 
-    private long Volatile_LastTimestamp;
-
     private volatile int ClockSequence;
 
     private volatile byte[]? LastNodeIdBytes;
@@ -33,8 +31,8 @@ internal sealed partial class GuidGeneratorState
 
     private long LastTimestamp
     {
-        get => Volatile.Read(ref this.Volatile_LastTimestamp);
-        set => Volatile.Write(ref this.Volatile_LastTimestamp, value);
+        get => Volatile.Read(ref field);
+        set => Volatile.Write(ref field, value);
     }
 
     internal static GuidGeneratorState GetInstance(NodeIdSource nodeIdSource)

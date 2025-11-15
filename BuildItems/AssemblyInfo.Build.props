@@ -13,4 +13,8 @@
     <DefineConstants>$(DefineConstants);UUIDREV_DISABLE</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <NoWarn Condition="'$(TargetFramework)'=='net6.0'">$(NoWarn);NETSDK1138</NoWarn>
+  </PropertyGroup>
+
 </Project>
