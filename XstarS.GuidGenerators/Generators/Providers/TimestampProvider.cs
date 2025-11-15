@@ -7,8 +7,6 @@ namespace XNetEx.Guids.Generators;
 
 internal abstract class TimestampProvider
 {
-    private static volatile TimestampProvider? Singleton;
-
     private TimestampProvider() { }
 
     internal static TimestampProvider Instance
@@ -19,11 +17,11 @@ internal abstract class TimestampProvider
             [MethodImpl(MethodImplOptions.Synchronized)]
             static TimestampProvider Initialize()
             {
-                return TimestampProvider.Singleton ??=
-                    TimestampProvider.Create();
+                return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                    TimestampProvider.Create());
             }
 
-            return TimestampProvider.Singleton ?? Initialize();
+            return Volatile.Read(ref field) ?? Initialize();
         }
     }
 
@@ -81,8 +79,6 @@ internal abstract class TimestampProvider
 
     private sealed class PerfCounter : TimestampProvider
     {
-        private long Volatile_StartTimestamp;
-
         private readonly Stopwatch HiResTimer;
 
         private readonly Timer UpdateTimeTask;
@@ -100,8 +96,8 @@ internal abstract class TimestampProvider
 
         private long StartTimestamp
         {
-            get => Volatile.Read(ref this.Volatile_StartTimestamp);
-            set => Volatile.Write(ref this.Volatile_StartTimestamp, value);
+            get => Volatile.Read(ref field);
+            set => Volatile.Write(ref field, value);
         }
 
         public override long CurrentTimestamp =>

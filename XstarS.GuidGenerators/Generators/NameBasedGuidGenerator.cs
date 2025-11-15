@@ -81,8 +81,6 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 
     internal sealed class MD5Hashing : NameBasedGuidGenerator
     {
-        private static volatile NameBasedGuidGenerator.MD5Hashing? Singleton;
-
         private MD5Hashing() { }
 
         internal static NameBasedGuidGenerator.MD5Hashing Instance
@@ -93,11 +91,11 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static NameBasedGuidGenerator.MD5Hashing Initialize()
                 {
-                    return NameBasedGuidGenerator.MD5Hashing.Singleton ??=
-                        new NameBasedGuidGenerator.MD5Hashing();
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new NameBasedGuidGenerator.MD5Hashing());
                 }
 
-                return NameBasedGuidGenerator.MD5Hashing.Singleton ?? Initialize();
+                return Volatile.Read(ref field) ?? Initialize();
             }
         }
 
@@ -108,8 +106,6 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 
     internal sealed class SHA1Hashing : NameBasedGuidGenerator
     {
-        private static volatile NameBasedGuidGenerator.SHA1Hashing? Singleton;
-
         private SHA1Hashing() { }
 
         internal static NameBasedGuidGenerator.SHA1Hashing Instance
@@ -120,11 +116,11 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static NameBasedGuidGenerator.SHA1Hashing Initialize()
                 {
-                    return NameBasedGuidGenerator.SHA1Hashing.Singleton ??=
-                        new NameBasedGuidGenerator.SHA1Hashing();
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new NameBasedGuidGenerator.SHA1Hashing());
                 }
 
-                return NameBasedGuidGenerator.SHA1Hashing.Singleton ?? Initialize();
+                return Volatile.Read(ref field) ?? Initialize();
             }
         }
 

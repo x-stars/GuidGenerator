@@ -1,6 +1,7 @@
 ﻿#if !UUIDREV_DISABLE
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using System.Threading;
 #if NET8_0_OR_GREATER
 using System;
 using XNetEx.Security.Cryptography;
@@ -12,24 +13,6 @@ partial class NameBasedGuidGenerator
 {
     partial class CustomHashing
     {
-        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha256;
-
-        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha384;
-
-        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha512;
-
-#if NET8_0_OR_GREATER
-        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha3D256;
-
-        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha3D384;
-
-        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonSha3D512;
-
-        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonShake128;
-
-        private static volatile NameBasedGuidGenerator.CustomHashing? SingletonShake256;
-#endif
-
         // Don't use `Lazy<T>` for lazy initialization for performance issues
         // in .NET Framework (fixed in .NET Core).
 
@@ -41,11 +24,11 @@ partial class NameBasedGuidGenerator
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    return NameBasedGuidGenerator.CustomHashing.SingletonSha256 ??=
-                        new NameBasedGuidGenerator.CustomHashing(SHA256.Create);
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new NameBasedGuidGenerator.CustomHashing(SHA256.Create));
                 }
 
-                return NameBasedGuidGenerator.CustomHashing.SingletonSha256 ?? Initialize();
+                return Volatile.Read(ref field) ?? Initialize();
             }
         }
 
@@ -57,11 +40,11 @@ partial class NameBasedGuidGenerator
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    return NameBasedGuidGenerator.CustomHashing.SingletonSha384 ??=
-                        new NameBasedGuidGenerator.CustomHashing(SHA384.Create);
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new NameBasedGuidGenerator.CustomHashing(SHA384.Create));
                 }
 
-                return NameBasedGuidGenerator.CustomHashing.SingletonSha384 ?? Initialize();
+                return Volatile.Read(ref field) ?? Initialize();
             }
         }
 
@@ -73,11 +56,11 @@ partial class NameBasedGuidGenerator
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    return NameBasedGuidGenerator.CustomHashing.SingletonSha512 ??=
-                        new NameBasedGuidGenerator.CustomHashing(SHA512.Create);
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new NameBasedGuidGenerator.CustomHashing(SHA512.Create));
                 }
 
-                return NameBasedGuidGenerator.CustomHashing.SingletonSha512 ?? Initialize();
+                return Volatile.Read(ref field) ?? Initialize();
             }
         }
 
@@ -91,11 +74,11 @@ partial class NameBasedGuidGenerator
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
                     ThrowIfNotSupported(SHA3_256.IsSupported, HashAlgorithmNames.SHA3_256);
-                    return NameBasedGuidGenerator.CustomHashing.SingletonSha3D256 ??=
-                        new NameBasedGuidGenerator.CustomHashing(SHA3_256.Create);
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new NameBasedGuidGenerator.CustomHashing(SHA3_256.Create));
                 }
 
-                return NameBasedGuidGenerator.CustomHashing.SingletonSha3D256 ?? Initialize();
+                return Volatile.Read(ref field) ?? Initialize();
             }
         }
 
@@ -108,11 +91,11 @@ partial class NameBasedGuidGenerator
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
                     ThrowIfNotSupported(SHA3_384.IsSupported, HashAlgorithmNames.SHA3_384);
-                    return NameBasedGuidGenerator.CustomHashing.SingletonSha3D384 ??=
-                        new NameBasedGuidGenerator.CustomHashing(SHA3_384.Create);
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new NameBasedGuidGenerator.CustomHashing(SHA3_384.Create));
                 }
 
-                return NameBasedGuidGenerator.CustomHashing.SingletonSha3D384 ?? Initialize();
+                return Volatile.Read(ref field) ?? Initialize();
             }
         }
 
@@ -125,11 +108,11 @@ partial class NameBasedGuidGenerator
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
                     ThrowIfNotSupported(SHA3_512.IsSupported, HashAlgorithmNames.SHA3_512);
-                    return NameBasedGuidGenerator.CustomHashing.SingletonSha3D512 ??=
-                        new NameBasedGuidGenerator.CustomHashing(SHA3_512.Create);
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new NameBasedGuidGenerator.CustomHashing(SHA3_512.Create));
                 }
 
-                return NameBasedGuidGenerator.CustomHashing.SingletonSha3D512 ?? Initialize();
+                return Volatile.Read(ref field) ?? Initialize();
             }
         }
 
@@ -142,11 +125,11 @@ partial class NameBasedGuidGenerator
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
                     ThrowIfNotSupported(Shake128.IsSupported, HashAlgorithmNames.SHAKE128);
-                    return NameBasedGuidGenerator.CustomHashing.SingletonShake128 ??=
-                        new NameBasedGuidGenerator.CustomHashing(Shake128D.Create256);
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new NameBasedGuidGenerator.CustomHashing(Shake128D.Create256));
                 }
 
-                return NameBasedGuidGenerator.CustomHashing.SingletonShake128 ?? Initialize();
+                return Volatile.Read(ref field) ?? Initialize();
             }
         }
 
@@ -159,11 +142,11 @@ partial class NameBasedGuidGenerator
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
                     ThrowIfNotSupported(Shake256.IsSupported, HashAlgorithmNames.SHAKE256);
-                    return NameBasedGuidGenerator.CustomHashing.SingletonShake256 ??=
-                        new NameBasedGuidGenerator.CustomHashing(Shake256D.Create512);
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new NameBasedGuidGenerator.CustomHashing(Shake256D.Create512));
                 }
 
-                return NameBasedGuidGenerator.CustomHashing.SingletonShake256 ?? Initialize();
+                return Volatile.Read(ref field) ?? Initialize();
             }
         }
 

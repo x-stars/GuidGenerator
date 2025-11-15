@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace XNetEx.Guids.Generators;
 
@@ -9,8 +10,6 @@ partial class CustomGuidGenerator
 {
     internal sealed class Example : CustomGuidGenerator, IGuidGenerator
     {
-        private static volatile CustomGuidGenerator.Example? Singleton;
-
         private Example() : base(TimestampEpochs.UnixTime) { }
 
         internal static CustomGuidGenerator.Example Instance
@@ -21,11 +20,11 @@ partial class CustomGuidGenerator
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static CustomGuidGenerator.Example Initialize()
                 {
-                    return CustomGuidGenerator.Example.Singleton ??=
-                        new CustomGuidGenerator.Example();
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new CustomGuidGenerator.Example());
                 }
 
-                return CustomGuidGenerator.Example.Singleton ?? Initialize();
+                return Volatile.Read(ref field) ?? Initialize();
             }
         }
 

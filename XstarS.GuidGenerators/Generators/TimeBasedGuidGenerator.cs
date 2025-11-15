@@ -10,10 +10,6 @@ internal partial class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
     , IBlockingGuidGenerator
 #endif
 {
-    private static volatile TimeBasedGuidGenerator? Singleton;
-
-    private static volatile TimeBasedGuidGenerator? SingletonR;
-
     private protected readonly GuidComponents GuidComponents;
 
     private readonly TimestampProvider TimestampProvider;
@@ -57,11 +53,11 @@ internal partial class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
             [MethodImpl(MethodImplOptions.Synchronized)]
             static TimeBasedGuidGenerator Initialize()
             {
-                return TimeBasedGuidGenerator.Singleton ??=
-                    new TimeBasedGuidGenerator();
+                return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                    new TimeBasedGuidGenerator());
             }
 
-            return TimeBasedGuidGenerator.Singleton ?? Initialize();
+            return Volatile.Read(ref field) ?? Initialize();
         }
     }
 
@@ -73,11 +69,11 @@ internal partial class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
             [MethodImpl(MethodImplOptions.Synchronized)]
             static TimeBasedGuidGenerator Initialize()
             {
-                return TimeBasedGuidGenerator.SingletonR ??=
-                    new TimeBasedGuidGenerator(NodeIdSource.NonVolatileRandom);
+                return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                    new TimeBasedGuidGenerator(NodeIdSource.NonVolatileRandom));
             }
 
-            return TimeBasedGuidGenerator.SingletonR ?? Initialize();
+            return Volatile.Read(ref field) ?? Initialize();
         }
     }
 

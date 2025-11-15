@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using XNetEx.Threading;
 
 namespace XNetEx.Guids.Generators;
@@ -42,8 +43,6 @@ internal abstract class NodeIdProvider
 
     private sealed class Nothing : NodeIdProvider
     {
-        private static volatile NodeIdProvider.Nothing? Singleton;
-
         private Nothing() { }
 
         internal static NodeIdProvider.Nothing Instance
@@ -54,11 +53,11 @@ internal abstract class NodeIdProvider
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static NodeIdProvider.Nothing Initialize()
                 {
-                    return NodeIdProvider.Nothing.Singleton ??=
-                        new NodeIdProvider.Nothing();
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new NodeIdProvider.Nothing());
                 }
 
-                return NodeIdProvider.Nothing.Singleton ?? Initialize();
+                return Volatile.Read(ref field) ?? Initialize();
             }
         }
 
@@ -71,8 +70,6 @@ internal abstract class NodeIdProvider
 
     private sealed class PhysicalAddress : NodeIdProvider
     {
-        private static volatile NodeIdProvider.PhysicalAddress? Singleton;
-
         private readonly AutoRefreshCache<byte[]> NodeIdBytesCache;
 
         private PhysicalAddress()
@@ -89,11 +86,11 @@ internal abstract class NodeIdProvider
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static NodeIdProvider.PhysicalAddress Initialize()
                 {
-                    return NodeIdProvider.PhysicalAddress.Singleton ??=
-                        new NodeIdProvider.PhysicalAddress();
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new NodeIdProvider.PhysicalAddress());
                 }
 
-                return NodeIdProvider.PhysicalAddress.Singleton ?? Initialize();
+                return Volatile.Read(ref field) ?? Initialize();
             }
         }
 
@@ -153,8 +150,6 @@ internal abstract class NodeIdProvider
 
     private class RandomNumber : NodeIdProvider
     {
-        private static volatile NodeIdProvider.RandomNumber? Singleton;
-
         private volatile byte[] NodeIdBytesValue;
 
         private RandomNumber()
@@ -170,11 +165,11 @@ internal abstract class NodeIdProvider
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static NodeIdProvider.RandomNumber Initialize()
                 {
-                    return NodeIdProvider.RandomNumber.Singleton ??=
-                        new NodeIdProvider.RandomNumber.NonVolatile();
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new NodeIdProvider.RandomNumber.NonVolatile());
                 }
 
-                return NodeIdProvider.RandomNumber.Singleton ?? Initialize();
+                return Volatile.Read(ref field) ?? Initialize();
             }
         }
 

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace XNetEx.Guids.Generators;
 
 internal sealed class DceSecurityGuidGenerator : TimeBasedGuidGenerator, IDceSecurityGuidGenerator
 {
-    private static volatile DceSecurityGuidGenerator? Singleton;
-
     private readonly LocalIdProvider LocalIdProvider;
 
     private DceSecurityGuidGenerator()
@@ -22,11 +21,11 @@ internal sealed class DceSecurityGuidGenerator : TimeBasedGuidGenerator, IDceSec
             [MethodImpl(MethodImplOptions.Synchronized)]
             static DceSecurityGuidGenerator Initialize()
             {
-                return DceSecurityGuidGenerator.Singleton ??=
-                    new DceSecurityGuidGenerator();
+                return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                    new DceSecurityGuidGenerator());
             }
 
-            return DceSecurityGuidGenerator.Singleton ?? Initialize();
+            return Volatile.Read(ref field) ?? Initialize();
         }
     }
 

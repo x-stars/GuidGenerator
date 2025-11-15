@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace XNetEx.Guids.Generators;
 
@@ -9,12 +10,6 @@ partial class TimeBasedGuidGenerator
 {
     internal class Sequential : TimeBasedGuidGenerator
     {
-        private static new volatile TimeBasedGuidGenerator.Sequential? Singleton;
-
-        private static new volatile TimeBasedGuidGenerator.Sequential? SingletonR;
-
-        private static volatile TimeBasedGuidGenerator.Sequential? SingletonP;
-
         private Sequential(NodeIdSource nodeIdSource) : base(nodeIdSource) { }
 
         private Sequential(
@@ -32,11 +27,11 @@ partial class TimeBasedGuidGenerator
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static TimeBasedGuidGenerator.Sequential Initialize()
                 {
-                    return TimeBasedGuidGenerator.Sequential.Singleton ??=
-                        new TimeBasedGuidGenerator.Sequential.Randomized();
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new TimeBasedGuidGenerator.Sequential.Randomized());
                 }
 
-                return TimeBasedGuidGenerator.Sequential.Singleton ?? Initialize();
+                return Volatile.Read(ref field) ?? Initialize();
             }
         }
 
@@ -48,11 +43,11 @@ partial class TimeBasedGuidGenerator
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static TimeBasedGuidGenerator.Sequential Initialize()
                 {
-                    return TimeBasedGuidGenerator.Sequential.SingletonR ??=
-                        new TimeBasedGuidGenerator.Sequential(NodeIdSource.NonVolatileRandom);
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new TimeBasedGuidGenerator.Sequential(NodeIdSource.NonVolatileRandom));
                 }
 
-                return TimeBasedGuidGenerator.Sequential.SingletonR ?? Initialize();
+                return Volatile.Read(ref field) ?? Initialize();
             }
         }
 
@@ -64,11 +59,11 @@ partial class TimeBasedGuidGenerator
                 [MethodImpl(MethodImplOptions.Synchronized)]
                 static TimeBasedGuidGenerator.Sequential Initialize()
                 {
-                    return TimeBasedGuidGenerator.Sequential.SingletonP ??=
-                        new TimeBasedGuidGenerator.Sequential(NodeIdSource.PhysicalAddress);
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new TimeBasedGuidGenerator.Sequential(NodeIdSource.PhysicalAddress));
                 }
 
-                return TimeBasedGuidGenerator.Sequential.SingletonP ?? Initialize();
+                return Volatile.Read(ref field) ?? Initialize();
             }
         }
 
