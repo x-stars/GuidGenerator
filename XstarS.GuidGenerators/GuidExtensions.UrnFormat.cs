@@ -9,117 +9,120 @@ namespace XNetEx.Guids;
 
 static partial class GuidExtensions
 {
-    /// <summary>
-    /// Converts the string representation of a GUID to the equivalent
-    /// <see cref="Guid"/> structure, provided that the string is in the URN format.
-    /// </summary>
-    /// <param name="input">The string to convert.</param>
-    /// <returns>A structure that contains the value that was parsed.</returns>
-    /// <exception cref="ArgumentNullException">
-    /// <paramref name="input"/> is <see langword="null"/>.</exception>
-    /// <exception cref="FormatException">
-    /// <paramref name="input"/> is not in the URN format.</exception>
-    public static Guid ParseUrn(
-        [StringSyntax(StringSyntaxAttribute.Uri)] string input)
+    extension(Guid)
     {
-        ArgumentNullException.ThrowIfNull(input);
+        /// <summary>
+        /// Converts the string representation of a GUID to the equivalent
+        /// <see cref="Guid"/> structure, provided that the string is in the URN format.
+        /// </summary>
+        /// <param name="input">The string to convert.</param>
+        /// <returns>A structure that contains the value that was parsed.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="input"/> is <see langword="null"/>.</exception>
+        /// <exception cref="FormatException">
+        /// <paramref name="input"/> is not in the URN format.</exception>
+        public static Guid ParseUrn(
+            [StringSyntax(StringSyntaxAttribute.Uri)] string input)
+        {
+            ArgumentNullException.ThrowIfNull(input);
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        return GuidExtensions.ParseUrn((ReadOnlySpan<char>)input);
+            return GuidExtensions.ParseUrn((ReadOnlySpan<char>)input);
 #else
-        var guidUrnString = input.Trim();
-        if (!guidUrnString.StartsWith("urn:uuid:", StringComparison.OrdinalIgnoreCase))
-        {
-            throw new FormatException("Guid URN should start with \"urn:uuid:\".");
-        }
+            var guidUrnString = input.Trim();
+            if (!guidUrnString.StartsWith("urn:uuid:", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new FormatException("Guid URN should start with \"urn:uuid:\".");
+            }
 
-        var guidString = guidUrnString[9..];
-        return Guid.ParseExact(guidString, "D");
+            var guidString = guidUrnString[9..];
+            return Guid.ParseExact(guidString, "D");
 #endif
-    }
-
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-    /// <summary>
-    /// Converts the character span representation of a GUID to the equivalent
-    /// <see cref="Guid"/> structure, provided that the string is in the URN format.
-    /// </summary>
-    /// <param name="input">A read-only span containing
-    /// the characters representing the GUID to convert.</param>
-    /// <returns>A structure that contains the value that was parsed.</returns>
-    /// <exception cref="FormatException">
-    /// <paramref name="input"/> is not in the URN format.</exception>
-    public static Guid ParseUrn(
-        [StringSyntax(StringSyntaxAttribute.Uri)] ReadOnlySpan<char> input)
-    {
-        var guidUrnString = input.Trim();
-        if (!guidUrnString.StartsWith("urn:uuid:", StringComparison.OrdinalIgnoreCase))
-        {
-            throw new FormatException("Guid URN should start with \"urn:uuid:\".");
-        }
-
-        var guidString = guidUrnString[9..];
-        return Guid.ParseExact(guidString, "D");
-    }
-#endif
-
-    /// <summary>
-    /// Converts the string representation of a GUID to the equivalent
-    /// <see cref="Guid"/> structure, provided that the string is in the URN format.
-    /// </summary>
-    /// <param name="input">The string to convert.</param>
-    /// <param name="result">When this method returns <see langword="true"/>,
-    /// contains the parsed <see cref="Guid"/> value.</param>
-    /// <returns><see langword="true"/> if the parse operation was successful;
-    /// otherwise, <see langword="false"/>.</returns>
-    public static bool TryParseUrn(
-        [StringSyntax(StringSyntaxAttribute.Uri)] string input, out Guid result)
-    {
-        if (input is null)
-        {
-            result = default(Guid);
-            return false;
         }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        return GuidExtensions.TryParseUrn((ReadOnlySpan<char>)input, out result);
+        /// <summary>
+        /// Converts the character span representation of a GUID to the equivalent
+        /// <see cref="Guid"/> structure, provided that the string is in the URN format.
+        /// </summary>
+        /// <param name="input">A read-only span containing
+        /// the characters representing the GUID to convert.</param>
+        /// <returns>A structure that contains the value that was parsed.</returns>
+        /// <exception cref="FormatException">
+        /// <paramref name="input"/> is not in the URN format.</exception>
+        public static Guid ParseUrn(
+            [StringSyntax(StringSyntaxAttribute.Uri)] ReadOnlySpan<char> input)
+        {
+            var guidUrnString = input.Trim();
+            if (!guidUrnString.StartsWith("urn:uuid:", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new FormatException("Guid URN should start with \"urn:uuid:\".");
+            }
+
+            var guidString = guidUrnString[9..];
+            return Guid.ParseExact(guidString, "D");
+        }
+#endif
+
+        /// <summary>
+        /// Converts the string representation of a GUID to the equivalent
+        /// <see cref="Guid"/> structure, provided that the string is in the URN format.
+        /// </summary>
+        /// <param name="input">The string to convert.</param>
+        /// <param name="result">When this method returns <see langword="true"/>,
+        /// contains the parsed <see cref="Guid"/> value.</param>
+        /// <returns><see langword="true"/> if the parse operation was successful;
+        /// otherwise, <see langword="false"/>.</returns>
+        public static bool TryParseUrn(
+            [StringSyntax(StringSyntaxAttribute.Uri)] string input, out Guid result)
+        {
+            if (input is null)
+            {
+                result = default(Guid);
+                return false;
+            }
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            return GuidExtensions.TryParseUrn((ReadOnlySpan<char>)input, out result);
 #else
-        var guidUrnString = input.Trim();
-        if (!guidUrnString.StartsWith("urn:uuid:", StringComparison.OrdinalIgnoreCase))
-        {
-            result = default(Guid);
-            return false;
-        }
+            var guidUrnString = input.Trim();
+            if (!guidUrnString.StartsWith("urn:uuid:", StringComparison.OrdinalIgnoreCase))
+            {
+                result = default(Guid);
+                return false;
+            }
 
-        var guidString = guidUrnString[9..];
-        return Guid.TryParseExact(guidString, "D", out result);
+            var guidString = guidUrnString[9..];
+            return Guid.TryParseExact(guidString, "D", out result);
 #endif
-    }
+        }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-    /// <summary>
-    /// Converts the character span representation of a GUID to the equivalent
-    /// <see cref="Guid"/> structure, provided that the string is in the URN format.
-    /// </summary>
-    /// <param name="input">A read-only span containing
-    /// the characters representing the GUID to convert.</param>
-    /// <param name="result">When this method returns <see langword="true"/>,
-    /// contains the parsed <see cref="Guid"/> value.</param>
-    /// <returns><see langword="true"/> if the parse operation was successful;
-    /// otherwise, <see langword="false"/>.</returns>
-    public static bool TryParseUrn(
-        [StringSyntax(StringSyntaxAttribute.Uri)] ReadOnlySpan<char> input, out Guid result)
-    {
-        var guidUrnString = input.Trim();
-        if (!guidUrnString.StartsWith("urn:uuid:", StringComparison.OrdinalIgnoreCase))
+        /// <summary>
+        /// Converts the character span representation of a GUID to the equivalent
+        /// <see cref="Guid"/> structure, provided that the string is in the URN format.
+        /// </summary>
+        /// <param name="input">A read-only span containing
+        /// the characters representing the GUID to convert.</param>
+        /// <param name="result">When this method returns <see langword="true"/>,
+        /// contains the parsed <see cref="Guid"/> value.</param>
+        /// <returns><see langword="true"/> if the parse operation was successful;
+        /// otherwise, <see langword="false"/>.</returns>
+        public static bool TryParseUrn(
+            [StringSyntax(StringSyntaxAttribute.Uri)] ReadOnlySpan<char> input, out Guid result)
         {
-            result = default(Guid);
-            return false;
-        }
+            var guidUrnString = input.Trim();
+            if (!guidUrnString.StartsWith("urn:uuid:", StringComparison.OrdinalIgnoreCase))
+            {
+                result = default(Guid);
+                return false;
+            }
 
-        var guidString = guidUrnString[9..];
-        return Guid.TryParseExact(guidString, "D", out result);
-    }
+            var guidString = guidUrnString[9..];
+            return Guid.TryParseExact(guidString, "D", out result);
+        }
 #endif
+    }
 
     /// <summary>
     /// Returns a URN string representation
