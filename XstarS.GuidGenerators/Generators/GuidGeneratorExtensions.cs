@@ -139,6 +139,7 @@ public static class GuidGeneratorExtensions
     }
 #endif
 
+#if !UUIDREV_DISABLE
     private static readonly ConditionalWeakTable<HashAlgorithm, INameBasedGuidGenerator> Version8NOfHashing = new();
 
     extension(GuidGenerator)
@@ -156,4 +157,5 @@ public static class GuidGeneratorExtensions
             return GuidGeneratorExtensions.Version8NOfHashing.GetValue(hashing, GuidGenerator.CreateVersion8N);
         }
     }
+#endif
 }
