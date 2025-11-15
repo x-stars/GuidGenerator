@@ -5,14 +5,14 @@ namespace XNetEx.Guids;
 
 #if !UUIDREV_DISABLE
 /// <summary>
-/// Provides RFC 4122/9562 compliant constants and conversion methods for <see cref="Guid"/>.
+/// Provides RFC 4122/9562 compliant constants and operations for <see cref="Guid"/>.
 /// </summary>
 #else
 /// <summary>
-/// Provides RFC 4122 compliant constants and conversion methods for <see cref="Guid"/>.
+/// Provides RFC 4122 compliant constants and operations for <see cref="Guid"/>.
 /// </summary>
 #endif
-public static class Uuid
+public static partial class Uuid
 {
     /// <summary>
     /// A read-only instance of the <see cref="Guid"/> structure whose value is all ones.

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Diagnostics;
@@ -136,4 +138,22 @@ public static class GuidGeneratorExtensions
         return guidGen.NewGuid(nsId, nameBytes);
     }
 #endif
+
+    private static readonly ConditionalWeakTable<HashAlgorithm, INameBasedGuidGenerator> Version8NOfHashing = new();
+
+    extension(GuidGenerator)
+    {
+        /// <summary>
+        /// Gets the related <see cref="INameBasedGuidGenerator"/> instance of the specified hash algorithm.
+        /// </summary>
+        /// <param name="hashing">The hash algorithm to use.</param>
+        /// <returns>The related <see cref="INameBasedGuidGenerator"/>
+        /// instance of <paramref name="hashing"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="hashing"/> is null.</exception>
+        internal static INameBasedGuidGenerator GetVersion8NOf(HashAlgorithm hashing)
+        {
+            ArgumentNullException.ThrowIfNull(hashing);
+            return GuidGeneratorExtensions.Version8NOfHashing.GetValue(hashing, GuidGenerator.CreateVersion8N);
+        }
+    }
 }
