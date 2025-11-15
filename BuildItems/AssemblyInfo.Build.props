@@ -12,4 +12,8 @@
     <AssemblyVersion>$(VersionMajor).$(VersionMinor).0.0</AssemblyVersion>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <NoWarn Condition="'$(TargetFramework)'=='net6.0'">$(NoWarn);NETSDK1138</NoWarn>
+  </PropertyGroup>
+
 </Project>
