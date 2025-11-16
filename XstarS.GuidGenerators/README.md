@@ -75,6 +75,25 @@ var guidV7 = GuidGenerator.OfVersion(7).NewGuid();
 // 018640c6-0dc9-7189-a644-31acdba4cabc
 ```
 
+### Generate by Static Extension Methods (C# 14 or Later)
+
+``` csharp
+using System;
+using XNetEx.Guids;
+
+// Generate time-based GUID.
+var guidV1 = Guid.NewVersion1();
+// 3944a871-aa14-11ed-8791-a9a9a46de54f
+
+// Generate name-based GUID.
+var guidV5 = Guid.NewVersion5(GuidNamespaces.Dns, "github.com");
+// 6fca3dd2-d61d-58de-9363-1574b382ea68
+
+// Generate Unix time-based GUID.
+var guidV7 = Guid.NewVersion7();
+// 018640c6-0dc9-7189-a644-31acdba4cabc
+```
+
 ### Build Custom State Generator Instance
 
 ``` csharp
