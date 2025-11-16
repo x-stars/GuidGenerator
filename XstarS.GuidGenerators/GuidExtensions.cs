@@ -21,7 +21,7 @@ public static partial class GuidExtensions
         /// <returns>An instance of the <see cref="Guid"/> structure whose value is all ones.</returns>
         public static Guid MaxValue
         {
-            // Add to hide the `get_*` method only in IntelliSense.
+            // Hide the `get_*` method from IntelliSense.
             [EditorBrowsable(EditorBrowsableState.Never)]
             get => Uuid.MaxValue;
         }
