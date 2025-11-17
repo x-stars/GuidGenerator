@@ -20,7 +20,7 @@ internal static class VolatileExtensions
         /// <param name="value">The value to set.</param>
         [return: NotNullIfNotNull(nameof(value))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T WriteValue<T>(ref T location, T value)
+        public static T WriteValue<T>([NotNullIfNotNull(nameof(value))] ref T location, T value)
             where T : class?
         {
             Volatile.Write(ref location, value);

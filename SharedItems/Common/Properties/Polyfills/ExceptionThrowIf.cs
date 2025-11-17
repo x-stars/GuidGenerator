@@ -9,7 +9,7 @@
 #pragma warning disable
 #nullable enable
 
-#if !(EXCEPTION_THROW_IF_EXTERNAL || NETCOREAPP6_0_OR_GREATER)
+#if !(EXCEPTION_THROW_IF_EXTERNAL || NET6_0_OR_GREATER)
 namespace System
 {
     using System.ComponentModel;
@@ -27,7 +27,7 @@ namespace System
         {
             /// <summary>
             /// Throws an <see cref="ArgumentNullException"/>
-            /// if the given <paramref name="argument"/> is <see langword="null"/>.
+            /// if <paramref name="argument"/> is <see langword="null"/>.
             /// </summary>
             /// <param name="argument">The reference type argument to validate as non-null.</param>
             /// <param name="paramName">The name of the parameter with which
@@ -35,7 +35,7 @@ namespace System
             /// the name of <paramref name="argument"/> is used.</param>
             /// <exception cref="ArgumentNullException">
             /// <paramref name="argument"/> is <see langword="null"/>.</exception>
-            public static void ThrowIfNull(object? argument,
+            public static void ThrowIfNull([NotNull] object? argument,
                 [CallerArgumentExpression(nameof(argument))] string? paramName = null)
             {
                 [DoesNotReturn, MethodImpl(MethodImplOptions.NoInlining)]
@@ -48,7 +48,7 @@ namespace System
 }
 #endif
 
-#if !(EXCEPTION_THROW_IF_EXTERNAL || NETCOREAPP7_0_OR_GREATER)
+#if !(EXCEPTION_THROW_IF_EXTERNAL || NET7_0_OR_GREATER)
 namespace System
 {
     using System.ComponentModel;
@@ -69,11 +69,11 @@ namespace System
             /// if the specified <paramref name="condition"/> is <see langword="true"/>.
             /// </summary>
             /// <param name="condition">The condition to evaluate.</param>
-            /// <param name="instance">The object whose type's full name
-            /// should be included in any resulting <see cref="ObjectDisposedException"/>.</param>
+            /// <param name="instance">The object whose type's full name should be included
+            /// in any resulting <see cref="ObjectDisposedException"/>.</param>
             /// <exception cref="ObjectDisposedException">
             /// The <paramref name="condition"/> is <see langword="true"/>.</exception>
-            public static void ThrowIf(bool condition, object instance)
+            public static void ThrowIf([DoesNotReturnIf(true)] bool condition, object instance)
             {
                 [DoesNotReturn, MethodImpl(MethodImplOptions.NoInlining)]
                 static void Throw(object instance) =>
@@ -86,11 +86,11 @@ namespace System
             /// if the specified <paramref name="condition"/> is <see langword="true"/>.
             /// </summary>
             /// <param name="condition">The condition to evaluate.</param>
-            /// <param name="type">The type whose full name
-            /// should be included in any resulting <see cref="ObjectDisposedException"/>.</param>
+            /// <param name="type">The type whose full name should be included
+            /// in any resulting <see cref="ObjectDisposedException"/>.</param>
             /// <exception cref="ObjectDisposedException">
             /// The <paramref name="condition"/> is <see langword="true"/>.</exception>
-            public static void ThrowIf(bool condition, Type type)
+            public static void ThrowIf([DoesNotReturnIf(true)] bool condition, Type type)
             {
                 [DoesNotReturn, MethodImpl(MethodImplOptions.NoInlining)]
                 static void Throw(Type type) =>

@@ -238,10 +238,11 @@ static partial class Uuid
         /// <param name="nsId">The namespace ID used to generate the <see cref="Guid"/>.</param>
         /// <param name="name">The name byte array used to generate the <see cref="Guid"/>.</param>
         /// <returns>A new <see cref="Guid"/> instance of RFC 9562 UUID version 8
-        /// generated based on <paramref name="nsId"/> and <paramref name="name"/>.</returns>
+        /// generated based on <paramref name="nsId"/> and <paramref name="name"/>
+        /// using <paramref name="hashing"/>.</returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="hashing"/> or <paramref name="name"/> is <see langword="null"/>.</exception>
-        /// <exception cref="InvalidOperationException">
+        /// <exception cref="ArgumentException">
         /// The hash size of <paramref name="hashing"/> is less than 128 bits.</exception>
         public static Guid NewVersion8N(HashAlgorithm hashing, Guid nsId, byte[] name)
         {
@@ -257,10 +258,11 @@ static partial class Uuid
         /// <param name="nsId">The namespace ID used to generate the <see cref="Guid"/>.</param>
         /// <param name="name">The name byte span used to generate the <see cref="Guid"/>.</param>
         /// <returns>A new <see cref="Guid"/> instance of RFC 9562 UUID version 8
-        /// generated based on <paramref name="nsId"/> and <paramref name="name"/>.</returns>
+        /// generated based on <paramref name="nsId"/> and <paramref name="name"/>
+        /// using <paramref name="hashing"/>.</returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
-        /// <exception cref="InvalidOperationException">
+        /// <exception cref="ArgumentException">
         /// The hash size of <paramref name="hashing"/> is less than 128 bits.</exception>
         public static Guid NewVersion8N(HashAlgorithm hashing, Guid nsId, ReadOnlySpan<byte> name)
         {
@@ -277,10 +279,11 @@ static partial class Uuid
         /// <param name="name">The name string used to generate the <see cref="Guid"/>.</param>
         /// <param name="encoding">The <see cref="Encoding"/> used to encode the name string.</param>
         /// <returns>A new <see cref="Guid"/> instance of RFC 9562 UUID version 8
-        /// generated based on <paramref name="nsId"/> and <paramref name="name"/>.</returns>
+        /// generated based on <paramref name="nsId"/> and <paramref name="name"/>
+        /// using <paramref name="hashing"/>.</returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="hashing"/> or <paramref name="name"/> is <see langword="null"/>.</exception>
-        /// <exception cref="InvalidOperationException">
+        /// <exception cref="ArgumentException">
         /// The hash size of <paramref name="hashing"/> is less than 128 bits.</exception>
         public static Guid NewVersion8N(
             HashAlgorithm hashing, Guid nsId, string name, Encoding? encoding = null)
@@ -290,18 +293,19 @@ static partial class Uuid
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         /// <summary>
-        /// Generates a new <see cref="Guid"/> instance of RFC 4122 UUID version 8
+        /// Generates a new <see cref="Guid"/> instance of RFC 9562 UUID version 8
         /// using the specified hash algorithm based on the specified namespace ID and name.
         /// </summary>
         /// <param name="hashing">The hash algorithm used to transform the input data.</param>
         /// <param name="nsId">The namespace ID used to generate the <see cref="Guid"/>.</param>
         /// <param name="name">The name character span used to generate the <see cref="Guid"/>.</param>
         /// <param name="encoding">The <see cref="Encoding"/> used to encode the name string.</param>
-        /// <returns>A new <see cref="Guid"/> instance of RFC 4122 UUID version 8
-        /// generated based on <paramref name="nsId"/> and <paramref name="name"/>.</returns>
+        /// <returns>A new <see cref="Guid"/> instance of RFC 9562 UUID version 8
+        /// generated based on <paramref name="nsId"/> and <paramref name="name"/>
+        /// using <paramref name="hashing"/>.</returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="hashing"/> is <see langword="null"/>.</exception>
-        /// <exception cref="InvalidOperationException">
+        /// <exception cref="ArgumentException">
         /// The hash size of <paramref name="hashing"/> is less than 128 bits.</exception>
         public static Guid NewVersion8N(
             HashAlgorithm hashing, Guid nsId, ReadOnlySpan<char> name, Encoding? encoding = null)

@@ -374,7 +374,7 @@ module Guid =
     [<CompiledName("NewVersion8N")>]
     let newV8N (hashing: HashAlgorithm)
                (nsId: Guid) (name: byte[]) : Guid =
-        Generator.GetVersion8NOf(hashing).NewGuid(nsId, name)
+        Uuid.NewVersion8N(hashing, nsId, name)
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
@@ -393,7 +393,7 @@ module Guid =
     [<CompiledName("NewVersion8NByString")>]
     let newV8NS (hashing: HashAlgorithm)
                 (nsId: Guid) (name: string) : Guid =
-        Generator.GetVersion8NOf(hashing).NewGuid(nsId, name)
+        Uuid.NewVersion8N(hashing, nsId, name)
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance
@@ -413,7 +413,7 @@ module Guid =
     [<CompiledName("NewVersion8NByEncoding")>]
     let newV8NEnc (hashing: HashAlgorithm)
                   (nsId: Guid) (enc: Text.Encoding) (name: string) : Guid =
-        Generator.GetVersion8NOf(hashing).NewGuid(nsId, name, enc)
+        Uuid.NewVersion8N(hashing, nsId, name, enc)
 
     /// <summary>
     /// Generates a new <see cref="T:System.Guid"/> instance

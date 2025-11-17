@@ -16,9 +16,9 @@ public static partial class GuidExtensions
     {
 #if !UUIDREV_DISABLE
         /// <summary>
-        /// Gets an instance of the <see cref="Guid"/> structure whose value is all ones.
+        /// Gets a <see cref="Guid"/> structure whose value is all ones.
         /// </summary>
-        /// <returns>An instance of the <see cref="Guid"/> structure whose value is all ones.</returns>
+        /// <returns>A <see cref="Guid"/> structure whose value is all ones.</returns>
         public static Guid MaxValue
         {
             // Hide the `get_*` method from IntelliSense.
