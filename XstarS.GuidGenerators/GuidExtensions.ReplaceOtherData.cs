@@ -92,7 +92,6 @@ static partial class GuidExtensions
     {
         ArgumentNullException.ThrowIfNull(randomData);
 
-
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         return guid.ReplaceRandomData((ReadOnlySpan<byte>)randomData);
 #else
@@ -165,7 +164,6 @@ static partial class GuidExtensions
     public static Guid ReplaceCustomData(this Guid guid, byte[] customData)
     {
         ArgumentNullException.ThrowIfNull(customData);
-
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         return guid.ReplaceCustomData((ReadOnlySpan<byte>)customData);

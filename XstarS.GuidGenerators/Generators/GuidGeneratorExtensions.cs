@@ -145,11 +145,10 @@ public static class GuidGeneratorExtensions
     extension(GuidGenerator)
     {
         /// <summary>
-        /// Gets the related <see cref="INameBasedGuidGenerator"/> instance of the specified hash algorithm.
+        /// Gets the related <see cref="INameBasedGuidGenerator"/> of the specified <see cref="HashAlgorithm"/>.
         /// </summary>
-        /// <param name="hashing">The hash algorithm to use.</param>
-        /// <returns>The related <see cref="INameBasedGuidGenerator"/>
-        /// instance of <paramref name="hashing"/>.</returns>
+        /// <param name="hashing">The <see cref="HashAlgorithm"/>.</param>
+        /// <returns>The related <see cref="INameBasedGuidGenerator"/> of <paramref name="hashing"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="hashing"/> is null.</exception>
         internal static INameBasedGuidGenerator GetVersion8NOf(HashAlgorithm hashing)
         {
