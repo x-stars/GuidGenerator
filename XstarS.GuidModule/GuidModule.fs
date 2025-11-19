@@ -1456,8 +1456,6 @@ module Guid =
         /// </summary>
         /// <returns>A <see cref="T:XNetEx.Guids.Generators.CustomStateGuidGeneratorBuilder"/>
         /// instance of the current <see cref="T:XNetEx.Guids.GuidVersion"/>.</returns>
-        /// <exception cref="T:System.InvalidOperationException">
-        /// This instance is not initialized correctly.</exception>
         member _.Zero() : Generator.CustomStateBuilder =
             Generator.CustomStateBuilder.Create(version)
 
@@ -1469,8 +1467,6 @@ module Guid =
         /// <param name="unused">This parameter is not used.</param>
         /// <returns>A <see cref="T:XNetEx.Guids.Generators.CustomStateGuidGeneratorBuilder"/>
         /// instance of the current <see cref="T:XNetEx.Guids.GuidVersion"/>.</returns>
-        /// <exception cref="T:System.InvalidOperationException">
-        /// This instance is not initialized correctly.</exception>
         member _.Yield(unused: unit) : Generator.CustomStateBuilder =
             Generator.CustomStateBuilder.Create(version)
 
@@ -1484,7 +1480,7 @@ module Guid =
         /// <returns>The result <see cref="T:System.Guid"/> sequence of the specified
         /// <see cref="T:XNetEx.Guids.Generators.CustomStateGuidGeneratorBuilder"/>.</returns>
         /// <exception cref="T:System.InvalidOperationException">
-        /// <paramref name="builder"/> is not initialized correctly.</exception>
+        /// The current <paramref name="builder"/> state is not supported by its GUID version.</exception>
         member _.Run(builder: Generator.CustomStateBuilder) : seq<Guid> =
             builder.ToGuidGenerator().AsSequence()
 
