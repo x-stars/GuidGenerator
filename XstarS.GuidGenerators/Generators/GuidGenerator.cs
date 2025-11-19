@@ -51,8 +51,6 @@ public abstract partial class GuidGenerator : IGuidGenerator, IGuidGeneratorInfo
     /// Generates a new <see cref="Guid"/> instance.
     /// </summary>
     /// <returns>A new <see cref="Guid"/> instance.</returns>
-    /// <exception cref="InvalidOperationException">
-    /// This instance is not in a valid state.</exception>
     /// <exception cref="ObjectDisposedException">
     /// This instance has already been disposed.</exception>
     public abstract Guid NewGuid();
@@ -86,8 +84,8 @@ public abstract partial class GuidGenerator : IGuidGenerator, IGuidGeneratorInfo
     /// <param name="name">The name byte span used to generate the <see cref="Guid"/>.</param>
     /// <returns>A new <see cref="Guid"/> instance generated based on
     /// <paramref name="nsId"/> and <paramref name="name"/>.</returns>
-    /// <exception cref="InvalidOperationException">The provided hash algorithm's
-    /// implementation is incorrect or the hash size is less than 128 bits.</exception>
+    /// <exception cref="InvalidOperationException">
+    /// The provided hash algorithm's hash size is less than 128 bits.</exception>
     /// <exception cref="NotSupportedException">
     /// This instance does not support generating a name-based <see cref="Guid"/>.</exception>
     /// <exception cref="ObjectDisposedException">
@@ -106,8 +104,6 @@ public abstract partial class GuidGenerator : IGuidGenerator, IGuidGeneratorInfo
     /// or <see langword="null"/> to get the local user or group ID from the system.</param>
     /// <returns>A new <see cref="Guid"/> instance generated based on
     /// <paramref name="domain"/> and <paramref name="localId"/>.</returns>
-    /// <exception cref="InvalidOperationException">
-    /// This instance is not in a valid state.</exception>
     /// <exception cref="PlatformNotSupportedException">
     /// The current operating system does not support getting the local user or group ID.</exception>
     /// <exception cref="NotSupportedException">

@@ -240,7 +240,7 @@ public readonly struct CustomStateGuidGeneratorBuilder
     /// <returns>A new <see cref="IGuidGenerator"/> instance
     /// based on custom state providers used in this instance.</returns>
     /// <exception cref="InvalidOperationException">
-    /// This instance is not initialized correctly.</exception>
+    /// The provided builder parameters are not supported by this GUID version.</exception>
     public IGuidGenerator ToGuidGenerator()
     {
         if (this.NodeIdSourceType is < NodeIdSource.None or > NodeIdSource.NonVolatileRandom)

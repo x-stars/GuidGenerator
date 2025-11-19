@@ -171,6 +171,13 @@ public class GuidCreationTest
     }
 
     [TestMethod]
+    public void NewVersion8_NoInput_GetVersion8Guid()
+    {
+        var guid = Guid.NewVersion8();
+        Assert.AreEqual(GuidVersion.Version8, guid.GetVersion());
+    }
+
+    [TestMethod]
     public void NewVersion8N_Sha256ByteArrayName_GetVersion8GuidInExpectedHash()
     {
         using var hashing = SHA256.Create();
