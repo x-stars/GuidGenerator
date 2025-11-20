@@ -1,9 +1,11 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using System.Text;
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Diagnostics;
+#endif
+#if !UUIDREV_DISABLE
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 #endif
 
 namespace XNetEx.Guids.Generators;

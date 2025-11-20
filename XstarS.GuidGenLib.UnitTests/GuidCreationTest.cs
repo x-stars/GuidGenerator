@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#if !UUIDREV_DISABLE
+using System.Security.Cryptography;
+#endif
 
 namespace XNetEx.Guids;
 

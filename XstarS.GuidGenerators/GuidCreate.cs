@@ -1,7 +1,9 @@
 ﻿using System;
-using System.Security.Cryptography;
 using System.Text;
 using XNetEx.Guids.Generators;
+#if !UUIDREV_DISABLE
+using System.Security.Cryptography;
+#endif
 
 namespace XNetEx.Guids;
 

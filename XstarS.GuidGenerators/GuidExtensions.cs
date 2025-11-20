@@ -1,9 +1,11 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using XNetEx.Guids.Components;
+#if !UUIDREV_DISABLE
+using System.ComponentModel;
+#endif
 
 namespace XNetEx.Guids;
 

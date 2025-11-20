@@ -1,7 +1,9 @@
 ﻿using System;
-using System.Security.Cryptography;
 using XNetEx.Guids;
 using XNetEx.Guids.Generators;
+#if !UUIDREV_DISABLE
+using System.Security.Cryptography;
+#endif
 
 namespace XstarS.GuidGen.Commands;
 
