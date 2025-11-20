@@ -34,14 +34,41 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         return this.NewGuid(nsId, (ReadOnlySpan<byte>)name);
 #else
-        return this.ComputeHashToGuid(nsId, name);
+        var hashing = this.GetHashing();
+        try
+        {
+            var hash = this.ComputeHash(hashing, nsId, name);
+            return this.HashToGuid(hash);
+        }
+        finally
+        {
+            this.ReturnHashing(hashing);
+        }
 #endif
     }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     public sealed override Guid NewGuid(Guid nsId, ReadOnlySpan<byte> name)
     {
-        return this.ComputeHashToGuid(nsId, name);
+        var hashing = this.GetHashing();
+        try
+        {
+            var hashSize = hashing.HashSize / 8;
+            var hash = ((uint)hashSize <= 1024) ?
+                (stackalloc byte[hashSize]) : (new byte[hashSize]);
+            var result = this.TryComputeHash(
+                hashing, nsId, name, hash, out var bytesWritten);
+            if (!result || (bytesWritten != hashSize))
+            {
+                throw new InvalidOperationException(
+                    "The algorithm's implementation is incorrect.");
+            }
+            return this.HashToGuid(hash);
+        }
+        finally
+        {
+            this.ReturnHashing(hashing);
+        }
     }
 #endif
 
@@ -79,53 +106,130 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
     }
 #endif
 
-    internal sealed class MD5Hashing : NameBasedGuidGenerator
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    private bool TryComputeHash(
+        HashAlgorithm hashing, Guid nsId, ReadOnlySpan<byte> name,
+        Span<byte> destination, out int bytesWritten)
     {
-        private MD5Hashing() { }
-
-        internal static NameBasedGuidGenerator.MD5Hashing Instance
+        if (!IncrementalHashAlgorithm.IsSupported
+#if DEBUG
+            == (Environment.TickCount % 2 != 0) // For testing fallback.
+#endif
+            )
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                [MethodImpl(MethodImplOptions.Synchronized)]
-                static NameBasedGuidGenerator.MD5Hashing Initialize()
-                {
-                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                        new NameBasedGuidGenerator.MD5Hashing());
-                }
-
-                return Volatile.Read(ref field) ?? Initialize();
-            }
+            return this.TryComputeHashFallback(
+                hashing, nsId, name, destination, out bytesWritten);
         }
 
-        public override GuidVersion Version => GuidVersion.Version3;
-
-        protected override HashAlgorithm CreateHashing() => MD5.Create();
+        hashing.Initialize();
+        var guidBytes = (stackalloc byte[16]);
+        var nsIdResult = nsId.TryWriteUuidBytes(guidBytes);
+        Debug.Assert(nsIdResult);
+        hashing.AppendData(guidBytes);
+        hashing.AppendData(name);
+        return hashing.TryGetFinalHash(destination, out bytesWritten);
     }
 
-    internal sealed class SHA1Hashing : NameBasedGuidGenerator
+    private bool TryComputeHashFallback(
+        HashAlgorithm hashing, Guid nsId, ReadOnlySpan<byte> name,
+        Span<byte> destination, out int bytesWritten)
     {
-        private SHA1Hashing() { }
+#if DEBUG
+        hashing.Initialize();
+#endif
+        const int guidSize = 16;
+        var inputLength = guidSize + name.Length;
+        var input = ((uint)name.Length <= 1024) ?
+            (stackalloc byte[inputLength]) : (new byte[inputLength]);
+        var nsIdResult = nsId.TryWriteUuidBytes(input);
+        Debug.Assert(nsIdResult);
+        name.CopyTo(input[guidSize..]);
+        return hashing.TryComputeHash(input, destination, out bytesWritten);
+    }
 
-        internal static NameBasedGuidGenerator.SHA1Hashing Instance
+    private Guid HashToGuid(ReadOnlySpan<byte> hash)
+    {
+#if !UUIDREV_DISABLE
+        if (hash.Length < 16)
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                [MethodImpl(MethodImplOptions.Synchronized)]
-                static NameBasedGuidGenerator.SHA1Hashing Initialize()
-                {
-                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                        new NameBasedGuidGenerator.SHA1Hashing());
-                }
+            throw new InvalidOperationException(
+                "The algorithm's hash size is less than 128 bits.");
+        }
+#endif
 
-                return Volatile.Read(ref field) ?? Initialize();
-            }
+        var guid = Uuid.FromBytes(hash[..16]);
+        this.FillVersionFieldUnchecked(ref guid);
+        this.FillVariantFieldUnchecked(ref guid);
+        return guid;
+    }
+#else
+    private static class LocalBuffers
+    {
+        [ThreadStatic] private static byte[]? GuidBytesValue;
+
+        internal static byte[] GuidBytes =>
+            LocalBuffers.GuidBytesValue ??= new byte[16];
+    }
+
+    private unsafe byte[] ComputeHash(
+        HashAlgorithm hashing, Guid nsId, byte[] name)
+    {
+        if (!IncrementalHashAlgorithm.IsSupported
+#if DEBUG
+            == (Environment.TickCount % 2 != 0) // For testing fallback.
+#endif
+            )
+        {
+            return this.ComputeHashFallback(hashing, nsId, name);
         }
 
-        public override GuidVersion Version => GuidVersion.Version5;
-
-        protected override HashAlgorithm CreateHashing() => SHA1.Create();
+        hashing.Initialize();
+        var guidBytes = LocalBuffers.GuidBytes;
+        fixed (byte* pGuidBytes = &guidBytes[0])
+        {
+            *(Guid*)pGuidBytes = nsId.ToBigEndian();
+        }
+        hashing.AppendData(guidBytes);
+        hashing.AppendData(name);
+        return hashing.GetFinalHash();
     }
+
+    private unsafe byte[] ComputeHashFallback(
+        HashAlgorithm hashing, Guid nsId, byte[] name)
+    {
+#if DEBUG
+        hashing.Initialize();
+#endif
+        const int guidSize = 16;
+        var inputLength = guidSize + name.Length;
+        var input = new byte[inputLength];
+        fixed (byte* pInput = &input[0])
+        {
+            *(Guid*)pInput = nsId.ToBigEndian();
+        }
+        Buffer.BlockCopy(name, 0, input, guidSize, name.Length);
+        return hashing.ComputeHash(input);
+    }
+
+    private unsafe Guid HashToGuid(byte[] hash)
+    {
+#if !UUIDREV_DISABLE
+        if (hash.Length < 16)
+        {
+            throw new InvalidOperationException(
+                "The algorithm's hash size is less than 128 bits.");
+        }
+#endif
+
+        var uuid = default(Guid);
+        fixed (byte* pHash = &hash[0])
+        {
+            uuid = *(Guid*)pHash;
+        }
+        var guid = uuid.ToBigEndian();
+        this.FillVersionFieldUnchecked(ref guid);
+        this.FillVariantFieldUnchecked(ref guid);
+        return guid;
+    }
+#endif
 }
