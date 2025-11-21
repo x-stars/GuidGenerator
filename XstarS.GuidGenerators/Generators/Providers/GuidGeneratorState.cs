@@ -53,7 +53,7 @@ internal sealed partial class GuidGeneratorState
         return new GuidGeneratorState(NodeIdSource.VolatileRandom);
     }
 
-    public bool Update(long timestamp, byte[] nodeId, out short clockSeq)
+    public bool Update(byte[] nodeId, long timestamp, out short clockSeq)
     {
         var updated = false;
         lock (this)

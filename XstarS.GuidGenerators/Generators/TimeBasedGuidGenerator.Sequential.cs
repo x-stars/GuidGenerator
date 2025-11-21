@@ -114,10 +114,10 @@ partial class TimeBasedGuidGenerator
             private bool TryFillTimeFields(ref Guid guid)
             {
                 var state = this.GeneratorState;
-                var timestamp = this.CurrentTimestamp;
                 var nodeId = this.NodeIdBytes;
+                var timestamp = this.CurrentTimestamp;
                 var updated = state.Update(
-                    timestamp, nodeId, out var clockSeq);
+                    nodeId, timestamp, out var clockSeq);
                 if (!updated) { return false; }
                 this.FillTimeFieldsChecked(ref guid, timestamp);
                 return true;

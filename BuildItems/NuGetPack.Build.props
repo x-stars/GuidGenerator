@@ -16,7 +16,7 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\GuidGenerator.snk</AssemblyOriginatorKeyFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <WarnOn Condition="'$(Language)'=='F#'">FS3390</WarnOn>
+    <WarnOn Condition="'$(Language)'=='F#'">$(WarnOn);FS3390</WarnOn>
   </PropertyGroup>
 
   <PropertyGroup>
