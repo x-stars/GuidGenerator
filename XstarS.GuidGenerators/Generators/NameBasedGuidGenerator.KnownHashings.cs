@@ -66,6 +66,9 @@ partial class NameBasedGuidGenerator
         // Don't use `Lazy<T>` for lazy initialization for performance issues
         // in .NET Framework (fixed in .NET Core).
 
+        // Don't use nested class field for lazy initialization, because inlined static field accessing
+        // will cause unconditional initialization in .NET Framework (fixed in .NET Core).
+
         internal static NameBasedGuidGenerator.CustomHashing InstanceSha256
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
