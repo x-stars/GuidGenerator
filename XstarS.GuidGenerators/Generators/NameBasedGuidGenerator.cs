@@ -105,45 +105,24 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
     }
 #endif
 
+    private static class LocalBuffers
+    {
+        [ThreadStatic] private static byte[]? GuidBytesValue;
+
+        internal static byte[] GuidBytes =>
+            LocalBuffers.GuidBytesValue ??= new byte[16];
+    }
+
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     private bool TryComputeHash(
         HashAlgorithm hashing, Guid nsId, ReadOnlySpan<byte> name,
         Span<byte> destination, out int bytesWritten)
     {
-        if (!IncrementalHashAlgorithm.IsSupported
-#if DEBUG
-            == (Environment.TickCount % 2 != 0) // For testing fallback.
-#endif
-            )
-        {
-            return this.TryComputeHashFallback(
-                hashing, nsId, name, destination, out bytesWritten);
-        }
-
-        hashing.Initialize();
-        var guidBytes = (stackalloc byte[16]);
+        var guidBytes = LocalBuffers.GuidBytes;
         var nsIdResult = nsId.TryWriteUuidBytes(guidBytes);
         Debug.Assert(nsIdResult);
-        hashing.AppendData(guidBytes);
-        hashing.AppendData(name);
-        return hashing.TryGetFinalHash(destination, out bytesWritten);
-    }
-
-    private bool TryComputeHashFallback(
-        HashAlgorithm hashing, Guid nsId, ReadOnlySpan<byte> name,
-        Span<byte> destination, out int bytesWritten)
-    {
-#if DEBUG
-        hashing.Initialize();
-#endif
-        const int guidSize = 16;
-        var inputLength = guidSize + name.Length;
-        var input = ((uint)name.Length <= 1024) ?
-            (stackalloc byte[inputLength]) : (new byte[inputLength]);
-        var nsIdResult = nsId.TryWriteUuidBytes(input);
-        Debug.Assert(nsIdResult);
-        name.CopyTo(input[guidSize..]);
-        return hashing.TryComputeHash(input, destination, out bytesWritten);
+        hashing.TransformBlock(guidBytes, 0, 16, null, 0);
+        return hashing.TryComputeHash(name, destination, out bytesWritten);
     }
 
     private Guid HashToGuid(ReadOnlySpan<byte> hash)
@@ -162,52 +141,16 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
         return guid;
     }
 #else
-    private static class LocalBuffers
-    {
-        [ThreadStatic] private static byte[]? GuidBytesValue;
-
-        internal static byte[] GuidBytes =>
-            LocalBuffers.GuidBytesValue ??= new byte[16];
-    }
-
     private unsafe byte[] ComputeHash(
         HashAlgorithm hashing, Guid nsId, byte[] name)
     {
-        if (!IncrementalHashAlgorithm.IsSupported
-#if DEBUG
-            == (Environment.TickCount % 2 != 0) // For testing fallback.
-#endif
-            )
-        {
-            return this.ComputeHashFallback(hashing, nsId, name);
-        }
-
-        hashing.Initialize();
         var guidBytes = LocalBuffers.GuidBytes;
         fixed (byte* pGuidBytes = &guidBytes[0])
         {
             *(Guid*)pGuidBytes = nsId.ToBigEndian();
         }
-        hashing.AppendData(guidBytes);
-        hashing.AppendData(name);
-        return hashing.GetFinalHash();
-    }
-
-    private unsafe byte[] ComputeHashFallback(
-        HashAlgorithm hashing, Guid nsId, byte[] name)
-    {
-#if DEBUG
-        hashing.Initialize();
-#endif
-        const int guidSize = 16;
-        var inputLength = guidSize + name.Length;
-        var input = new byte[inputLength];
-        fixed (byte* pInput = &input[0])
-        {
-            *(Guid*)pInput = nsId.ToBigEndian();
-        }
-        Buffer.BlockCopy(name, 0, input, guidSize, name.Length);
-        return hashing.ComputeHash(input);
+        hashing.TransformBlock(guidBytes, 0, 16, null, 0);
+        return hashing.ComputeHash(name);
     }
 
     private unsafe Guid HashToGuid(byte[] hash)
