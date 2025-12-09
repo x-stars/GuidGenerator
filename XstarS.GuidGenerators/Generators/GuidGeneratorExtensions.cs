@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Text;
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-using System.Diagnostics;
-#endif
 #if !UUIDREV_DISABLE
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
@@ -75,7 +72,11 @@ public static class GuidGeneratorExtensions
         var nameBytes = ((uint)nameLength <= 1024) ?
             (stackalloc byte[nameLength]) : (new byte[nameLength]);
         var bytesWritten = encoding.GetBytes(name, nameBytes);
-        Debug.Assert(bytesWritten == nameLength);
+        if (bytesWritten != nameLength)
+        {
+            throw new InvalidOperationException(
+                "The encoding's implementation is incorrect.");
+        }
         return guidGen.NewGuid(nsId, nameBytes);
     }
 #endif
@@ -136,7 +137,11 @@ public static class GuidGeneratorExtensions
         var nameBytes = ((uint)nameLength <= 1024) ?
             (stackalloc byte[nameLength]) : (new byte[nameLength]);
         var bytesWritten = encoding.GetBytes(name, nameBytes);
-        Debug.Assert(bytesWritten == nameLength);
+        if (bytesWritten != nameLength)
+        {
+            throw new InvalidOperationException(
+                "The encoding's implementation is incorrect.");
+        }
         return guidGen.NewGuid(nsId, nameBytes);
     }
 #endif
