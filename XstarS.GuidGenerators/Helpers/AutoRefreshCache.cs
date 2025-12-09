@@ -105,7 +105,7 @@ internal sealed class AutoRefreshCache<T> : IDisposable
         if (this.SleepCountdown > 0)
         {
             this.CachedValueBox = new StrongBox<T>(this.RefreshFunc.Invoke());
-            this.SleepCountdown -= 1;
+            Interlocked.Decrement(ref this.SleepCountdown);
         }
         else
         {
