@@ -46,7 +46,7 @@ module internal ExtensionOperators =
     /// <param name="value">The input value.</param>
     /// <returns>The input value.</returns>
     [<CompiledName("TeeAction")>]
-    let inline tee (action: 'T -> unit) (value: 'T) : 'T =
+    let inline tee ([<InlineIfLambda>] action: 'T -> unit) (value: 'T) : 'T =
         action value
         value
 
@@ -58,6 +58,6 @@ module internal ExtensionOperators =
     /// <param name="action">The action to apply.</param>
     /// <returns>The input value.</returns>
     [<CompiledName("op_TeeAction")>]
-    let inline ( |- ) (value: 'T) (action: 'T -> unit) : 'T =
+    let inline ( |- ) (value: 'T) ([<InlineIfLambda>] action: 'T -> unit) : 'T =
         action value
         value
