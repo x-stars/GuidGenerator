@@ -32,7 +32,7 @@ module internal Assert =
     [<DebuggerNonUserCode; ExcludeFromCodeCoverage>]
     [<EditorBrowsable(EditorBrowsableState.Never)>]
     [<Sealed>]
-    type internal SeqWrapper<'T>(source: seq<'T>) =
+    type internal SeqWrapper<'T> private (source: seq<'T>) =
 
         /// <summary>
         /// Returns an <see cref="T:System.Collections.ICollection"/> wrapper
