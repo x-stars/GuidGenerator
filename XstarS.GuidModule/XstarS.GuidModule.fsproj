@@ -25,8 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="OptionConvert.fs" />
-    <Compile Include="TryResult.fs" />
+    <Compile Include="Helpers\OptionConvert.fs" />
+    <Compile Include="Helpers\TryResult.fs" />
     <Compile Include="Extensions.fs" />
     <Compile Include="GuidModule.fs" />
     <Compile Include="GuidPatterns.fs" />
