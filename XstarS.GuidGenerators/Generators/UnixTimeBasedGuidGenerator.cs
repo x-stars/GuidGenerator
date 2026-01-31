@@ -38,11 +38,14 @@ internal sealed class UnixTimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            [MethodImpl(MethodImplOptions.Synchronized)]
+            [MethodImpl(MethodImplOptions.NoInlining)]
             static UnixTimeBasedGuidGenerator Initialize()
             {
-                return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                    new UnixTimeBasedGuidGenerator());
+                lock (GuidGenerator.InitSyncRoot)
+                {
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new UnixTimeBasedGuidGenerator());
+                }
             }
 
             return Volatile.Read(ref field) ?? Initialize();

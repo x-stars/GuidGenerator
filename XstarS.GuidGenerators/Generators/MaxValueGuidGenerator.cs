@@ -15,11 +15,14 @@ internal sealed class MaxValueGuidGenerator : GuidGenerator, IGuidGenerator
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            [MethodImpl(MethodImplOptions.Synchronized)]
+            [MethodImpl(MethodImplOptions.NoInlining)]
             static MaxValueGuidGenerator Initialize()
             {
-                return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                    new MaxValueGuidGenerator());
+                lock (GuidGenerator.InitSyncRoot)
+                {
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new MaxValueGuidGenerator());
+                }
             }
 
             return Volatile.Read(ref field) ?? Initialize();

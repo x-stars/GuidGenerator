@@ -14,11 +14,14 @@ internal sealed class RandomGuidGenerator : GuidGenerator, IGuidGenerator
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            [MethodImpl(MethodImplOptions.Synchronized)]
+            [MethodImpl(MethodImplOptions.NoInlining)]
             static RandomGuidGenerator Initialize()
             {
-                return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                    new RandomGuidGenerator());
+                lock (GuidGenerator.InitSyncRoot)
+                {
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new RandomGuidGenerator());
+                }
             }
 
             return Volatile.Read(ref field) ?? Initialize();

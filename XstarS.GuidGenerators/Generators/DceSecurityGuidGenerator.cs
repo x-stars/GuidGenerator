@@ -18,11 +18,14 @@ internal sealed class DceSecurityGuidGenerator : TimeBasedGuidGenerator, IDceSec
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            [MethodImpl(MethodImplOptions.Synchronized)]
+            [MethodImpl(MethodImplOptions.NoInlining)]
             static DceSecurityGuidGenerator Initialize()
             {
-                return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                    new DceSecurityGuidGenerator());
+                lock (GuidGenerator.InitSyncRoot)
+                {
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new DceSecurityGuidGenerator());
+                }
             }
 
             return Volatile.Read(ref field) ?? Initialize();
