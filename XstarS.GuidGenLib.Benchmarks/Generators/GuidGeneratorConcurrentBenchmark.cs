@@ -26,9 +26,9 @@ public class GuidGeneratorConcurrentBenchmark
     {
         this.ParallelInvoke(count =>
         {
-            for (int index = 0; index < count; index++)
+            foreach (var index in ..count)
             {
-                var guid = Guid.NewGuid();
+                _ = Guid.NewGuid();
             }
         });
     }
@@ -40,9 +40,9 @@ public class GuidGeneratorConcurrentBenchmark
         {
             var empty = GuidVersion.Empty;
             var guidGen = GuidGenerator.OfVersion(empty);
-            for (int index = 0; index < count; index++)
+            foreach (var index in ..count)
             {
-                var guid = guidGen.NewGuid();
+                _ = guidGen.NewGuid();
             }
         });
     }
@@ -53,9 +53,9 @@ public class GuidGeneratorConcurrentBenchmark
         this.ParallelInvoke(count =>
         {
             var guidGen = GuidGenerator.OfVersion(1);
-            for (int index = 0; index < count; index++)
+            foreach (var index in ..count)
             {
-                var guid = guidGen.NewGuid();
+                _ = guidGen.NewGuid();
             }
         });
     }
@@ -66,9 +66,9 @@ public class GuidGeneratorConcurrentBenchmark
         this.ParallelInvoke(count =>
         {
             var guidGen = GuidGenerator.OfVersion(2);
-            for (int index = 0; index < count; index++)
+            foreach (var index in ..count)
             {
-                var guid = guidGen.NewGuid();
+                _ = guidGen.NewGuid();
             }
         });
     }
@@ -79,9 +79,9 @@ public class GuidGeneratorConcurrentBenchmark
         this.ParallelInvoke(count =>
         {
             var guidGen = GuidGenerator.OfVersion(3);
-            for (int index = 0; index < count; index++)
+            foreach (var index in ..count)
             {
-                var guid = guidGen.NewGuid();
+                _ = guidGen.NewGuid();
             }
         });
     }
@@ -92,9 +92,9 @@ public class GuidGeneratorConcurrentBenchmark
         this.ParallelInvoke(count =>
         {
             var guidGen = GuidGenerator.OfVersion(4);
-            for (int index = 0; index < count; index++)
+            foreach (var index in ..count)
             {
-                var guid = guidGen.NewGuid();
+                _ = guidGen.NewGuid();
             }
         });
     }
@@ -105,9 +105,9 @@ public class GuidGeneratorConcurrentBenchmark
         this.ParallelInvoke(count =>
         {
             var guidGen = GuidGenerator.OfVersion(5);
-            for (int index = 0; index < count; index++)
+            foreach (var index in ..count)
             {
-                var guid = guidGen.NewGuid();
+                _ = guidGen.NewGuid();
             }
         });
     }
@@ -119,9 +119,9 @@ public class GuidGeneratorConcurrentBenchmark
         this.ParallelInvoke(count =>
         {
             var guidGen = GuidGenerator.OfVersion(6);
-            for (int index = 0; index < count; index++)
+            foreach (var index in ..count)
             {
-                var guid = guidGen.NewGuid();
+                _ = guidGen.NewGuid();
             }
         });
     }
@@ -132,9 +132,9 @@ public class GuidGeneratorConcurrentBenchmark
         this.ParallelInvoke(count =>
         {
             var guidGen = GuidGenerator.OfVersion(7);
-            for (int index = 0; index < count; index++)
+            foreach (var index in ..count)
             {
-                var guid = guidGen.NewGuid();
+                _ = guidGen.NewGuid();
             }
         });
     }
@@ -145,9 +145,9 @@ public class GuidGeneratorConcurrentBenchmark
         this.ParallelInvoke(count =>
         {
             var guidGen = GuidGenerator.OfVersion(8);
-            for (int index = 0; index < count; index++)
+            foreach (var index in ..count)
             {
-                var guid = guidGen.NewGuid();
+                _ = guidGen.NewGuid();
             }
         });
     }
@@ -159,9 +159,9 @@ public class GuidGeneratorConcurrentBenchmark
         {
             var maxValue = GuidVersion.MaxValue;
             var guidGen = GuidGenerator.OfVersion(maxValue);
-            for (int index = 0; index < count; index++)
+            foreach (var index in ..count)
             {
-                var guid = guidGen.NewGuid();
+                _ = guidGen.NewGuid();
             }
         });
     }

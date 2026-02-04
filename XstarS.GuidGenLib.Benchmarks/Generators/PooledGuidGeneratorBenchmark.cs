@@ -2,10 +2,13 @@
 using System;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Configs;
 
 namespace XNetEx.Guids.Generators;
 
+[CLSCompliant(false)]
 [MemoryDiagnoser]
+[GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
 public class PooledGuidGeneratorBenchmark
 {
     [CLSCompliant(false)]
@@ -23,67 +26,59 @@ public class PooledGuidGeneratorBenchmark
     }
 
     [Benchmark(Baseline = true)]
-    public void GuidNewGuid()
-    {
-        this.ParallelInvoke(count =>
-        {
-            for (int index = 0; index < count; index++)
-            {
-                var guid = Guid.NewGuid();
-            }
-        });
-    }
-
-    [Benchmark]
+    [BenchmarkCategory("GuidVersion1")]
     public void GuidV1Generate()
     {
         var guidGen = GuidGenerator.Version1R;
         this.ParallelInvoke(count =>
         {
-            for (int index = 0; index < count; index++)
+            foreach (var index in ..count)
             {
-                var guid = guidGen.NewGuid();
+                _ = guidGen.NewGuid();
             }
         });
     }
 
     [Benchmark]
+    [BenchmarkCategory("GuidVersion1")]
     public void GuidV1PoolGenerate()
     {
         var guidGen = GuidGenerator.CreatePooled(
             GuidGenerator.CreateVersion1R);
         this.ParallelInvoke(count =>
         {
-            for (int index = 0; index < count; index++)
+            foreach (var index in ..count)
             {
-                var guid = guidGen.NewGuid();
+                _ = guidGen.NewGuid();
             }
         });
     }
 
-    [Benchmark]
+    [Benchmark(Baseline = true)]
+    [BenchmarkCategory("GuidVersion6")]
     public void GuidV6Generate()
     {
         var guidGen = GuidGenerator.Version6R;
         this.ParallelInvoke(count =>
         {
-            for (int index = 0; index < count; index++)
+            foreach (var index in ..count)
             {
-                var guid = guidGen.NewGuid();
+                _ = guidGen.NewGuid();
             }
         });
     }
 
     [Benchmark]
+    [BenchmarkCategory("GuidVersion6")]
     public void GuidV6PoolGenerate()
     {
         var guidGen = GuidGenerator.CreatePooled(
             GuidGenerator.CreateVersion6R);
         this.ParallelInvoke(count =>
         {
-            for (int index = 0; index < count; index++)
+            foreach (var index in ..count)
             {
-                var guid = guidGen.NewGuid();
+                _ = guidGen.NewGuid();
             }
         });
     }
