@@ -50,11 +50,14 @@ internal partial class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            [MethodImpl(MethodImplOptions.Synchronized)]
+            [MethodImpl(MethodImplOptions.NoInlining)]
             static TimeBasedGuidGenerator Initialize()
             {
-                return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                    new TimeBasedGuidGenerator());
+                lock (GuidGenerator.InitSyncRoot)
+                {
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new TimeBasedGuidGenerator());
+                }
             }
 
             return Volatile.Read(ref field) ?? Initialize();
@@ -66,11 +69,14 @@ internal partial class TimeBasedGuidGenerator : GuidGenerator, IGuidGenerator
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            [MethodImpl(MethodImplOptions.Synchronized)]
+            [MethodImpl(MethodImplOptions.NoInlining)]
             static TimeBasedGuidGenerator Initialize()
             {
-                return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                    new TimeBasedGuidGenerator(NodeIdSource.NonVolatileRandom));
+                lock (GuidGenerator.InitSyncRoot)
+                {
+                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                        new TimeBasedGuidGenerator(NodeIdSource.NonVolatileRandom));
+                }
             }
 
             return Volatile.Read(ref field) ?? Initialize();

@@ -50,7 +50,7 @@ internal partial class GuidComponents : IGuidCommonComponents
     {
         if (variant > GuidVariant.Reserved)
         {
-            return string.Empty;
+            return "Variant for Guid must be between 0 and 3.";
         }
 
         this.SetVariant(ref guid, variant);
@@ -87,7 +87,7 @@ internal partial class GuidComponents : IGuidCommonComponents
     {
         if (version > (GuidVersion)/*MaxValue*/15)
         {
-            return string.Empty;
+            return "Version for Guid must be between 0 and 15.";
         }
 
         this.SetVersion(ref guid, version);

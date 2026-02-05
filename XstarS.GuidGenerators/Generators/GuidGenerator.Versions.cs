@@ -11,6 +11,11 @@ using ITimeBasedGuidGenerator = IGuidGenerator;
 partial class GuidGenerator
 {
     /// <summary>
+    /// An object used to synchronize the initialization of static members.
+    /// </summary>
+    private protected static readonly object InitSyncRoot = new();
+
+    /// <summary>
     /// Gets the <see cref="IGuidGenerator"/> instance of <see cref="Guid.Empty"/>.
     /// </summary>
     /// <returns>The <see cref="IGuidGenerator"/> instance of <see cref="Guid.Empty"/>.</returns>

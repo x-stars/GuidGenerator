@@ -19,11 +19,14 @@ partial class NameBasedGuidGenerator
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                [MethodImpl(MethodImplOptions.Synchronized)]
+                [MethodImpl(MethodImplOptions.NoInlining)]
                 static NameBasedGuidGenerator.MD5Hashing Initialize()
                 {
-                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                        new NameBasedGuidGenerator.MD5Hashing());
+                    lock (GuidGenerator.InitSyncRoot)
+                    {
+                        return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                            new NameBasedGuidGenerator.MD5Hashing());
+                    }
                 }
 
                 return Volatile.Read(ref field) ?? Initialize();
@@ -44,11 +47,14 @@ partial class NameBasedGuidGenerator
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                [MethodImpl(MethodImplOptions.Synchronized)]
+                [MethodImpl(MethodImplOptions.NoInlining)]
                 static NameBasedGuidGenerator.SHA1Hashing Initialize()
                 {
-                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                        new NameBasedGuidGenerator.SHA1Hashing());
+                    lock (GuidGenerator.InitSyncRoot)
+                    {
+                        return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                            new NameBasedGuidGenerator.SHA1Hashing());
+                    }
                 }
 
                 return Volatile.Read(ref field) ?? Initialize();
@@ -74,11 +80,14 @@ partial class NameBasedGuidGenerator
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                [MethodImpl(MethodImplOptions.Synchronized)]
+                [MethodImpl(MethodImplOptions.NoInlining)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                        new NameBasedGuidGenerator.CustomHashing(SHA256.Create));
+                    lock (GuidGenerator.InitSyncRoot)
+                    {
+                        return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                            new NameBasedGuidGenerator.CustomHashing(SHA256.Create));
+                    }
                 }
 
                 return Volatile.Read(ref field) ?? Initialize();
@@ -90,11 +99,14 @@ partial class NameBasedGuidGenerator
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                [MethodImpl(MethodImplOptions.Synchronized)]
+                [MethodImpl(MethodImplOptions.NoInlining)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                        new NameBasedGuidGenerator.CustomHashing(SHA384.Create));
+                    lock (GuidGenerator.InitSyncRoot)
+                    {
+                        return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                            new NameBasedGuidGenerator.CustomHashing(SHA384.Create));
+                    }
                 }
 
                 return Volatile.Read(ref field) ?? Initialize();
@@ -106,11 +118,14 @@ partial class NameBasedGuidGenerator
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                [MethodImpl(MethodImplOptions.Synchronized)]
+                [MethodImpl(MethodImplOptions.NoInlining)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                        new NameBasedGuidGenerator.CustomHashing(SHA512.Create));
+                    lock (GuidGenerator.InitSyncRoot)
+                    {
+                        return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                            new NameBasedGuidGenerator.CustomHashing(SHA512.Create));
+                    }
                 }
 
                 return Volatile.Read(ref field) ?? Initialize();
@@ -123,12 +138,15 @@ partial class NameBasedGuidGenerator
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                [MethodImpl(MethodImplOptions.Synchronized)]
+                [MethodImpl(MethodImplOptions.NoInlining)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    ThrowIfNotSupported(SHA3_256.IsSupported, HashAlgorithmNames.SHA3_256);
-                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                        new NameBasedGuidGenerator.CustomHashing(SHA3_256.Create));
+                    lock (GuidGenerator.InitSyncRoot)
+                    {
+                        ThrowIfNotSupported(SHA3_256.IsSupported, HashAlgorithmNames.SHA3_256);
+                        return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                            new NameBasedGuidGenerator.CustomHashing(SHA3_256.Create));
+                    }
                 }
 
                 return Volatile.Read(ref field) ?? Initialize();
@@ -140,12 +158,15 @@ partial class NameBasedGuidGenerator
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                [MethodImpl(MethodImplOptions.Synchronized)]
+                [MethodImpl(MethodImplOptions.NoInlining)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    ThrowIfNotSupported(SHA3_384.IsSupported, HashAlgorithmNames.SHA3_384);
-                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                        new NameBasedGuidGenerator.CustomHashing(SHA3_384.Create));
+                    lock (GuidGenerator.InitSyncRoot)
+                    {
+                        ThrowIfNotSupported(SHA3_384.IsSupported, HashAlgorithmNames.SHA3_384);
+                        return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                            new NameBasedGuidGenerator.CustomHashing(SHA3_384.Create));
+                    }
                 }
 
                 return Volatile.Read(ref field) ?? Initialize();
@@ -157,12 +178,15 @@ partial class NameBasedGuidGenerator
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                [MethodImpl(MethodImplOptions.Synchronized)]
+                [MethodImpl(MethodImplOptions.NoInlining)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    ThrowIfNotSupported(SHA3_512.IsSupported, HashAlgorithmNames.SHA3_512);
-                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                        new NameBasedGuidGenerator.CustomHashing(SHA3_512.Create));
+                    lock (GuidGenerator.InitSyncRoot)
+                    {
+                        ThrowIfNotSupported(SHA3_512.IsSupported, HashAlgorithmNames.SHA3_512);
+                        return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                            new NameBasedGuidGenerator.CustomHashing(SHA3_512.Create));
+                    }
                 }
 
                 return Volatile.Read(ref field) ?? Initialize();
@@ -174,12 +198,15 @@ partial class NameBasedGuidGenerator
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                [MethodImpl(MethodImplOptions.Synchronized)]
+                [MethodImpl(MethodImplOptions.NoInlining)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    ThrowIfNotSupported(Shake128.IsSupported, HashAlgorithmNames.SHAKE128);
-                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                        new NameBasedGuidGenerator.CustomHashing(Shake128D.Create256));
+                    lock (GuidGenerator.InitSyncRoot)
+                    {
+                        ThrowIfNotSupported(Shake128.IsSupported, HashAlgorithmNames.SHAKE128);
+                        return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                            new NameBasedGuidGenerator.CustomHashing(Shake128D.Create256));
+                    }
                 }
 
                 return Volatile.Read(ref field) ?? Initialize();
@@ -191,12 +218,15 @@ partial class NameBasedGuidGenerator
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                [MethodImpl(MethodImplOptions.Synchronized)]
+                [MethodImpl(MethodImplOptions.NoInlining)]
                 static NameBasedGuidGenerator.CustomHashing Initialize()
                 {
-                    ThrowIfNotSupported(Shake256.IsSupported, HashAlgorithmNames.SHAKE256);
-                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                        new NameBasedGuidGenerator.CustomHashing(Shake256D.Create512));
+                    lock (GuidGenerator.InitSyncRoot)
+                    {
+                        ThrowIfNotSupported(Shake256.IsSupported, HashAlgorithmNames.SHAKE256);
+                        return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                            new NameBasedGuidGenerator.CustomHashing(Shake256D.Create512));
+                    }
                 }
 
                 return Volatile.Read(ref field) ?? Initialize();

@@ -8,119 +8,75 @@ namespace XNetEx.Guids;
 [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
 public class GuidUuidBytesBenchmark
 {
-    [CLSCompliant(false)]
-    [Params(1, 10, 100, 1000)]
-    public int GuidCount;
-
     private readonly Guid GuidValue = new(
         0xffffffff, 0xffff, 0xffff,
         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
 
     private readonly byte[] GuidBytes =
-    {
+    [
         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-    };
+    ];
 
-    [BenchmarkCategory("FromByteArray")]
     [Benchmark(Baseline = true)]
+    [BenchmarkCategory("FromByteArray")]
     public void FromByteArray()
     {
-        var bytes = this.GuidBytes;
-        var count = this.GuidCount;
-        for (int index = 0; index < count; index++)
-        {
-            var guid = new Guid(bytes);
-        }
+        _ = new Guid(this.GuidBytes);
     }
 
+    [Benchmark]
     [BenchmarkCategory("FromByteArray")]
-    [Benchmark(Baseline = false)]
     public void FromUuidByteArray()
     {
-        var bytes = this.GuidBytes;
-        var count = this.GuidCount;
-        for (int index = 0; index < count; index++)
-        {
-            var guid = Uuid.FromByteArray(bytes);
-        }
+        _ = Guid.FromUuidByteArray(this.GuidBytes);
     }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-    [BenchmarkCategory("FromByteSpan")]
     [Benchmark(Baseline = true)]
+    [BenchmarkCategory("FromByteSpan")]
     public void FromByteSpan()
     {
-        var bytes = (ReadOnlySpan<byte>)this.GuidBytes;
-        var count = this.GuidCount;
-        for (int index = 0; index < count; index++)
-        {
-            var guid = new Guid(bytes);
-        }
+        _ = new Guid((ReadOnlySpan<byte>)this.GuidBytes);
     }
 
+    [Benchmark]
     [BenchmarkCategory("FromByteSpan")]
-    [Benchmark(Baseline = false)]
     public void FromUuidByteSpan()
     {
-        var bytes = (ReadOnlySpan<byte>)this.GuidBytes;
-        var count = this.GuidCount;
-        for (int index = 0; index < count; index++)
-        {
-            var guid = Uuid.FromBytes(bytes);
-        }
+        _ = Guid.FromUuidBytes((ReadOnlySpan<byte>)this.GuidBytes);
     }
 #endif
 
-    [BenchmarkCategory("ToByteArray")]
     [Benchmark(Baseline = true)]
+    [BenchmarkCategory("ToByteArray")]
     public void ToByteArray()
     {
-        var guid = this.GuidValue;
-        var count = this.GuidCount;
-        for (int index = 0; index < count; index++)
-        {
-            var bytes = guid.ToByteArray();
-        }
+        _ = this.GuidValue.ToByteArray();
     }
 
+    [Benchmark]
     [BenchmarkCategory("ToByteArray")]
-    [Benchmark(Baseline = false)]
     public void ToUuidByteArray()
     {
-        var guid = this.GuidValue;
-        var count = this.GuidCount;
-        for (int index = 0; index < count; index++)
-        {
-            var bytes = guid.ToUuidByteArray();
-        }
+        _ = this.GuidValue.ToUuidByteArray();
     }
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-    [BenchmarkCategory("TryWriteByteSpan")]
     [Benchmark(Baseline = true)]
+    [BenchmarkCategory("TryWriteByteSpan")]
     public void TryWriteByteSpan()
     {
-        var guid = this.GuidValue;
         var bytes = (stackalloc byte[16]);
-        var count = this.GuidCount;
-        for (int index = 0; index < count; index++)
-        {
-            _ = guid.TryWriteBytes(bytes);
-        }
+        _ = this.GuidValue.TryWriteBytes(bytes);
     }
 
+    [Benchmark]
     [BenchmarkCategory("TryWriteByteSpan")]
-    [Benchmark(Baseline = false)]
     public void TryWriteUuidByteSpan()
     {
-        var guid = this.GuidValue;
         var bytes = (stackalloc byte[16]);
-        var count = this.GuidCount;
-        for (int index = 0; index < count; index++)
-        {
-            _ = guid.TryWriteUuidBytes(bytes);
-        }
+        _ = this.GuidValue.TryWriteUuidBytes(bytes);
     }
 #endif
 }

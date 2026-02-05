@@ -17,11 +17,14 @@ partial class CustomGuidGenerator
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                [MethodImpl(MethodImplOptions.Synchronized)]
+                [MethodImpl(MethodImplOptions.NoInlining)]
                 static CustomGuidGenerator.Example Initialize()
                 {
-                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                        new CustomGuidGenerator.Example());
+                    lock (GuidGenerator.InitSyncRoot)
+                    {
+                        return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                            new CustomGuidGenerator.Example());
+                    }
                 }
 
                 return Volatile.Read(ref field) ?? Initialize();

@@ -24,11 +24,14 @@ partial class TimeBasedGuidGenerator
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                [MethodImpl(MethodImplOptions.Synchronized)]
+                [MethodImpl(MethodImplOptions.NoInlining)]
                 static TimeBasedGuidGenerator.Sequential Initialize()
                 {
-                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                        new TimeBasedGuidGenerator.Sequential.Randomized());
+                    lock (GuidGenerator.InitSyncRoot)
+                    {
+                        return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                            new TimeBasedGuidGenerator.Sequential.Randomized());
+                    }
                 }
 
                 return Volatile.Read(ref field) ?? Initialize();
@@ -40,11 +43,14 @@ partial class TimeBasedGuidGenerator
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                [MethodImpl(MethodImplOptions.Synchronized)]
+                [MethodImpl(MethodImplOptions.NoInlining)]
                 static TimeBasedGuidGenerator.Sequential Initialize()
                 {
-                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                        new TimeBasedGuidGenerator.Sequential(NodeIdSource.NonVolatileRandom));
+                    lock (GuidGenerator.InitSyncRoot)
+                    {
+                        return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                            new TimeBasedGuidGenerator.Sequential(NodeIdSource.NonVolatileRandom));
+                    }
                 }
 
                 return Volatile.Read(ref field) ?? Initialize();
@@ -56,11 +62,14 @@ partial class TimeBasedGuidGenerator
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                [MethodImpl(MethodImplOptions.Synchronized)]
+                [MethodImpl(MethodImplOptions.NoInlining)]
                 static TimeBasedGuidGenerator.Sequential Initialize()
                 {
-                    return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
-                        new TimeBasedGuidGenerator.Sequential(NodeIdSource.PhysicalAddress));
+                    lock (GuidGenerator.InitSyncRoot)
+                    {
+                        return Volatile.Read(ref field) ?? Volatile.WriteValue(ref field,
+                            new TimeBasedGuidGenerator.Sequential(NodeIdSource.PhysicalAddress));
+                    }
                 }
 
                 return Volatile.Read(ref field) ?? Initialize();

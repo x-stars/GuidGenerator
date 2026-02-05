@@ -8,57 +8,33 @@ namespace XNetEx.Guids.Generators;
 [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
 public class GuidCreateBenchmark
 {
-    [CLSCompliant(false)]
-    [Params(1, 10, 100, 1000)]
-    public int GuidCount;
-
     [Benchmark(Baseline = true)]
     [BenchmarkCategory("GuidVersion4")]
     public void GuidNewGuid()
     {
-        var count = this.GuidCount;
-        for (int index = 0; index < count; index++)
-        {
-            var guid = Guid.NewGuid();
-        }
+        _ = Guid.NewGuid();
     }
 
     [Benchmark]
     [BenchmarkCategory("GuidVersion4")]
     public void GuidV4Generate()
     {
-        var guidGen = GuidGenerator.OfVersion(4);
-        var count = this.GuidCount;
-        for (int index = 0; index < count; index++)
-        {
-            var guid = guidGen.NewGuid();
-        }
+        _ = GuidGenerator.Version4.NewGuid();
     }
 
-#if !UUIDREV_DISABLE
-#if NET9_0_OR_GREATER
+#if !UUIDREV_DISABLE && NET9_0_OR_GREATER
     [Benchmark(Baseline = true)]
     [BenchmarkCategory("GuidVersion7")]
     public void GuidCreateVersion7()
     {
-        var count = this.GuidCount;
-        for (int index = 0; index < count; index++)
-        {
-            var guid = Guid.CreateVersion7();
-        }
+        _ = Guid.CreateVersion7();
     }
 
     [Benchmark]
     [BenchmarkCategory("GuidVersion7")]
     public void GuidV7Generate()
     {
-        var guidGen = GuidGenerator.OfVersion(7);
-        var count = this.GuidCount;
-        for (int index = 0; index < count; index++)
-        {
-            var guid = guidGen.NewGuid();
-        }
+        _ = GuidGenerator.Version7.NewGuid();
     }
-#endif
 #endif
 }

@@ -8,10 +8,6 @@ namespace XNetEx.Guids;
 [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
 public class GuidFieldsBenchmark
 {
-    [CLSCompliant(false)]
-    [Params(1, 10, 100, 1000)]
-    public int GuidCount;
-
     private readonly Guid GuidValue = new(
         0xffffffff, 0xffff, 0xffff,
         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
@@ -19,51 +15,32 @@ public class GuidFieldsBenchmark
     private readonly byte[] GuidLowerBytes =
         [0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff];
 
-    [BenchmarkCategory("ByFieldValues")]
     [Benchmark(Baseline = true)]
+    [BenchmarkCategory("ByFieldValues")]
     public void ConstructFromFields()
     {
-        var count = this.GuidCount;
-        for (int index = 0; index < count; index++)
-        {
-            var guid = new Guid(0xffffffff, 0xffff, 0xffff,
-                0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
-        }
+        _ = new Guid(0xffffffff, 0xffff, 0xffff,
+            0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
     }
 
+    [Benchmark]
     [BenchmarkCategory("ByFieldValues")]
-    [Benchmark(Baseline = false)]
     public void DeconstructToFields()
     {
-        var guid = this.GuidValue;
-        var count = this.GuidCount;
-        for (int index = 0; index < count; index++)
-        {
-            var (a, b, c, d, e, f, g, h, i, j, k) = guid;
-        }
+        var (a, b, c, d, e, f, g, h, i, j, k) = this.GuidValue;
     }
 
-    [BenchmarkCategory("ByFieldValuesAndArray")]
     [Benchmark(Baseline = true)]
+    [BenchmarkCategory("ByFieldValuesAndArray")]
     public void ConstructFromFieldsAndArray()
     {
-        var lower = this.GuidLowerBytes;
-        var count = this.GuidCount;
-        for (int index = 0; index < count; index++)
-        {
-            var guid = new Guid(-1, -1, -1, lower);
-        }
+        _ = new Guid(-1, -1, -1, this.GuidLowerBytes);
     }
 
+    [Benchmark]
     [BenchmarkCategory("ByFieldValuesAndArray")]
-    [Benchmark(Baseline = false)]
     public void DeconstructToFieldsAndArray()
     {
-        var guid = this.GuidValue;
-        var count = this.GuidCount;
-        for (int index = 0; index < count; index++)
-        {
-            var (a, b, c, d) = guid;
-        }
+        var (a, b, c, d) = this.GuidValue;
     }
 }

@@ -286,20 +286,12 @@ AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
   DefaultJob : .NET 8.0.0 (8.0.23.53103), X64 RyuJIT AVX2
 ```
 
-|             Method | GuidCount | Mean            | StdDev        | Ratio |Allocated |
-|------------------- |----------:|----------------:|--------------:|------:|---------:|
-|      `GuidNewGuid` |         1 |      39.4991 ns |     0.6056 ns |  1.00 |        - |
-|    `EmptyGenerate` |         1 |       0.9068 ns |     0.0223 ns |  0.02 |        - |
-|   `GuidV1Generate` |         1 |     105.6470 ns |     0.4313 ns |  2.68 |        - |
-|   `GuidV2Generate` |         1 |     100.1834 ns |     0.0721 ns |  2.53 |        - |
-|   `GuidV3Generate` |         1 |     185.6253 ns |     1.6967 ns |  4.70 |        - |
-|   `GuidV4Generate` |         1 |      40.4183 ns |     0.4285 ns |  1.02 |        - |
-|   `GuidV5Generate` |         1 |     175.3653 ns |     2.4101 ns |  4.44 |        - |
-|                    |           |                 |               |       |          |
-|      `GuidNewGuid` |      1000 |  37,335.7751 ns |   399.4522 ns | 1.000 |        - |
-|    `EmptyGenerate` |      1000 |     232.4035 ns |     1.6808 ns | 0.006 |        - |
-|   `GuidV1Generate` |      1000 | 105,798.8867 ns |   683.9275 ns | 2.834 |      2 B |
-|   `GuidV2Generate` |      1000 | 106,502.6782 ns |   966.0136 ns | 2.853 |      3 B |
-|   `GuidV3Generate` |      1000 | 179,090.1237 ns |   993.3070 ns | 4.797 |        - |
-|   `GuidV4Generate` |      1000 |  37,113.4318 ns |   231.3545 ns | 0.994 |        - |
-|   `GuidV5Generate` |      1000 | 174,083.2118 ns | 1,143.8121 ns | 4.665 |        - |
+|             Method |  Mean            | StdDev        | Ratio |Allocated |
+|------------------- |-----------------:|--------------:|------:|---------:|
+|      `GuidNewGuid` |       39.4991 ns |     0.6056 ns |  1.00 |        - |
+|    `EmptyGenerate` |        0.9068 ns |     0.0223 ns |  0.02 |        - |
+|   `GuidV1Generate` |      105.6470 ns |     0.4313 ns |  2.68 |        - |
+|   `GuidV2Generate` |      100.1834 ns |     0.0721 ns |  2.53 |        - |
+|   `GuidV3Generate` |      185.6253 ns |     1.6967 ns |  4.70 |        - |
+|   `GuidV4Generate` |       40.4183 ns |     0.4285 ns |  1.02 |        - |
+|   `GuidV5Generate` |      175.3653 ns |     2.4101 ns |  4.44 |        - |
