@@ -6,7 +6,7 @@ namespace XNetEx.Guids;
 public class GuidComponentReplaceBenchmark
 {
     private readonly Guid GuidValue =
-        Guid.NewVersion2(DceSecurityDomain.Person);
+        Guid.NewVersion2(DceSecurityDomain.Group);
 
     private readonly DateTime Timestamp =
         new(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc);

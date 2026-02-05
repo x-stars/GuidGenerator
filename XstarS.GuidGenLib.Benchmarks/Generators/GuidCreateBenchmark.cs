@@ -22,8 +22,7 @@ public class GuidCreateBenchmark
         _ = GuidGenerator.Version4.NewGuid();
     }
 
-#if !UUIDREV_DISABLE
-#if NET9_0_OR_GREATER
+#if !UUIDREV_DISABLE && NET9_0_OR_GREATER
     [Benchmark(Baseline = true)]
     [BenchmarkCategory("GuidVersion7")]
     public void GuidCreateVersion7()
@@ -37,6 +36,5 @@ public class GuidCreateBenchmark
     {
         _ = GuidGenerator.Version7.NewGuid();
     }
-#endif
 #endif
 }

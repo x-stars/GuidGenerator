@@ -8,7 +8,6 @@ public class GuidComponentBenchmark
     private readonly Guid GuidValue =
         Guid.NewVersion2(DceSecurityDomain.Person);
 
-
     [Benchmark]
     public void GetVersion()
     {
@@ -25,7 +24,6 @@ public class GuidComponentBenchmark
     public void TryGetTimestamp()
     {
         _ = this.GuidValue.TryGetTimestamp(out var timestamp);
-
     }
 
     [Benchmark]
