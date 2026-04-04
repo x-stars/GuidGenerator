@@ -10,8 +10,6 @@ internal sealed class ShowVersionCommand : SingleOptionCommand
 
     protected override void ExecuteCore(string optionArg)
     {
-        var version = ThisAssembly.Info.InformationalVersion;
-        version = version[..version.LastIndexOf('+')];
-        Console.WriteLine($"{ThisAssembly.Info.Title} {version}");
+        Console.WriteLine($"{AssemblyInfo.Title} {AssemblyInfo.Version}");
     }
 }

@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildItems", "BuildItems", 
 		BuildItems\NuGetPack.Build.props = BuildItems\NuGetPack.Build.props
 		BuildItems\RefUnsafe.Build.props = BuildItems\RefUnsafe.Build.props
 		BuildItems\Trimming.Build.props = BuildItems\Trimming.Build.props
+		BuildItems\WriteAssemblyInfo.Build.targets = BuildItems\WriteAssemblyInfo.Build.targets
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configurations", "{80D67636-BFAE-4A5C-8A3C-B1DFFDD7DF5F}"
