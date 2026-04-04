@@ -1,0 +1,35 @@
+<Project>
+
+  <PropertyGroup>
+    <_AssemblyInfoFileDir>obj\$(Configuration)\$(TargetFramework)</_AssemblyInfoFileDir>
+    <_AssemblyInfoFileName>$(AssemblyName).AssemblyInfoConst.g.cs</_AssemblyInfoFileName>
+    <_AssemblyInfoFilePath>$(_AssemblyInfoFileDir)\$(_AssemblyInfoFileName)</_AssemblyInfoFilePath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <_AssemblyInfoFileContent Include="// &lt;auto-generated/&gt;" />
+    <_AssemblyInfoFileContent Include="internal static partial class AssemblyInfo" />
+    <_AssemblyInfoFileContent Include="{" />
+    <_AssemblyInfoFileContent
+      Include="%20%20%20%20internal const string Title = &quot;$(AssemblyTitle)&quot;%3B"
+    />
+    <_AssemblyInfoFileContent
+      Include="%20%20%20%20internal const string Version = &quot;$(Version)&quot;%3B"
+    />
+    <_AssemblyInfoFileContent Include="}" />
+  </ItemGroup>
+
+  <Target Name="_WriteAssemblyInfoFile" BeforeTargets="CoreCompile">
+    <WriteLinesToFile
+      File="$(_AssemblyInfoFilePath)"
+      Lines="@(_AssemblyInfoFileContent)"
+      Overwrite="true"
+      WriteOnlyWhenDifferent="true"
+    />
+  </Target>
+
+  <ItemGroup>
+    <Compile Include="$(_AssemblyInfoFilePath)" Visible="false" />
+  </ItemGroup>
+
+</Project>
