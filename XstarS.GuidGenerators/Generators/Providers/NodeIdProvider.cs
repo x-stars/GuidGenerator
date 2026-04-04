@@ -190,7 +190,7 @@ internal abstract class NodeIdProvider
             return nodeId;
         }
 
-        [MemberNotNull(nameof(this.NodeIdBytesValue))]
+        [MemberNotNull(nameof(NodeIdBytesValue))]
         internal void ResetNodeIdBytes()
         {
             this.NodeIdBytesValue =

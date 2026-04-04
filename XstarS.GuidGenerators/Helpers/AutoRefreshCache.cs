@@ -6,8 +6,8 @@ using System.Threading;
 namespace XNetEx.Threading;
 
 [DebuggerDisplay(
-    $"{nameof(this.IsValueValid)} = {{{nameof(this.IsValueValid)}}}, " +
-    $"{nameof(this.Value)} = {{{nameof(this.ValueForDebugDisplay)}}}")]
+    $"{nameof(IsValueValid)} = {{{nameof(IsValueValid)}}}, " +
+    $"{nameof(Value)} = {{{nameof(ValueForDebugDisplay)}}}")]
 internal sealed class AutoRefreshCache<T> : IDisposable
 {
     private readonly Func<T> RefreshFunc;
