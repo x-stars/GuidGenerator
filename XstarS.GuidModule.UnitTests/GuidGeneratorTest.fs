@@ -19,7 +19,7 @@ type GuidGeneratorTest() =
         |> Guid.tryGetNodeId
         |> tee (Assert.true' << ValueOption.isSome)
         |> ValueOption.get
-        |> fun nodeId -> nodeId[0] &&& 0x01uy
+        |> fun nodeId -> nodeId.[0] &&& 0x01uy
         |> Assert.equalTo 0x01uy
 
     [<TestMethod>]
@@ -128,7 +128,7 @@ type GuidGeneratorTest() =
         |> Guid.tryGetNodeId
         |> tee (Assert.true' << ValueOption.isSome)
         |> ValueOption.get
-        |> fun nodeId -> nodeId[0] &&& 0x01uy
+        |> fun nodeId -> nodeId.[0] &&& 0x01uy
         |> Assert.equalTo 0x00uy
 
     [<TestMethod>]
@@ -137,7 +137,7 @@ type GuidGeneratorTest() =
         |> Guid.tryGetNodeId
         |> tee (Assert.true' << ValueOption.isSome)
         |> ValueOption.get
-        |> fun nodeId -> nodeId[0] &&& 0x01uy
+        |> fun nodeId -> nodeId.[0] &&& 0x01uy
         |> Assert.equalTo 0x01uy
 
     [<TestMethod>]
