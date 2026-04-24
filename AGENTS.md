@@ -124,7 +124,7 @@ dotnet publish -c Release -f net10.0 -r linux-x64 --sc
 - `NoReflection.Build.props`: Reflection-free mode for trimming
 - `Trimming.Build.props`: Trimming-safe code
 - `NuGetPack.Build.props`: NuGet package metadata
-- `RefUnsafe.Build.props`: Ref/unsafe handling
+- `RefUnsafe.Build.props`: Unsafe helper reference
 
 ### Code Sharing
 
@@ -179,7 +179,7 @@ dotnet publish -c Release -f net10.0 -r linux-x64 --sc
 
 ## Dependency Graph
 
-``` tree
+``` plaintext
 XstarS.GuidGenerators (core)
 ├── XstarS.GuidGen.CLI (embeds via compilation)
 ├── XstarS.GuidGen.Service (project reference)
