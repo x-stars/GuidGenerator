@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace XNetEx.Guids.Generators;
@@ -50,8 +51,10 @@ partial class GuidGeneratorState
         }
     }
 
-    private static async Task<bool> LoadFromStorageAsync()
+    private static async Task<bool> LoadFromStorageAsync(
+        CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var storageFile = GuidGeneratorState.StorageFile;
         if (storageFile is null) { return false; }
 
@@ -61,7 +64,7 @@ partial class GuidGeneratorState
             using (var stream = streamProvider.Invoke(storageFile, FileAccess.Read))
             {
                 var buffer = BinaryBuffer.Value;
-                var length = await stream.ReadAsync(buffer, 0, buffer.Length)
+                var length = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)
                     .ConfigureAwait(continueOnCapturedContext: false);
                 if (length != buffer.Length)
                 {
@@ -153,8 +156,10 @@ partial class GuidGeneratorState
         }
     }
 
-    private static async Task<bool> SaveToStorageAsyncCore()
+    private static async Task<bool> SaveToStorageAsyncCore(
+        CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var storageFile = GuidGeneratorState.StorageFile;
         if (storageFile is null) { return false; }
 
@@ -165,7 +170,7 @@ partial class GuidGeneratorState
             using (var stream = streamProvider.Invoke(storageFile, FileAccess.Write))
             {
                 var buffer = BinaryBuffer.Value;
-                await stream.WriteAsync(buffer, 0, buffer.Length)
+                await stream.WriteAsync(buffer, 0, buffer.Length, cancellationToken)
                     .ConfigureAwait(continueOnCapturedContext: false);
             }
             return true;

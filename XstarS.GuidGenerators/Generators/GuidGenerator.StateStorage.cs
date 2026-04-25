@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace XNetEx.Guids.Generators;
@@ -41,12 +42,15 @@ partial class GuidGenerator
     /// </summary>
     /// <param name="fileName">The path of the state storage file,
     /// or <see langword="null"/> to disable the state storage.</param>
+    /// <param name="cancellationToken">
+    /// The <see cref="CancellationToken"/> to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous state storage loading operation.
     /// The result value is <see langword="true"/> if the state storage loading operation
     /// is successful; otherwise, <see langword="false"/>.</returns>
-    public static Task<bool> SetStateStorageFileAsync(string? fileName)
+    public static Task<bool> SetStateStorageFileAsync(string? fileName,
+        CancellationToken cancellationToken = default)
     {
-        return GuidGeneratorState.SetStorageFileAsync(fileName);
+        return GuidGeneratorState.SetStorageFileAsync(fileName, cancellationToken: cancellationToken);
     }
 
     /// <summary>
@@ -61,9 +65,12 @@ partial class GuidGenerator
     /// or <see langword="null"/> to use the default file stream provider.</param>
     /// <returns><see langword="true"/> if the state storage loading operation
     /// is successful; otherwise, <see langword="false"/>.</returns>
-    public static bool SetStateStorageFile(string? fileName,
-        Func<string, FileAccess, Stream>? streamProvider = null)
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="streamProvider"/> is <see langword="null"/>.</exception>
+    public static bool SetStateStorageFile(
+        string? fileName, Func<string, FileAccess, Stream> streamProvider)
     {
+        ArgumentNullException.ThrowIfNull(streamProvider);
         return GuidGeneratorState.SetStorageFile(fileName, streamProvider);
     }
 
@@ -77,13 +84,19 @@ partial class GuidGenerator
     /// <param name="streamProvider">The delegate used to provide
     /// the <see cref="Stream"/> for the state storage I/O operations,
     /// or <see langword="null"/> to use the default file stream provider.</param>
+    /// <param name="cancellationToken">
+    /// The <see cref="CancellationToken"/> to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous state storage loading operation.
     /// The result value is <see langword="true"/> if the state storage loading operation
     /// is successful; otherwise, <see langword="false"/>.</returns>
-    public static Task<bool> SetStateStorageFileAsync(string? fileName,
-        Func<string, FileAccess, Stream>? streamProvider = null)
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="streamProvider"/> is <see langword="null"/>.</exception>
+    public static Task<bool> SetStateStorageFileAsync(
+        string? fileName, Func<string, FileAccess, Stream> streamProvider,
+        CancellationToken cancellationToken = default)
     {
-        return GuidGeneratorState.SetStorageFileAsync(fileName, streamProvider);
+        ArgumentNullException.ThrowIfNull(streamProvider);
+        return GuidGeneratorState.SetStorageFileAsync(fileName, streamProvider, cancellationToken);
     }
 
     /// <summary>

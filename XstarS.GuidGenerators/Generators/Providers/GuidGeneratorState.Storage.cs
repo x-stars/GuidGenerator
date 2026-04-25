@@ -47,16 +47,17 @@ partial class GuidGeneratorState
     }
 
     public static async Task<bool> SetStorageFileAsync(
-        string? fileName, StreamProvider? streamProvider = null)
+        string? fileName, StreamProvider? streamProvider = null,
+        CancellationToken cancellationToken = default)
     {
-        await GuidGeneratorState.StorageLock.WaitAsync()
+        await GuidGeneratorState.StorageLock.WaitAsync(cancellationToken)
             .ConfigureAwait(continueOnCapturedContext: false);
         try
         {
             GuidGeneratorState.StorageFileName = fileName;
             GuidGeneratorState.StreamProvider = streamProvider ??
                 GuidGeneratorState.OpenLocalFile;
-            return await GuidGeneratorState.LoadFromStorageAsync()
+            return await GuidGeneratorState.LoadFromStorageAsync(cancellationToken)
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
         finally
@@ -90,6 +91,7 @@ partial class GuidGeneratorState
 
     private static Stream OpenLocalFile(string storageFile, FileAccess operationType)
     {
+        // Very small file, don't use OS async I/O in the default provider to avoid overhead.
         return operationType switch
         {
             FileAccess.Read => new FileStream(storageFile,
