@@ -2,14 +2,6 @@
 
 This document describes the code style conventions used in the GuidGenerator project.
 
-## Why Not EditorConfig?
-
-EditorConfig is excellent for formatting rules (indentation, spacing, line endings),
-but it cannot enforce naming conventions, `this` keyword usage, type qualification, and XML documentation structure.
-These require code analysis tools or manual enforcement.
-
-See [.editorconfig](.editorconfig) for formatting rules.
-
 ---
 
 ## C# Code Style
