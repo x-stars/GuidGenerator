@@ -6,6 +6,8 @@ using XNetEx.Threading;
 
 namespace XNetEx.Guids.Generators;
 
+using StreamProvider = Func<string, FileAccess, Stream>;
+
 partial class GuidGeneratorState
 {
     private const int VersionNumber = 4122;
@@ -13,6 +15,8 @@ partial class GuidGeneratorState
     private static readonly byte[] EmptyNodeId = new byte[6];
 
     private static volatile string? StorageFileName = GuidGeneratorState.SetSaveOnProcessExit();
+
+    private static volatile StreamProvider StreamProvider = GuidGeneratorState.OpenLocalFile;
 
     private static readonly SemaphoreSlim StorageLock = new(initialCount: 1, maxCount: 1);
 
@@ -25,12 +29,15 @@ partial class GuidGeneratorState
 
     public static event EventHandler<StateStorageExceptionEventArgs>? StorageException;
 
-    public static bool SetStorageFile(string? fileName)
+    public static bool SetStorageFile(
+        string? fileName, StreamProvider? streamProvider = null)
     {
         GuidGeneratorState.StorageLock.Wait();
         try
         {
             GuidGeneratorState.StorageFileName = fileName;
+            GuidGeneratorState.StreamProvider = streamProvider ??
+                GuidGeneratorState.OpenLocalFile;
             return GuidGeneratorState.LoadFromStorage();
         }
         finally
@@ -39,13 +46,16 @@ partial class GuidGeneratorState
         }
     }
 
-    public static async Task<bool> SetStorageFileAsync(string? fileName)
+    public static async Task<bool> SetStorageFileAsync(
+        string? fileName, StreamProvider? streamProvider = null)
     {
         await GuidGeneratorState.StorageLock.WaitAsync()
             .ConfigureAwait(continueOnCapturedContext: false);
         try
         {
             GuidGeneratorState.StorageFileName = fileName;
+            GuidGeneratorState.StreamProvider = streamProvider ??
+                GuidGeneratorState.OpenLocalFile;
             return await GuidGeneratorState.LoadFromStorageAsync()
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
@@ -83,9 +93,21 @@ partial class GuidGeneratorState
         Volatile.Read(ref GuidGeneratorState.StorageException)?.Invoke(null, e);
     }
 
+    private static Stream OpenLocalFile(string storageFile, FileAccess operationType)
+    {
+        return operationType switch
+        {
+            FileAccess.Read => new FileStream(storageFile,
+                FileMode.Open, FileAccess.Read, FileShare.Read),
+            FileAccess.Write => new FileStream(storageFile,
+                FileMode.OpenOrCreate, FileAccess.Write, FileShare.None),
+            _ => throw new ArgumentOutOfRangeException(nameof(operationType))
+        };
+    }
+
     /// <summary>
-    /// NOTE: Any reference to the <see cref="BinaryBuffer"/>
-    /// must be in the <see cref="GuidGeneratorState.StorageLock"/> scope. 
+    /// NOTE: Any reference to members of this type must be
+    /// in the <see cref="GuidGeneratorState.StorageLock"/> scope.
     /// </summary>
     private static class BinaryBuffer
     {
@@ -113,8 +135,8 @@ partial class GuidGeneratorState
 
         try
         {
-            using (var stream = new FileStream(storageFile,
-                FileMode.Open, FileAccess.Read, FileShare.Read))
+            var streamProvider = GuidGeneratorState.StreamProvider;
+            using (var stream = streamProvider.Invoke(storageFile, FileAccess.Read))
             {
                 var buffer = BinaryBuffer.Value;
                 var length = await stream.ReadAsync(buffer, 0, buffer.Length)
@@ -251,8 +273,8 @@ partial class GuidGeneratorState
             writer.Write(clockSeq);
             writer.Write(phyNodeId, 0, nodeIdSize);
             writer.Write(randNodeId, 0, nodeIdSize);
-            using (var stream = new FileStream(storageFile,
-                FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+            var streamProvider = GuidGeneratorState.StreamProvider;
+            using (var stream = streamProvider.Invoke(storageFile, FileAccess.Write))
             {
                 var buffer = BinaryBuffer.Value;
                 await stream.WriteAsync(buffer, 0, buffer.Length)

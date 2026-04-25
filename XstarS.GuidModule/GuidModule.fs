@@ -1,6 +1,7 @@
 ﻿namespace XNetEx.FSharp.Core
 
 open System
+open System.IO
 open System.Threading.Tasks
 open FSharp.Core.CompilerServices
 open XNetEx.Guids
@@ -841,6 +842,39 @@ module Guid =
     [<CompiledName("LoadGeneratorStateAsync")>]
     let loadStateAsync (fileName: string) : Task<bool> =
         Generator.SetStateStorageFileAsync(fileName)
+
+    /// <summary>
+    /// Loads the GUID generator state from the specified storage file and the function
+    /// used to provide the <see cref="System.IO.Stream"/> for the state storage I/O operations,
+    /// and returns a value that indicates whether the loading operation is successful.
+    /// </summary>
+    /// <param name="streamProvider">The function used to provide
+    /// the <see cref="System.IO.Stream"/> for the state storage I/O operations.</param>
+    /// <param name="fileName">The path of the state storage file,
+    /// or <see langword="null"/> to disable the state storage.</param>
+    /// <returns><see langword="true"/> if the state storage loading operation
+    /// is successful; otherwise, <see langword="false"/>.</returns>
+    [<CompiledName("LoadGeneratorStateFromProvider")>]
+    let loadStateFromProvider (streamProvider: string -> FileAccess -> Stream)
+                              (fileName: string) : bool =
+        Generator.SetStateStorageFile(fileName, Func<_, _, _>(streamProvider))
+
+    /// <summary>
+    /// Asynchronously loads the GUID generator state from the specified storage file and the function
+    /// used to provide the <see cref="System.IO.Stream"/> for the state storage I/O operations,
+    /// and returns a value that indicates whether the loading operation is successful.
+    /// </summary>
+    /// <param name="streamProvider">The function used to provide
+    /// the <see cref="System.IO.Stream"/> for the state storage I/O operations.</param>
+    /// <param name="fileName">The path of the state storage file,
+    /// or <see langword="null"/> to disable the state storage.</param>
+    /// <returns>A task that represents the state storage loading operation.
+    /// The result value is <see langword="true"/> if the state storage loading operation
+    /// is successful; otherwise, <see langword="false"/>.</returns>
+    [<CompiledName("LoadGeneratorStateFromProviderAsync")>]
+    let loadStateFromProviderAsync (streamProvider: string -> FileAccess -> Stream)
+                                   (fileName: string) : Task<bool> =
+        Generator.SetStateStorageFileAsync(fileName, Func<_, _, _>(streamProvider))
 
     /// <summary>
     /// Resets the GUID generator state that can be saving to the state storage file.
