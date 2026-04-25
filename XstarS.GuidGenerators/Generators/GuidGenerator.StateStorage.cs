@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace XNetEx.Guids.Generators;
 
@@ -31,6 +32,20 @@ partial class GuidGenerator
     public static bool SetStateStorageFile(string? fileName)
     {
         return GuidGeneratorState.SetStorageFile(fileName);
+    }
+
+    /// <summary>
+    /// Asynchronously sets the path of the state storage file and returns a task
+    /// containing a value that indicates whether the state storage loading operation is successful.
+    /// </summary>
+    /// <param name="fileName">The path of the state storage file,
+    /// or <see langword="null"/> to disable the state storage.</param>
+    /// <returns>A task that represents the state storage loading operation.
+    /// The result value is <see langword="true"/> if the state storage loading operation
+    /// is successful; otherwise, <see langword="false"/>.</returns>
+    public static Task<bool> SetStateStorageFileAsync(string? fileName)
+    {
+        return GuidGeneratorState.SetStorageFileAsync(fileName);
     }
 
     /// <summary>

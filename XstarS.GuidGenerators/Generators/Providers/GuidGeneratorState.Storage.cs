@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using XNetEx.Threading;
@@ -15,6 +14,8 @@ partial class GuidGeneratorState
 
     private static volatile string? StorageFileName = GuidGeneratorState.SetSaveOnProcessExit();
 
+    private static readonly SemaphoreSlim StorageLock = new(initialCount: 1, maxCount: 1);
+
     private static readonly AutoRefreshCache<Task<bool>> LastSavingAsyncResultCache =
         new(GuidGeneratorState.SaveToStorageAsync, refreshPeriod: 10 * 1000, sleepAfter: 0);
 
@@ -24,11 +25,34 @@ partial class GuidGeneratorState
 
     public static event EventHandler<StateStorageExceptionEventArgs>? StorageException;
 
-    [MethodImpl(MethodImplOptions.Synchronized)]
     public static bool SetStorageFile(string? fileName)
     {
-        GuidGeneratorState.StorageFileName = fileName;
-        return GuidGeneratorState.LoadFromStorage();
+        GuidGeneratorState.StorageLock.Wait();
+        try
+        {
+            GuidGeneratorState.StorageFileName = fileName;
+            return GuidGeneratorState.LoadFromStorage();
+        }
+        finally
+        {
+            GuidGeneratorState.StorageLock.Release();
+        }
+    }
+
+    public static async Task<bool> SetStorageFileAsync(string? fileName)
+    {
+        await GuidGeneratorState.StorageLock.WaitAsync()
+            .ConfigureAwait(continueOnCapturedContext: false);
+        try
+        {
+            GuidGeneratorState.StorageFileName = fileName;
+            return await GuidGeneratorState.LoadFromStorageAsync()
+                .ConfigureAwait(continueOnCapturedContext: false);
+        }
+        finally
+        {
+            GuidGeneratorState.StorageLock.Release();
+        }
     }
 
     public static void ResetGlobal()
@@ -54,28 +78,54 @@ partial class GuidGeneratorState
         return null;
     }
 
-    [MethodImpl(MethodImplOptions.Synchronized)]
-    private static Task<bool> SaveToStorageAsync()
-    {
-        return Task.Run(GuidGeneratorState.SaveToStorage);
-    }
-
     private static void OnStorageException(StateStorageExceptionEventArgs e)
     {
         Volatile.Read(ref GuidGeneratorState.StorageException)?.Invoke(null, e);
     }
 
-    [MethodImpl(MethodImplOptions.Synchronized)]
+    /// <summary>
+    /// NOTE: Any reference to the <see cref="BinaryBuffer"/>
+    /// must be in the <see cref="GuidGeneratorState.StorageLock"/> scope. 
+    /// </summary>
+    private static class BinaryBuffer
+    {
+        private const int Size = 4 + 4 + 8 + 4 + 6 + 6;
+
+        internal static readonly byte[] Value = new byte[BinaryBuffer.Size];
+        internal static readonly MemoryStream Stream = new(BinaryBuffer.Value);
+        internal static readonly BinaryReader Reader = new(BinaryBuffer.Stream);
+        internal static readonly BinaryWriter Writer = new(BinaryBuffer.Stream);
+
+        internal static void Reset() => BinaryBuffer.Stream.Position = 0;
+    }
+
     private static bool LoadFromStorage()
+    {
+        return GuidGeneratorState.LoadFromStorageAsync()
+            .ConfigureAwait(continueOnCapturedContext: false)
+            .GetAwaiter().GetResult();
+    }
+
+    private static async Task<bool> LoadFromStorageAsync()
     {
         var storageFile = GuidGeneratorState.StorageFile;
         if (storageFile is null) { return false; }
 
         try
         {
-            using var stream = new FileStream(storageFile,
-                FileMode.Open, FileAccess.Read, FileShare.Read);
-            using var reader = new BinaryReader(stream);
+            using (var stream = new FileStream(storageFile,
+                FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                var buffer = BinaryBuffer.Value;
+                var length = await stream.ReadAsync(buffer, 0, buffer.Length)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+                if (length != buffer.Length)
+                {
+                    throw new EndOfStreamException();
+                }
+            }
+            BinaryBuffer.Reset();
+            var reader = BinaryBuffer.Reader;
             const int nodeIdSize = 6;
             var version = reader.ReadInt32();
             if (version != GuidGeneratorState.VersionNumber)
@@ -88,7 +138,6 @@ partial class GuidGeneratorState
             var phyNodeId = reader.ReadBytes(nodeIdSize);
             var randNodeId = reader.ReadBytes(nodeIdSize);
             var isIndClkSeq = (fieldFlags >> (2 * 8)) != 0;
-            stream.Close();
 
             var phyState = GuidGeneratorState.PhysicalNodeState;
             var randState = GuidGeneratorState.RandomNodeState;
@@ -131,8 +180,29 @@ partial class GuidGeneratorState
         }
     }
 
-    [MethodImpl(MethodImplOptions.Synchronized)]
     private static bool SaveToStorage()
+    {
+        return GuidGeneratorState.SaveToStorageAsync()
+            .ConfigureAwait(continueOnCapturedContext: false)
+            .GetAwaiter().GetResult();
+    }
+
+    private static async Task<bool> SaveToStorageAsync()
+    {
+        await GuidGeneratorState.StorageLock.WaitAsync()
+            .ConfigureAwait(continueOnCapturedContext: false);
+        try
+        {
+            return await GuidGeneratorState.SaveToStorageAsyncCore()
+                .ConfigureAwait(continueOnCapturedContext: false);
+        }
+        finally
+        {
+            GuidGeneratorState.StorageLock.Release();
+        }
+    }
+
+    private static async Task<bool> SaveToStorageAsyncCore()
     {
         var storageFile = GuidGeneratorState.StorageFile;
         if (storageFile is null) { return false; }
@@ -172,9 +242,8 @@ partial class GuidGeneratorState
                 }
             }
 
-            using var stream = new FileStream(storageFile,
-                FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
-            using var writer = new BinaryWriter(stream);
+            BinaryBuffer.Reset();
+            var writer = BinaryBuffer.Writer;
             const int nodeIdSize = 6;
             writer.Write(GuidGeneratorState.VersionNumber);
             writer.Write(fieldFlags);
@@ -182,6 +251,13 @@ partial class GuidGeneratorState
             writer.Write(clockSeq);
             writer.Write(phyNodeId, 0, nodeIdSize);
             writer.Write(randNodeId, 0, nodeIdSize);
+            using (var stream = new FileStream(storageFile,
+                FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+            {
+                var buffer = BinaryBuffer.Value;
+                await stream.WriteAsync(buffer, 0, buffer.Length)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+            }
             return true;
         }
         catch (Exception ex)

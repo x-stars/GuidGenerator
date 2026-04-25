@@ -1,6 +1,7 @@
 ﻿namespace XNetEx.FSharp.Core
 
 open System
+open System.Threading.Tasks
 open FSharp.Core.CompilerServices
 open XNetEx.Guids
 open XNetEx.Guids.Generators
@@ -827,6 +828,19 @@ module Guid =
     [<CompiledName("LoadGeneratorState")>]
     let loadState (fileName: string) : bool =
         Generator.SetStateStorageFile(fileName)
+
+    /// <summary>
+    /// Asynchronously loads the GUID generator state from the specified storage file
+    /// and returns a task containing a value that indicates whether the loading operation is successful.
+    /// </summary>
+    /// <param name="fileName">The path of the state storage file,
+    /// or <see langword="null"/> to disable the state storage.</param>
+    /// <returns>A task that represents the state storage loading operation.
+    /// The result value is <see langword="true"/> if the state storage loading operation
+    /// is successful; otherwise, <see langword="false"/>.</returns>
+    [<CompiledName("LoadGeneratorStateAsync")>]
+    let loadStateAsync (fileName: string) : Task<bool> =
+        Generator.SetStateStorageFileAsync(fileName)
 
     /// <summary>
     /// Resets the GUID generator state that can be saving to the state storage file.
