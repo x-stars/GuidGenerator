@@ -88,11 +88,6 @@ partial class GuidGeneratorState
         return null;
     }
 
-    private static void OnStorageException(StateStorageExceptionEventArgs e)
-    {
-        Volatile.Read(ref GuidGeneratorState.StorageException)?.Invoke(null, e);
-    }
-
     private static Stream OpenLocalFile(string storageFile, FileAccess operationType)
     {
         return operationType switch
@@ -105,108 +100,17 @@ partial class GuidGeneratorState
         };
     }
 
-    /// <summary>
-    /// NOTE: Any reference to members of this type must be
-    /// in the <see cref="GuidGeneratorState.StorageLock"/> scope.
-    /// </summary>
-    private static class BinaryBuffer
-    {
-        private const int Size = 4 + 4 + 8 + 4 + 6 + 6;
-
-        internal static readonly byte[] Value = new byte[BinaryBuffer.Size];
-        internal static readonly MemoryStream Stream = new(BinaryBuffer.Value);
-        internal static readonly BinaryReader Reader = new(BinaryBuffer.Stream);
-        internal static readonly BinaryWriter Writer = new(BinaryBuffer.Stream);
-
-        internal static void Reset() => BinaryBuffer.Stream.Position = 0;
-    }
-
-    private static bool LoadFromStorage()
-    {
-        return GuidGeneratorState.LoadFromStorageAsync()
-            .ConfigureAwait(continueOnCapturedContext: false)
-            .GetAwaiter().GetResult();
-    }
-
-    private static async Task<bool> LoadFromStorageAsync()
-    {
-        var storageFile = GuidGeneratorState.StorageFile;
-        if (storageFile is null) { return false; }
-
-        try
-        {
-            var streamProvider = GuidGeneratorState.StreamProvider;
-            using (var stream = streamProvider.Invoke(storageFile, FileAccess.Read))
-            {
-                var buffer = BinaryBuffer.Value;
-                var length = await stream.ReadAsync(buffer, 0, buffer.Length)
-                    .ConfigureAwait(continueOnCapturedContext: false);
-                if (length != buffer.Length)
-                {
-                    throw new EndOfStreamException();
-                }
-            }
-            BinaryBuffer.Reset();
-            var reader = BinaryBuffer.Reader;
-            const int nodeIdSize = 6;
-            var version = reader.ReadInt32();
-            if (version != GuidGeneratorState.VersionNumber)
-            {
-                throw new InvalidDataException($"Unknown version number: {version}.");
-            }
-            var fieldFlags = reader.ReadInt32();
-            var timestamp = reader.ReadInt64();
-            var clockSeq = reader.ReadInt32();
-            var phyNodeId = reader.ReadBytes(nodeIdSize);
-            var randNodeId = reader.ReadBytes(nodeIdSize);
-            var isIndClkSeq = (fieldFlags >> (2 * 8)) != 0;
-
-            var phyState = GuidGeneratorState.PhysicalNodeState;
-            var randState = GuidGeneratorState.RandomNodeState;
-            foreach (var state in new[] { phyState, randState })
-            {
-                var isRandom = state.NodeIdSource.IsRandomValue();
-                var clkSeqFlag = (isRandom ? 0x02 : 0x01) << (2 * 8);
-                var clkSeqShift = isRandom ? (2 * 8) : (0 * 8);
-                var nodeIdFlag = isRandom ? 0x08 : 0x04;
-                var nodeIdBytes = isRandom ? randNodeId : phyNodeId;
-                lock (state)
-                {
-                    state.Reset();
-                    if ((fieldFlags & 0x01) == 0x01)
-                    {
-                        state.LastTimestamp = timestamp;
-                    }
-                    if (!isIndClkSeq && ((fieldFlags & 0x02) == 0x02))
-                    {
-                        state.ClockSequence = clockSeq;
-                    }
-                    if (isIndClkSeq && ((fieldFlags & clkSeqFlag) == clkSeqFlag))
-                    {
-                        state.ClockSequence = (ushort)(clockSeq >> clkSeqShift);
-                    }
-                    if ((fieldFlags & nodeIdFlag) == nodeIdFlag)
-                    {
-                        state.SetLastNodeId(nodeIdBytes);
-                    }
-                    state.IsRefreshed = false;
-                }
-            }
-            return true;
-        }
-        catch (Exception ex)
-        {
-            GuidGeneratorState.OnStorageException(
-                new StateStorageExceptionEventArgs(ex, storageFile, FileAccess.Read));
-            return false;
-        }
-    }
-
     private static bool SaveToStorage()
     {
-        return GuidGeneratorState.SaveToStorageAsync()
-            .ConfigureAwait(continueOnCapturedContext: false)
-            .GetAwaiter().GetResult();
+        GuidGeneratorState.StorageLock.Wait();
+        try
+        {
+            return GuidGeneratorState.SaveToStorageCore();
+        }
+        finally
+        {
+            GuidGeneratorState.StorageLock.Release();
+        }
     }
 
     private static async Task<bool> SaveToStorageAsync()
@@ -224,69 +128,8 @@ partial class GuidGeneratorState
         }
     }
 
-    private static async Task<bool> SaveToStorageAsyncCore()
+    private static void OnStorageException(StateStorageExceptionEventArgs e)
     {
-        var storageFile = GuidGeneratorState.StorageFile;
-        if (storageFile is null) { return false; }
-
-        try
-        {
-            var fieldFlags = 0x01 | 0x02;
-            var timestamp = default(long);
-            var clockSeq = default(int);
-            var phyNodeId = GuidGeneratorState.EmptyNodeId;
-            var randNodeId = GuidGeneratorState.EmptyNodeId;
-            lock (GuidGeneratorState.PhysicalNodeState)
-            {
-                lock (GuidGeneratorState.RandomNodeState)
-                {
-                    fieldFlags |= (0x01 | 0x02) << (2 * 8);
-                    var phyState = GuidGeneratorState.PhysicalNodeState;
-                    var randState = GuidGeneratorState.RandomNodeState;
-                    timestamp = (!phyState.IsRefreshed && !randState.IsRefreshed) ?
-                        Math.Max(phyState.LastTimestamp, randState.LastTimestamp) :
-                        Math.Max(
-                            phyState.IsRefreshed ? phyState.LastTimestamp : 0L,
-                            randState.IsRefreshed ? randState.LastTimestamp : 0L);
-                    clockSeq = (int)(
-                        ((uint)(ushort)phyState.ClockSequence << (0 * 8)) |
-                        ((uint)(ushort)randState.ClockSequence << (2 * 8)));
-                    if (phyState.LastNodeIdBytes is not null)
-                    {
-                        fieldFlags |= 0x04;
-                        phyNodeId = phyState.LastNodeIdBytes;
-                    }
-                    if (randState.LastNodeIdBytes is not null)
-                    {
-                        fieldFlags |= 0x08;
-                        randNodeId = randState.LastNodeIdBytes;
-                    }
-                }
-            }
-
-            BinaryBuffer.Reset();
-            var writer = BinaryBuffer.Writer;
-            const int nodeIdSize = 6;
-            writer.Write(GuidGeneratorState.VersionNumber);
-            writer.Write(fieldFlags);
-            writer.Write(timestamp);
-            writer.Write(clockSeq);
-            writer.Write(phyNodeId, 0, nodeIdSize);
-            writer.Write(randNodeId, 0, nodeIdSize);
-            var streamProvider = GuidGeneratorState.StreamProvider;
-            using (var stream = streamProvider.Invoke(storageFile, FileAccess.Write))
-            {
-                var buffer = BinaryBuffer.Value;
-                await stream.WriteAsync(buffer, 0, buffer.Length)
-                    .ConfigureAwait(continueOnCapturedContext: false);
-            }
-            return true;
-        }
-        catch (Exception ex)
-        {
-            GuidGeneratorState.OnStorageException(
-                new StateStorageExceptionEventArgs(ex, storageFile, FileAccess.Write));
-            return false;
-        }
+        Volatile.Read(ref GuidGeneratorState.StorageException)?.Invoke(null, e);
     }
 }
