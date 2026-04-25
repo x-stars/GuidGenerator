@@ -41,7 +41,7 @@ partial class GuidGenerator
     /// </summary>
     /// <param name="fileName">The path of the state storage file,
     /// or <see langword="null"/> to disable the state storage.</param>
-    /// <returns>A task that represents the state storage loading operation.
+    /// <returns>A task that represents the asynchronous state storage loading operation.
     /// The result value is <see langword="true"/> if the state storage loading operation
     /// is successful; otherwise, <see langword="false"/>.</returns>
     public static Task<bool> SetStateStorageFileAsync(string? fileName)
@@ -77,7 +77,7 @@ partial class GuidGenerator
     /// <param name="streamProvider">The delegate used to provide
     /// the <see cref="Stream"/> for the state storage I/O operations,
     /// or <see langword="null"/> to use the default file stream provider.</param>
-    /// <returns>A task that represents the state storage loading operation.
+    /// <returns>A task that represents the asynchronous state storage loading operation.
     /// The result value is <see langword="true"/> if the state storage loading operation
     /// is successful; otherwise, <see langword="false"/>.</returns>
     public static Task<bool> SetStateStorageFileAsync(string? fileName,

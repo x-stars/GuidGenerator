@@ -19,7 +19,7 @@ partial class GuidGeneratorState
         internal static readonly BinaryReader Reader = new(BinaryBuffer.Stream);
         internal static readonly BinaryWriter Writer = new(BinaryBuffer.Stream);
 
-        internal static void Reset() => BinaryBuffer.Stream.Position = 0;
+        internal static void Reset() => BinaryBuffer.Stream.Position = 0L;
     }
 
     private static bool LoadFromStorage()

@@ -836,7 +836,7 @@ module Guid =
     /// </summary>
     /// <param name="fileName">The path of the state storage file,
     /// or <see langword="null"/> to disable the state storage.</param>
-    /// <returns>A task that represents the state storage loading operation.
+    /// <returns>A task that represents the asynchronous state storage loading operation.
     /// The result value is <see langword="true"/> if the state storage loading operation
     /// is successful; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("LoadGeneratorStateAsync")>]
@@ -845,11 +845,11 @@ module Guid =
 
     /// <summary>
     /// Loads the GUID generator state from the specified storage file and the function
-    /// used to provide the <see cref="System.IO.Stream"/> for the state storage I/O operations,
+    /// used to provide the <see cref="T:System.IO.Stream"/> for the state storage I/O operations,
     /// and returns a value that indicates whether the loading operation is successful.
     /// </summary>
     /// <param name="streamProvider">The function used to provide
-    /// the <see cref="System.IO.Stream"/> for the state storage I/O operations.</param>
+    /// the <see cref="T:System.IO.Stream"/> for the state storage I/O operations.</param>
     /// <param name="fileName">The path of the state storage file,
     /// or <see langword="null"/> to disable the state storage.</param>
     /// <returns><see langword="true"/> if the state storage loading operation
@@ -861,14 +861,14 @@ module Guid =
 
     /// <summary>
     /// Asynchronously loads the GUID generator state from the specified storage file and the function
-    /// used to provide the <see cref="System.IO.Stream"/> for the state storage I/O operations,
+    /// used to provide the <see cref="T:System.IO.Stream"/> for the state storage I/O operations,
     /// and returns a value that indicates whether the loading operation is successful.
     /// </summary>
     /// <param name="streamProvider">The function used to provide
-    /// the <see cref="System.IO.Stream"/> for the state storage I/O operations.</param>
+    /// the <see cref="T:System.IO.Stream"/> for the state storage I/O operations.</param>
     /// <param name="fileName">The path of the state storage file,
     /// or <see langword="null"/> to disable the state storage.</param>
-    /// <returns>A task that represents the state storage loading operation.
+    /// <returns>A task that represents the asynchronous state storage loading operation.
     /// The result value is <see langword="true"/> if the state storage loading operation
     /// is successful; otherwise, <see langword="false"/>.</returns>
     [<CompiledName("LoadGeneratorStateFromProviderAsync")>]
