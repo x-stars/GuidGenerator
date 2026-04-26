@@ -113,6 +113,26 @@ public partial class NameBasedGuidGeneratorTest
     }
 
     [TestMethod]
+    public void NewGuid_Version3VeryLongStringName_GetExpectedGuid()
+    {
+        var nsId = Guid.Empty;
+        var name = new string('\0', 1024 * 1024);
+        var guid = GuidGenerator.OfVersion(3).NewGuid(nsId, name);
+        var expected = Guid.Parse("2dd8f675-f87f-3cc9-a76f-059b3d221f9e");
+        Assert.AreEqual(expected, guid);
+    }
+
+    [TestMethod]
+    public void NewGuid_Version5VeryLongStringName_GetExpectedGuid()
+    {
+        var nsId = Guid.Empty;
+        var name = new string('\0', 1024 * 1024);
+        var guid = GuidGenerator.Version5.NewGuid(nsId, name);
+        var expected = Guid.Parse("eaef76b6-54a1-5f28-9bf9-5fc1d290bc20");
+        Assert.AreEqual(expected, guid);
+    }
+
+    [TestMethod]
     public void NewGuid_NonNameBasedVersions_CatchNotSupportedException()
     {
         foreach (var version in new[]
