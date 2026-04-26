@@ -862,7 +862,7 @@ module Guid =
     /// <summary>
     /// Asynchronously loads the GUID generator state from the specified storage file and the function
     /// used to provide the <see cref="T:System.IO.Stream"/> for the state storage I/O operations,
-    /// and returns a value that indicates whether the loading operation is successful.
+    /// and returns a task containing a value that indicates whether the loading operation is successful.
     /// </summary>
     /// <param name="streamProvider">The function used to provide
     /// the <see cref="T:System.IO.Stream"/> for the state storage I/O operations.</param>

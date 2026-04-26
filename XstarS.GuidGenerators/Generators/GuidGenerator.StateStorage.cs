@@ -65,12 +65,9 @@ partial class GuidGenerator
     /// or <see langword="null"/> to use the default file stream provider.</param>
     /// <returns><see langword="true"/> if the state storage loading operation
     /// is successful; otherwise, <see langword="false"/>.</returns>
-    /// <exception cref="ArgumentNullException">
-    /// <paramref name="streamProvider"/> is <see langword="null"/>.</exception>
     public static bool SetStateStorageFile(
-        string? fileName, Func<string, FileAccess, Stream> streamProvider)
+        string? fileName, Func<string, FileAccess, Stream>? streamProvider)
     {
-        ArgumentNullException.ThrowIfNull(streamProvider);
         return GuidGeneratorState.SetStorageFile(fileName, streamProvider);
     }
 
@@ -89,13 +86,10 @@ partial class GuidGenerator
     /// <returns>A task that represents the asynchronous state storage loading operation.
     /// The result value is <see langword="true"/> if the state storage loading operation
     /// is successful; otherwise, <see langword="false"/>.</returns>
-    /// <exception cref="ArgumentNullException">
-    /// <paramref name="streamProvider"/> is <see langword="null"/>.</exception>
     public static Task<bool> SetStateStorageFileAsync(
-        string? fileName, Func<string, FileAccess, Stream> streamProvider,
+        string? fileName, Func<string, FileAccess, Stream>? streamProvider,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(streamProvider);
         return GuidGeneratorState.SetStorageFileAsync(fileName, streamProvider, cancellationToken);
     }
 
