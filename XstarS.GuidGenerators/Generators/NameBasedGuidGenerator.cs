@@ -2,6 +2,9 @@
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Threading;
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+using System.Buffers;
+#endif
 
 namespace XNetEx.Guids.Generators;
 
@@ -49,12 +52,13 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     public sealed override Guid NewGuid(Guid nsId, ReadOnlySpan<byte> name)
     {
+        var rentArray = (byte[]?)null;
         var hashing = this.GetHashing();
         try
         {
             var hashSize = hashing.HashSize / 8;
-            var hash = ((uint)hashSize <= 1024) ?
-                (stackalloc byte[hashSize]) : (new byte[hashSize]);
+            var hash = ((uint)hashSize <= 1024) ? (stackalloc byte[hashSize]) :
+                (rentArray = ArrayPool<byte>.Shared.Rent(hashSize)).AsSpan(0, hashSize);
             var result = this.TryComputeHash(
                 hashing, nsId, name, hash, out var bytesWritten);
             if (!result || (bytesWritten != hashSize))
@@ -66,6 +70,10 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
         }
         finally
         {
+            if (rentArray is not null)
+            {
+                ArrayPool<byte>.Shared.Return(rentArray);
+            }
             this.ReturnHashing(hashing);
         }
     }
