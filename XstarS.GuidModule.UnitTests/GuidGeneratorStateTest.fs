@@ -18,6 +18,13 @@ type GuidGeneratorStateTest() =
                 refExn.contents <- e.Exception)
         &refExn.contents
 
+    let catchStateLoadExnAsRef () : ref<exn> =
+        let refExn = ref null
+        Guid.onStateExn (fun e ->
+            if e.OperationType = FileAccess.Read then
+                refExn.contents <- e.Exception)
+        refExn
+
     let createTempFile (fileName: outref<string>) : IDisposable =
         let tempFile = Path.GetTempFileName()
         fileName <- tempFile
@@ -54,6 +61,63 @@ type GuidGeneratorStateTest() =
         |> tee (Assert.true' << ValueOption.isSome)
         |> ValueOption.get
         |> Assert.Seq.equalTo (Array.init 6 addByte1)
+
+    [<TestMethod>]
+    member _.LoadGeneratorStateFromProvider_MemoryFileWithRandomNodeId_GetNodeIdFromFile() =
+        Guid.resetState ()
+        let exception' = &catchStateLoadExn ()
+        let mutable fileName = null
+        use tempFile = createTempFile &fileName
+        let addByte1 = (op (+) 1) >> byte
+        let data = Array.zeroCreate<byte> 32
+        if true then
+            use stream = new MemoryStream(data)
+            use writer = new BinaryWriter(stream)
+            writer.Write(4122)
+            writer.Write(0x08)
+            writer.Write(0L)
+            writer.Write(0)
+            writer.Write((Array.init 6 byte), 0, 6)
+            writer.Write((Array.init 6 addByte1), 0, 6)
+        fileName
+        |> Guid.loadStateFromProvider (
+            fun name access -> new MemoryStream(data))
+        |> Assert.true'
+        exception'
+        |> Assert.null'
+        Guid.newV1R ()
+        |> Guid.tryGetNodeId
+        |> tee (Assert.true' << ValueOption.isSome)
+        |> ValueOption.get
+        |> Assert.Seq.equalTo (Array.init 6 addByte1)
+
+    [<TestMethod>]
+    member _.LoadGeneratorStateAsync_FileWithRandomNodeId_GetNodeIdFromFile() =
+        Guid.resetState ()
+        let exceptionRef = catchStateLoadExnAsRef ()
+        let mutable fileName = null
+        use tempFile = createTempFile &fileName
+        let addByte1 = (op (+) 1) >> byte
+        if true then
+            use stream = new FileStream(fileName, FileMode.Create)
+            use writer = new BinaryWriter(stream)
+            writer.Write(4122)
+            writer.Write(0x08)
+            writer.Write(0L)
+            writer.Write(0)
+            writer.Write((Array.init 6 byte), 0, 6)
+            writer.Write((Array.init 6 addByte1), 0, 6)
+        task {
+            let! loadResult = Guid.loadStateAsync fileName
+            loadResult |> Assert.true'
+            exceptionRef.Value
+            |> Assert.null'
+            Guid.newV1R ()
+            |> Guid.tryGetNodeId
+            |> tee (Assert.true' << ValueOption.isSome)
+            |> ValueOption.get
+            |> Assert.Seq.equalTo (Array.init 6 addByte1)
+        } :> Threading.Tasks.Task
 
     [<TestMethod>]
     member _.OnStateException_NonExistingFile_CatchFileNotFoundException() =
