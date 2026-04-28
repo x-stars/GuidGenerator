@@ -31,8 +31,8 @@ internal sealed partial class GuidGeneratorState
 
     private long LastTimestamp
     {
-        get => Volatile.Read(ref field);
-        set => Volatile.Write(ref field, value);
+        get => Interlocked.Read(ref field);
+        set => Interlocked.Exchange(ref field, value);
     }
 
     internal static GuidGeneratorState GetInstance(NodeIdSource nodeIdSource)
