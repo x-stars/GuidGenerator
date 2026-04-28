@@ -7,10 +7,12 @@ namespace XNetEx.Guids.Generators;
 
 partial class GuidGeneratorState
 {
-    /// <summary>
-    /// NOTE: Any reference to members of this type must be
+#if DEBUG
+    /// <remarks>
+    /// Any reference to members of this type must be
     /// in the <see cref="GuidGeneratorState.StorageLock"/> scope.
-    /// </summary>
+    /// </remarks>
+#endif
     private static class BinaryBuffer
     {
         private const int Size = 4 + 4 + 8 + 4 + 6 + 6;
@@ -64,8 +66,13 @@ partial class GuidGeneratorState
             using (var stream = streamProvider.Invoke(storageFile, FileAccess.Read))
             {
                 var buffer = BinaryBuffer.Value;
-                var length = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)
-                    .ConfigureAwait(continueOnCapturedContext: false);
+                var length =
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                    await stream.ReadAsync(buffer, cancellationToken)
+#else
+                    await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)
+#endif
+                        .ConfigureAwait(continueOnCapturedContext: false);
                 if (length != buffer.Length)
                 {
                     throw new EndOfStreamException();
@@ -170,7 +177,11 @@ partial class GuidGeneratorState
             using (var stream = streamProvider.Invoke(storageFile, FileAccess.Write))
             {
                 var buffer = BinaryBuffer.Value;
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                await stream.WriteAsync(buffer, cancellationToken)
+#else
                 await stream.WriteAsync(buffer, 0, buffer.Length, cancellationToken)
+#endif
                     .ConfigureAwait(continueOnCapturedContext: false);
             }
             return true;

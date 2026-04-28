@@ -3,6 +3,7 @@
 open System
 open System.Diagnostics
 open System.IO
+open System.Threading.Tasks
 open Microsoft.VisualStudio.TestTools.UnitTesting
 open XNetEx.FSharp.Control
 open XNetEx.FSharp.UnitTesting.MSTest
@@ -11,19 +12,15 @@ open XNetEx.FSharp.UnitTesting.MSTest
 [<DoNotParallelize>]
 type GuidGeneratorStateTest() =
 
-    let catchStateLoadExn () : inref<exn> =
-        let refExn = ref null
-        Guid.onStateExn (fun e ->
-            if e.OperationType = FileAccess.Read then
-                refExn.contents <- e.Exception)
-        &refExn.contents
-
     let catchStateLoadExnAsRef () : ref<exn> =
         let refExn = ref null
         Guid.onStateExn (fun e ->
             if e.OperationType = FileAccess.Read then
                 refExn.contents <- e.Exception)
         refExn
+
+    let catchStateLoadExn () : inref<exn> =
+        &(catchStateLoadExnAsRef ()).contents
 
     let createTempFile (fileName: outref<string>) : IDisposable =
         let tempFile = Path.GetTempFileName()
@@ -66,8 +63,6 @@ type GuidGeneratorStateTest() =
     member _.LoadGeneratorStateFromProvider_MemoryFileWithRandomNodeId_GetNodeIdFromFile() =
         Guid.resetState ()
         let exception' = &catchStateLoadExn ()
-        let mutable fileName = null
-        use tempFile = createTempFile &fileName
         let addByte1 = (op (+) 1) >> byte
         let data = Array.zeroCreate<byte> 32
         if true then
@@ -79,7 +74,7 @@ type GuidGeneratorStateTest() =
             writer.Write(0)
             writer.Write((Array.init 6 byte), 0, 6)
             writer.Write((Array.init 6 addByte1), 0, 6)
-        fileName
+        nameof MemoryStream
         |> Guid.loadStateFromProvider (
             fun name access -> new MemoryStream(data))
         |> Assert.true'
@@ -109,7 +104,8 @@ type GuidGeneratorStateTest() =
             writer.Write((Array.init 6 addByte1), 0, 6)
         task {
             let! loadResult = Guid.loadStateAsync fileName
-            loadResult |> Assert.true'
+            loadResult
+            |> Assert.true'
             exceptionRef.Value
             |> Assert.null'
             Guid.newV1R ()
@@ -117,7 +113,7 @@ type GuidGeneratorStateTest() =
             |> tee (Assert.true' << ValueOption.isSome)
             |> ValueOption.get
             |> Assert.Seq.equalTo (Array.init 6 addByte1)
-        } :> Threading.Tasks.Task
+        } :> Task
 
     [<TestMethod>]
     member _.OnStateException_NonExistingFile_CatchFileNotFoundException() =
