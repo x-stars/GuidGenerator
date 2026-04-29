@@ -18,7 +18,7 @@ partial class GuidGeneratorState
 
     private static volatile StreamProvider StreamProvider = GuidGeneratorState.OpenLocalFile;
 
-    private static readonly SemaphoreSlim StorageLock = new(initialCount: 1, maxCount: 1);
+    private static readonly SemaphoreSlim StorageLock = SemaphoreSlim.CreateLock();
 
     private static readonly AutoRefreshCache<Task<bool>> LastSavingAsyncResultCache =
         new(GuidGeneratorState.SaveToStorageAsync, refreshPeriod: 10 * 1000, sleepAfter: 0);
@@ -32,17 +32,12 @@ partial class GuidGeneratorState
     public static bool SetStorageFile(
         string? fileName, StreamProvider? streamProvider = null)
     {
-        GuidGeneratorState.StorageLock.Wait();
-        try
+        using (GuidGeneratorState.StorageLock.EnterScope())
         {
             GuidGeneratorState.StorageFileName = fileName;
             GuidGeneratorState.StreamProvider = streamProvider ??
                 GuidGeneratorState.OpenLocalFile;
             return GuidGeneratorState.LoadFromStorage();
-        }
-        finally
-        {
-            GuidGeneratorState.StorageLock.Release();
         }
     }
 
@@ -50,19 +45,14 @@ partial class GuidGeneratorState
         string? fileName, StreamProvider? streamProvider = null,
         CancellationToken cancellationToken = default)
     {
-        await GuidGeneratorState.StorageLock.WaitAsync(cancellationToken)
-            .ConfigureAwait(continueOnCapturedContext: false);
-        try
+        using (await GuidGeneratorState.StorageLock.EnterScopeAsync(cancellationToken)
+                .ConfigureAwait(continueOnCapturedContext: false))
         {
             GuidGeneratorState.StorageFileName = fileName;
             GuidGeneratorState.StreamProvider = streamProvider ??
                 GuidGeneratorState.OpenLocalFile;
             return await GuidGeneratorState.LoadFromStorageAsync(cancellationToken)
                 .ConfigureAwait(continueOnCapturedContext: false);
-        }
-        finally
-        {
-            GuidGeneratorState.StorageLock.Release();
         }
     }
 
@@ -104,29 +94,19 @@ partial class GuidGeneratorState
 
     private static bool SaveToStorage()
     {
-        GuidGeneratorState.StorageLock.Wait();
-        try
+        using (GuidGeneratorState.StorageLock.EnterScope())
         {
             return GuidGeneratorState.SaveToStorageCore();
-        }
-        finally
-        {
-            GuidGeneratorState.StorageLock.Release();
         }
     }
 
     private static async Task<bool> SaveToStorageAsync()
     {
-        await GuidGeneratorState.StorageLock.WaitAsync()
-            .ConfigureAwait(continueOnCapturedContext: false);
-        try
+        using (await GuidGeneratorState.StorageLock.EnterScopeAsync()
+                .ConfigureAwait(continueOnCapturedContext: false))
         {
             return await GuidGeneratorState.SaveToStorageAsyncCore()
                 .ConfigureAwait(continueOnCapturedContext: false);
-        }
-        finally
-        {
-            GuidGeneratorState.StorageLock.Release();
         }
     }
 
