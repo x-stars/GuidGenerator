@@ -21,7 +21,7 @@ partial class GuidGeneratorState
     private static readonly SemaphoreSlim StorageLock = SemaphoreSlim.CreateLock();
 
     private static readonly AutoRefreshCache<Task<bool>> LastSavingAsyncResultCache =
-        new(GuidGeneratorState.SaveToStorageAsync, refreshPeriod: 10 * 1000, sleepAfter: 0);
+        new(GuidGeneratorState.SaveToStorageAsync, refreshPeriod: 10 * 1000, sleepAfter: 1);
 
     public static string? StorageFile => GuidGeneratorState.StorageFileName;
 
