@@ -19,6 +19,11 @@ partial class GuidGeneratorStateTest
 
     private ref readonly Exception? CatchStateLoadException()
     {
+        return ref this.CatchStateLoadExceptionAsBox().Value;
+    }
+
+    private StrongBox<Exception?> CatchStateLoadExceptionAsBox()
+    {
         var catchBox = new StrongBox<Exception?>();
         GuidGenerator.StateStorageException += (sender, e) =>
         {
@@ -27,7 +32,7 @@ partial class GuidGeneratorStateTest
                 catchBox.Value = e.Exception;
             }
         };
-        return ref catchBox.Value;
+        return catchBox;
     }
 
     private IDisposable CreateTempFile(out string fileName)
@@ -78,5 +83,18 @@ partial class GuidGeneratorStateTest
         writer.Write(clockSeq ?? 0);
         writer.Write(phyNodeId, 0, 6);
         writer.Write(randNodeId, 0, 6);
+    }
+
+    private sealed class MemoryFile(byte[] data)
+    {
+        public Stream OpenStream(string fileName, FileAccess fileAccess)
+        {
+            return fileAccess switch
+            {
+                FileAccess.Read => new MemoryStream(data, writable: false),
+                FileAccess.Write => new MemoryStream(data, writable: true),
+                _ => throw new ArgumentOutOfRangeException(nameof(fileAccess)),
+            };
+        }
     }
 }

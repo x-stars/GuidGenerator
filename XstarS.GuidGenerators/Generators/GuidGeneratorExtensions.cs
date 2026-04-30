@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Text;
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+using System.Buffers;
+#endif
 #if !UUIDREV_DISABLE
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
@@ -68,16 +71,27 @@ public static class GuidGeneratorExtensions
         ArgumentNullException.ThrowIfNull(guidGen);
         encoding ??= Encoding.UTF8;
 
+        var rentArray = (byte[]?)null;
         var nameLength = encoding.GetByteCount(name);
-        var nameBytes = ((uint)nameLength <= 1024) ?
-            (stackalloc byte[nameLength]) : (new byte[nameLength]);
-        var bytesWritten = encoding.GetBytes(name, nameBytes);
-        if (bytesWritten != nameLength)
+        var nameBytes = ((uint)nameLength <= 1024) ? (stackalloc byte[nameLength]) :
+            (rentArray = ArrayPool<byte>.Shared.Rent(nameLength)).AsSpan(0, nameLength);
+        try
         {
-            throw new InvalidOperationException(
-                "The encoding's implementation is incorrect.");
+            var bytesWritten = encoding.GetBytes(name, nameBytes);
+            if (bytesWritten != nameLength)
+            {
+                throw new InvalidOperationException(
+                    "The encoding's implementation is incorrect.");
+            }
+            return guidGen.NewGuid(nsId, nameBytes);
         }
-        return guidGen.NewGuid(nsId, nameBytes);
+        finally
+        {
+            if (rentArray is not null)
+            {
+                ArrayPool<byte>.Shared.Return(rentArray);
+            }
+        }
     }
 #endif
 
@@ -133,16 +147,27 @@ public static class GuidGeneratorExtensions
         ArgumentNullException.ThrowIfNull(guidGen);
         encoding ??= Encoding.UTF8;
 
+        var rentArray = (byte[]?)null;
         var nameLength = encoding.GetByteCount(name);
-        var nameBytes = ((uint)nameLength <= 1024) ?
-            (stackalloc byte[nameLength]) : (new byte[nameLength]);
-        var bytesWritten = encoding.GetBytes(name, nameBytes);
-        if (bytesWritten != nameLength)
+        var nameBytes = ((uint)nameLength <= 1024) ? (stackalloc byte[nameLength]) :
+            (rentArray = ArrayPool<byte>.Shared.Rent(nameLength)).AsSpan(0, nameLength);
+        try
         {
-            throw new InvalidOperationException(
-                "The encoding's implementation is incorrect.");
+            var bytesWritten = encoding.GetBytes(name, nameBytes);
+            if (bytesWritten != nameLength)
+            {
+                throw new InvalidOperationException(
+                    "The encoding's implementation is incorrect.");
+            }
+            return guidGen.NewGuid(nsId, nameBytes);
         }
-        return guidGen.NewGuid(nsId, nameBytes);
+        finally
+        {
+            if (rentArray is not null)
+            {
+                ArrayPool<byte>.Shared.Return(rentArray);
+            }
+        }
     }
 #endif
 
