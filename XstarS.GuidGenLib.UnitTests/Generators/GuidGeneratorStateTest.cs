@@ -191,6 +191,32 @@ public partial class GuidGeneratorStateTest
     }
 
     [TestMethod]
+    public void SetStateStorageFile_MemoryFileWithBothClockSeqFields_GetClockSeqFromFile()
+    {
+        var data = (byte[])[];
+        using (var tempFile = this.CreateTempFile(out var fileName))
+        {
+            this.WriteStateFieldsToFile(fileName, version: 4122, phyClkSeq: 42, randClkSeq: 44);
+            data = File.ReadAllBytes(fileName);
+        }
+        var memoryFile = new MemoryFile(data);
+        ref readonly var exception = ref this.CatchStateLoadException();
+        var loadResult = GuidGenerator.SetStateStorageFile(string.Empty, memoryFile.OpenStream);
+        Assert.IsTrue(loadResult);
+        Assert.IsNull(exception);
+        var guid0 = GuidGenerator.Version1.NewGuid();
+        _ = guid0.TryGetClockSequence(out var clockSeq0);
+        Assert.AreEqual(42, clockSeq0);
+#if !UUIDREV_DISABLE
+        var guid1 = GuidGenerator.Version6R.NewGuid();
+#else
+        var guid1 = GuidGenerator.Version1R.NewGuid();
+#endif
+        _ = guid1.TryGetClockSequence(out var clockSeq1);
+        Assert.AreEqual(44, clockSeq1);
+    }
+
+    [TestMethod]
     public void ResetState_GuidVersion1R_GetDifferentClockSequencesAndNodeIds()
     {
         var guidGen = GuidGenerator.Version1R;

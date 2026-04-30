@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace XNetEx.Guids.Generators;
 
@@ -31,6 +34,63 @@ partial class GuidGenerator
     public static bool SetStateStorageFile(string? fileName)
     {
         return GuidGeneratorState.SetStorageFile(fileName);
+    }
+
+    /// <summary>
+    /// Asynchronously sets the path of the state storage file and returns a task
+    /// containing a value that indicates whether the state storage loading operation is successful.
+    /// </summary>
+    /// <param name="fileName">The path of the state storage file,
+    /// or <see langword="null"/> to disable the state storage.</param>
+    /// <param name="cancellationToken">
+    /// The <see cref="CancellationToken"/> to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous state storage loading operation.
+    /// The result value is <see langword="true"/> if the state storage loading operation
+    /// is successful; otherwise, <see langword="false"/>.</returns>
+    public static Task<bool> SetStateStorageFileAsync(string? fileName,
+        CancellationToken cancellationToken = default)
+    {
+        return GuidGeneratorState.SetStorageFileAsync(fileName, cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// Sets the path of the state storage file and the delegate used to provide
+    /// the <see cref="Stream"/> for the state storage I/O operations, and returns a value
+    /// that indicates whether the state storage loading operation is successful.
+    /// </summary>
+    /// <param name="fileName">The path of the state storage file,
+    /// or <see langword="null"/> to disable the state storage.</param>
+    /// <param name="streamProvider">The delegate used to provide
+    /// the <see cref="Stream"/> for the state storage I/O operations,
+    /// or <see langword="null"/> to use the default file stream provider.</param>
+    /// <returns><see langword="true"/> if the state storage loading operation
+    /// is successful; otherwise, <see langword="false"/>.</returns>
+    public static bool SetStateStorageFile(
+        string? fileName, Func<string, FileAccess, Stream>? streamProvider)
+    {
+        return GuidGeneratorState.SetStorageFile(fileName, streamProvider);
+    }
+
+    /// <summary>
+    /// Asynchronously sets the path of the state storage file and the delegate used to provide
+    /// the <see cref="Stream"/> for the state storage I/O operations, and returns a task
+    /// containing a value that indicates whether the state storage loading operation is successful.
+    /// </summary>
+    /// <param name="fileName">The path of the state storage file,
+    /// or <see langword="null"/> to disable the state storage.</param>
+    /// <param name="streamProvider">The delegate used to provide
+    /// the <see cref="Stream"/> for the state storage I/O operations,
+    /// or <see langword="null"/> to use the default file stream provider.</param>
+    /// <param name="cancellationToken">
+    /// The <see cref="CancellationToken"/> to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous state storage loading operation.
+    /// The result value is <see langword="true"/> if the state storage loading operation
+    /// is successful; otherwise, <see langword="false"/>.</returns>
+    public static Task<bool> SetStateStorageFileAsync(
+        string? fileName, Func<string, FileAccess, Stream>? streamProvider,
+        CancellationToken cancellationToken = default)
+    {
+        return GuidGeneratorState.SetStorageFileAsync(fileName, streamProvider, cancellationToken);
     }
 
     /// <summary>
