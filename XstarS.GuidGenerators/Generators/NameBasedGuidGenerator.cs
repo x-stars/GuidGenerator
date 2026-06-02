@@ -1,24 +1,21 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Threading;
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Buffers;
+using System.Diagnostics;
 #endif
 
 namespace XNetEx.Guids.Generators;
 
 internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGenerator
 {
-    private readonly ThreadLocal<HashAlgorithm?> LocalHashing;
+    private readonly ThreadLocal<HashAlgorithm> LocalHashing;
 
     protected NameBasedGuidGenerator()
     {
-        this.LocalHashing = new ThreadLocal<HashAlgorithm?>(
-            this.CreateHashing, this.TrackHashing);
+        this.LocalHashing = new ThreadLocal<HashAlgorithm>(this.CreateHashing);
     }
-
-    protected virtual bool TrackHashing => false;
 
     public sealed override Guid NewGuid()
     {
@@ -81,37 +78,9 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 
     protected abstract HashAlgorithm CreateHashing();
 
-    protected virtual HashAlgorithm GetHashing()
-    {
-        var hashing = this.LocalHashing.Value!;
-        Debug.Assert(hashing is not null);
-        if (this.TrackHashing)
-        {
-            this.LocalHashing.Value = null;
-        }
-        return hashing!;
-    }
+    protected virtual HashAlgorithm GetHashing() => this.LocalHashing.Value!;
 
-    protected virtual void ReturnHashing(HashAlgorithm hashing)
-    {
-        if (this.TrackHashing)
-        {
-            this.LocalHashing.Value = hashing;
-        }
-    }
-
-#if !UUIDREV_DISABLE
-    protected void DisposeHashings()
-    {
-        Debug.Assert(this.TrackHashing);
-        var hashings = this.LocalHashing.Values;
-        foreach (var hashing in hashings)
-        {
-            hashing?.Dispose();
-        }
-        this.LocalHashing.Dispose();
-    }
-#endif
+    protected virtual void ReturnHashing(HashAlgorithm hashing) { }
 
     private static class LocalBuffers
     {

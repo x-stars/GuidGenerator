@@ -50,8 +50,6 @@ partial class NameBasedGuidGenerator
                 this.DisposeState = LatchStates.Initial;
             }
 
-            protected override bool TrackHashing => true;
-
             protected override void Dispose(bool disposing)
             {
                 if (Interlocked.CompareExchange(
@@ -62,7 +60,8 @@ partial class NameBasedGuidGenerator
                     {
                         if (disposing)
                         {
-                            this.DisposeHashings();
+                            this.LocalHashing.Value!.Dispose();
+                            this.LocalHashing.Dispose();
                         }
                         this.DisposeState = LatchStates.Exited;
                     }
