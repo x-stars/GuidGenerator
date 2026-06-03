@@ -14,12 +14,12 @@
 #endif
 
 #ifdef _WIN32
-#define DLL_IMPORT \
-    __declspec(dllimport)
+#define DLL_IMPORT __declspec(dllimport)
 #else
 #define DLL_IMPORT
 #endif
 
+#include <stddef.h>
 #include <stdint.h>
 
 #ifndef _HRESULT_DEFINED
@@ -44,20 +44,20 @@ extern "C" {
 #endif
 
 typedef uint8_t DCE_SECURITY_DOMAIN;
-const DCE_SECURITY_DOMAIN DCE_SECURITY_DOMAIN_PERSON = 0;
-const DCE_SECURITY_DOMAIN DCE_SECURITY_DOMAIN_GROUP = 1;
-const DCE_SECURITY_DOMAIN DCE_SECURITY_DOMAIN_ORG = 2;
+static const DCE_SECURITY_DOMAIN DCE_SECURITY_DOMAIN_PERSON = 0;
+static const DCE_SECURITY_DOMAIN DCE_SECURITY_DOMAIN_GROUP = 1;
+static const DCE_SECURITY_DOMAIN DCE_SECURITY_DOMAIN_ORG = 2;
 
-const GUID GUID_NAMESPACE_DNS = {
+static const GUID GUID_NAMESPACE_DNS = {
     0x6ba7b810, 0x9dad, 0x11d1,
     {0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8} };
-const GUID GUID_NAMESPACE_URL = {
+static const GUID GUID_NAMESPACE_URL = {
     0x6ba7b811, 0x9dad, 0x11d1,
     {0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8} };
-const GUID GUID_NAMESPACE_OID = {
+static const GUID GUID_NAMESPACE_OID = {
     0x6ba7b812, 0x9dad, 0x11d1,
     {0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8} };
-const GUID GUID_NAMESPACE_X500 = {
+static const GUID GUID_NAMESPACE_X500 = {
     0x6ba7b814, 0x9dad, 0x11d1,
     {0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8} };
 

@@ -32,8 +32,7 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
         this.Generators = new BoundedCollection<IBlockingGuidGenerator>(
             (capacity == -1) ? int.MaxValue : (capacity - 1));
         this.LocalDefaultGenerator = (capacity == -1) ?
-            new ThreadLocal<IBlockingGuidGenerator>(
-                this.CreateGenerator, trackAllValues: true) : null;
+            new ThreadLocal<IBlockingGuidGenerator>(this.CreateGenerator) : null;
         this.GlobalDefaultGenerator = null;
         this.DisposeState = LatchStates.Initial;
     }
@@ -159,11 +158,7 @@ internal sealed class GuidGeneratorPool : IGuidGenerator, IDisposable
         }
         if (this.LocalDefaultGenerator is not null)
         {
-            var localGenerators = this.LocalDefaultGenerator.Values;
-            foreach (var generator in localGenerators)
-            {
-                generator.Dispose();
-            }
+            this.LocalDefaultGenerator.Value!.Dispose();
             this.LocalDefaultGenerator.Dispose();
         }
         this.GlobalDefaultGenerator?.Dispose();
