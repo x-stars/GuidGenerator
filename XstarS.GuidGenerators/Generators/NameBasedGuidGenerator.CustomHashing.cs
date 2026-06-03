@@ -98,7 +98,7 @@ partial class NameBasedGuidGenerator
         {
             private readonly HashAlgorithm GlobalHashing;
 
-            private volatile bool IsDisposed;
+            private volatile int DisposeState;
 
             internal Synchronized(HashAlgorithm hashing)
                 : base(hashing.Identity)
@@ -111,30 +111,40 @@ partial class NameBasedGuidGenerator
                         nameof(hashing));
                 }
 
-                this.GlobalHashing = hashing;
                 this.LocalHashing.Dispose();
-                this.IsDisposed = false;
+                this.GlobalHashing = hashing;
+                this.DisposeState = LatchStates.Initial;
             }
 
             protected override void Dispose(bool disposing)
             {
-                if (!this.IsDisposed)
+                if (Interlocked.CompareExchange(
+                    ref this.DisposeState, LatchStates.Entered,
+                    LatchStates.Initial) == LatchStates.Initial)
                 {
-                    if (disposing)
+                    try
                     {
-                        lock (this.GlobalHashing)
+                        if (disposing)
                         {
-                            this.GlobalHashing.Dispose();
+                            lock (this.GlobalHashing)
+                            {
+                                this.GlobalHashing.Dispose();
+                            }
                         }
+                        this.DisposeState = LatchStates.Exited;
                     }
-                    this.IsDisposed = true;
+                    catch (Exception)
+                    {
+                        this.DisposeState = LatchStates.Failed;
+                        throw;
+                    }
                 }
                 base.Dispose(disposing);
             }
 
             protected override HashAlgorithm GetHashing()
             {
-                if (this.IsDisposed)
+                if (this.DisposeState != LatchStates.Initial)
                 {
                     throw new ObjectDisposedException(nameof(NameBasedGuidGenerator));
                 }
