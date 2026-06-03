@@ -49,28 +49,34 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     public sealed override Guid NewGuid(Guid nsId, ReadOnlySpan<byte> name)
     {
-        var rentArray = (byte[]?)null;
         var hashing = this.GetHashing();
         try
         {
+            var rentArray = (byte[]?)null;
             var hashSize = hashing.HashSize / 8;
             var hash = ((uint)hashSize <= 1024) ? (stackalloc byte[hashSize]) :
                 (rentArray = ArrayPool<byte>.Shared.Rent(hashSize)).AsSpan(0, hashSize);
-            var result = this.TryComputeHash(
-                hashing, nsId, name, hash, out var bytesWritten);
-            if (!result || (bytesWritten != hashSize))
+            try
             {
-                throw new InvalidOperationException(
-                    "The algorithm's implementation is incorrect.");
+                var result = this.TryComputeHash(
+                    hashing, nsId, name, hash, out var bytesWritten);
+                if (!result || (bytesWritten != hashSize))
+                {
+                    throw new InvalidOperationException(
+                        "The algorithm's implementation is incorrect.");
+                }
+                return this.HashToGuid(hash);
             }
-            return this.HashToGuid(hash);
+            finally
+            {
+                if (rentArray is not null)
+                {
+                    ArrayPool<byte>.Shared.Return(rentArray);
+                }
+            }
         }
         finally
         {
-            if (rentArray is not null)
-            {
-                ArrayPool<byte>.Shared.Return(rentArray);
-            }
             this.ReturnHashing(hashing);
         }
     }
