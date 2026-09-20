@@ -1,24 +1,21 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Threading;
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 using System.Buffers;
+using System.Diagnostics;
 #endif
 
 namespace XNetEx.Guids.Generators;
 
 internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBasedGuidGenerator
 {
-    private readonly ThreadLocal<HashAlgorithm?> LocalHashing;
+    private readonly ThreadLocal<HashAlgorithm> LocalHashing;
 
     protected NameBasedGuidGenerator()
     {
-        this.LocalHashing = new ThreadLocal<HashAlgorithm?>(
-            this.CreateHashing, this.TrackHashing);
+        this.LocalHashing = new ThreadLocal<HashAlgorithm>(this.CreateHashing);
     }
-
-    protected virtual bool TrackHashing => false;
 
     public sealed override Guid NewGuid()
     {
@@ -52,28 +49,34 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     public sealed override Guid NewGuid(Guid nsId, ReadOnlySpan<byte> name)
     {
-        var rentArray = (byte[]?)null;
         var hashing = this.GetHashing();
         try
         {
+            var rentArray = (byte[]?)null;
             var hashSize = hashing.HashSize / 8;
             var hash = ((uint)hashSize <= 1024) ? (stackalloc byte[hashSize]) :
                 (rentArray = ArrayPool<byte>.Shared.Rent(hashSize)).AsSpan(0, hashSize);
-            var result = this.TryComputeHash(
-                hashing, nsId, name, hash, out var bytesWritten);
-            if (!result || (bytesWritten != hashSize))
+            try
             {
-                throw new InvalidOperationException(
-                    "The algorithm's implementation is incorrect.");
+                var result = this.TryComputeHash(
+                    hashing, nsId, name, hash, out var bytesWritten);
+                if (!result || (bytesWritten != hashSize))
+                {
+                    throw new InvalidOperationException(
+                        "The algorithm's implementation is incorrect.");
+                }
+                return this.HashToGuid(hash);
             }
-            return this.HashToGuid(hash);
+            finally
+            {
+                if (rentArray is not null)
+                {
+                    ArrayPool<byte>.Shared.Return(rentArray);
+                }
+            }
         }
         finally
         {
-            if (rentArray is not null)
-            {
-                ArrayPool<byte>.Shared.Return(rentArray);
-            }
             this.ReturnHashing(hashing);
         }
     }
@@ -81,37 +84,9 @@ internal abstract partial class NameBasedGuidGenerator : GuidGenerator, INameBas
 
     protected abstract HashAlgorithm CreateHashing();
 
-    protected virtual HashAlgorithm GetHashing()
-    {
-        var hashing = this.LocalHashing.Value!;
-        Debug.Assert(hashing is not null);
-        if (this.TrackHashing)
-        {
-            this.LocalHashing.Value = null;
-        }
-        return hashing!;
-    }
+    protected virtual HashAlgorithm GetHashing() => this.LocalHashing.Value!;
 
-    protected virtual void ReturnHashing(HashAlgorithm hashing)
-    {
-        if (this.TrackHashing)
-        {
-            this.LocalHashing.Value = hashing;
-        }
-    }
-
-#if !UUIDREV_DISABLE
-    protected void DisposeHashings()
-    {
-        Debug.Assert(this.TrackHashing);
-        var hashings = this.LocalHashing.Values;
-        foreach (var hashing in hashings)
-        {
-            hashing?.Dispose();
-        }
-        this.LocalHashing.Dispose();
-    }
-#endif
+    protected virtual void ReturnHashing(HashAlgorithm hashing) { }
 
     private static class LocalBuffers
     {
