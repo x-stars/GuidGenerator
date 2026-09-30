@@ -22,6 +22,7 @@
   </PropertyGroup>
 
   <Import Project="..\BuildItems\Trimming.Build.props" />
+  <Import Project="..\BuildItems\RuntimeAsync.Build.props" />
 
   <ItemGroup>
     <Compile Include="..\SharedItems\Common\**\*.cs" />

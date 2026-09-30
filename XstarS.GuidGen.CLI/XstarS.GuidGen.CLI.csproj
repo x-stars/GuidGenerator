@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net6.0;net8.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net8.0;net10.0;net11.0</TargetFrameworks>
     <RootNamespace>XstarS.GuidGen</RootNamespace>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
@@ -26,6 +26,7 @@
   <Import Project="..\BuildItems\Trimming.Build.props" />
   <Import Project="..\BuildItems\NativeAOT.Build.props" />
   <Import Project="..\BuildItems\NoReflection.Build.props" />
+  <Import Project="..\BuildItems\RuntimeAsync.Build.props" />
 
   <ItemGroup>
     <Compile Include="..\SharedItems\Common\**\*.cs" />

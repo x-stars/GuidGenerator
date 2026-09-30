@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net10.0;net11.0</TargetFrameworks>
     <RootNamespace>XstarS.GuidGen.Service</RootNamespace>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
@@ -19,6 +19,7 @@
 
   <Import Project="..\BuildItems\Trimming.Build.props" />
   <Import Project="..\BuildItems\NativeAOT.Build.props" />
+  <Import Project="..\BuildItems\RuntimeAsync.Build.props" />
 
   <ItemGroup>
     <Compile Include="..\SharedItems\Common\**\*.cs" />

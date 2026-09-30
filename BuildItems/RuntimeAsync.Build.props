@@ -1,0 +1,13 @@
+<Project>
+
+  <PropertyGroup>
+    <RuntimeAsync Condition="
+      $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)','net11.0'))
+    ">true</RuntimeAsync>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(RuntimeAsync)'=='true'">
+    <Features>$(Features);runtime-async=on</Features>
+  </PropertyGroup>
+
+</Project>
