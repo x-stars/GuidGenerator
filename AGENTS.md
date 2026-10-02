@@ -1,4 +1,4 @@
-# AI Agent Guide for GuidGenerator
+﻿# AI Agent Guide for GuidGenerator
 
 ## Overview
 
@@ -114,12 +114,13 @@ dotnet publish -c Release -f net10.0 -r linux-x64 --sc
 ### Framework Support
 
 - **XstarS.GuidGenerators**: net461, net472, net6.0, net8.0, net10.0, netstandard2.0, netstandard2.1 (maximum compatibility)
-- **CLI/Service/NativeLib**: net8.0, net10.0 (modern only)
+- **XstarS.GuidGen.CLI**: net461, net472, net6.0, net8.0, net10.0 (maximum compatibility)
+- **Service/NativeLib**: net8.0, net10.0 (modern only)
 - **XstarS.GuidModule**: net8.0, netstandard2.0, netstandard2.1 (F#)
 
 ### Build Configuration Files (`BuildItems/`)
 
-- `AssemblyInfo.Build.props`: Version (currently 2.13.0), signing, metadata
+- `AssemblyInfo.Build.props`: Version, signing, metadata
 - `NativeAOT.Build.props`: Native AOT compatibility flags
 - `NoReflection.Build.props`: Reflection-free mode for trimming
 - `Trimming.Build.props`: Trimming-safe code
