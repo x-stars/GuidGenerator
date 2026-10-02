@@ -1,4 +1,6 @@
 ﻿- name: Introduction
   href: introduction.md
+- name: Core Library Architecture
+  href: architecture.md
 - name: Getting Started
   href: getting-started.md
