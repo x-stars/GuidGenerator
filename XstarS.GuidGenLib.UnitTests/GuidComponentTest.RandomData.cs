@@ -95,6 +95,19 @@ partial class GuidComponentTest
 #endif
 #endif
 
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    [TestMethod]
+    public void TryWriteRandomData_TooShortBuffer_GetAllFalseResults()
+    {
+        var guid = Guid.Parse("2502f1d5-c2a9-47d3-b6d8-d7670094ace2");
+        var randomData = (stackalloc byte[16]);
+        var bitmask = (stackalloc byte[16]);
+        Assert.IsFalse(guid.TryWriteRandomData([], bitmask));
+        Assert.IsFalse(guid.TryWriteRandomData(randomData, []));
+        Assert.IsFalse(guid.TryWriteRandomData([], []));
+    }
+#endif
+
     [TestMethod]
     public void TryGetRandomData_OtherVersionGuids_GetAllFalseResults()
     {

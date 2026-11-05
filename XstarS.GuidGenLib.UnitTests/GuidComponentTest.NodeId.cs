@@ -76,6 +76,15 @@ partial class GuidComponentTest
 #endif
 #endif
 
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    [TestMethod]
+    public void TryWriteNodeId_TooShortBuffer_GetFalseResult()
+    {
+        var guid = Guid.Parse("6ba7b810-9dad-11d1-80b4-00c04fd430c8");
+        Assert.IsFalse(guid.TryWriteNodeId([]));
+    }
+#endif
+
     [TestMethod]
     public void TryGetNodeId_OtherVersionGuids_GetAllFalseResults()
     {

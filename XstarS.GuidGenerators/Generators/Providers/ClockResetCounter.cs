@@ -91,7 +91,7 @@ internal abstract class ClockResetCounter
 
         private static readonly int RollbackLimit = Environment.ProcessorCount;
 
-        // InitFlag: 31, LastClock: 27~16, Sequence: 14~0.
+        // InitFlag: 31, LastClock: 27~16, Sequence: 13~0.
         private volatile int SequenceState;
 
         private volatile int RollbackCount;

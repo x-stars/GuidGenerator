@@ -32,6 +32,9 @@ public interface IGuidGenerator : IGuidGeneratorInfo
     /// Generates a new <see cref="Guid"/> instance.
     /// </summary>
     /// <returns>A new <see cref="Guid"/> instance.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// The current timestamp is of the range
+    /// that the current <see cref="Guid"/> can represent.</exception>
     /// <exception cref="ObjectDisposedException">
     /// This instance has already been disposed.</exception>
     Guid NewGuid();
@@ -114,6 +117,9 @@ public interface IBlockingGuidGenerator : IGuidGenerator
     /// <returns><see langword="true"/> if this instance can
     /// generate a new <see cref="Guid"/> instance without blocking;
     /// otherwise, <see langword="false"/>.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// The current timestamp is of the range
+    /// that the current <see cref="Guid"/> can represent.</exception>
     /// <exception cref="ObjectDisposedException">
     /// This instance has already been disposed.</exception>
     bool TryNewGuid(out Guid result);

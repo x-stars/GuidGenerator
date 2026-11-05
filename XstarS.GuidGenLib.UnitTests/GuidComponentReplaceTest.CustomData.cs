@@ -39,6 +39,18 @@ partial class GuidComponentReplaceTest
 #endif
 
     [TestMethod]
+    public void ReplaceCustomData_Non16BytesData_CatchArgumentException()
+    {
+        var original = Guid.Parse("00000000-0000-8000-8000-000000000000");
+        foreach (var length in new[] { 0, 1, 15, 17 })
+        {
+            var customData = new byte[length];
+            Assert.ThrowsException<ArgumentException>(
+                () => original.ReplaceCustomData(customData));
+        }
+    }
+
+    [TestMethod]
     public void ReplaceCustomData_OtherVersionGuids_GetOriginalGuidValues()
     {
         var customData = new byte[16]
