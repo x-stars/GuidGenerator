@@ -52,7 +52,7 @@ public abstract partial class GuidGenerator : IGuidGenerator, IGuidGeneratorInfo
     /// </summary>
     /// <returns>A new <see cref="Guid"/> instance.</returns>
     /// <exception cref="InvalidOperationException">
-    /// The current timestamp is of the range
+    /// The provided state is invalid or out of the range
     /// that the current <see cref="Guid"/> can represent.</exception>
     /// <exception cref="ObjectDisposedException">
     /// This instance has already been disposed.</exception>
