@@ -25,82 +25,56 @@ partial class GuidGeneratorState
         internal static void Reset() => BinaryBuffer.Stream.Position = 0L;
     }
 
-    private static bool LoadFromStorage()
+    private static void LoadFromStorage(string fileName)
     {
-        var storageFile = GuidGeneratorState.StorageFile;
-        if (storageFile is null) { return false; }
-
-        try
+        var streamProvider = GuidGeneratorState.StreamProvider;
+        using (var stream = streamProvider.Invoke(fileName, FileAccess.Read))
         {
-            var streamProvider = GuidGeneratorState.StreamProvider;
-            using (var stream = streamProvider.Invoke(storageFile, FileAccess.Read))
+            var buffer = BinaryBuffer.Value;
+            var current = 0;
+            while (current < buffer.Length)
             {
-                var buffer = BinaryBuffer.Value;
-                var current = 0;
-                while (current < buffer.Length)
+                var length = stream.Read(buffer, current, buffer.Length - current);
+                if (length == 0)
                 {
-                    var length = stream.Read(buffer, current, buffer.Length - current);
-                    if (length == 0)
-                    {
-                        throw new EndOfStreamException();
-                    }
-                    current += length;
+                    throw new EndOfStreamException();
                 }
+                current += length;
             }
-            GuidGeneratorState.LoadFromBuffer();
-            return true;
         }
-        catch (Exception ex)
-        {
-            GuidGeneratorState.OnStorageException(
-                new StateStorageExceptionEventArgs(ex, storageFile, FileAccess.Read));
-            return false;
-        }
+        GuidGeneratorState.LoadFromBuffer();
     }
 
-    private static async Task<bool> LoadFromStorageAsync(
+    private static async Task LoadFromStorageAsync(string fileName,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        var storageFile = GuidGeneratorState.StorageFile;
-        if (storageFile is null) { return false; }
-
-        try
+        var streamProvider = GuidGeneratorState.StreamProvider;
+        using (var stream = streamProvider.Invoke(fileName, FileAccess.Read))
         {
-            var streamProvider = GuidGeneratorState.StreamProvider;
-            using (var stream = streamProvider.Invoke(storageFile, FileAccess.Read))
+            var buffer =
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                (Memory<byte>)
+#endif
+                BinaryBuffer.Value;
+            var current = 0;
+            while (current < buffer.Length)
             {
-                var buffer =
+                var length = await stream.ReadAsync(
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-                    (Memory<byte>)
-#endif
-                    BinaryBuffer.Value;
-                var current = 0;
-                while (current < buffer.Length)
-                {
-                    var length = await stream.ReadAsync(
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-                        buffer[current..], cancellationToken
+                    buffer[current..], cancellationToken
 #else
-                        buffer, current, buffer.Length - current, cancellationToken
+                    buffer, current, buffer.Length - current, cancellationToken
 #endif
-                        ).ConfigureAwait(continueOnCapturedContext: false);
-                    if (length == 0)
-                    {
-                        throw new EndOfStreamException();
-                    }
-                    current += length;
+                    ).ConfigureAwait(continueOnCapturedContext: false);
+                if (length == 0)
+                {
+                    throw new EndOfStreamException();
                 }
+                current += length;
             }
-            GuidGeneratorState.LoadFromBuffer();
-            return true;
         }
-        catch (Exception ex)
-        {
-            GuidGeneratorState.OnStorageException(
-                new StateStorageExceptionEventArgs(ex, storageFile, FileAccess.Read));
-            return false;
-        }
+        GuidGeneratorState.LoadFromBuffer();
     }
 
     private static void LoadFromBuffer()
@@ -153,58 +127,32 @@ partial class GuidGeneratorState
         }
     }
 
-    private static bool SaveToStorageCore()
+    private static void SaveToStorageCore(string fileName)
     {
-        var storageFile = GuidGeneratorState.StorageFile;
-        if (storageFile is null) { return false; }
-
-        try
+        GuidGeneratorState.SaveToBuffer();
+        var streamProvider = GuidGeneratorState.StreamProvider;
+        using (var stream = streamProvider.Invoke(fileName, FileAccess.Write))
         {
-            GuidGeneratorState.SaveToBuffer();
-            var streamProvider = GuidGeneratorState.StreamProvider;
-            using (var stream = streamProvider.Invoke(storageFile, FileAccess.Write))
-            {
-                var buffer = BinaryBuffer.Value;
-                stream.Write(buffer, 0, buffer.Length);
-            }
-            return true;
-        }
-        catch (Exception ex)
-        {
-            GuidGeneratorState.OnStorageException(
-                new StateStorageExceptionEventArgs(ex, storageFile, FileAccess.Write));
-            return false;
+            var buffer = BinaryBuffer.Value;
+            stream.Write(buffer, 0, buffer.Length);
         }
     }
 
-    private static async Task<bool> SaveToStorageAsyncCore(
+    private static async Task SaveToStorageAsyncCore(string fileName,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        var storageFile = GuidGeneratorState.StorageFile;
-        if (storageFile is null) { return false; }
-
-        try
+        GuidGeneratorState.SaveToBuffer();
+        var streamProvider = GuidGeneratorState.StreamProvider;
+        using (var stream = streamProvider.Invoke(fileName, FileAccess.Write))
         {
-            GuidGeneratorState.SaveToBuffer();
-            var streamProvider = GuidGeneratorState.StreamProvider;
-            using (var stream = streamProvider.Invoke(storageFile, FileAccess.Write))
-            {
-                var buffer = BinaryBuffer.Value;
+            var buffer = BinaryBuffer.Value;
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-                await stream.WriteAsync(buffer, cancellationToken)
+            await stream.WriteAsync(buffer, cancellationToken)
 #else
-                await stream.WriteAsync(buffer, 0, buffer.Length, cancellationToken)
+            await stream.WriteAsync(buffer, 0, buffer.Length, cancellationToken)
 #endif
-                    .ConfigureAwait(continueOnCapturedContext: false);
-            }
-            return true;
-        }
-        catch (Exception ex)
-        {
-            GuidGeneratorState.OnStorageException(
-                new StateStorageExceptionEventArgs(ex, storageFile, FileAccess.Write));
-            return false;
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
     }
 

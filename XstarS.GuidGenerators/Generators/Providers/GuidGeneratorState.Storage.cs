@@ -32,12 +32,24 @@ partial class GuidGeneratorState
     public static bool SetStorageFile(
         string? fileName, StreamProvider? streamProvider = null)
     {
-        using (GuidGeneratorState.StorageLock.EnterScope())
+        if (fileName is null) { return false; }
+
+        try
         {
-            GuidGeneratorState.StorageFileName = fileName;
-            GuidGeneratorState.StreamProvider = streamProvider ??
-                GuidGeneratorState.OpenLocalFile;
-            return GuidGeneratorState.LoadFromStorage();
+            using (GuidGeneratorState.StorageLock.EnterScope())
+            {
+                GuidGeneratorState.StorageFileName = fileName;
+                GuidGeneratorState.StreamProvider = streamProvider ??
+                    GuidGeneratorState.OpenLocalFile;
+                GuidGeneratorState.LoadFromStorage(fileName);
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            GuidGeneratorState.OnStorageException(
+                new StateStorageExceptionEventArgs(ex, fileName, FileAccess.Read));
+            return false;
         }
     }
 
@@ -45,14 +57,27 @@ partial class GuidGeneratorState
         string? fileName, StreamProvider? streamProvider = null,
         CancellationToken cancellationToken = default)
     {
-        using (await GuidGeneratorState.StorageLock.EnterScopeAsync(cancellationToken)
-                .ConfigureAwait(continueOnCapturedContext: false))
+        cancellationToken.ThrowIfCancellationRequested();
+        if (fileName is null) { return false; }
+
+        try
         {
-            GuidGeneratorState.StorageFileName = fileName;
-            GuidGeneratorState.StreamProvider = streamProvider ??
-                GuidGeneratorState.OpenLocalFile;
-            return await GuidGeneratorState.LoadFromStorageAsync(cancellationToken)
-                .ConfigureAwait(continueOnCapturedContext: false);
+            using (await GuidGeneratorState.StorageLock.EnterScopeAsync(cancellationToken)
+                    .ConfigureAwait(continueOnCapturedContext: false))
+            {
+                GuidGeneratorState.StorageFileName = fileName;
+                GuidGeneratorState.StreamProvider = streamProvider ??
+                    GuidGeneratorState.OpenLocalFile;
+                await GuidGeneratorState.LoadFromStorageAsync(fileName, cancellationToken)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            GuidGeneratorState.OnStorageException(
+                new StateStorageExceptionEventArgs(ex, fileName, FileAccess.Read));
+            return false;
         }
     }
 
@@ -94,19 +119,49 @@ partial class GuidGeneratorState
 
     private static bool SaveToStorage()
     {
-        using (GuidGeneratorState.StorageLock.EnterScope())
+        var fileName = GuidGeneratorState.StorageFile;
+        if (fileName is null) { return false; }
+
+        try
         {
-            return GuidGeneratorState.SaveToStorageCore();
+            using (GuidGeneratorState.StorageLock.EnterScope())
+            {
+                fileName = GuidGeneratorState.StorageFile;
+                if (fileName is null) { return false; }
+                GuidGeneratorState.SaveToStorageCore(fileName);
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            GuidGeneratorState.OnStorageException(
+                new StateStorageExceptionEventArgs(ex, fileName!, FileAccess.Write));
+            return false;
         }
     }
 
     private static async Task<bool> SaveToStorageAsync()
     {
-        using (await GuidGeneratorState.StorageLock.EnterScopeAsync()
-                .ConfigureAwait(continueOnCapturedContext: false))
+        var fileName = GuidGeneratorState.StorageFile;
+        if (fileName is null) { return false; }
+
+        try
         {
-            return await GuidGeneratorState.SaveToStorageAsyncCore()
-                .ConfigureAwait(continueOnCapturedContext: false);
+            using (await GuidGeneratorState.StorageLock.EnterScopeAsync()
+                .ConfigureAwait(continueOnCapturedContext: false))
+            {
+                fileName = GuidGeneratorState.StorageFile;
+                if (fileName is null) { return false; }
+                await GuidGeneratorState.SaveToStorageAsyncCore(fileName)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            GuidGeneratorState.OnStorageException(
+                new StateStorageExceptionEventArgs(ex, fileName!, FileAccess.Write));
+            return false;
         }
     }
 
