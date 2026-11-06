@@ -104,14 +104,14 @@ partial class GuidGeneratorState
         return null;
     }
 
-    private static Stream OpenLocalFile(string storageFile, FileAccess operationType)
+    private static Stream OpenLocalFile(string fileName, FileAccess operationType)
     {
         // Very small file, don't use OS async I/O in the default provider to avoid overhead.
         return operationType switch
         {
-            FileAccess.Read => new FileStream(storageFile,
+            FileAccess.Read => new FileStream(fileName,
                 FileMode.Open, FileAccess.Read, FileShare.Read),
-            FileAccess.Write => new FileStream(storageFile,
+            FileAccess.Write => new FileStream(fileName,
                 FileMode.OpenOrCreate, FileAccess.Write, FileShare.None),
             _ => throw new ArgumentOutOfRangeException(nameof(operationType))
         };
