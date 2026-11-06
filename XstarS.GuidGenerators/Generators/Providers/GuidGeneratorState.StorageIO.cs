@@ -36,10 +36,15 @@ partial class GuidGeneratorState
             using (var stream = streamProvider.Invoke(storageFile, FileAccess.Read))
             {
                 var buffer = BinaryBuffer.Value;
-                var length = stream.Read(buffer, 0, buffer.Length);
-                if (length != buffer.Length)
+                var current = 0;
+                while (current < buffer.Length)
                 {
-                    throw new EndOfStreamException();
+                    var length = stream.Read(buffer, current, buffer.Length - current);
+                    if (length == 0)
+                    {
+                        throw new EndOfStreamException();
+                    }
+                    current += length;
                 }
             }
             GuidGeneratorState.LoadFromBuffer();
@@ -65,17 +70,26 @@ partial class GuidGeneratorState
             var streamProvider = GuidGeneratorState.StreamProvider;
             using (var stream = streamProvider.Invoke(storageFile, FileAccess.Read))
             {
-                var buffer = BinaryBuffer.Value;
-                var length =
+                var buffer =
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-                    await stream.ReadAsync(buffer, cancellationToken)
-#else
-                    await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)
+                    (Memory<byte>)
 #endif
-                        .ConfigureAwait(continueOnCapturedContext: false);
-                if (length != buffer.Length)
+                    BinaryBuffer.Value;
+                var current = 0;
+                while (current < buffer.Length)
                 {
-                    throw new EndOfStreamException();
+                    var length = await stream.ReadAsync(
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                        buffer[current..], cancellationToken
+#else
+                        buffer, current, buffer.Length - current, cancellationToken
+#endif
+                        ).ConfigureAwait(continueOnCapturedContext: false);
+                    if (length == 0)
+                    {
+                        throw new EndOfStreamException();
+                    }
+                    current += length;
                 }
             }
             GuidGeneratorState.LoadFromBuffer();
