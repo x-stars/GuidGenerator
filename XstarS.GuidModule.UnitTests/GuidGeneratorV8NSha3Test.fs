@@ -11,7 +11,8 @@ type GuidGeneratorV8NSha3Test() =
 
     [<TestMethod>]
     member _.NewVersion8NSha3D256_EmptyName_GetExpectedGuid() =
-        if not SHA3_256.IsSupported then ()
+        if not SHA3_256.IsSupported then
+            Assert.inconclusive "The current hash algorithm is not supported."
         else
             Guid.newV8NSha3D256 Guid.empty Array.empty
             |> tee (Guid.version
@@ -20,7 +21,8 @@ type GuidGeneratorV8NSha3Test() =
 
     [<TestMethod>]
     member _.NewVersion8NSha3D256ByString_ExampleDns_GetExpectedGuid() =
-        if not SHA3_256.IsSupported then ()
+        if not SHA3_256.IsSupported then
+            Assert.inconclusive "The current hash algorithm is not supported."
         else
             Guid.newV8NSha3D256S Guid.nsDns "www.example.com"
             |> tee (Guid.version
@@ -29,7 +31,8 @@ type GuidGeneratorV8NSha3Test() =
 
     [<TestMethod>]
     member _.NewVersion8NSha3D256ByEncoding_ExampleDns_GetExpectedGuid() =
-        if not SHA3_256.IsSupported then ()
+        if not SHA3_256.IsSupported then
+            Assert.inconclusive "The current hash algorithm is not supported."
         else
             Guid.newV8NSha3D256Enc Guid.nsDns Text.Encoding.Unicode "www.example.com"
             |> tee (Guid.version
@@ -38,7 +41,8 @@ type GuidGeneratorV8NSha3Test() =
 
     [<TestMethod>]
     member _.NewVersion8NSha3D384_EmptyName_GetExpectedGuid() =
-        if not SHA3_384.IsSupported then ()
+        if not SHA3_384.IsSupported then
+            Assert.inconclusive "The current hash algorithm is not supported."
         else
             Guid.newV8NSha3D384 Guid.empty Array.empty
             |> tee (Guid.version
@@ -47,7 +51,8 @@ type GuidGeneratorV8NSha3Test() =
 
     [<TestMethod>]
     member _.NewVersion8NSha3D384ByString_ExampleDns_GetExpectedGuid() =
-        if not SHA3_384.IsSupported then ()
+        if not SHA3_384.IsSupported then
+            Assert.inconclusive "The current hash algorithm is not supported."
         else
             Guid.newV8NSha3D384S Guid.nsDns "www.example.com"
             |> tee (Guid.version
@@ -56,7 +61,8 @@ type GuidGeneratorV8NSha3Test() =
 
     [<TestMethod>]
     member _.NewVersion8NSha3D384ByEncoding_ExampleDns_GetExpectedGuid() =
-        if not SHA3_384.IsSupported then ()
+        if not SHA3_384.IsSupported then
+            Assert.inconclusive "The current hash algorithm is not supported."
         else
             Guid.newV8NSha3D384Enc Guid.nsDns Text.Encoding.Unicode "www.example.com"
             |> tee (Guid.version
@@ -65,7 +71,8 @@ type GuidGeneratorV8NSha3Test() =
 
     [<TestMethod>]
     member _.NewVersion8NSha3D512_EmptyName_GetExpectedGuid() =
-        if not SHA3_512.IsSupported then ()
+        if not SHA3_512.IsSupported then
+            Assert.inconclusive "The current hash algorithm is not supported."
         else
             Guid.newV8NSha3D512 Guid.empty Array.empty
             |> tee (Guid.version
@@ -74,7 +81,8 @@ type GuidGeneratorV8NSha3Test() =
 
     [<TestMethod>]
     member _.NewVersion8NSha3D512ByString_ExampleDns_GetExpectedGuid() =
-        if not SHA3_512.IsSupported then ()
+        if not SHA3_512.IsSupported then
+            Assert.inconclusive "The current hash algorithm is not supported."
         else
             Guid.newV8NSha3D512S Guid.nsDns "www.example.com"
             |> tee (Guid.version
@@ -83,7 +91,8 @@ type GuidGeneratorV8NSha3Test() =
 
     [<TestMethod>]
     member _.NewVersion8NSha3D512ByEncoding_ExampleDns_GetExpectedGuid() =
-        if not SHA3_512.IsSupported then ()
+        if not SHA3_512.IsSupported then
+            Assert.inconclusive "The current hash algorithm is not supported."
         else
             Guid.newV8NSha3D512Enc Guid.nsDns Text.Encoding.Unicode "www.example.com"
             |> tee (Guid.version
@@ -92,7 +101,8 @@ type GuidGeneratorV8NSha3Test() =
 
     [<TestMethod>]
     member _.NewVersion8NShake128_EmptyName_GetExpectedGuid() =
-        if not Shake128.IsSupported then ()
+        if not Shake128.IsSupported then
+            Assert.inconclusive "The current hash algorithm is not supported."
         else
             Guid.newV8NShake128 Guid.empty Array.empty
             |> tee (Guid.version
@@ -101,7 +111,8 @@ type GuidGeneratorV8NSha3Test() =
 
     [<TestMethod>]
     member _.NewVersion8NShake128ByString_ExampleDns_GetExpectedGuid() =
-        if not Shake128.IsSupported then ()
+        if not Shake128.IsSupported then
+            Assert.inconclusive "The current hash algorithm is not supported."
         else
             Guid.newV8NShake128S Guid.nsDns "www.example.com"
             |> tee (Guid.version
@@ -110,7 +121,8 @@ type GuidGeneratorV8NSha3Test() =
 
     [<TestMethod>]
     member _.NewVersion8NShake128ByEncoding_ExampleDns_GetExpectedGuid() =
-        if not Shake128.IsSupported then ()
+        if not Shake128.IsSupported then
+            Assert.inconclusive "The current hash algorithm is not supported."
         else
             Guid.newV8NShake128Enc Guid.nsDns Text.Encoding.Unicode "www.example.com"
             |> tee (Guid.version
@@ -119,7 +131,8 @@ type GuidGeneratorV8NSha3Test() =
 
     [<TestMethod>]
     member _.NewVersion8NShake256_EmptyName_GetExpectedGuid() =
-        if not Shake256.IsSupported then ()
+        if not Shake256.IsSupported then
+            Assert.inconclusive "The current hash algorithm is not supported."
         else
             Guid.newV8NShake256 Guid.empty Array.empty
             |> tee (Guid.version
@@ -128,7 +141,8 @@ type GuidGeneratorV8NSha3Test() =
 
     [<TestMethod>]
     member _.NewVersion8NShake256ByString_ExampleDns_GetExpectedGuid() =
-        if not Shake256.IsSupported then ()
+        if not Shake256.IsSupported then
+            Assert.inconclusive "The current hash algorithm is not supported."
         else
             Guid.newV8NShake256S Guid.nsDns "www.example.com"
             |> tee (Guid.version
@@ -137,7 +151,8 @@ type GuidGeneratorV8NSha3Test() =
 
     [<TestMethod>]
     member _.NewVersion8NShake256ByEncoding_ExampleDns_GetExpectedGuid() =
-        if not Shake256.IsSupported then ()
+        if not Shake256.IsSupported then
+            Assert.inconclusive "The current hash algorithm is not supported."
         else
             Guid.newV8NShake256Enc Guid.nsDns Text.Encoding.Unicode "www.example.com"
             |> tee (Guid.version

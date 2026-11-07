@@ -148,7 +148,7 @@ partial class GuidGeneratorState
         try
         {
             using (await GuidGeneratorState.StorageLock.EnterScopeAsync()
-                .ConfigureAwait(continueOnCapturedContext: false))
+                    .ConfigureAwait(continueOnCapturedContext: false))
             {
                 fileName = GuidGeneratorState.StorageFile;
                 if (fileName is null) { return false; }
