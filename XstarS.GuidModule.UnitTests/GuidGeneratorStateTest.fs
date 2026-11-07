@@ -87,14 +87,13 @@ type GuidGeneratorStateTest() =
         |> Assert.Seq.equalTo (Array.init 6 addByte1)
 
     [<TestMethod>]
-    member _.LoadGeneratorStateAsync_FileWithRandomNodeId_GetNodeIdFromFile() =
+    member _.LoadGeneratorStateFromProviderAsync_MemoryFileWithRandomNodeId_GetNodeIdFromFile() =
         Guid.resetState ()
         let exceptionRef = catchStateLoadExnAsRef ()
-        let mutable fileName = null
-        use tempFile = createTempFile &fileName
         let addByte1 = (op (+) 1) >> byte
+        let data = Array.zeroCreate<byte> 32
         if true then
-            use stream = new FileStream(fileName, FileMode.Create)
+            use stream = new MemoryStream(data)
             use writer = new BinaryWriter(stream)
             writer.Write(4122)
             writer.Write(0x08)
@@ -103,7 +102,10 @@ type GuidGeneratorStateTest() =
             writer.Write((Array.init 6 byte), 0, 6)
             writer.Write((Array.init 6 addByte1), 0, 6)
         task {
-            let! loadResult = Guid.loadStateAsync fileName
+            let! loadResult =
+                nameof MemoryStream
+                |> Guid.loadStateFromProviderAsync (
+                    fun name access -> new MemoryStream(data))
             loadResult
             |> Assert.true'
             exceptionRef.Value
