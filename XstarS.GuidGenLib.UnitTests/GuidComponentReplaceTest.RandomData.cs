@@ -72,6 +72,18 @@ partial class GuidComponentReplaceTest
 #endif
 
     [TestMethod]
+    public void ReplaceRandomData_Non16BytesData_CatchArgumentException()
+    {
+        var original = Guid.Parse("00000000-0000-4000-8000-000000000000");
+        foreach (var length in new[] { 0, 1, 15, 17 })
+        {
+            var randomData = new byte[length];
+            Assert.ThrowsException<ArgumentException>(
+                () => original.ReplaceRandomData(randomData));
+        }
+    }
+
+    [TestMethod]
     public void ReplaceRandomData_OtherVersionGuids_GetOriginalGuidValues()
     {
         var randomData = new byte[16]

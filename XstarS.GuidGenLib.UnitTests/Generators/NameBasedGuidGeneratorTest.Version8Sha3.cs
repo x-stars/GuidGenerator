@@ -10,7 +10,10 @@ partial class NameBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version8NSha3D256_GetExpectedGuid()
     {
-        if (!SHA3_256.IsSupported) { return; }
+        if (!SHA3_256.IsSupported)
+        {
+            Assert.Inconclusive("The current hash algorithm is not supported.");
+        }
         var nsId = Guid.Empty;
         var name = Array.Empty<byte>();
         var guid = GuidGenerator.Version8NSha3D256.NewGuid(nsId, name);
@@ -21,7 +24,10 @@ partial class NameBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version8NSha3D256StringName_GetExpectedGuid()
     {
-        if (!SHA3_256.IsSupported) { return; }
+        if (!SHA3_256.IsSupported)
+        {
+            Assert.Inconclusive("The current hash algorithm is not supported.");
+        }
         var nsId = GuidNamespaces.Dns;
         var name = "www.example.com";
         var guid = GuidGenerator.Version8NSha3D256.NewGuid(nsId, name);
@@ -32,7 +38,10 @@ partial class NameBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version8NSha3D384_GetExpectedGuid()
     {
-        if (!SHA3_384.IsSupported) { return; }
+        if (!SHA3_384.IsSupported)
+        {
+            Assert.Inconclusive("The current hash algorithm is not supported.");
+        }
         var nsId = Guid.Empty;
         var name = Array.Empty<byte>();
         var guid = GuidGenerator.Version8NSha3D384.NewGuid(nsId, name);
@@ -43,7 +52,10 @@ partial class NameBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version8NSha3D384StringName_GetExpectedGuid()
     {
-        if (!SHA3_384.IsSupported) { return; }
+        if (!SHA3_384.IsSupported)
+        {
+            Assert.Inconclusive("The current hash algorithm is not supported.");
+        }
         var nsId = GuidNamespaces.Dns;
         var name = "www.example.com";
         var guid = GuidGenerator.Version8NSha3D384.NewGuid(nsId, name);
@@ -54,7 +66,10 @@ partial class NameBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version8NSha3D512_GetExpectedGuid()
     {
-        if (!SHA3_512.IsSupported) { return; }
+        if (!SHA3_512.IsSupported)
+        {
+            Assert.Inconclusive("The current hash algorithm is not supported.");
+        }
         var nsId = Guid.Empty;
         var name = Array.Empty<byte>();
         var guid = GuidGenerator.Version8NSha3D512.NewGuid(nsId, name);
@@ -65,7 +80,10 @@ partial class NameBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version8NSha3D512StringName_GetExpectedGuid()
     {
-        if (!SHA3_512.IsSupported) { return; }
+        if (!SHA3_512.IsSupported)
+        {
+            Assert.Inconclusive("The current hash algorithm is not supported.");
+        }
         var nsId = GuidNamespaces.Dns;
         var name = "www.example.com";
         var guid = GuidGenerator.Version8NSha3D512.NewGuid(nsId, name);
@@ -76,7 +94,10 @@ partial class NameBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version8NShake128_GetExpectedGuid()
     {
-        if (!Shake128.IsSupported) { return; }
+        if (!Shake128.IsSupported)
+        {
+            Assert.Inconclusive("The current hash algorithm is not supported.");
+        }
         var nsId = Guid.Empty;
         var name = Array.Empty<byte>();
         var guid = GuidGenerator.Version8NShake128.NewGuid(nsId, name);
@@ -87,7 +108,10 @@ partial class NameBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version8NShake128StringName_GetExpectedGuid()
     {
-        if (!Shake128.IsSupported) { return; }
+        if (!Shake128.IsSupported)
+        {
+            Assert.Inconclusive("The current hash algorithm is not supported.");
+        }
         var nsId = GuidNamespaces.Dns;
         var name = "www.example.com";
         var guid = GuidGenerator.Version8NShake128.NewGuid(nsId, name);
@@ -98,7 +122,10 @@ partial class NameBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version8NShake256_GetExpectedGuid()
     {
-        if (!Shake256.IsSupported) { return; }
+        if (!Shake256.IsSupported)
+        {
+            Assert.Inconclusive("The current hash algorithm is not supported.");
+        }
         var nsId = Guid.Empty;
         var name = Array.Empty<byte>();
         var guid = GuidGenerator.Version8NShake256.NewGuid(nsId, name);
@@ -109,7 +136,10 @@ partial class NameBasedGuidGeneratorTest
     [TestMethod]
     public void NewGuid_Version8NShake256StringName_GetExpectedGuid()
     {
-        if (!Shake256.IsSupported) { return; }
+        if (!Shake256.IsSupported)
+        {
+            Assert.Inconclusive("The current hash algorithm is not supported.");
+        }
         var nsId = GuidNamespaces.Dns;
         var name = "www.example.com";
         var guid = GuidGenerator.Version8NShake256.NewGuid(nsId, name);

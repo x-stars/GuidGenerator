@@ -50,6 +50,19 @@ partial class GuidComponentTest
     }
 #endif
 
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    [TestMethod]
+    public void TryWriteCustomData_TooShortBuffer_GetAllFalseResults()
+    {
+        var guid = Guid.Parse("05db6c94-bba6-8702-88aa-548f4d6cd700");
+        var customData = (stackalloc byte[16]);
+        var bitmask = (stackalloc byte[16]);
+        Assert.IsFalse(guid.TryWriteCustomData([], bitmask));
+        Assert.IsFalse(guid.TryWriteCustomData(customData, []));
+        Assert.IsFalse(guid.TryWriteCustomData([], []));
+    }
+#endif
+
     [TestMethod]
     public void TryGetCustomData_OtherVersionGuids_GetAllFalseResults()
     {

@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace XNetEx.Guids.Generators;
@@ -96,5 +98,45 @@ partial class GuidGeneratorStateTest
                 _ => throw new ArgumentOutOfRangeException(nameof(fileAccess)),
             };
         }
+
+        public Stream OpenSingleByteReadStream(string fileName, FileAccess fileAccess)
+        {
+            return fileAccess switch
+            {
+                FileAccess.Read => new SingleByteReadMemoryStream(data),
+                FileAccess.Write => new MemoryStream(data, writable: true),
+                _ => throw new ArgumentOutOfRangeException(nameof(fileAccess)),
+            };
+        }
+    }
+
+    private sealed class SingleByteReadMemoryStream(byte[] data)
+        : MemoryStream(data, writable: false)
+    {
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            return base.Read(buffer, offset, (count > 1) ? 1 : count);
+        }
+
+        public override Task<int> ReadAsync(
+            byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            return base.ReadAsync(
+                buffer, offset, (count > 1) ? 1 : count, cancellationToken);
+        }
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        public override int Read(Span<byte> buffer)
+        {
+            return base.Read(buffer[..((buffer.Length > 1) ? 1 : buffer.Length)]);
+        }
+
+        public override ValueTask<int> ReadAsync(
+            Memory<byte> buffer, CancellationToken cancellationToken = default)
+        {
+            return base.ReadAsync(
+                buffer[..((buffer.Length > 1) ? 1 : buffer.Length)], cancellationToken);
+        }
+#endif
     }
 }

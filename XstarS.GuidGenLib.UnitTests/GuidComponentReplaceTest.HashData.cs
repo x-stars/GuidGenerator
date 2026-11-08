@@ -70,6 +70,18 @@ partial class GuidComponentReplaceTest
 #endif
 
     [TestMethod]
+    public void ReplaceHashData_Non16BytesData_CatchArgumentException()
+    {
+        var original = Guid.Parse("00000000-0000-5000-8000-000000000000");
+        foreach (var length in new[] { 0, 1, 15, 17 })
+        {
+            var hashData = new byte[length];
+            Assert.ThrowsException<ArgumentException>(
+                () => original.ReplaceHashData(hashData));
+        }
+    }
+
+    [TestMethod]
     public void ReplaceHashData_OtherVersionGuids_GetOriginalGuidValues()
     {
         var hashData = new byte[16]
