@@ -96,7 +96,7 @@ internal sealed partial class GuidGeneratorState
             return false;
         }
 
-        if (timestamp <= this.LastTimestamp)
+        if (timestamp < this.LastTimestamp)
         {
             this.ClockSequence++;
         }

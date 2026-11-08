@@ -93,6 +93,19 @@ partial class GuidComponentTest
     }
 #endif
 
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+    [TestMethod]
+    public void TryWriteHashData_TooShortBuffer_GetAllFalseResults()
+    {
+        var guid = Guid.Parse("768a7b1b-ae51-5c0a-bc9d-a85a343f2c24");
+        var hashData = (stackalloc byte[16]);
+        var bitmask = (stackalloc byte[16]);
+        Assert.IsFalse(guid.TryWriteHashData([], bitmask));
+        Assert.IsFalse(guid.TryWriteHashData(hashData, []));
+        Assert.IsFalse(guid.TryWriteHashData([], []));
+    }
+#endif
+
     [TestMethod]
     public void TryGetHashData_OtherVersionGuids_GetAllFalseResults()
     {

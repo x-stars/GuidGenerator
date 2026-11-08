@@ -77,6 +77,18 @@ partial class GuidComponentReplaceTest
 #endif
 
     [TestMethod]
+    public void ReplaceNodeId_Non6BytesData_CatchArgumentException()
+    {
+        var original = Guid.Parse("00000000-0000-1000-8000-000000000000");
+        foreach (var length in new[] { 0, 1, 5, 7 })
+        {
+            var nodeId = new byte[length];
+            Assert.ThrowsException<ArgumentException>(
+                () => original.ReplaceNodeId(nodeId));
+        }
+    }
+
+    [TestMethod]
     public void ReplaceNodeId_OtherVersionGuids_GetOriginalGuidValues()
     {
         var nodeId = new byte[] { 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF };

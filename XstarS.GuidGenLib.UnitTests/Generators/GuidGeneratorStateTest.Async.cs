@@ -96,4 +96,46 @@ partial class GuidGeneratorStateTest
         _ = guid1.TryGetClockSequence(out var clockSeq1);
         Assert.AreEqual(44, clockSeq1);
     }
+
+    [TestMethod]
+    public async Task SetStateStorageFileAsync_1ByteReadMemoryFileWithClockSeqField_GetClockSeqFromFile()
+    {
+        var data = (byte[])[];
+        using (var tempFile = this.CreateTempFile(out var fileName))
+        {
+            this.WriteStateFieldsToFile(fileName, version: 4122, randClkSeq: 42);
+            data = File.ReadAllBytes(fileName);
+        }
+        var memoryFile = new MemoryFile(data);
+        var exceptionBox = this.CatchStateLoadExceptionAsBox();
+        var loadResult = await GuidGenerator.SetStateStorageFileAsync(
+            string.Empty, memoryFile.OpenSingleByteReadStream);
+        Assert.IsTrue(loadResult);
+        Assert.IsNull(exceptionBox.Value);
+        var guid = GuidGenerator.Version1R.NewGuid();
+        _ = guid.TryGetClockSequence(out var clockSeq);
+        Assert.AreEqual(42, clockSeq);
+    }
+
+    [TestMethod]
+    public async Task StateStorageException_SetStorageFileInHandler_NoDeadLock()
+    {
+        var index = 0;
+        var memoryFile = new MemoryFile(new byte[32]);
+        using (var stream = memoryFile.OpenStream(string.Empty, FileAccess.Write))
+        using (var writer = new BinaryWriter(stream))
+        {
+            writer.Write(4122);
+        }
+        void OpenNextMemoryFile(object? sender, StateStorageExceptionEventArgs e)
+        {
+            Assert.IsInstanceOfType(e.Exception, typeof(FileNotFoundException));
+            GuidGenerator.SetStateStorageFile($"{index++}", memoryFile.OpenStream);
+        }
+        GuidGenerator.StateStorageException += OpenNextMemoryFile;
+        await GuidGenerator.SetStateStorageFileAsync(
+            $"{index++}", (_, _) => throw new FileNotFoundException());
+        GuidGenerator.StateStorageException -= OpenNextMemoryFile;
+        Assert.AreEqual(2, index);
+    }
 }

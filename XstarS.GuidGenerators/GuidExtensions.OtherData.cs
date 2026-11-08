@@ -47,6 +47,7 @@ static partial class GuidExtensions
         this Guid guid, Span<byte> destination, Span<byte> bitmask)
     {
         if (destination.Length < 16) { return false; }
+        if (bitmask.Length < 16) { return false; }
         if (!guid.GetRfc4122Version().IsNameBased())
         {
             return false;
@@ -100,6 +101,7 @@ static partial class GuidExtensions
         this Guid guid, Span<byte> destination, Span<byte> bitmask)
     {
         if (destination.Length < 16) { return false; }
+        if (bitmask.Length < 16) { return false; }
         if (!guid.GetRfc4122Version().IsRandomized())
         {
             return false;
@@ -154,6 +156,7 @@ static partial class GuidExtensions
         this Guid guid, Span<byte> destination, Span<byte> bitmask)
     {
         if (destination.Length < 16) { return false; }
+        if (bitmask.Length < 16) { return false; }
         if (!guid.GetRfc4122Version().IsCustomized())
         {
             return false;
