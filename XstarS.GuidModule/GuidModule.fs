@@ -1389,7 +1389,7 @@ module Guid =
     /// <returns>A new <see cref="T:System.Guid"/> instance that is
     /// equivalent to the <see cref="T:System.Guid"/> except that
     /// the DCE Security domain replaced with <paramref name="domain"/>
-    /// and the local ID replaced with and <paramref name="localId"/>, or the original value
+    /// and the local ID replaced with <paramref name="localId"/>, or the original value
     /// if the <see cref="T:System.Guid"/> is not a DCE Security UUID.</returns>
     [<CompiledName("ReplaceDomainAndLocalId")>]
     let replaceLocalId (domain: Domain) (localId: int) (guid: Guid) : Guid =

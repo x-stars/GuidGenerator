@@ -130,7 +130,7 @@ static partial class GuidExtensions
     /// <param name="localId">The local ID to use as replacement.</param>
     /// <returns>A new <see cref="Guid"/> instance that is equivalent to the current <see cref="Guid"/>
     /// except that the DCE Security domain replaced with <paramref name="domain"/>
-    /// and the local ID replaced with and <paramref name="localId"/>,
+    /// and the local ID replaced with <paramref name="localId"/>,
     /// or the original value if the <see cref="Guid"/> is not a DCE Security UUID.</returns>
     public static Guid ReplaceDomainAndLocalId(
         this Guid guid, DceSecurityDomain domain, int localId)
